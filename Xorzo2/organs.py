@@ -33,6 +33,16 @@ Organ regularizers (the v4 leash, adapted): injection-diversity across
 bytes and node-embedding diversity, reported by the Life loop.
 
 Revision history:
+- 2026-07-20 v1.2: VoiceResonant: the multi-frame readout. The
+    resonance study (probe.py --resonance) showed the spine's past is
+    present in the state in original form, recoverable by re-phasing
+    alone; each rewound view Tc^-k psi is a PURE FUNCTION of the
+    current state, so a voice reading several such frames stays
+    memoryless and no-bypass while gaining aligned access to the
+    spine's held past. from_voice() upgrades an existing single-frame
+    Voice with function preserved (old weights on the frame-0 columns,
+    past-frame columns zeroed: the individual keeps its voice and
+    grows ears).
 - 2026-07-19 v1.1: Voice made memoryless (GRU removed; plan v1.2).
 - 2026-07-19 v1.0: initial organs (E approx 21K params, D approx 220K).
 """
@@ -163,6 +173,88 @@ class Voice(nn.Module):
         sim = e @ e.T
         off = sim - torch.diag(torch.diag(sim))
         return (off * off).mean()
+
+
+class VoiceResonant(nn.Module):
+    """D: the resonant readout. Reads the CURRENT state through
+    several rewound frames (state, Tc^-1 state, Tc^-4 state, ...):
+    reading glasses for each depth of the past. Every frame is a pure
+    function of the present state: the organ carries no state between
+    bytes and sees nothing but spine state. Memoryless, no bypass,
+    and it hears what the spine has been holding."""
+
+    N_VIEWS = 3
+
+    def __init__(self, n_nodes: int, n_frames: int,
+                 d_node_emb: int = 24, d_feat: int = 32,
+                 d_hidden: int = 192):
+        super().__init__()
+        self.n_nodes = n_nodes
+        self.n_frames = n_frames
+        self.node_emb = nn.Parameter(torch.randn(n_nodes, d_node_emb) * 0.1)
+        self.node_proj = nn.Sequential(
+            nn.Linear(2 * n_frames + d_node_emb, d_feat), nn.GELU(),
+            nn.Linear(d_feat, d_feat),
+        )
+        self.views = nn.Parameter(torch.randn(self.N_VIEWS, d_feat) * 0.1)
+        self.mlp = nn.Sequential(
+            nn.Linear(self.N_VIEWS * d_feat, d_hidden), nn.GELU(),
+            nn.Linear(d_hidden, d_hidden), nn.GELU(),
+        )
+        self.head = nn.Linear(d_hidden, 256)
+        self.scale = 1.0 / math.sqrt(d_feat)
+
+    def grow(self, n_nodes_new: int, init_rows: torch.Tensor):
+        """Extend node embeddings for newly born nodes (Stage 2)."""
+        assert n_nodes_new == self.n_nodes + init_rows.shape[0]
+        self.node_emb = nn.Parameter(torch.cat(
+            [self.node_emb.data, init_rows.to(self.node_emb.device)], 0))
+        self.n_nodes = n_nodes_new
+
+    def forward(self, frames: torch.Tensor) -> torch.Tensor:
+        """frames: (F, 2N) or (B, F, 2N) rewound views -> logits."""
+        n = self.n_nodes
+        re = frames[..., :n].transpose(-2, -1)      # (..., N, F)
+        im = frames[..., n:].transpose(-2, -1)      # (..., N, F)
+        per_node = torch.cat([re, im], dim=-1)      # (..., N, 2F)
+        emb = self.node_emb.expand(*per_node.shape[:-2], -1, -1)
+        feats = self.node_proj(
+            torch.cat([per_node, emb], dim=-1))     # (..., N, d_feat)
+        attn = torch.softmax(
+            torch.einsum("vf,...nf->...vn", self.views, feats)
+            * self.scale, dim=-1)
+        pooled = torch.einsum("...vn,...nf->...vf", attn, feats)
+        pooled = pooled.reshape(*pooled.shape[:-2], -1)
+        return self.head(self.mlp(pooled))
+
+    def embedding_diversity(self) -> torch.Tensor:
+        e = F.normalize(self.node_emb, dim=-1)
+        sim = e @ e.T
+        off = sim - torch.diag(torch.diag(sim))
+        return (off * off).mean()
+
+    @classmethod
+    def from_voice(cls, old: "Voice", n_frames: int) -> "VoiceResonant":
+        """Function-preserving upgrade: the old single-frame weights
+        land on the frame-0 columns; the past-frame columns start at
+        zero. The upgraded voice initially computes EXACTLY what the
+        old one did, then learns to use the past."""
+        v = cls(old.n_nodes, n_frames)
+        with torch.no_grad():
+            v.node_emb = nn.Parameter(old.node_emb.data.clone())
+            v.views = nn.Parameter(old.views.data.clone())
+            v.mlp.load_state_dict(old.mlp.state_dict())
+            v.head.load_state_dict(old.head.state_dict())
+            new0 = v.node_proj[0]
+            old0 = old.node_proj[0]
+            new0.weight.zero_()
+            new0.bias.copy_(old0.bias)
+            Fn = n_frames
+            new0.weight[:, 0] = old0.weight[:, 0]          # re, frame 0
+            new0.weight[:, Fn] = old0.weight[:, 1]         # im, frame 0
+            new0.weight[:, 2 * Fn:] = old0.weight[:, 2:]   # embeddings
+            v.node_proj[2].load_state_dict(old.node_proj[2].state_dict())
+        return v
 
 
 def count_params(module: nn.Module) -> int:

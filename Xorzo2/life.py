@@ -91,7 +91,7 @@ import torch.nn.functional as F
 
 from spine import (Seed, Spine, INJ_NODES, N_NODES_SEED, TICKS_PER_BYTE,
                    RESERVED_NODE)
-from organs import Senses, SensesBit, Voice, count_params
+from organs import Senses, SensesBit, Voice, VoiceResonant, count_params
 
 RAND_CE = math.log(256.0)          # cross-entropy of a uniform guesser
 
@@ -122,6 +122,8 @@ class LifeConfig:
     dream_frac_max: float = 0.5
     dream_anneal_bytes: int = 1_000_000
     dream_temperature: float = 1.0
+    # Resonant voice (organs v1.2): rewound views of the current state
+    voice_frames: tuple = (0, 1, 2, 4, 8, 16)
 
 
 class Life:
@@ -141,7 +143,8 @@ class Life:
         # Senses are GIVEN by default since the keyboard adoption
         # (plan v1.4); the learned Senses class remains for controls.
         self.E = SensesBit(self.spine.N, INJ_NODES, self.alpha).to(dev)
-        self.D = Voice(self.spine.N).to(dev)
+        self.D = VoiceResonant(self.spine.N,
+                               len(self.cfg.voice_frames)).to(dev)
         self.opt = torch.optim.Adam(self._trainable(), lr=self.cfg.lr)
 
         if noise_spine:
@@ -157,6 +160,7 @@ class Life:
             self.M.requires_grad_(False)
             self.M_cycle = torch.linalg.matrix_power(self.M, TICKS_PER_BYTE)
             self.M_cycle.requires_grad_(False)
+            self._build_frames()
         else:
             self._noise_matrix = None
             self._rebuild_matrices()
@@ -200,6 +204,36 @@ class Life:
         self.M.requires_grad_(False)
         self.M_cycle = torch.linalg.matrix_power(self.M, TICKS_PER_BYTE)
         self.M_cycle.requires_grad_(False)
+        self._build_frames()
+
+    def _build_frames(self):
+        """Frozen rewind matrices for the resonant voice: R_k = the
+        pseudo-inverse cycle to the k-th power (pinv, not inv: a noise
+        spine's crushed modes make a true inverse explode; the live
+        spine's pinv IS its inverse). Each frame is a pure function of
+        the current state."""
+        Minv = torch.linalg.pinv(self.M_cycle)
+        frames = []
+        by_k = {0: torch.eye(self.M_cycle.shape[0],
+                             device=self.cfg.device)}
+        cur = by_k[0]
+        for k in range(1, max(self.cfg.voice_frames) + 1):
+            cur = Minv @ cur
+            if k in self.cfg.voice_frames:
+                by_k[k] = cur.clone()
+        for k in self.cfg.voice_frames:
+            R = by_k[k]
+            R.requires_grad_(False)
+            frames.append(R)
+        self.R_frames = frames
+
+    def _voice_frames(self, psi: torch.Tensor) -> torch.Tensor:
+        """The rewound views (F, 2N), each renormalized."""
+        vs = []
+        for R in self.R_frames:
+            v = R @ psi
+            vs.append(v / (torch.linalg.vector_norm(v) + 1e-12))
+        return torch.stack(vs)
 
     # ----- Stage 2: growth (plan section 7) -----
 
@@ -354,7 +388,7 @@ class Life:
             eb = self.cfg.energy_ema_beta
             self.energy_ema = eb * self.energy_ema + (1 - eb) * e
 
-        logits = self.D(self.psi)
+        logits = self.D(self._voice_frames(self.psi))
         t = torch.tensor(target_val, dtype=torch.long, device=dev)
         loss = F.cross_entropy(logits.unsqueeze(0), t.unsqueeze(0))
 
@@ -450,7 +484,7 @@ class Life:
         losses = []
         dreamed = []
         for i in range(half, len(seg)):
-            logits = self.D(self.psi)
+            logits = self.D(self._voice_frames(self.psi))
             t = torch.tensor(seg[i], dtype=torch.long, device=dev)
             losses.append(F.cross_entropy(logits.unsqueeze(0),
                                           t.unsqueeze(0)))
@@ -526,7 +560,7 @@ class Life:
                 s = self.M_cycle @ (self.psi + self.E(b))
                 self.psi = s / (torch.linalg.vector_norm(s) + 1e-12)
                 self.ticks_lived += TICKS_PER_BYTE
-                logits = self.D(self.psi)
+                logits = self.D(self._voice_frames(self.psi))
                 t = torch.tensor(data[i + 1], dtype=torch.long,
                                  device=dev)
                 total += float(F.cross_entropy(logits.unsqueeze(0),
@@ -625,7 +659,8 @@ class Life:
             self.spine = Spine(octs)
             self._rebuild_matrices()
             self.E = SensesBit(self.spine.N, INJ_NODES, self.alpha).to(dev)
-            self.D = Voice(self.spine.N).to(dev)
+            self.D = VoiceResonant(self.spine.N,
+                               len(self.cfg.voice_frames)).to(dev)
             self.opt = torch.optim.Adam(self._trainable(), lr=self.cfg.lr)
         if "energy_ema" in ckpt:
             self.energy_ema = ckpt["energy_ema"].to(dev)
@@ -642,11 +677,25 @@ class Life:
             self.opt = torch.optim.Adam(self._trainable(), lr=self.cfg.lr)
         self.E.load_state_dict(ckpt["senses"])
         voice_ok = True
+        voice_upgraded = False
         try:
             self.D.load_state_dict(ckpt["voice"])
         except Exception:
-            voice_ok = False       # old (recurrent) voice: migrate below
-        if voice_ok:
+            # Try the single-frame Voice era: upgrade FUNCTION-PRESERVED
+            # (organs v1.2 from_voice: old weights on frame 0, past
+            # frames start silent; the individual keeps its voice and
+            # grows ears). Otherwise the GRU era: full replacement.
+            try:
+                v_old = Voice(self.spine.N).to(dev)
+                v_old.load_state_dict(ckpt["voice"])
+                self.D = VoiceResonant.from_voice(
+                    v_old, len(self.cfg.voice_frames)).to(dev)
+                self.opt = torch.optim.Adam(self._trainable(),
+                                            lr=self.cfg.lr)
+                voice_upgraded = True
+            except Exception:
+                voice_ok = False   # GRU era: replace below
+        if voice_ok and not voice_upgraded:
             self.opt.load_state_dict(ckpt["opt"])
         c = ckpt["counters"]
         self.bytes_lived = c["bytes_lived"]
@@ -663,7 +712,23 @@ class Life:
             self.replay.append(s)
         self.growth_history = ckpt["growth_history"]
         torch.set_rng_state(ckpt["torch_rng"])
-        if not voice_ok:
+        if voice_upgraded:
+            event = {
+                "event": "voice_upgrade_resonant",
+                "at_bytes": self.bytes_lived,
+                "time": time.strftime("%Y-%m-%d %H:%M:%S"),
+                "reason": "resonant readout (organs v1.2): rewound "
+                          "views of the current state; function "
+                          "preserved (old weights on frame 0, past "
+                          "frames start silent); loss continuity kept",
+            }
+            self.growth_history.append(event)
+            if self.home is not None:
+                self._save()
+            print(f"    [worldline event] voice upgraded to resonant "
+                  f"readout at {self.bytes_lived:,} bytes lived; "
+                  f"function preserved, ears for the past added")
+        elif not voice_ok:
             event = {
                 "event": "voice_replacement",
                 "at_bytes": self.bytes_lived,
@@ -697,7 +762,7 @@ class Life:
                 s = self.M_cycle @ (self.psi + inj)
                 self.psi = s / (torch.linalg.vector_norm(s) + 1e-12)
                 self.ticks_lived += TICKS_PER_BYTE
-                logits = self.D(self.psi)
+                logits = self.D(self._voice_frames(self.psi))
                 probs = torch.softmax(logits / temperature, dim=-1)
                 prev = int(torch.multinomial(probs, 1))
                 out.append(prev)
@@ -712,7 +777,7 @@ class Life:
         dev = self.cfg.device
         with torch.no_grad():
             for _ in range(n_bytes):
-                logits = self.D(self.psi)
+                logits = self.D(self._voice_frames(self.psi))
                 probs = torch.softmax(logits / temperature, dim=-1)
                 b = int(torch.multinomial(probs, 1))
                 out.append(b)
