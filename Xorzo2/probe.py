@@ -276,6 +276,81 @@ def probe_accuracy(states: np.ndarray, byte_seq: np.ndarray,
     return float((pred == yte).mean())
 
 
+def resonance_study():
+    """Adjudicated question (Ashman, 2026-07-20): "memories don't
+    fade, they fail to resonate." Operational form: is the past still
+    present in the state in its ORIGINAL form, readable by re-phasing
+    alone, or is it destroyed?
+
+    A per-lag-trained probe cannot answer this (any invertible
+    transform is absorbed into its weights). So: train ONE ridge
+    reader at lag 0 (the present-tense reader), freeze it, then read
+    byte t-k three ways:
+
+      naive:   frozen reader on psi_t           (reader out of phase)
+      rewound: frozen reader on Tc^-k psi_t     (re-phased by the
+               exact inverse cycle; ZERO new parameters per lag)
+      learned: per-lag ridge                    (reference)
+
+    If rewound recovers what naive loses, recall is resonance
+    re-alignment and the only true fading is the O(alpha) contracting
+    sliver (min cycle singular value 0.952) plus interference."""
+    seed_obj = Seed()
+    chords = make_bit_chords(seed_obj.alpha, bipolar=True)
+    rng = np.random.RandomState(2026)
+    byte_seq = rng.randint(0, 256, size=N_STEPS + BURN_IN + max(LAGS))
+    Tc = cycle_operator(seed_obj.op.T)
+    Tc_inv = np.linalg.inv(Tc)
+    states = evolve(Tc, chords, byte_seq, seed_obj.attractor)
+    n = N_NODES_SEED
+
+    def to_c(X):
+        return X[:, :n] + 1j * X[:, n:]
+
+    def to_r(Z):
+        out = np.empty((Z.shape[0], 2 * n))
+        out[:, :n] = Z.real
+        out[:, n:] = Z.imag
+        return out
+
+    # The present-tense reader: ridge at lag 0, frozen
+    t0 = np.arange(BURN_IN, len(states))
+    X0 = states[t0]
+    y0 = byte_seq[t0]
+    ntr = int(0.8 * len(X0))
+    Y = np.zeros((ntr, 256))
+    Y[np.arange(ntr), y0[:ntr]] = 1.0
+    G = X0[:ntr].T @ X0[:ntr] + RIDGE * np.eye(2 * n)
+    W0 = np.linalg.solve(G, X0[:ntr].T @ Y)
+
+    print("Xorzo2 resonance study: one frozen present-tense reader; "
+          "the past read naively vs re-phased (chance 0.0039)")
+    print("  lag(cycles)   naive  rewound  learned(ref)")
+    Z = to_c(states)                       # complex states, evolving copy
+    for k in LAGS:
+        t_idx = np.arange(BURN_IN + k, len(states))
+        y = byte_seq[t_idx - k]
+        nte = int(0.8 * len(t_idx))
+        # naive: frozen reader, state as-is
+        Xn = states[t_idx]
+        acc_naive = float(((Xn[nte:] @ W0).argmax(1) == y[nte:]).mean())
+        # rewound: frozen reader on Tc^-k psi_t, renormalized
+        Zk = to_c(states[t_idx])
+        for _ in range(k):
+            Zk = Zk @ Tc_inv.T
+        Zk = Zk / (np.linalg.norm(Zk, axis=1, keepdims=True) + 1e-12)
+        Xr = to_r(Zk)
+        acc_rew = float(((Xr[nte:] @ W0).argmax(1) == y[nte:]).mean())
+        acc_learned = probe_accuracy(states, byte_seq, k)
+        print(f"  {k:>7d}      {acc_naive:.3f}   {acc_rew:.3f}     "
+              f"{acc_learned:.3f}")
+    sv = np.linalg.svd(Tc, compute_uv=False)
+    print(f"\n  genuine fade per cycle: only the contracting sliver "
+          f"(min SV {sv.min():.4f}, i.e. ~{100*(1-sv.min()):.1f}%/cycle "
+          f"in the softest mode); conserved modes: median SV "
+          f"{np.median(sv):.4f}")
+
+
 def spectrum_line(name: str, Tc: np.ndarray) -> str:
     sv = np.linalg.svd(Tc, compute_uv=False)
     return (f"  {name:14s} cycle singular values: max {sv.max():.4f}  "
@@ -339,5 +414,7 @@ if __name__ == "__main__":
         keyboard_study()
     elif "--scaling" in sys.argv:
         scaling_study()
+    elif "--resonance" in sys.argv:
+        resonance_study()
     else:
         main()

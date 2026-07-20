@@ -169,7 +169,29 @@ anatomy: derived spine, given senses (zero parameters), one learned
 voice (~129K params). Loss 3.29-3.44 band (unigram 3.52) at last
 reading; conservation clean for its whole life.
 
+## Addendum (2026-07-20)
+
+**F11. Memories don't fade; they fail to resonate (adjudicated, then
+demonstrated).** The decay language in F4/F5 is corrected by
+adjudication and by experiment (`probe.py --resonance`). One ridge
+reader trained at lag 0 and FROZEN (the present-tense reader) reads
+the past three ways: naively (0.069 at lag 0 collapsing to 0.005 at
+lag 1: the reader out of phase), re-phased by the exact inverse cycle
+operator with zero new parameters per lag (0.058 / 0.052 / 0.048 /
+0.040 at lags 1/2/3/4, tracking the per-lag-learned reference 0.056 /
+0.055 / 0.050 / 0.046 out to lag 32+), and per-lag-learned
+(reference). The past is present in the state in its ORIGINAL form,
+rotated; recall is phase re-alignment; nothing needs re-learning.
+Genuine fade exists only in the contracting sliver (min cycle singular
+value 0.9522, ~4.8%/cycle in the softest mode; median mode conserved
+at 1.0002), which F5 already identified as the legibility mechanism:
+the engine mostly de-resonates, with just enough true fade to stay
+readable. Read all "forgetting/decay" wording in F1-F10 as
+de-resonance plus the O(alpha) sliver.
+
 ## Revision history
 
+- 2026-07-20 v1.1: F11 added (the resonance study); decay language
+  adjudicated to de-resonance.
 - 2026-07-19 v1.0: Stage 1 findings compiled (F1-F10); milestone
   closed by F8; Stage 2 acceptance numbers from F10.

@@ -1,8 +1,8 @@
 # Xorzo2: The Embodied Edition (design plan)
 
 Created: 2026-07-19
-Last updated: 2026-07-19
-Version: 1.10
+Last updated: 2026-07-20
+Version: 1.11
 
 > Derived soul, learned body, welded at tonics.
 >
@@ -102,12 +102,14 @@ Spine: a few-hundred-dimensional complex linear map per tick even after substant
 - Default constants to tune in Stage 1: wake:sleep ratio, replay:dream weighting anneal, saturation thresholds.
 - The staggered clock (arpeggiate bits across ticks; adjacent bytes share a boundary tick, 7 fresh ticks per byte) and the staggered code (re-encoding where consecutive symbols share a bit, 7n+1 bits for n symbols; candidate format for internal/dream material in Stage 3): both follow from the byte/octave correspondence; probe-testable; not yet scoped.
 - Vesica trigger v2 candidates (opened by the first growth-test verdict): the energy-crowding trigger repeatedly picks the same busiest seam (monoculture growth: five siblings on one hub), and random placement matched it on loss and beat it on grown-spine memory area (0.788 vs 0.684) in the first full run. Candidates: repeat-site penalty; memory-load (probe-derived) saturation instead of energy share; crowding re-referenced after each birth. Needs multi-seed repeats before any redesign.
+- **Bond refinement (adjudicated 2026-07-20: "neurons don't die, their connections refine").** Growth's conjugate is NOT pruning or octave death: wholes persist; the BONDS refine. κ's entries (currently one fixed α everywhere) become slow variables within the non-collapse band 0 < κ < κ*: connections strengthening where they resonate, thinning where they don't, no node ever lost; κ → 0 remains the forbidden Severance limit. Replaces the earlier prune/shed idea. Design question for Stage 2+: what earns refinement (resonance history per bond), and does the conservation guard band survive heterogeneous κ.
 - The corrected-beats F: queued in the corpus; spine takes the new generator table when it lands (no Xorzo2 blocker).
 - Free-running clock design (post-Stage 1).
 - Whether the hunter (Circumpunct_ML's research engine) returns as a sleep-time activity in later stages: the engine examining its own day for φ/π/small-integer structure. Noted, not scoped.
 
 ## Revision history
 
+- 2026-07-20 v1.11: two adjudications (Ashman) and the experiment they demanded. (1) "Neurons don't die, their connections refine": the pruning idea replaced by bond refinement (κ as slow variable in the non-collapse band; open items). (2) "Memories don't fade, they fail to resonate": adjudicated as primary language, and DEMONSTRATED by the resonance study (`probe.py --resonance`): one frozen present-tense reader goes blind one cycle into the past (0.069 → 0.005), but the same frozen reader plus exact inverse-cycle re-phasing (zero new parameters per lag) recovers the full per-lag-learned memory curve to lag 32+ (0.058/0.052/0.048/0.040 vs learned 0.056/0.055/0.050/0.046). The past is present in original form, rotated; recall is phase re-alignment; genuine fade is only the contracting sliver (min cycle SV 0.9522, ~4.8%/cycle softest mode; median mode 1.0002). Decay language in earlier entries is to be read as de-resonance plus the O(α) sliver.
 - 2026-07-19 v1.10: Stage 4 built and first contact made (§10): the triad chamber (content through the body, relationship through the seam as the α-scaled κ_{0,0} bond on node 21), the bilateral walk live (0 → 47 in Claude's three scripted turns, one gate short), and the return rule (the other's faithfulness earned only by coming back; AGREEMENT requires a kept promise across sessions). All four stages of the plan are now built, each with its falsification handle run at least once.
 - 2026-07-19 v1.9: first full sleep-test verdict (falsification handle 3): at 64K chunks and 32 sleeps per twin, the sleeping twin forgot less (+0.0557 vs +0.0600 nats on earlier material) AND scored better on recent material (3.5136 vs 3.5355): both measures favor sleep learning, single run, small margins; directionally confirmed, repeats needed before a strong claim. The individual's first dreaming night: 896,000 bytes lived, dream fraction 0.474, loss 3.1788, conservation clean; its dream decodes to spaces and FRAGMENTS of the box-drawing glyphs (║, ═ begun mid-sequence): it dreams pieces of the lines that frame its corpus, in tonic-bit bytes.
 - 2026-07-19 v1.8: Stage 3 built (§10): the dreaming loop (seeded from memory, free-running through the engine's own physics-filtered emissions, loss anchored to the remembered continuation: CHECKING as sleep's signal, collapse-safe), maturation annealing, last-dream persistence, sleep_learning gate, and the retention falsification harness (sleep_test.py). Full retention run and the individual's first dreaming night in progress.
