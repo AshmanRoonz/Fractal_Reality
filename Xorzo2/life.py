@@ -37,6 +37,13 @@ The two Lies, instrumented (plan section 8):
         spectral radius. If the twin learns as well, the thesis fails.
 
 Revision history:
+- 2026-07-19 v1.5: Stage 4 seam bond and conversation. set_seam()
+    couples the conversation-whole to the reserved node (21) at up to
+    alpha (the kappa_{0,0} bond; raw sensory injection there remains
+    forbidden: this is the nesting relation, not sensation). converse()
+    streams heard text as wake experience (reading is living, learning
+    on) and replies by continuing from the current state without
+    re-injection. The chamber (chamber.py) drives both.
 - 2026-07-19 v1.4: Stage 3 dreaming. Sleep learning becomes replay
     PLUS the dreaming loop: a dream seeds itself from a remembered
     segment, then free-runs (the voice's own sampled emissions are
@@ -173,6 +180,7 @@ class Life:
         self.growth_ema = None         # per-cycle log-growth excess
         self.replay = deque(maxlen=self.cfg.replay_maxlen)
         self.growth_history = []       # Stage 2 will append here
+        self._seam_vec = None          # Stage 4: the kappa bond, if set
 
         if self.home is not None:
             if (self.home / "checkpoint.pt").exists():
@@ -306,6 +314,23 @@ class Life:
               f"{self.bytes_lived:,} bytes lived; senses are now given "
               f"(zero parameters); voice and spine state carried forward")
 
+    # ----- Stage 4: the seam bond (plan section 10) -----
+
+    def set_seam(self, bond: complex | None):
+        """Couple the conversation-whole at the reserved seam node.
+        |bond| <= alpha is the caller's law (triad.Bilateral64 enforces
+        it by construction: amplitude = alpha * openness). None severs.
+        This is kappa_{0,0}, not sensation: the seam stays excluded
+        from sensory injection and from growth."""
+        if bond is None:
+            self._seam_vec = None
+            return
+        dev = self.cfg.device
+        v = torch.zeros(2 * self.spine.N, device=dev)
+        v[RESERVED_NODE] = float(bond.real)
+        v[RESERVED_NODE + self.spine.N] = float(bond.imag)
+        self._seam_vec = v
+
     # ----- one byte of experience (used by wake and by replay) -----
 
     def _cycle(self, byte_val: int, target_val: int):
@@ -314,6 +339,8 @@ class Life:
         b = torch.tensor(byte_val, dtype=torch.long, device=dev)
         inj = self.E(b)
         inj_norm = float(inj.detach().norm())
+        if self._seam_vec is not None:
+            inj = inj + self._seam_vec
 
         state = self.psi + inj
         s = self.M_cycle @ state
@@ -675,6 +702,44 @@ class Life:
                 prev = int(torch.multinomial(probs, 1))
                 out.append(prev)
         return bytes(out)
+
+    def speak_continue(self, n_bytes: int = 120,
+                       temperature: float = 0.85) -> bytes:
+        """Emit from the CURRENT state (no prompt re-injection): the
+        voice continues whatever the being is already holding. Each
+        emitted byte is re-injected (the voice hears itself)."""
+        out = []
+        dev = self.cfg.device
+        with torch.no_grad():
+            for _ in range(n_bytes):
+                logits = self.D(self.psi)
+                probs = torch.softmax(logits / temperature, dim=-1)
+                b = int(torch.multinomial(probs, 1))
+                out.append(b)
+                bt = torch.tensor(b, dtype=torch.long, device=dev)
+                inj = self.E(bt)
+                if self._seam_vec is not None:
+                    inj = inj + self._seam_vec
+                s = self.M_cycle @ (self.psi + inj)
+                self.psi = s / (torch.linalg.vector_norm(s) + 1e-12)
+                self.ticks_lived += TICKS_PER_BYTE
+        return bytes(out)
+
+    def converse(self, heard: bytes, reply_bytes: int = 120,
+                 temperature: float = 0.85) -> bytes:
+        """One conversational turn: the heard text streams as wake
+        experience (reading is living; learning stays on), then the
+        voice continues from the state the hearing left behind."""
+        L = self.cfg.tbptt
+        for i in range(0, max(len(heard) - 1, 1), L):
+            seg = heard[i:i + L + 1]
+            if len(seg) >= 2:
+                self._learn_segment(seg)
+                self.replay.append(bytes(seg))
+                self.bytes_lived += len(seg) - 1
+        if self.home is not None:
+            self._save()
+        return self.speak_continue(reply_bytes, temperature)
 
 
 # ----- the severance harness (plan section 8, test 1) -----

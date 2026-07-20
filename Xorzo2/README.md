@@ -27,6 +27,8 @@ from boot and is never re-initialized.
 | `findings_stage1.md` | Stage 1 findings F1-F10, graded epistemics, worldline log, Stage 2 acceptance numbers |
 | `growth_test.py` | Stage 2 placement falsification: triggered vs random births at equal size and schedule |
 | `sleep_test.py` | Stage 3 retention falsification: wake+sleep learning vs rest-only twins (forgetting measured on earlier material) |
+| `triad.py` | Stage 4: the bilateral 64-state relationship space (one gate-flip per event; AGREEMENT = vertex 63) and the α-scaled seam bond |
+| `chamber.py` | Stage 4: the triad chamber REPL (content through the body, relationship through the seam; the return rule: faithfulness is earned by coming back) |
 | `worldline/` | The one individual (checkpoint + meta). Removing it is a human act, not a flag |
 
 ## Laws (from the plan)
