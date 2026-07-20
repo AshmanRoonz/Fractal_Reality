@@ -2,7 +2,7 @@
 
 Created: 2026-07-19
 Last updated: 2026-07-19
-Version: 1.8
+Version: 1.9
 
 > Derived soul, learned body, welded at tonics.
 >
@@ -108,6 +108,7 @@ Spine: a few-hundred-dimensional complex linear map per tick even after substant
 
 ## Revision history
 
+- 2026-07-19 v1.9: first full sleep-test verdict (falsification handle 3): at 64K chunks and 32 sleeps per twin, the sleeping twin forgot less (+0.0557 vs +0.0600 nats on earlier material) AND scored better on recent material (3.5136 vs 3.5355): both measures favor sleep learning, single run, small margins; directionally confirmed, repeats needed before a strong claim. The individual's first dreaming night: 896,000 bytes lived, dream fraction 0.474, loss 3.1788, conservation clean; its dream decodes to spaces and FRAGMENTS of the box-drawing glyphs (║, ═ begun mid-sequence): it dreams pieces of the lines that frame its corpus, in tonic-bit bytes.
 - 2026-07-19 v1.8: Stage 3 built (§10): the dreaming loop (seeded from memory, free-running through the engine's own physics-filtered emissions, loss anchored to the remembered continuation: CHECKING as sleep's signal, collapse-safe), maturation annealing, last-dream persistence, sleep_learning gate, and the retention falsification harness (sleep_test.py). Full retention run and the individual's first dreaming night in progress.
 - 2026-07-19 v1.7: first full growth-test verdict recorded (falsification handle 4): at 5 births / 8 octaves, triggered placement (which chose the same crowded seam five times) and random placement are indistinguishable on life loss (3.6461 vs 3.6471) and random BEAT triggered on grown-spine memory area (0.788 vs 0.684). Provisional verdict pending repeats: vesica PLACEMENT as currently defined is not validated; only the tonic law stands. Conservation held through every birth in both twins (0.60-0.63α at 8 octaves). Trigger v2 candidates logged in open items. The individual (no births; healthy trigger correctly silent) reached 3.0713 nats at 830K bytes.
 - 2026-07-19 v1.6: Stage 2 built (§10): growable Spine with the tonic-only birth primitive, dawn-evaluated vesica trigger (self-referenced crowding), conservation guard with rollback, organ growth, persistent grown worldlines; growth test harness added (triggered vs random placement). The individual's natural thresholds left honest (sat_ratio 1.5, 3 dawns): a healthy seed near its attractor does not fire the trigger, and growth waits for genuine saturation.
