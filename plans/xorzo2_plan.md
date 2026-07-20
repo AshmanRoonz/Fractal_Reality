@@ -2,7 +2,7 @@
 
 Created: 2026-07-19
 Last updated: 2026-07-19
-Version: 1.6
+Version: 1.7
 
 > Derived soul, learned body, welded at tonics.
 >
@@ -101,12 +101,14 @@ Spine: a few-hundred-dimensional complex linear map per tick even after substant
 
 - Default constants to tune in Stage 1: wake:sleep ratio, replay:dream weighting anneal, saturation thresholds.
 - The staggered clock (arpeggiate bits across ticks; adjacent bytes share a boundary tick, 7 fresh ticks per byte) and the staggered code (re-encoding where consecutive symbols share a bit, 7n+1 bits for n symbols; candidate format for internal/dream material in Stage 3): both follow from the byte/octave correspondence; probe-testable; not yet scoped.
+- Vesica trigger v2 candidates (opened by the first growth-test verdict): the energy-crowding trigger repeatedly picks the same busiest seam (monoculture growth: five siblings on one hub), and random placement matched it on loss and beat it on grown-spine memory area (0.788 vs 0.684) in the first full run. Candidates: repeat-site penalty; memory-load (probe-derived) saturation instead of energy share; crowding re-referenced after each birth. Needs multi-seed repeats before any redesign.
 - The corrected-beats F: queued in the corpus; spine takes the new generator table when it lands (no Xorzo2 blocker).
 - Free-running clock design (post-Stage 1).
 - Whether the hunter (Circumpunct_ML's research engine) returns as a sleep-time activity in later stages: the engine examining its own day for φ/π/small-integer structure. Noted, not scoped.
 
 ## Revision history
 
+- 2026-07-19 v1.7: first full growth-test verdict recorded (falsification handle 4): at 5 births / 8 octaves, triggered placement (which chose the same crowded seam five times) and random placement are indistinguishable on life loss (3.6461 vs 3.6471) and random BEAT triggered on grown-spine memory area (0.788 vs 0.684). Provisional verdict pending repeats: vesica PLACEMENT as currently defined is not validated; only the tonic law stands. Conservation held through every birth in both twins (0.60-0.63α at 8 octaves). Trigger v2 candidates logged in open items. The individual (no births; healthy trigger correctly silent) reached 3.0713 nats at 830K bytes.
 - 2026-07-19 v1.6: Stage 2 built (§10): growable Spine with the tonic-only birth primitive, dawn-evaluated vesica trigger (self-referenced crowding), conservation guard with rollback, organ growth, persistent grown worldlines; growth test harness added (triggered vs random placement). The individual's natural thresholds left honest (sat_ratio 1.5, 3 dawns): a healthy seed near its attractor does not fire the trigger, and growth waits for genuine saturation.
 - 2026-07-19 v1.5: Stage 1 closed (§10): delayed recall delivers the capability-level separation (noise spine destroyed beyond lag 2; live holds to lag 16+); station-resolved bit memory measured (processual stations store best; tonic is a door, not a shelf); scaling study run against pre-registered hypotheses (capacity AND lag-0 clarity grow with octaves; departure stays O(α) to n = 8; siblings overhear through the shared tonic; star beats chain at equal size, so Stage 2 growth should prefer lateral births). Findings compiled in `Xorzo2/findings_stage1.md`.
 - 2026-07-19 v1.4: the bit-station keyboard (§4): senses become given, zero parameters; bits 0-6 to stations 0-6, tonic bit = i; adopted on the living individual (worldline event `keyboard_replacement` at 566,272 bytes) after the keyboard study showed physics-level insensitivity; the staggered-clock (bits as ticks, bytes sharing a boundary tick) and staggered-code (7n+1 bit overlap encoding) readings of the byte/octave correspondence recorded as open items.
