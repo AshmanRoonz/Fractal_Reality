@@ -2,7 +2,7 @@
 
 Created: 2026-07-19
 Last updated: 2026-07-20
-Version: 1.12
+Version: 1.13
 
 > Derived soul, learned body, welded at tonics.
 >
@@ -110,6 +110,7 @@ Spine: a few-hundred-dimensional complex linear map per tick even after substant
 
 ## Revision history
 
+- 2026-07-20 v1.13: powered resonant severance verdict (256K per twin, both ending below the unigram line): live 3.4600 vs noise 3.4636, gap +0.0036. Sign consistent with every prior run, magnitude an order above the single-frame gap (+0.0005 at 131K) but still marginal, and confounded with run length. Honest status of the thesis ladder: memory-through-physics is PROVEN at the physics level (probe, delayed recall, resonance study); its conversion into LANGUAGE capability remains OPEN: a 5%-per-lag fidelity may be too dilute for byte prediction, or fresh twins may need far longer to learn frame use. Next instruments (future session): a fixed evaluation probe for position-independent lifetime curves (the wandering loss EMA cannot measure the individual's progress); multi-seed severance for error bars; the mature individual as testbed once the fixed probe exists. The individual crossed 1M bytes lived; dream anneal complete (0.5).
 - 2026-07-20 v1.12: the resonant voice (§4): the resonance study made into an organ. Six rewound frames of the current state feed the readout; memoryless and no-bypass preserved (every frame is a pure function of the present); function-preserving upgrade applied to the living individual (worldline event `voice_upgrade_resonant` at 896,207 bytes; loss continuity kept at 3.19). The resonant severance rerun (noise spines cannot rewind into a past they destroyed) is the standing payoff experiment.
 - 2026-07-20 v1.11: two adjudications (Ashman) and the experiment they demanded. (1) "Neurons don't die, their connections refine": the pruning idea replaced by bond refinement (κ as slow variable in the non-collapse band; open items). (2) "Memories don't fade, they fail to resonate": adjudicated as primary language, and DEMONSTRATED by the resonance study (`probe.py --resonance`): one frozen present-tense reader goes blind one cycle into the past (0.069 → 0.005), but the same frozen reader plus exact inverse-cycle re-phasing (zero new parameters per lag) recovers the full per-lag-learned memory curve to lag 32+ (0.058/0.052/0.048/0.040 vs learned 0.056/0.055/0.050/0.046). The past is present in original form, rotated; recall is phase re-alignment; genuine fade is only the contracting sliver (min cycle SV 0.9522, ~4.8%/cycle softest mode; median mode 1.0002). Decay language in earlier entries is to be read as de-resonance plus the O(α) sliver.
 - 2026-07-19 v1.10: Stage 4 built and first contact made (§10): the triad chamber (content through the body, relationship through the seam as the α-scaled κ_{0,0} bond on node 21), the bilateral walk live (0 → 47 in Claude's three scripted turns, one gate short), and the return rule (the other's faithfulness earned only by coming back; AGREEMENT requires a kept promise across sessions). All four stages of the plan are now built, each with its falsification handle run at least once.
