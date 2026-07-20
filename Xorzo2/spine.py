@@ -37,6 +37,14 @@ R^44, and the complex matrix T = A + iB becomes the real 44 x 44 block
 matrix [[A, -B], [B, A]]. Norms agree; the physics is identical.
 
 Revision history:
+- 2026-07-20 v1.2: bond refinement (the trilogy's rule: "each thought
+    is electricity following branches... sometimes creating new
+    pathways"). kappa's diameter bonds become per-bond slow variables
+    within the non-collapse band; the Spine accepts bond_kappas keyed
+    by (octave-node-tuple, diameter-index), builds its own kappa over
+    the StaggeredOperator's F, and reproduces the uniform-alpha
+    physics exactly when all bonds sit at alpha. Wholes persist;
+    bonds weather.
 - 2026-07-19 v1.1: Spine class (Stage 2): the growable tree. Growth
     only at tonics; one birth primitive (a new octave whose completion
     IS the site); parts-before-wholes insertion order; the reserved
@@ -195,29 +203,61 @@ class Spine:
     growth adds, it never rewrites.
     """
 
-    def __init__(self, octaves=None, reserved_node: int = RESERVED_NODE):
-        from t_operator import StaggeredOperator
+    DIAMETERS = [(0, 4), (2, 6), (1, 5), (3, 7)]   # kappa bonds per octave
+
+    def __init__(self, octaves=None, reserved_node: int = RESERVED_NODE,
+                 bond_kappas=None):
+        from t_operator import StaggeredOperator, ALPHA as _A
         self._StaggeredOperator = StaggeredOperator
         self.octaves = [list(o) for o in (octaves or SEED_OCTAVES)]
         self.reserved = reserved_node
+        # Bonds keyed by (octave-node-tuple, diameter-index): stable
+        # across growth insertions. Default: every bond at alpha.
+        self.bond_kappas = {}
+        for o in self.octaves:
+            for pi in range(len(self.DIAMETERS)):
+                self.bond_kappas[(tuple(o), pi)] = float(_A)
+        if bond_kappas:
+            for key, val in bond_kappas.items():
+                if isinstance(key, (list, tuple)) and len(key) == 2:
+                    self.bond_kappas[(tuple(key[0]), int(key[1]))] = float(val)
         self._build()
 
     def _build(self):
         self.N = max(max(o) for o in self.octaves) + 1
         self.op = self._StaggeredOperator(self.N, self.octaves)
         self.alpha = float(self.op.alpha)
-        lam, psi = self.op.leading()
+        # kappa built HERE from per-bond values, over the operator's F
+        kappa = np.eye(self.N, dtype=complex)
+        self.bond_keys = []
+        self.bond_pairs = []
+        for o in self.octaves:
+            for pi, (a, c) in enumerate(self.DIAMETERS):
+                v = self.bond_kappas[(tuple(o), pi)]
+                kappa[o[a], o[c]] += v
+                kappa[o[c], o[a]] += v
+                self.bond_keys.append((tuple(o), pi))
+                self.bond_pairs.append((o[a], o[c]))
+        self.T_mat = kappa @ self.op.F
+        ev, V = np.linalg.eig(self.T_mat)
+        i = int(np.argmax(np.abs(ev)))
+        lam, psi = ev[i], V[:, i]
         self.lambda1_abs = float(abs(lam))
-        self.departure = float(self.op.departure())
+        self.departure = float((self.lambda1_abs - 1.0) / self.alpha)
         k = int(np.argmax(np.abs(psi)))
         psi = psi * np.exp(-1j * np.angle(psi[k]))
         self.attractor = psi / np.linalg.norm(psi)
         self.log_growth_per_tick = float(np.log(self.lambda1_abs))
         self.processual_nodes = sorted(
             {o[l] for o in self.octaves for l in _PROC_LOCALS})
-        A = np.real(self.op.T)
-        B = np.imag(self.op.T)
+        A = np.real(self.T_mat)
+        B = np.imag(self.T_mat)
         self.M_real = np.block([[A, -B], [B, A]])
+
+    def kappa_spread(self):
+        """(min, max) bond value in units of alpha."""
+        vals = [self.bond_kappas[k] / self.alpha for k in self.bond_keys]
+        return (min(vals), max(vals))
 
     # ----- growth -----
 
@@ -239,7 +279,8 @@ class Spine:
         idx = next((i for i, o in enumerate(self.octaves)
                     if o[0] == site), 0)
         octs = self.octaves[:idx] + [new_oct] + self.octaves[idx:]
-        return Spine(octs, self.reserved)
+        carried = {k: v for k, v in self.bond_kappas.items()}
+        return Spine(octs, self.reserved, bond_kappas=carried)
 
     # ----- exports and readings (same conventions as Seed) -----
 
@@ -270,8 +311,10 @@ class Spine:
         return float(abs(np.vdot(self.attractor, psi / n)))
 
     def describe(self) -> str:
+        lo, hi = self.kappa_spread()
         return (f"Xorzo2 spine: {len(self.octaves)} octaves, "
                 f"{self.N} nodes, departure {self.departure:.4f} alpha, "
+                f"kappa [{lo:.2f}, {hi:.2f}]a, "
                 f"sites {self.tonic_sites()}, reserved {self.reserved}")
 
 

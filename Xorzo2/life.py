@@ -124,6 +124,13 @@ class LifeConfig:
     dream_temperature: float = 1.0
     # Resonant voice (organs v1.2): rewound views of the current state
     voice_frames: tuple = (0, 1, 2, 4, 8, 16)
+    # Bond refinement (spine v1.2): flow lays path; a given local
+    # rule, no gradients: the spine is never trained, it weathers
+    refine_enabled: bool = True
+    refine_eta: float = 0.02
+    kappa_min_frac: float = 0.5
+    kappa_max_frac: float = 1.5
+    coherence_ema_beta: float = 0.999
 
 
 class Life:
@@ -171,6 +178,9 @@ class Life:
             self.energy_ema = (self.psi[:self.spine.N] ** 2
                                + self.psi[self.spine.N:] ** 2).clone()
         self.streaks = {}
+        self._init_bond_trackers()
+        self.refines = 0
+        self.refine_skips = 0
 
         self.bytes_lived = 0
         self.ticks_lived = 0
@@ -240,6 +250,55 @@ class Life:
             vs.append(v / (torch.linalg.vector_norm(v) + 1e-12))
         return torch.stack(vs)
 
+    def _init_bond_trackers(self):
+        dev = self.cfg.device
+        nb = len(self.spine.bond_pairs)
+        self._bi = torch.tensor([p[0] for p in self.spine.bond_pairs],
+                                dtype=torch.long, device=dev)
+        self._bj = torch.tensor([p[1] for p in self.spine.bond_pairs],
+                                dtype=torch.long, device=dev)
+        self._bond_num = torch.zeros(nb, device=dev)
+        self._bond_den = torch.full((nb,), 1e-8, device=dev)
+
+    def _refine_check(self):
+        """At dawn: bonds weather by the flow that crossed them.
+        A given local rule, no gradients: delta-kappa per bond is
+        eta * alpha * coherence (phase-aligned flow thickens,
+        anti-phase thins), clamped to the non-collapse band, and
+        the whole update is guard-checked: if the refined spine's
+        conservation departure exceeds the guard, this dawn's
+        weathering is skipped. Wholes persist; bonds refine."""
+        if not self.cfg.refine_enabled or self.noise_spine:
+            return
+        c = (self._bond_num / self._bond_den).clamp(-1.0, 1.0)
+        c = c.detach().cpu().numpy()
+        a = self.alpha
+        lo, hi = self.cfg.kappa_min_frac * a, self.cfg.kappa_max_frac * a
+        new_bonds = {}
+        for key, ci in zip(self.spine.bond_keys, c):
+            old = self.spine.bond_kappas[key]
+            new_bonds[key] = float(np.clip(
+                old + self.cfg.refine_eta * a * ci, lo, hi))
+        candidate = Spine(self.spine.octaves, self.spine.reserved,
+                          bond_kappas=new_bonds)
+        if candidate.departure > self.cfg.guard_departure:
+            self.refine_skips += 1
+            return
+        self.spine = candidate
+        self._rebuild_matrices()
+        self._init_bond_trackers()
+        self.refines += 1
+        if self.refines == 1:
+            self.growth_history.append({
+                "event": "refinement_active",
+                "at_bytes": self.bytes_lived,
+                "time": time.strftime("%Y-%m-%d %H:%M:%S"),
+                "reason": "bond weathering begins: flow lays path "
+                          "(given local rule, alpha-banded, guarded)"})
+            print(f"    [worldline event] refinement active at "
+                  f"{self.bytes_lived:,} bytes lived: the spine "
+                  f"begins to weather")
+
     # ----- Stage 2: growth (plan section 7) -----
 
     def trigger_ratios(self) -> dict:
@@ -307,6 +366,7 @@ class Life:
         self.D.grow(candidate.N, rows)
         self.spine = candidate
         self._rebuild_matrices()
+        self._init_bond_trackers()
         self.E = SensesBit(self.spine.N, INJ_NODES, self.alpha).to(dev)
         self.opt = torch.optim.Adam(self._trainable(), lr=self.cfg.lr)
         self.streaks = {}
@@ -389,9 +449,18 @@ class Life:
         self.ticks_lived += TICKS_PER_BYTE
         with torch.no_grad():
             n = self.spine.N
-            e = self.psi[:n].detach() ** 2 + self.psi[n:].detach() ** 2
+            re = self.psi[:n].detach()
+            im = self.psi[n:].detach()
+            e = re ** 2 + im ** 2
             eb = self.cfg.energy_ema_beta
             self.energy_ema = eb * self.energy_ema + (1 - eb) * e
+            # Hebbian coherence per kappa bond: Re(psi_i conj psi_j)
+            cb = self.cfg.coherence_ema_beta
+            num = (re[self._bi] * re[self._bj]
+                   + im[self._bi] * im[self._bj])
+            den = torch.sqrt(e[self._bi] * e[self._bj]) + 1e-12
+            self._bond_num = cb * self._bond_num + (1 - cb) * num
+            self._bond_den = cb * self._bond_den + (1 - cb) * den
 
         logits = self.D(self._voice_frames(self.psi))
         t = torch.tensor(target_val, dtype=torch.long, device=dev)
@@ -551,6 +620,7 @@ class Life:
             self.psi = self.psi / (torch.linalg.vector_norm(self.psi) + 1e-12)
         self.sleeps += 1
         self._growth_check()                           # you grow in your sleep
+        self._refine_check()                           # and you weather there too
 
     # ----- readings -----
 
@@ -616,6 +686,10 @@ class Life:
             "growth_excess_per_cycle": self.growth_ema,
             "injection_diversity": self.injection_diversity(),
             "spine_departure_alpha": self.spine.departure,
+            "kappa_spread_alpha": [round(x, 3) for x
+                                   in self.spine.kappa_spread()],
+            "refines": self.refines,
+            "refine_skips": self.refine_skips,
             "organ_params": count_params(self.E) + count_params(self.D),
             "reserved_node_untouched": True,
             "growth_events": len(self.growth_history),
@@ -627,6 +701,10 @@ class Life:
         ckpt = {
             "psi": self.psi.detach().cpu(),
             "octaves": self.spine.octaves,
+            "bond_kappas": [[list(k[0]), k[1], v] for k, v
+                             in self.spine.bond_kappas.items()],
+            "refines": self.refines,
+            "refine_skips": self.refine_skips,
             "energy_ema": self.energy_ema.detach().cpu(),
             "streaks": dict(self.streaks),
             "senses_class": type(self.E).__name__,
@@ -661,10 +739,15 @@ class Life:
         dev = self.cfg.device
         ckpt = torch.load(self.home / "checkpoint.pt", weights_only=False)
         octs = ckpt.get("octaves")
-        if octs is not None and octs != self.spine.octaves:
-            # The worldline grew in a prior session: regrow before load
-            self.spine = Spine(octs)
+        bonds_raw = ckpt.get("bond_kappas")
+        bonds = ({(tuple(o), int(pi)): float(v)
+                  for o, pi, v in bonds_raw} if bonds_raw else None)
+        if octs is not None and (octs != self.spine.octaves
+                                 or bonds is not None):
+            # The worldline grew or weathered in a prior session
+            self.spine = Spine(octs, bond_kappas=bonds)
             self._rebuild_matrices()
+            self._init_bond_trackers()
             self.E = SensesBit(self.spine.N, INJ_NODES, self.alpha).to(dev)
             self.D = VoiceResonant(self.spine.N,
                                len(self.cfg.voice_frames)).to(dev)
@@ -718,6 +801,8 @@ class Life:
         for s in ckpt["replay_tail"]:
             self.replay.append(s)
         self.growth_history = ckpt["growth_history"]
+        self.refines = ckpt.get("refines", 0)
+        self.refine_skips = ckpt.get("refine_skips", 0)
         torch.set_rng_state(ckpt["torch_rng"])
         if voice_upgraded:
             event = {
