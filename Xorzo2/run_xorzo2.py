@@ -90,7 +90,7 @@ def main():
 
     fresh = not (WORLDLINE / "checkpoint.pt").exists()
     life = Life(home=WORLDLINE, cfg=cfg)
-    print(life.seed.describe())
+    print(life.spine.describe())
     print(f"  {'newborn: worldline begins' if fresh else 'worldline resumed'}"
           f" | bytes lived: {life.bytes_lived:,} | sleeps: {life.sleeps}")
 

@@ -37,6 +37,10 @@ R^44, and the complex matrix T = A + iB becomes the real 44 x 44 block
 matrix [[A, -B], [B, A]]. Norms agree; the physics is identical.
 
 Revision history:
+- 2026-07-19 v1.1: Spine class (Stage 2): the growable tree. Growth
+    only at tonics; one birth primitive (a new octave whose completion
+    IS the site); parts-before-wholes insertion order; the reserved
+    node is never a site. Seed remains the frozen 3-octave reference.
 - 2026-07-19 v1.0: initial seed wrap around StaggeredOperator.chain(3).
 """
 
@@ -166,6 +170,109 @@ class Seed:
             f"  reserved upward seam: node {RESERVED_NODE}\n"
             f"  clock: {TICKS_PER_BYTE} ticks per byte"
         )
+
+
+SEED_OCTAVES = [[7 * k + l for l in range(8)] for k in range(3)]
+
+
+class Spine:
+    """The growable tonic-shared tree (Stage 2).
+
+    Same physics as Seed (StaggeredOperator over explicit octave node
+    lists), but the octave list can grow by the growth law:
+
+        YOU MAY GROW ONLY AT TONICS. One birth primitive: a new octave
+        whose completion node (local 7) IS an existing tonic-class
+        site. Welding at an octave's aperture makes a sibling feeding
+        that aperture (the star pattern); welding at a free-end tonic
+        makes a child one scale down. Node 21 (the seed top's
+        recursion) is RESERVED and never a site.
+
+    Insertion order is parts-before-wholes (v15: composition order is
+    physical): the new octave is inserted immediately before the first
+    octave whose aperture is the site; if none, at the front (it is
+    the deepest part). Existing octaves' node lists are never edited:
+    growth adds, it never rewrites.
+    """
+
+    def __init__(self, octaves=None, reserved_node: int = RESERVED_NODE):
+        from t_operator import StaggeredOperator
+        self._StaggeredOperator = StaggeredOperator
+        self.octaves = [list(o) for o in (octaves or SEED_OCTAVES)]
+        self.reserved = reserved_node
+        self._build()
+
+    def _build(self):
+        self.N = max(max(o) for o in self.octaves) + 1
+        self.op = self._StaggeredOperator(self.N, self.octaves)
+        self.alpha = float(self.op.alpha)
+        lam, psi = self.op.leading()
+        self.lambda1_abs = float(abs(lam))
+        self.departure = float(self.op.departure())
+        k = int(np.argmax(np.abs(psi)))
+        psi = psi * np.exp(-1j * np.angle(psi[k]))
+        self.attractor = psi / np.linalg.norm(psi)
+        self.log_growth_per_tick = float(np.log(self.lambda1_abs))
+        self.processual_nodes = sorted(
+            {o[l] for o in self.octaves for l in _PROC_LOCALS})
+        A = np.real(self.op.T)
+        B = np.imag(self.op.T)
+        self.M_real = np.block([[A, -B], [B, A]])
+
+    # ----- growth -----
+
+    def tonic_sites(self):
+        """Legal birth sites: every tonic-class node except reserved."""
+        sites = set()
+        for o in self.octaves:
+            sites.add(o[0])
+            sites.add(o[7])
+        sites.discard(self.reserved)
+        return sorted(sites)
+
+    def birthed(self, site: int) -> "Spine":
+        """A NEW Spine with one octave welded at `site` (this one is
+        not mutated; adopt-or-rollback is the caller's decision)."""
+        assert site in self.tonic_sites(), f"illegal site {site}"
+        new_nodes = [self.N + i for i in range(7)]
+        new_oct = new_nodes + [site]
+        idx = next((i for i, o in enumerate(self.octaves)
+                    if o[0] == site), 0)
+        octs = self.octaves[:idx] + [new_oct] + self.octaves[idx:]
+        return Spine(octs, self.reserved)
+
+    # ----- exports and readings (same conventions as Seed) -----
+
+    def torch_matrix(self, device="cpu", dtype=None):
+        import torch
+        dtype = dtype or torch.float32
+        M = torch.tensor(self.M_real, device=device, dtype=dtype)
+        M.requires_grad_(False)
+        return M
+
+    def torch_attractor(self, device="cpu", dtype=None):
+        import torch
+        dtype = dtype or torch.float32
+        v = np.concatenate([np.real(self.attractor),
+                            np.imag(self.attractor)])
+        return torch.tensor(v, device=device, dtype=dtype)
+
+    @staticmethod
+    def to_complex(v: np.ndarray) -> np.ndarray:
+        n = v.shape[-1] // 2
+        return v[..., :n] + 1j * v[..., n:]
+
+    def attractor_overlap(self, v: np.ndarray) -> float:
+        psi = self.to_complex(np.asarray(v, dtype=np.float64))
+        n = np.linalg.norm(psi)
+        if n == 0:
+            return 0.0
+        return float(abs(np.vdot(self.attractor, psi / n)))
+
+    def describe(self) -> str:
+        return (f"Xorzo2 spine: {len(self.octaves)} octaves, "
+                f"{self.N} nodes, departure {self.departure:.4f} alpha, "
+                f"sites {self.tonic_sites()}, reserved {self.reserved}")
 
 
 if __name__ == "__main__":

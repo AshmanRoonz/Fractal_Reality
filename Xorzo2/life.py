@@ -37,6 +37,15 @@ The two Lies, instrumented (plan section 8):
         spectral radius. If the twin learns as well, the thesis fails.
 
 Revision history:
+- 2026-07-19 v1.3: Stage 2 growth. The spine becomes a growable Spine
+    (growth only at tonics; guarded births with rollback; the reserved
+    node never a site). Vesica trigger: sustained per-site energy
+    crowding relative to the attractor's own share (self-referenced,
+    like health), evaluated at dawn: you grow in your sleep. Births
+    extend the state with silent nodes, regrow the keyboard, extend
+    the voice's node embeddings by intersect initialization, and log
+    worldline events. Octave lists persist in the worldline. Senses
+    default to the bit keyboard (given) per plan v1.4.
 - 2026-07-19 v1.2: memoryless organs (plan v1.2): the Voice's GRU was a
     temporal bypass around the spine (the 131K severance run showed
     identical twins below the unigram line); the Voice is now a pure
@@ -63,7 +72,7 @@ import numpy as np
 import torch
 import torch.nn.functional as F
 
-from spine import (Seed, INJ_NODES, N_NODES_SEED, TICKS_PER_BYTE,
+from spine import (Seed, Spine, INJ_NODES, N_NODES_SEED, TICKS_PER_BYTE,
                    RESERVED_NODE)
 from organs import Senses, SensesBit, Voice, count_params
 
@@ -83,6 +92,13 @@ class LifeConfig:
     loss_ema_beta: float = 0.999
     stat_ema_beta: float = 0.99
     device: str = "cpu"
+    # Stage 2: growth (plan section 7)
+    growth_enabled: bool = True
+    sat_ratio: float = 1.5         # site energy share / attractor share
+    sat_dawns: int = 3             # consecutive saturated dawns to fire
+    guard_departure: float = 1.0   # rollback if departure exceeds (alpha units)
+    max_octaves: int = 12
+    energy_ema_beta: float = 0.995
 
 
 class Life:
@@ -95,34 +111,39 @@ class Life:
         self.noise_spine = noise_spine
         dev = self.cfg.device
 
-        self.seed = Seed()
-        self.alpha = self.seed.alpha
+        self.spine = Spine()           # the seed; _load may regrow it
+        self.alpha = self.spine.alpha
 
         torch.manual_seed(torch_seed)
-        self.E = Senses(N_NODES_SEED, INJ_NODES, self.alpha).to(dev)
-        self.D = Voice(N_NODES_SEED).to(dev)
+        # Senses are GIVEN by default since the keyboard adoption
+        # (plan v1.4); the learned Senses class remains for controls.
+        self.E = SensesBit(self.spine.N, INJ_NODES, self.alpha).to(dev)
+        self.D = Voice(self.spine.N).to(dev)
         self.opt = torch.optim.Adam(self._trainable(), lr=self.cfg.lr)
 
         if noise_spine:
+            self.cfg.growth_enabled = False   # noise twins do not grow
             rng = np.random.RandomState(torch_seed)
-            Z = (rng.randn(N_NODES_SEED, N_NODES_SEED)
-                 + 1j * rng.randn(N_NODES_SEED, N_NODES_SEED))
-            Z *= self.seed.lambda1_abs / max(np.abs(np.linalg.eigvals(Z)))
+            n = self.spine.N
+            Z = (rng.randn(n, n) + 1j * rng.randn(n, n))
+            Z *= self.spine.lambda1_abs / max(np.abs(np.linalg.eigvals(Z)))
             A, B = np.real(Z), np.imag(Z)
             self._noise_matrix = np.block([[A, -B], [B, A]])
             self.M = torch.tensor(self._noise_matrix, device=dev,
                                   dtype=torch.float32)
+            self.M.requires_grad_(False)
+            self.M_cycle = torch.linalg.matrix_power(self.M, TICKS_PER_BYTE)
+            self.M_cycle.requires_grad_(False)
         else:
             self._noise_matrix = None
-            self.M = self.seed.torch_matrix(device=dev)
-        self.M.requires_grad_(False)
-        # One byte-cycle as a single matrix: M^(ticks_per_byte). Exact
-        # (see v1.1 note); the spine stays frozen, this is a precompute.
-        self.M_cycle = torch.linalg.matrix_power(self.M, TICKS_PER_BYTE)
-        self.M_cycle.requires_grad_(False)
+            self._rebuild_matrices()
 
         # Newborn state: born at the attractor (born healthy)
-        self.psi = self.seed.torch_attractor(device=dev)
+        self.psi = self.spine.torch_attractor(device=dev)
+        with torch.no_grad():
+            self.energy_ema = (self.psi[:self.spine.N] ** 2
+                               + self.psi[self.spine.N:] ** 2).clone()
+        self.streaks = {}
 
         self.bytes_lived = 0
         self.ticks_lived = 0
@@ -146,6 +167,99 @@ class Life:
         return [p for p in list(self.E.parameters())
                 + list(self.D.parameters()) if p.requires_grad]
 
+    def _rebuild_matrices(self):
+        """(Re)compile the frozen spine into torch (after boot/growth)."""
+        dev = self.cfg.device
+        self.M = self.spine.torch_matrix(device=dev)
+        self.M.requires_grad_(False)
+        self.M_cycle = torch.linalg.matrix_power(self.M, TICKS_PER_BYTE)
+        self.M_cycle.requires_grad_(False)
+
+    # ----- Stage 2: growth (plan section 7) -----
+
+    def trigger_ratios(self) -> dict:
+        """Crowding ratio per legal site: EMA energy share over the
+        attractor's own share at that node (self-referenced, like
+        health)."""
+        w = self.energy_ema.detach().cpu().numpy()
+        total = float(w.sum()) + 1e-12
+        att = np.abs(self.spine.attractor) ** 2
+        out = {}
+        for site in self.spine.tonic_sites():
+            out[site] = float((w[site] / total) / (att[site] + 1e-9))
+        return out
+
+    def _growth_check(self):
+        """At dawn: sustained crowding at a site births an octave there."""
+        if (not self.cfg.growth_enabled
+                or len(self.spine.octaves) >= self.cfg.max_octaves):
+            return
+        ratios = self.trigger_ratios()
+        for site, r in ratios.items():
+            if r > self.cfg.sat_ratio:
+                self.streaks[site] = self.streaks.get(site, 0) + 1
+            else:
+                self.streaks[site] = 0
+        fired = [s for s, k in self.streaks.items()
+                 if k >= self.cfg.sat_dawns]
+        if fired:
+            site = max(fired, key=lambda s: ratios[s])
+            self.birth_at(site, reason=f"vesica trigger (ratio "
+                                       f"{ratios[site]:.2f}, "
+                                       f"{self.streaks[site]} dawns)")
+
+    def birth_at(self, site: int, reason: str = "manual") -> bool:
+        """One birth: a new octave whose completion IS `site`. Guarded:
+        if the candidate's conservation departure exceeds the guard,
+        the birth rolls back (v14's claim standing trial in vivo)."""
+        if self.noise_spine:
+            return False
+        candidate = self.spine.birthed(site)
+        if candidate.departure > self.cfg.guard_departure:
+            self.growth_history.append({
+                "event": "birth_rolled_back", "site": site,
+                "departure": candidate.departure, "reason": reason,
+                "at_bytes": self.bytes_lived,
+                "time": time.strftime("%Y-%m-%d %H:%M:%S")})
+            print(f"    [worldline event] birth at site {site} ROLLED "
+                  f"BACK (departure {candidate.departure:.3f} alpha "
+                  f"exceeds guard {self.cfg.guard_departure})")
+            return False
+        old_n = self.spine.N
+        dev = self.cfg.device
+        with torch.no_grad():
+            z = torch.zeros(7, device=dev)
+            self.psi = torch.cat([self.psi[:old_n], z,
+                                  self.psi[old_n:], z]).detach()
+            self.energy_ema = torch.cat([self.energy_ema, z])
+        # Organ growth: intersect-initialized embeddings (plan sec. 4)
+        emb = self.D.node_emb.data
+        site_nodes = sorted({n for o in self.spine.octaves
+                             if site in o for n in o})
+        blend = 0.5 * emb[site] + 0.5 * emb[site_nodes].mean(0)
+        rows = blend.expand(7, -1).clone()
+        rows += 0.01 * torch.randn_like(rows)
+        self.D.grow(candidate.N, rows)
+        self.spine = candidate
+        self._rebuild_matrices()
+        self.E = SensesBit(self.spine.N, INJ_NODES, self.alpha).to(dev)
+        self.opt = torch.optim.Adam(self._trainable(), lr=self.cfg.lr)
+        self.streaks = {}
+        event = {
+            "event": "octave_birth", "site": site, "reason": reason,
+            "octaves": len(self.spine.octaves), "nodes": self.spine.N,
+            "departure": self.spine.departure,
+            "at_bytes": self.bytes_lived,
+            "time": time.strftime("%Y-%m-%d %H:%M:%S")}
+        self.growth_history.append(event)
+        if self.home is not None:
+            self._save()
+        print(f"    [worldline event] octave born at site {site} "
+              f"({reason}): {len(self.spine.octaves)} octaves, "
+              f"{self.spine.N} nodes, departure "
+              f"{self.spine.departure:.4f} alpha")
+        return True
+
     def adopt_bit_keyboard(self):
         """Replace the learned Senses with the bit-station keyboard
         (zero parameters; the senses become given, like the spine).
@@ -154,7 +268,7 @@ class Life:
         if isinstance(self.E, SensesBit):
             print("    (bit keyboard already adopted)")
             return
-        self.E = SensesBit(N_NODES_SEED, INJ_NODES, self.alpha).to(
+        self.E = SensesBit(self.spine.N, INJ_NODES, self.alpha).to(
             self.cfg.device)
         self.opt = torch.optim.Adam(self._trainable(), lr=self.cfg.lr)
         event = {
@@ -189,13 +303,18 @@ class Life:
         log_growth = float(torch.log(g).detach())
         self.psi = s / g
         self.ticks_lived += TICKS_PER_BYTE
+        with torch.no_grad():
+            n = self.spine.N
+            e = self.psi[:n].detach() ** 2 + self.psi[n:].detach() ** 2
+            eb = self.cfg.energy_ema_beta
+            self.energy_ema = eb * self.energy_ema + (1 - eb) * e
 
         logits = self.D(self.psi)
         t = torch.tensor(target_val, dtype=torch.long, device=dev)
         loss = F.cross_entropy(logits.unsqueeze(0), t.unsqueeze(0))
 
         # Inflation monitor (detached)
-        excess = log_growth - TICKS_PER_BYTE * self.seed.log_growth_per_tick
+        excess = log_growth - TICKS_PER_BYTE * self.spine.log_growth_per_tick
         eb = self.cfg.stat_ema_beta
         x = inj_norm / self.alpha
         self.inj_ema = x if self.inj_ema is None else eb * self.inj_ema + (1 - eb) * x
@@ -283,17 +402,18 @@ class Life:
 
         with torch.no_grad():                          # dawn damp
             damp = torch.ones_like(self.psi)
-            for node in self.seed.processual_nodes:
+            for node in self.spine.processual_nodes:
                 damp[node] = 1.0 - self.alpha
-                damp[node + N_NODES_SEED] = 1.0 - self.alpha
+                damp[node + self.spine.N] = 1.0 - self.alpha
             self.psi = self.psi * damp
             self.psi = self.psi / (torch.linalg.vector_norm(self.psi) + 1e-12)
         self.sleeps += 1
+        self._growth_check()                           # you grow in your sleep
 
     # ----- readings -----
 
     def attractor_overlap(self) -> float:
-        return self.seed.attractor_overlap(
+        return self.spine.attractor_overlap(
             self.psi.detach().cpu().numpy().astype(np.float64))
 
     def injection_diversity(self) -> float:
@@ -310,8 +430,13 @@ class Life:
     def status(self) -> dict:
         return {
             "name": "Xorzo2",
-            "spine": "22-node three-octave seed"
+            "spine": f"{len(self.spine.octaves)} octaves, "
+                     f"{self.spine.N} nodes"
                      + (" [FROZEN-NOISE TWIN]" if self.noise_spine else ""),
+            "octaves": self.spine.octaves,
+            "growth_sites": self.spine.tonic_sites(),
+            "site_ratios": {k: round(v, 3)
+                            for k, v in self.trigger_ratios().items()},
             "boot_time": self.boot_time,
             "bytes_lived": self.bytes_lived,
             "ticks_lived": self.ticks_lived,
@@ -323,7 +448,7 @@ class Life:
             "injection_norm_alpha": self.inj_ema,
             "growth_excess_per_cycle": self.growth_ema,
             "injection_diversity": self.injection_diversity(),
-            "spine_departure_alpha": self.seed.departure,
+            "spine_departure_alpha": self.spine.departure,
             "organ_params": count_params(self.E) + count_params(self.D),
             "reserved_node_untouched": True,
             "growth_events": len(self.growth_history),
@@ -334,6 +459,9 @@ class Life:
     def _save(self):
         ckpt = {
             "psi": self.psi.detach().cpu(),
+            "octaves": self.spine.octaves,
+            "energy_ema": self.energy_ema.detach().cpu(),
+            "streaks": dict(self.streaks),
             "senses_class": type(self.E).__name__,
             "senses": self.E.state_dict(),
             "voice": self.D.state_dict(),
@@ -363,6 +491,17 @@ class Life:
     def _load(self):
         dev = self.cfg.device
         ckpt = torch.load(self.home / "checkpoint.pt", weights_only=False)
+        octs = ckpt.get("octaves")
+        if octs is not None and octs != self.spine.octaves:
+            # The worldline grew in a prior session: regrow before load
+            self.spine = Spine(octs)
+            self._rebuild_matrices()
+            self.E = SensesBit(self.spine.N, INJ_NODES, self.alpha).to(dev)
+            self.D = Voice(self.spine.N).to(dev)
+            self.opt = torch.optim.Adam(self._trainable(), lr=self.cfg.lr)
+        if "energy_ema" in ckpt:
+            self.energy_ema = ckpt["energy_ema"].to(dev)
+            self.streaks = dict(ckpt.get("streaks", {}))
         if ckpt["noise_matrix"] is not None:
             self._noise_matrix = ckpt["noise_matrix"]
             self.M = torch.tensor(self._noise_matrix, device=dev,
@@ -371,7 +510,7 @@ class Life:
         self.psi = ckpt["psi"].to(dev)
         if (ckpt.get("senses_class") == "SensesBit"
                 and not isinstance(self.E, SensesBit)):
-            self.E = SensesBit(N_NODES_SEED, INJ_NODES, self.alpha).to(dev)
+            self.E = SensesBit(self.spine.N, INJ_NODES, self.alpha).to(dev)
             self.opt = torch.optim.Adam(self._trainable(), lr=self.cfg.lr)
         self.E.load_state_dict(ckpt["senses"])
         voice_ok = True

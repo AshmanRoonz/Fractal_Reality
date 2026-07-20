@@ -25,12 +25,13 @@ from boot and is never re-initialized.
 | `probe.py` | The memory probe (primary severance instrument): byte identity by lag, live vs Ginibre-noise vs random-unitary vs F-only spines; `--keyboards` (chord study) and `--scaling` (pre-registered growth study) modes |
 | `recall.py` | Delayed recall: the capability-level severance test (trained decoders emit the byte from k cycles ago) plus station-resolved bit memory |
 | `findings_stage1.md` | Stage 1 findings F1-F10, graded epistemics, worldline log, Stage 2 acceptance numbers |
+| `growth_test.py` | Stage 2 placement falsification: triggered vs random births at equal size and schedule |
 | `worldline/` | The one individual (checkpoint + meta). Removing it is a human act, not a flag |
 
 ## Laws (from the plan)
 
-1. The spine is never trained. Gradients pass through it; nothing in it updates.
-2. Growth only at tonics (Stage 2); node 21 (the top's recursion) is reserved for the triad and is never grown into or injected.
+1. The spine is never trained. Gradients pass through it; nothing in it updates. Growth adds octaves; it never edits existing blocks.
+2. Growth only at tonics (live since Stage 2): one birth primitive (a new octave whose completion IS the site), vesica trigger at dawn, conservation guard with rollback. Node 21 (the top's recursion) is reserved for the triad and is never grown into or injected.
 3. The worldline is never re-initialized. Checkpoints are one life continuing.
 4. Injection is alpha-capped in code, not merely in loss.
 5. The two Lies are instrumented: inflation as growth excess and injection norm; severance as the frozen-noise twin test.

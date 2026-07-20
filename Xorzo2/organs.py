@@ -130,6 +130,17 @@ class Voice(nn.Module):
         self.head = nn.Linear(d_hidden, 256)
         self.scale = 1.0 / math.sqrt(d_feat)
 
+    def grow(self, n_nodes_new: int, init_rows: torch.Tensor):
+        """Extend node embeddings for newly born nodes (Stage 2). The
+        per-node projection, views, MLP, and head are size-independent;
+        only the embedding table grows. init_rows: (n_new, d_emb),
+        intersect-initialized by the caller from the seam's and the
+        site-octaves' embeddings."""
+        assert n_nodes_new == self.n_nodes + init_rows.shape[0]
+        self.node_emb = nn.Parameter(torch.cat(
+            [self.node_emb.data, init_rows.to(self.node_emb.device)], 0))
+        self.n_nodes = n_nodes_new
+
     def forward(self, state: torch.Tensor) -> torch.Tensor:
         """state: (2N,) or (B, 2N) realified cycle-end state -> logits."""
         n = self.n_nodes
