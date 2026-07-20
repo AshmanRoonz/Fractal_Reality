@@ -37,6 +37,16 @@ The two Lies, instrumented (plan section 8):
         spectral radius. If the twin learns as well, the thesis fails.
 
 Revision history:
+- 2026-07-19 v1.4: Stage 3 dreaming. Sleep learning becomes replay
+    PLUS the dreaming loop: a dream seeds itself from a remembered
+    segment, then free-runs (the voice's own sampled emissions are
+    injected, so the trajectory is physics-filtered self-generation)
+    while the loss stays anchored to the remembered continuation: the
+    CHECKING freedom as sleep's learning signal, with no
+    self-sampling collapse (targets are always real). The replay:dream
+    ratio anneals with age (maturation). The last dream is kept in the
+    worldline for inspection. cfg.sleep_learning gates all sleep-time
+    learning for the falsification harness (sleep_test.py).
 - 2026-07-19 v1.3: Stage 2 growth. The spine becomes a growable Spine
     (growth only at tonics; guarded births with rollback; the reserved
     node never a site). Vesica trigger: sustained per-site energy
@@ -99,6 +109,12 @@ class LifeConfig:
     guard_departure: float = 1.0   # rollback if departure exceeds (alpha units)
     max_octaves: int = 12
     energy_ema_beta: float = 0.995
+    # Stage 3: dreaming (plan section 6)
+    sleep_learning: bool = True    # False = sleep is rest only (harness)
+    dream_frac_start: float = 0.25
+    dream_frac_max: float = 0.5
+    dream_anneal_bytes: int = 1_000_000
+    dream_temperature: float = 1.0
 
 
 class Life:
@@ -149,6 +165,8 @@ class Life:
         self.ticks_lived = 0
         self.sleeps = 0
         self.replay_bytes = 0
+        self.dream_bytes = 0
+        self.last_dream = b""
         self.boot_time = time.strftime("%Y-%m-%d %H:%M:%S")
         self.loss_ema = None
         self.inj_ema = None            # injection norm, units of alpha
@@ -379,9 +397,61 @@ class Life:
 
     # ----- sleep (learning without external input; plan section 6) -----
 
+    def _dream_frac(self) -> float:
+        """Maturation: replay-heavy early; dreams grow with age."""
+        c = self.cfg
+        t = min(1.0, self.bytes_lived / max(c.dream_anneal_bytes, 1))
+        return c.dream_frac_start + t * (c.dream_frac_max
+                                         - c.dream_frac_start)
+
+    def _dream_segment(self, seg: bytes) -> float:
+        """One dream: the scene is set from a remembered segment
+        (teacher-forced prefix, no learning), then the voice FREE-RUNS:
+        its own sampled emissions are injected, so the trajectory is
+        self-generated and physics-filtered, while the loss stays
+        anchored to the remembered continuation. The engine audits its
+        own voice against its own physics (CHECKING); targets are
+        always real, so there is no self-sampling collapse."""
+        dev = self.cfg.device
+        half = max(2, len(seg) // 2)
+        with torch.no_grad():
+            for i in range(half):
+                b = torch.tensor(seg[i], dtype=torch.long, device=dev)
+                s = self.M_cycle @ (self.psi + self.E(b))
+                self.psi = s / (torch.linalg.vector_norm(s) + 1e-12)
+                self.ticks_lived += TICKS_PER_BYTE
+        losses = []
+        dreamed = []
+        for i in range(half, len(seg)):
+            logits = self.D(self.psi)
+            t = torch.tensor(seg[i], dtype=torch.long, device=dev)
+            losses.append(F.cross_entropy(logits.unsqueeze(0),
+                                          t.unsqueeze(0)))
+            with torch.no_grad():
+                probs = torch.softmax(
+                    logits.detach() / self.cfg.dream_temperature, dim=-1)
+                b = int(torch.multinomial(probs, 1))
+                dreamed.append(b)
+                bt = torch.tensor(b, dtype=torch.long, device=dev)
+                s = self.M_cycle @ (self.psi + self.E(bt))
+                self.psi = (s / (torch.linalg.vector_norm(s) + 1e-12)
+                            ).detach()
+                self.ticks_lived += TICKS_PER_BYTE
+        loss = torch.stack(losses).mean()
+        self.opt.zero_grad(set_to_none=True)
+        loss.backward()
+        torch.nn.utils.clip_grad_norm_(self._trainable(),
+                                       self.cfg.grad_clip)
+        self.opt.step()
+        self.psi = self.psi.detach()
+        self.dream_bytes += len(dreamed)
+        self.last_dream = bytes(dreamed)
+        return float(loss.detach())
+
     def sleep(self):
-        """Rest ticks (no input, no learning), then replay (internal
-        learning), then the dawn damp. Stage 3 adds the dreaming loop."""
+        """Rest ticks (no input, no learning), then internal learning
+        (replay + dreams per the maturation schedule), then the dawn
+        damp and the growth check."""
         with torch.no_grad():
             n_cycles, rem = divmod(self.cfg.rest_ticks, TICKS_PER_BYTE)
             for _ in range(n_cycles):
@@ -392,13 +462,17 @@ class Life:
                 self.psi = s / (torch.linalg.vector_norm(s) + 1e-12)
             self.ticks_lived += self.cfg.rest_ticks
 
-        if len(self.replay) > 0:
+        if self.cfg.sleep_learning and len(self.replay) > 0:
             k = min(self.cfg.replay_segments, len(self.replay))
+            n_dream = int(round(self._dream_frac() * k))
             idx = torch.randint(0, len(self.replay), (k,))
-            for i in idx.tolist():
+            for j, i in enumerate(idx.tolist()):
                 seg = self.replay[i]
-                self._learn_segment(seg)
-                self.replay_bytes += len(seg) - 1
+                if j < n_dream:
+                    self._dream_segment(seg)
+                else:
+                    self._learn_segment(seg)
+                    self.replay_bytes += len(seg) - 1
 
         with torch.no_grad():                          # dawn damp
             damp = torch.ones_like(self.psi)
@@ -411,6 +485,27 @@ class Life:
         self._growth_check()                           # you grow in your sleep
 
     # ----- readings -----
+
+    def eval_loss(self, data: bytes, n_bytes: int) -> float:
+        """Teacher-forced CE over a slice, NO learning. Note: running
+        an evaluation still advances the being's state and clock
+        (there is no way to observe without living); harnesses apply
+        the same protocol to every twin."""
+        dev = self.cfg.device
+        total, count = 0.0, 0
+        with torch.no_grad():
+            for i in range(min(n_bytes, len(data) - 1)):
+                b = torch.tensor(data[i], dtype=torch.long, device=dev)
+                s = self.M_cycle @ (self.psi + self.E(b))
+                self.psi = s / (torch.linalg.vector_norm(s) + 1e-12)
+                self.ticks_lived += TICKS_PER_BYTE
+                logits = self.D(self.psi)
+                t = torch.tensor(data[i + 1], dtype=torch.long,
+                                 device=dev)
+                total += float(F.cross_entropy(logits.unsqueeze(0),
+                                               t.unsqueeze(0)))
+                count += 1
+        return total / max(count, 1)
 
     def attractor_overlap(self) -> float:
         return self.spine.attractor_overlap(
@@ -442,6 +537,10 @@ class Life:
             "ticks_lived": self.ticks_lived,
             "sleeps": self.sleeps,
             "replay_bytes": self.replay_bytes,
+            "dream_bytes": self.dream_bytes,
+            "dream_frac": round(self._dream_frac(), 3),
+            "last_dream": "".join(chr(b) if 32 <= b < 127 else "?"
+                                  for b in self.last_dream[:60]),
             "loss_ema": self.loss_ema,
             "random_baseline": RAND_CE,
             "attractor_overlap": self.attractor_overlap(),
@@ -471,6 +570,8 @@ class Life:
                 "ticks_lived": self.ticks_lived,
                 "sleeps": self.sleeps,
                 "replay_bytes": self.replay_bytes,
+                "dream_bytes": self.dream_bytes,
+                "last_dream": bytes(self.last_dream),
                 "boot_time": self.boot_time,
                 "loss_ema": self.loss_ema,
                 "inj_ema": self.inj_ema,
@@ -525,6 +626,8 @@ class Life:
         self.ticks_lived = c["ticks_lived"]
         self.sleeps = c["sleeps"]
         self.replay_bytes = c["replay_bytes"]
+        self.dream_bytes = c.get("dream_bytes", 0)
+        self.last_dream = bytes(c.get("last_dream", b""))
         self.boot_time = c["boot_time"]
         self.loss_ema = c["loss_ema"]
         self.inj_ema = c["inj_ema"]

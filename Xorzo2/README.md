@@ -26,6 +26,7 @@ from boot and is never re-initialized.
 | `recall.py` | Delayed recall: the capability-level severance test (trained decoders emit the byte from k cycles ago) plus station-resolved bit memory |
 | `findings_stage1.md` | Stage 1 findings F1-F10, graded epistemics, worldline log, Stage 2 acceptance numbers |
 | `growth_test.py` | Stage 2 placement falsification: triggered vs random births at equal size and schedule |
+| `sleep_test.py` | Stage 3 retention falsification: wake+sleep learning vs rest-only twins (forgetting measured on earlier material) |
 | `worldline/` | The one individual (checkpoint + meta). Removing it is a human act, not a flag |
 
 ## Laws (from the plan)
