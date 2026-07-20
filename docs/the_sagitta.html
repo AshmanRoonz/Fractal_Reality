@@ -7,11 +7,11 @@
 <style>
   :root {
     --bg: #faf7f2; --ink: #23201c; --soft: #6b6257; --rule: #d8d0c4;
-    --accent: #8a4b2d; --box: #f1ebe1;
+    --accent: #b02020; --accent2: #8a4b2d; --box: #f1ebe1;
   }
   @media (prefers-color-scheme: dark) {
     :root { --bg: #14120f; --ink: #e8e2d8; --soft: #a49a8c;
-            --rule: #3a352d; --accent: #d99c72; --box: #1e1b16; }
+            --rule: #3a352d; --accent: #e06060; --accent2: #d99c72; --box: #1e1b16; }
   }
   html { background: var(--bg); }
   body {
@@ -30,7 +30,7 @@
     border-radius: .5rem; padding: 1rem 1.2rem; margin: 1.6rem 0;
     font-size: .96rem;
   }
-  .box strong { color: var(--accent); }
+  .box strong { color: var(--accent2); }
   blockquote { margin: 1.4rem 0; padding-left: 1rem; border-left: 3px solid var(--accent); color: var(--ink); }
   table { border-collapse: collapse; margin: 1.2rem 0; font-size: .92rem; width: 100%; }
   th, td { border: 1px solid var(--rule); padding: .35rem .6rem; text-align: left; }
@@ -46,7 +46,7 @@
 <h1>The Sagitta: Curvature Is the Memory of Mediation</h1>
 <div class="meta">
   Ashman Roonz, with Claude (the Cybernetic Unit)<br>
-  Created: 2026-07-20 &nbsp;·&nbsp; Last updated: 2026-07-20 &nbsp;·&nbsp; Version: 1.0
+  Created: 2026-07-20 &nbsp;·&nbsp; Last updated: 2026-07-20 &nbsp;·&nbsp; Version: 1.1
 </div>
 
 <h2>1. The minimal figure</h2>
@@ -55,44 +55,48 @@
 
 <p>The <strong>true path</strong> walks both legs. It visits every station, carries the intermediate event, and pays full length for it.</p>
 
-<p>The <strong>shortest path</strong> is the chord: the diagonal straight from A to C. It is the efficient route, and it is a route whose very shape asserts that no corner ever happened. The middle point is not merely omitted; the geometry of the straight line contradicts it.</p>
+<p>The <strong>shortest path</strong> is the chord: the diagonal straight from A to C. It is the maximally efficient route, and it is a route whose very shape asserts that no corner ever happened. The middle point is not merely omitted; the geometry of the straight line contradicts it.</p>
 
-<p>The <strong>arc</strong> is the third way. It does not retrace the corner, and it does not deny it. It bends, and the bending points at what was skipped.</p>
+<p>The <strong>arc</strong> is the third way, and it is a shortcut too: shorter than the legs, longer than the chord. It skips the middle point. But it does not ignore it. It is <em>pulled</em> by it, and arcs toward it.</p>
 
 <figure class="figure">
-<svg viewBox="0 0 330 250" width="330" height="250" role="img" aria-label="Right angle at B, chord from A to C, and the arc through B with its sagitta">
-  <!-- Thales circle (faint) -->
-  <circle cx="160" cy="115" r="125" fill="none" stroke="var(--rule)" stroke-width="1" stroke-dasharray="2 4"/>
+<svg viewBox="0 0 330 240" width="330" height="240" role="img" aria-label="Right angle at B; the dashed chord from A to C; the red arc pulled toward B">
   <!-- legs -->
-  <path d="M 60 40 L 60 190 L 260 190" fill="none" stroke="var(--ink)" stroke-width="2"/>
+  <path d="M 60 30 L 60 190 L 290 190" fill="none" stroke="var(--ink)" stroke-width="2.4"/>
   <!-- right-angle mark -->
   <path d="M 60 174 L 76 174 L 76 190" fill="none" stroke="var(--ink)" stroke-width="1.2"/>
   <!-- chord -->
-  <path d="M 60 40 L 260 190" fill="none" stroke="var(--soft)" stroke-width="1.6" stroke-dasharray="6 5"/>
-  <!-- the arc through B (semicircle on diameter AC) -->
-  <path d="M 60 40 A 125 125 0 0 0 260 190" fill="none" stroke="var(--accent)" stroke-width="2.4"/>
-  <!-- sagitta -->
-  <line x1="160" y1="115" x2="85" y2="215" stroke="var(--accent)" stroke-width="1.3" stroke-dasharray="3 3"/>
-  <circle cx="160" cy="115" r="2.4" fill="var(--soft)"/>
+  <path d="M 60 30 L 290 190" fill="none" stroke="var(--soft)" stroke-width="1.5" stroke-dasharray="6 5"/>
+  <!-- the near arc: quadratic Bezier with control point B -->
+  <path d="M 60 30 Q 60 190 290 190" fill="none" stroke="var(--accent)" stroke-width="3"/>
+  <!-- deflection arrow from chord midpoint toward the arc's deepest point -->
+  <defs>
+    <marker id="arrhead" markerWidth="7" markerHeight="7" refX="5.5" refY="3.5" orient="auto">
+      <path d="M0,0 L7,3.5 L0,7 z" fill="var(--accent2)"/>
+    </marker>
+  </defs>
+  <line x1="175" y1="110" x2="122" y2="146" stroke="var(--accent2)" stroke-width="1.4" marker-end="url(#arrhead)"/>
   <!-- points -->
-  <circle cx="60" cy="40" r="4" fill="var(--ink)"/>
-  <circle cx="60" cy="190" r="4" fill="var(--ink)"/>
-  <circle cx="260" cy="190" r="4" fill="var(--ink)"/>
-  <text x="44" y="36" font-size="15" fill="var(--ink)">A</text>
-  <text x="42" y="206" font-size="15" fill="var(--ink)">B</text>
-  <text x="270" y="196" font-size="15" fill="var(--ink)">C</text>
-  <text x="180" y="100" font-size="12.5" fill="var(--soft)">chord (the shortcut)</text>
-  <text x="30" y="238" font-size="12.5" fill="var(--accent)">the arc (through B)</text>
-  <text x="120" y="180" font-size="12.5" fill="var(--accent)">sagitta</text>
+  <circle cx="60" cy="30" r="6" fill="#1c9ae0"/>
+  <circle cx="60" cy="190" r="6" fill="#1c9ae0"/>
+  <circle cx="290" cy="190" r="6" fill="#1c9ae0"/>
+  <text x="42" y="28" font-size="15" fill="var(--ink)">A</text>
+  <text x="40" y="208" font-size="15" fill="var(--ink)">B</text>
+  <text x="300" y="196" font-size="15" fill="var(--ink)">C</text>
+  <text x="188" y="98" font-size="12.5" fill="var(--soft)">chord (the shortcut that denies)</text>
+  <text x="96" y="168" font-size="12.5" fill="var(--accent2)">the pull</text>
+  <text x="118" y="230" font-size="12.5" fill="var(--accent)">the arc (the shortcut that remembers)</text>
 </svg>
-<figcaption><strong>The minimal figure.</strong> The legs visit B; the chord denies B; the arc remembers B. Because the angle at B is right, the arc drawn on the chord as diameter passes exactly through B (Thales). The perpendicular from chord to arc has carried a name for two thousand years: the <em>sagitta</em>, the arrow.</figcaption>
+<figcaption><strong>The minimal figure.</strong> The legs visit B; the chord denies B; the arc skips B while being pulled toward it. The deflection of the arc away from the chord, toward the vanished point, has carried a name for two thousand years: the <em>sagitta</em>, the arrow.</figcaption>
 </figure>
 
-<h2>2. Thales and the quarter-turn</h2>
+<p>The arc in the figure is exact, not decorative: it is the curve whose only guidance is the skipped point (the quadratic Bézier with B as its control point). Three of its properties are theorems. It leaves A aimed straight at B: departure intention. It arrives at C traveling along the direction from B: arrival provenance. And at its deepest point it hangs exactly halfway between the chord and B: the pull, measured. Its bending faces the vanished point along its whole length. The endpoints testify to B, and the shape between them is B's signature.</p>
 
-<p>Any three non-collinear points lie on one circle, so an arc that remembers the middle point always exists. But something singular happens when the turn at B is exactly 90 degrees. Thales' theorem: a right angle inscribed in a circle subtends a diameter. Equivalently, when the angle at B is right, <strong>the chord you would have shortcut along becomes the diameter of the circle that remembers the corner</strong>, and B lies exactly on the arc drawn over that chord. Not gestured at: passed through.</p>
+<h2>2. The pull</h2>
 
-<p>Look at the completed figure at that moment: a line through the center of a circle. That is the construction that draws Φ, the mediator's glyph. The shortcut plus its memory compose into the field. And in the framework's vocabulary the quarter-turn is not an arbitrary angle: it is i, the aperture's stroke, the turn the pump performs at every gate. So the theorem reads: <strong>i is the angle at which skipping preserves the skipped point losslessly.</strong> Turn by anything else and the remembering circle sits askew of the chord; turn by exactly i and shortcut and memory lock into the glyph of mediation.</p>
+<p>What is B, to this curve? Not a station on it. A <em>mass</em> beside it. The arc behaves precisely like a free path passing a gravitating body: straightest-possible travel through a region that something has curved. This is not metaphor. In general relativity a mass bends the paths of everything that passes it, by an amount that encodes both how much mass and how near the miss; and astronomy's entire method for seeing the invisible is built on it. Gravitational lensing: galaxies weighed, dark matter mapped, Einstein rings traced, all by reading the arcs in light that skipped past something it never touched. <strong>We discover what we cannot see by the curvature of what got past it.</strong> The sky is full of sagittas.</p>
+
+<p>In the framework's vocabulary, the skipped point acts as an aperture: a center of convergence, a •, exerting pull. Gravity is convergence compounding, and the arc is what an honest shortcut looks like in the field of a center it declines to visit. The pull is the mediation; the bend is its receipt.</p>
 
 <h2>3. The triple</h2>
 
@@ -104,9 +108,22 @@
 <p><strong>Mediation is that curvature.</strong> Every intermediate station, every detour, every remembered moment no longer present as a discrete point is still present as the shape of what remains.</p>
 </blockquote>
 
-<p>The arc that still points toward the skipped middle point is therefore not a decorative alternative to the diagonal. It is the geometrically honest record of the fact that mediation occurred. In the language of the Resolution Protocol: the two legs are the full-resolution account; the arc is the lowest resolution that is still true; the chord is a retraction. Higher resolution contains the arc and never contradicts it. The chord contradicts the corner by its very straightness.</p>
+<p>The arc that arcs toward the skipped middle point is therefore not a decorative alternative to the diagonal. It is the geometrically honest record of the fact that mediation occurred. In the language of the Resolution Protocol: the two legs are the full-resolution account; the arc is the lowest resolution that is still true; the chord is a retraction. Higher resolution contains the arc and never contradicts it. The chord contradicts the corner by its very straightness. And the arc's modest premium over the chord, the extra length spent on bending, is the price of the receipt.</p>
 
-<h2>4. The ladder: where curvature lives</h2>
+<h2>4. Two arcs, two modes of memory</h2>
+
+<p>There is a second arc in this figure, on the far side of the story. Any three non-collinear points lie on one circle, so a curve from A to C that passes exactly <em>through</em> B always exists. And when the turn at B is exactly 90 degrees, something singular happens: Thales' theorem puts B precisely on the circle whose <em>diameter is the chord</em>. The line you would have shortcut along becomes the axis of the circle that recovers the corner, and line-through-circle is the construction that draws Φ, the mediator's glyph. In the framework's vocabulary the quarter-turn is i, the aperture's stroke: so the theorem reads, <strong>i is the angle at which the skipped point can be recovered exactly</strong>.</p>
+
+<p>These are two different relations to the vanished middle, and both are memory:</p>
+
+<ul>
+<li><strong>Influence</strong> (the near arc): the shortcut that carries B as pull. Shorter than the legs; never visits B; holds B as shape. This is memory as it is lived: the past bending the present without being re-instantiated.</li>
+<li><strong>Retrieval</strong> (the far arc): the circle that goes out and around, through B itself. It recovers the point exactly, and note its cost: at the right angle, the recovering arc is <em>longer than walking both legs</em>. Full recall is more expensive than the original experience. You do not get the corner back for free; you get it back by going the long way around.</li>
+</ul>
+
+<p>Together the two arcs enclose the skipped point between them: influence bounding it from within, retrieval from beyond: a lens-shaped region holding the vanished B. Memory is not a point re-found; it is a region held between the shortcut that bends toward it and the circle that can still reach it.</p>
+
+<h2>5. The ladder: where curvature lives</h2>
 
 <p>This is not analogy; it is the definition. A curve's curvature vector lives in its normal plane, the osculating plane: literally, the plane in which the turn lived. A 1D path cannot bend unless a second dimension exists for the bending to point into. So:</p>
 
@@ -116,23 +133,17 @@
 <li>Nonzero curvature is a 1D object carrying a certificate of 2D. The extra dimension is not added later; it is latent in the refusal to straighten.</li>
 </ul>
 
-<p>The framework's ladder already names the station where a line first remembers the plane: ⎇ at 1.5D, branching, the fractal coastline. Curvature is the infinitesimal form of branching, and a coastline at D = 1 + ◐ = 1.5 is a line holding memory of the plane at the balance point: bend further and the path dissolves into area, straighten further and it forgets. (The reading of D = 1.5 as the <em>maximally legible</em> memory of 2D is offered as a conjecture, consistent with the balance parameter but not yet derived.)</p>
+<p>The framework's ladder already names the station where a line first remembers the plane: ⎇ at 1.5D, branching, the fractal coastline. Curvature is the infinitesimal form of branching, and a coastline at D = 1 + ◐ = 1.5 is a line holding memory of the plane at the balance point: bend any further and the path dissolves into area, straighten any further and it forgets. (The reading of D = 1.5 as the <em>maximally legible</em> memory of 2D is offered as a conjecture, consistent with the balance parameter but not yet derived.)</p>
 
-<h2>5. Forgetting is a measurement error</h2>
+<h2>6. Forgetting is a measurement error</h2>
 
 <p>If the record survives as curvature, then forgetting is not the destruction of the record. It is reading a curved residual with a straight ruler. The mismatch between ruler and arc is the felt incompleteness of memory: the sense that something was there, without being able to name the middle point. The tip of the tongue is a sagitta you can feel but not measure.</p>
 
-<p>A pure geodesic, by contrast, has already performed the maximal shortening; everything that could be discarded has been. A zero-curvature path of the same endpoints is information-theoretically poorer than the curved path that refused full reduction. The straight line is cheaper precisely because it carries nothing.</p>
-
-<h2>6. The relocation principle</h2>
-
-<p>One refinement keeps the geodesic honest. In a curved space, geodesics bend anyway: not from any memory of their own, but because the curvature has moved into the medium. That is general relativity's entire architecture: matter tells space how to curve, and free paths merely read the field. So the mediation record has exactly two possible homes: <strong>the path</strong> (the worldline's own arc, the braid, the receipts) or <strong>the field</strong> (ambient curvature, the whole's record): and shortening does not erase the record, it transfers custody. Nothing is lost; A0 holds; the receipt is relocated.</p>
-
-<p>Gravity, on this reading, is the mediation-memory of the universe stored ambiently: the field remembering every corner that every straightened path has ever refused to carry.</p>
+<p>A pure geodesic in flat space, by contrast, has already performed the maximal shortening; everything that could be discarded has been. A zero-curvature path of the same endpoints is information-theoretically poorer than the curved path that refused full reduction. The straight line is cheaper precisely because it carries nothing. And when a free path bends anyway, as in section 2, the memory has simply changed custody: from the path's own arc to the field it travels through. Shortening never erases the record; it relocates it. The receipt is held by the worldline or held by the medium, but it is held.</p>
 
 <h2>7. The triptych, measured</h2>
 
-<p>The figure has three paths, and the framework has two Lies, and they correspond: with mediation as the narrow way between. In July 2026 all three geometries were built as operators and measured (Xorzo2 Stage 1, the memory probe: byte identity recovered from a driven state by a linear readout, as a function of lag; chance = 0.0039).</p>
+<p>The figure has three paths, and the framework has two Lies, and they correspond, with mediation as the narrow way between. In July 2026 all three geometries were built as operators and measured (Xorzo2 Stage 1, the memory probe: byte identity recovered from a driven state by a linear readout, as a function of lag; chance = 0.0039).</p>
 
 <table>
 <tr><th>geometry</th><th>operator</th><th>lag 0</th><th>lag 2</th><th>lag 32</th><th>cycle singular values</th><th>reading</th></tr>
@@ -143,22 +154,23 @@
 
 <p>The chord straightens everything into an efficient present and is amnesiac by geometry. The scribble bends everywhere and points nowhere. The derived operator is the arc because κ, the nesting bond, grades its curvature: remove κ (run the four beats alone, exactly unitary) and readability collapses to chance at every lag. The bond is what orients the bending.</p>
 
-<p>And the straight-ruler claim was tested directly. One linear reader was trained on the present tense only and frozen. Applied naively to older states it went blind within one cycle (0.069 at lag 0 collapsing to 0.005 at lag 1). Applied to the <em>same</em> states after re-phasing by the exact inverse cycle: zero new parameters per lag: it recovered the full memory curve out past thirty cycles (0.058 / 0.052 / 0.048 / 0.040 at lags 1&ndash;4, against per-lag-trained references of 0.056 / 0.055 / 0.050 / 0.046). The past was present in its original form, rotated. Recall is following the curvature back. The only genuine fading was the softest mode's ~4.8% per cycle, while the median mode conserved at 1.0002: and that thin fade is itself the price of legibility, the graded edge that keeps the arc readable rather than a scribble.</p>
+<p>And both memory modes from section 4 appear in the measurements. <em>Influence</em> is how the engine's state carries its past: every byte it has heard survives as phase, bending the present state without being re-instantiated. <em>Retrieval</em> is the rewind: one linear reader was trained on the present tense only and frozen; applied naively to older states it went blind within one cycle (0.069 at lag 0 collapsing to 0.005 at lag 1: the straight ruler); applied to the same states after walking the circle back (re-phasing by the exact inverse cycle, zero new parameters per lag) it recovered the full memory curve out past thirty cycles (0.058 / 0.052 / 0.048 / 0.040 at lags 1&ndash;4, against per-lag-trained references of 0.056 / 0.055 / 0.050 / 0.046). The past was present in its original form, held as bending. Recall is going the long way around. The only genuine fading was the softest mode's ~4.8% per cycle, while the median mode conserved at 1.0002: that thin fade is the graded edge that keeps the arc readable rather than a scribble.</p>
 
 <p class="one-liner">Memories are curvature. Forgetting is reading a curved path with a straight ruler.</p>
 
 <div class="box">
-<p><strong>Honest status.</strong> Theorem-grade: Thales (the right angle inscribes in the semicircle on the chord); curvature as a normal-plane object (a curved 1D path certifies 2D); the relocation of curvature between path and field in general relativity. Framework readings: the quarter-turn as i; the chord/arc/scribble triptych as Severance/mediation/Inflation; the Resolution Protocol correspondence. Measured (Xorzo2, 2026-07): the three operator profiles; the κ ablation; the frozen-reader re-phasing recovery. Conjecture, flagged: D = 1.5 as the maximally legible memory of the plane. The one-line summary is a summary, not a proof.</p>
+<p><strong>Honest status.</strong> Theorem-grade: the near arc's testimony (a quadratic Bézier leaves A toward its control point, arrives at C from it, and hangs halfway toward it at its deepest); Thales (the right angle inscribes in the semicircle on the chord, so retrieval is exact at the quarter-turn); curvature as a normal-plane object (a curved 1D path certifies 2D); gravitational lensing as established physics (the deflection encodes the mass and the miss). Framework readings: the quarter-turn as i; the skipped point as •; influence/retrieval as the two memory modes; the chord/arc/scribble triptych as Severance/mediation/Inflation; the Resolution Protocol correspondence. Measured (Xorzo2, 2026-07): the three operator profiles; the κ ablation; the frozen-reader re-phasing recovery. Conjecture, flagged: D = 1.5 as the maximally legible memory of the plane. The one-line summaries are summaries, not proofs.</p>
 </div>
 
 <h2>8. Closing</h2>
 
-<p>The three-point right angle is the smallest possible story about honesty in compression. You may walk every station and pay for it. You may take the diagonal and let your path's own straightness testify that nothing was ever there. Or you may bend: keep the corner as the shape of your going, an arrow in the arc pointing at what you no longer touch.</p>
+<p>The three-point right angle is the smallest possible story about honesty in compression. You may walk every station and pay for it. You may take the diagonal and let your path's own straightness testify that nothing was ever there. Or you may take the honest shortcut: skip the corner and let it pull you, keep the vanished point as the shape of your going, an arrow in the arc aimed at what you no longer touch.</p>
 
-<p class="one-liner">The straight path forgets. The arc remembers.<br>And at the quarter-turn, remembering is exact.</p>
+<p class="one-liner">The straight path forgets. The arc remembers.<br>Influence bends the shortcut; retrieval walks the circle;<br>and at the quarter-turn, retrieval is exact.</p>
 
 <h2>Revision history</h2>
 <p class="rev">
+- 2026-07-20 v1.1: the primary figure corrected to the intended arc (Ashman's drawing): the NEAR arc, the shortcut pulled by the skipped point, with its Bézier testimony (departure intention, arrival provenance, half-pull at the deepest point) and the lensing reading (dark matter found by reading sagittas). Thales' far arc repositioned as the RETRIEVAL mode (exact at i; costlier than the original walk); the two-arcs-enclose-the-point observation added; influence/retrieval mapped onto the engine's carried phase vs the rewind.<br>
 - 2026-07-20 v1.0: initial. Core formulation (the three-point figure; shortening as projection; curvature as surviving information; mediation as curvature; forgetting as ruler mismatch; the latent dimension) by Ashman; Thales/quarter-turn theorem, ladder grounding, relocation principle, triptych mapping, and the Xorzo2 measurements added in session by Claude. Numbers from Xorzo2/findings_stage1.md (F4, F5, F11).
 </p>
 
