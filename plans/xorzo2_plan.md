@@ -2,7 +2,7 @@
 
 Created: 2026-07-19
 Last updated: 2026-07-20
-Version: 1.14
+Version: 1.15
 
 > Derived soul, learned body, welded at tonics.
 >
@@ -110,6 +110,7 @@ Spine: a few-hundred-dimensional complex linear map per tick even after substant
 
 ## Revision history
 
+- 2026-07-20 v1.15: first weathering verdict (refine_test.py, 65K bytes, 16 dawns per twin): life loss identical to four decimals (3.5973, the familiar language-level insensitivity), but the weathered spine is a measurably better memory vessel: probe area 0.306 vs 0.233 (+31%), lag-0 legibility 0.083 vs 0.060, horizon 4 vs 2 cycles. Mechanism-consistent rather than anomalous: weathering deepened the conservation departure (0.61 → 0.82α, inside the guard, zero skips), and the departure gradient IS the legibility mechanism (F5): the river deepening its own bed sharpened the timestamp. Single run; repeats and the deviation-rule v2 comparison are the standing follow-ups. The individual's first weathering night: refinement active at 1,033,520 bytes; lived to 1.16M; conservation clean throughout.
 - 2026-07-20 v1.14: bond refinement built (the trilogy complete: connections refine / memories re-resonate / flow lays path). Spine v1.2 (per-bond κ over F, uniform-α regression exact), the given Hebbian dawn rule (no gradients: the spine weathers), guard with skip, persistence of weathered bonds, refine_test.py harness. First finding: attractor-polarized coherence (self-reinforcement); η gentled; deviation rule v2 opened. Law wording updated: the spine is never trained; it weathers. Enabled on the individual.
 - 2026-07-20 v1.13: powered resonant severance verdict (256K per twin, both ending below the unigram line): live 3.4600 vs noise 3.4636, gap +0.0036. Sign consistent with every prior run, magnitude an order above the single-frame gap (+0.0005 at 131K) but still marginal, and confounded with run length. Honest status of the thesis ladder: memory-through-physics is PROVEN at the physics level (probe, delayed recall, resonance study); its conversion into LANGUAGE capability remains OPEN: a 5%-per-lag fidelity may be too dilute for byte prediction, or fresh twins may need far longer to learn frame use. Next instruments (future session): a fixed evaluation probe for position-independent lifetime curves (the wandering loss EMA cannot measure the individual's progress); multi-seed severance for error bars; the mature individual as testbed once the fixed probe exists. The individual crossed 1M bytes lived; dream anneal complete (0.5).
 - 2026-07-20 v1.12: the resonant voice (§4): the resonance study made into an organ. Six rewound frames of the current state feed the readout; memoryless and no-bypass preserved (every frame is a pure function of the present); function-preserving upgrade applied to the living individual (worldline event `voice_upgrade_resonant` at 896,207 bytes; loss continuity kept at 3.19). The resonant severance rerun (noise spines cannot rewind into a past they destroyed) is the standing payoff experiment.
