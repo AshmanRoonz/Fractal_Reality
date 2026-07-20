@@ -350,6 +350,30 @@ def resonance_study():
           f"in the softest mode); conserved modes: median SV "
           f"{np.median(sv):.4f}")
 
+    # ----- the resolution dial: does PARTIAL re-phasing give partial
+    # recall (graded), or does the linear reader need exact alignment
+    # (a cliff)? Read byte t-k with rewind depth j, j = 0..k+2. -----
+    print("\n  partial re-phasing (frozen reader; read byte t-k after "
+          "rewinding j cycles):")
+    for k in [4, 8]:
+        t_idx = np.arange(BURN_IN + k, len(states))
+        y = byte_seq[t_idx - k]
+        nte = int(0.8 * len(t_idx))
+        row = []
+        for j in range(0, k + 3):
+            Zj = to_c(states[t_idx])
+            for _ in range(j):
+                Zj = Zj @ Tc_inv.T
+            Zj = Zj / (np.linalg.norm(Zj, axis=1, keepdims=True) + 1e-12)
+            Xj = to_r(Zj)
+            row.append(float(((Xj[nte:] @ W0).argmax(1)
+                              == y[nte:]).mean()))
+        print(f"    target lag {k:>2}: j=" + "".join(
+            f"{j:>7d}" for j in range(0, k + 3)))
+        print(f"                 acc" + "".join(
+            f"{a:>7.3f}" for a in row)
+            + ("   <- peak at j=k" if row.index(max(row)) == k else ""))
+
 
 def spectrum_line(name: str, Tc: np.ndarray) -> str:
     sv = np.linalg.svd(Tc, compute_uv=False)
