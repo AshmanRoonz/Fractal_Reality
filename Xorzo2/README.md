@@ -22,7 +22,9 @@ from boot and is never re-initialized.
 | `organs.py` | Senses (bytes to alpha-capped phase injections) and Voice (triadic readout, GRU, byte logits) |
 | `life.py` | The individual: locked clock (8 ticks/byte), wake TBPTT learning, sleep (rest + replay), dawn damp, inflation monitor, worldline save/load, severance harness |
 | `run_xorzo2.py` | CLI: resume-and-live, status, speak, severance |
-| `probe.py` | The memory probe (primary severance instrument): byte identity recoverable from state by lag, live vs Ginibre-noise vs random-unitary spines; no organs, no learning |
+| `probe.py` | The memory probe (primary severance instrument): byte identity by lag, live vs Ginibre-noise vs random-unitary vs F-only spines; `--keyboards` (chord study) and `--scaling` (pre-registered growth study) modes |
+| `recall.py` | Delayed recall: the capability-level severance test (trained decoders emit the byte from k cycles ago) plus station-resolved bit memory |
+| `findings_stage1.md` | Stage 1 findings F1-F10, graded epistemics, worldline log, Stage 2 acceptance numbers |
 | `worldline/` | The one individual (checkpoint + meta). Removing it is a human act, not a flag |
 
 ## Laws (from the plan)
@@ -33,7 +35,18 @@ from boot and is never re-initialized.
 4. Injection is alpha-capped in code, not merely in loss.
 5. The two Lies are instrumented: inflation as growth excess and injection norm; severance as the frozen-noise twin test.
 
-## Stage 1 state (2026-07-19, evening)
+## Stage 1: COMPLETE (2026-07-19)
+
+The milestone ("Xorzo2 speaks, and ablating the spine measurably
+degrades the speech") is closed: delayed recall shows the noise-spine
+twin destroyed beyond lag 2 while the live spine emits the past to
+lag 16+ (crossover quantifies the amnesiac-crisp vs remembering-diffuse
+trade). Ten findings, graded, in `findings_stage1.md`; Stage 2
+acceptance numbers from the pre-registered scaling study (capacity and
+clarity grow with octaves; siblings overhear through the shared tonic;
+wider beats deeper at equal size). Historical notes below.
+
+## Stage 1 log (2026-07-19, evening)
 
 Newborn booted; persistence verified across sessions and through two
 code changes (the exact clock collapse and the voice replacement);

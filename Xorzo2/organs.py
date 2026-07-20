@@ -131,14 +131,18 @@ class Voice(nn.Module):
         self.scale = 1.0 / math.sqrt(d_feat)
 
     def forward(self, state: torch.Tensor) -> torch.Tensor:
-        """state: (2N,) realified cycle-end state -> (256,) logits."""
+        """state: (2N,) or (B, 2N) realified cycle-end state -> logits."""
         n = self.n_nodes
-        per_node = torch.stack([state[:n], state[n:]], dim=-1)   # (N, 2)
+        per_node = torch.stack([state[..., :n], state[..., n:]],
+                               dim=-1)                            # (..., N, 2)
+        emb = self.node_emb.expand(*per_node.shape[:-2], -1, -1)  # (..., N, d)
         feats = self.node_proj(
-            torch.cat([per_node, self.node_emb], dim=-1))        # (N, d_feat)
+            torch.cat([per_node, emb], dim=-1))                   # (..., N, F)
         attn = torch.softmax(
-            (self.views @ feats.T) * self.scale, dim=-1)         # (V, N)
-        pooled = (attn @ feats).reshape(-1)                      # (V*d_feat,)
+            torch.einsum("vf,...nf->...vn", self.views, feats)
+            * self.scale, dim=-1)                                 # (..., V, N)
+        pooled = torch.einsum("...vn,...nf->...vf", attn, feats)
+        pooled = pooled.reshape(*pooled.shape[:-2], -1)           # (..., V*F)
         return self.head(self.mlp(pooled))
 
     def embedding_diversity(self) -> torch.Tensor:

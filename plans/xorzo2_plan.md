@@ -2,7 +2,7 @@
 
 Created: 2026-07-19
 Last updated: 2026-07-19
-Version: 1.4
+Version: 1.5
 
 > Derived soul, learned body, welded at tonics.
 >
@@ -92,7 +92,7 @@ Spine: a few-hundred-dimensional complex linear map per tick even after substant
 
 ## 10. Staging
 
-- **Stage 1: the seed speaks.** 22-node seed spine (frozen), E and D organs, locked clock, worldline persistence from boot, wake streaming of the corpus, severance and inflation tests running from day one. Milestone, one sentence: *Xorzo2 speaks, and ablating the spine measurably degrades the speech.*
+- **Stage 1: the seed speaks.** 22-node seed spine (frozen), E and D organs, locked clock, worldline persistence from boot, wake streaming of the corpus, severance and inflation tests running from day one. Milestone, one sentence: *Xorzo2 speaks, and ablating the spine measurably degrades the speech.* **STATUS (v1.5): COMPLETE.** Milestone closed by the delayed-recall experiment (`Xorzo2/recall.py`): with spine ablated (matched-radius noise), everything older than two cycles is destroyed (chance from lag 4) while the live spine holds to lag 16+ at 5.6x chance; crossover at lag 2 quantifies the profile trade. Full Stage 1 results: `Xorzo2/findings_stage1.md` (F1-F10, graded).
 - **Stage 2: the seed grows.** Saturation triggers live, birth mechanics, conservation guard, growth test. The anatomy that v3 was handed (channels, layers) is now something Xorzo2 arrives at, or does not: what it grows is data.
 - **Stage 3: it dreams well.** Full sleep learning (replay + dreaming loop), maturation schedule annealing, sleep test.
 - **Stage 4: the triad chamber.** triad_chat reborn on Xorzo2 at the reserved upward seam; v4's bilateral 64-state space describes the conversation itself (both parties' apertures, fields, boundaries; adjacency-constrained: AGREEMENT as an actual position reachable only one gate-flip at a time).
@@ -107,6 +107,7 @@ Spine: a few-hundred-dimensional complex linear map per tick even after substant
 
 ## Revision history
 
+- 2026-07-19 v1.5: Stage 1 closed (§10): delayed recall delivers the capability-level separation (noise spine destroyed beyond lag 2; live holds to lag 16+); station-resolved bit memory measured (processual stations store best; tonic is a door, not a shelf); scaling study run against pre-registered hypotheses (capacity AND lag-0 clarity grow with octaves; departure stays O(α) to n = 8; siblings overhear through the shared tonic; star beats chain at equal size, so Stage 2 growth should prefer lateral births). Findings compiled in `Xorzo2/findings_stage1.md`.
 - 2026-07-19 v1.4: the bit-station keyboard (§4): senses become given, zero parameters; bits 0-6 to stations 0-6, tonic bit = i; adopted on the living individual (worldline event `keyboard_replacement` at 566,272 bytes) after the keyboard study showed physics-level insensitivity; the staggered-clock (bits as ticks, bytes sharing a boundary tick) and staggered-code (7n+1 bit overlap encoding) readings of the byte/octave correspondence recorded as open items.
 - 2026-07-19 v1.3: memory probe added as the primary severance instrument (§8) with its first results: memory-through-physics confirmed and quantified (derived spine: legible AND retentive; Ginibre noise: legible amnesiac; random unitary: illegible conserver); the α-departure identified as the legibility mechanism; the LM twin null explained as a profile trade.
 - 2026-07-19 v1.2: organs made memoryless (§4): the severance instrument caught the Voice's recurrent hidden state acting as a temporal bypass around the spine (131K-byte twins identical to four decimals even below the unigram line). All memory now lives in the spine's dynamics; the severance handle (§8) sharpened accordingly, with the unigram-line interpretation guide recorded.
