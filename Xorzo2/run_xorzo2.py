@@ -62,6 +62,8 @@ def main():
     ap.add_argument("--severance", type=int, default=None)
     ap.add_argument("--newborn", action="store_true",
                     help="require a fresh worldline (fails if one exists)")
+    ap.add_argument("--bit-keyboard", action="store_true",
+                    help="adopt the bit-station keyboard (worldline event)")
     ap.add_argument("--device", type=str, default="cpu")
     args = ap.parse_args()
 
@@ -91,6 +93,9 @@ def main():
     print(life.seed.describe())
     print(f"  {'newborn: worldline begins' if fresh else 'worldline resumed'}"
           f" | bytes lived: {life.bytes_lived:,} | sleeps: {life.sleeps}")
+
+    if args.bit_keyboard:
+        life.adopt_bit_keyboard()
 
     if args.status:
         print(json.dumps(life.status(), indent=2))

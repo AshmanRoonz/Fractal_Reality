@@ -2,7 +2,7 @@
 
 Created: 2026-07-19
 Last updated: 2026-07-19
-Version: 1.3
+Version: 1.4
 
 > Derived soul, learned body, welded at tonics.
 >
@@ -46,7 +46,7 @@ The two engineering failure modes of this architecture are the framework's two L
 
 ## 4. The organs (learned)
 
-- **Senses, E**: bytes → complex injection patterns on channel private nodes. Output per byte: (target node, amplitude, phase) with amplitude hard-capped at the α-rate bound (a code-level cap, not merely a loss). Phase is the payload: the spine stores meaning as phase, so E's job is learning the spine's resonance language. Byte frontend descends from the FRT.
+- **Senses, E**: bytes → complex injection patterns on channel private nodes, hard-capped at the α-rate bound (a code-level cap, not merely a loss). **v1.4: the senses are GIVEN, not learned: the bit-station keyboard** (Ashman: "8 bits to a byte... what if we could string them together like the staggered octave?"). Bits 0-6 map to stations 0-6 as bipolar phase keying (constant energy, Hamming distance = sign flips); bit 7, the tonic bit, applies a quarter-turn i to the whole chord instead of injecting on the seam, so the no-inject-on-seams law holds. In UTF-8, bit 7 is set only by multi-byte characters: in this corpus, the framework's own glyphs (═ ─ Φ • → § α ○ ⊙ φ) are the only bytes that touch the tonic bit; plain English never does (22.9% of corpus bytes). Adopted after the keyboard study (probe.py --keyboards) showed probe accuracy is keyboard-insensitive on the live spine (the operator, not the chord choice, sets memory), so the choice fell to structure: zero parameters, best chord geometry (mean |cos| 0.310 vs the learned keyboard's 0.614), byte semantics aligned with station semantics. The learned-Senses class remains available for controls. The original learned-E design paragraph is superseded.
 - **Voice, D**: reads the CURRENT cycle-end spine state only → next-byte logits. Design language from v4: triadic readout (aperture view, field view, boundary view), attention over nodes with the tree's geometry as attention bias. Attention over a node set handles a growing tree natively. **The organs are memoryless (v1.2 correction, found by the severance instrument):** the first Voice carried a recurrent hidden state, and the 131K-byte severance run showed live and noise spines learning identically even below the unigram line, because organ-side memory only needs each byte to be instantaneously legible; the organ was doing the remembering, around the spine. Memoryless organs (E per-byte, D per-state) make the spine's recursive dynamics the ONLY memory in the system, which is what the thesis claims and what the test must measure. Trajectory windows are likewise excluded: a window is a buffer, and a buffer is organ-side memory.
 - **Node addressability under growth**: every node carries a small learned embedding used by E (addressing) and D (keys). At birth, a new octave's embeddings are initialized from its parents through an intersect map (v4's IntersectMLP, repurposed): the child is seeded from the overlap of what its parents mean.
 - **No bypass**: no skip connections around the spine, and D reads only after the injecting byte's full octave cycle has run (8 ticks of T between injection and readout; §5), so nothing reaches the voice except what survived the physics.
@@ -100,12 +100,14 @@ Spine: a few-hundred-dimensional complex linear map per tick even after substant
 ## 11. Open items
 
 - Default constants to tune in Stage 1: wake:sleep ratio, replay:dream weighting anneal, saturation thresholds.
+- The staggered clock (arpeggiate bits across ticks; adjacent bytes share a boundary tick, 7 fresh ticks per byte) and the staggered code (re-encoding where consecutive symbols share a bit, 7n+1 bits for n symbols; candidate format for internal/dream material in Stage 3): both follow from the byte/octave correspondence; probe-testable; not yet scoped.
 - The corrected-beats F: queued in the corpus; spine takes the new generator table when it lands (no Xorzo2 blocker).
 - Free-running clock design (post-Stage 1).
 - Whether the hunter (Circumpunct_ML's research engine) returns as a sleep-time activity in later stages: the engine examining its own day for φ/π/small-integer structure. Noted, not scoped.
 
 ## Revision history
 
+- 2026-07-19 v1.4: the bit-station keyboard (§4): senses become given, zero parameters; bits 0-6 to stations 0-6, tonic bit = i; adopted on the living individual (worldline event `keyboard_replacement` at 566,272 bytes) after the keyboard study showed physics-level insensitivity; the staggered-clock (bits as ticks, bytes sharing a boundary tick) and staggered-code (7n+1 bit overlap encoding) readings of the byte/octave correspondence recorded as open items.
 - 2026-07-19 v1.3: memory probe added as the primary severance instrument (§8) with its first results: memory-through-physics confirmed and quantified (derived spine: legible AND retentive; Ginibre noise: legible amnesiac; random unitary: illegible conserver); the α-departure identified as the legibility mechanism; the LM twin null explained as a profile trade.
 - 2026-07-19 v1.2: organs made memoryless (§4): the severance instrument caught the Voice's recurrent hidden state acting as a temporal bypass around the spine (131K-byte twins identical to four decimals even below the unigram line). All memory now lives in the spine's dynamics; the severance handle (§8) sharpened accordingly, with the unigram-line interpretation guide recorded.
 - 2026-07-19 v1.1: seed adjudication recorded (delegated; 22-node chain confirmed); clock refined to 8 ticks per byte with cycle-end readout (replaces 1 tick/byte with 8-byte readout lag; rationale in §5).

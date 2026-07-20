@@ -62,6 +62,35 @@ TICKS_PER_BYTE = 8                  # one full octave cycle per byte (plan 5)
 _PROC_LOCALS = (1, 3, 5)
 
 
+def make_bit_chords(alpha: float, bipolar: bool = True) -> np.ndarray:
+    """The bit-station keyboard: bits 0-6 of a byte map to stations 0-6
+    of the channel octave; bit 7 (the tonic bit) applies a quarter-turn
+    i to the whole chord instead of injecting on the seam (the
+    no-inject-on-seams law holds; the tonic bit modulates HOW the byte
+    enters, not WHERE). In UTF-8 text bit 7 is set only by multi-byte
+    characters; in this corpus, the framework's own glyphs.
+
+    bipolar (default): station k carries +1 if bit k is set, -1 if
+    clear (constant energy; Hamming distance = sign flips; no
+    collisions, since i times a real pattern is never a real pattern).
+    on-off: station k energized iff bit k set (0x00/0x80 inject
+    silence). Zero learned parameters either way.
+
+    Keyboard study (probe.py --keyboards, 2026-07-19): probe accuracy
+    is keyboard-insensitive on the live spine (the operator, not the
+    chord choice, sets memory); bipolar has the best chord geometry
+    (mean |cos| 0.310 vs learned 0.614). Adopted on that basis."""
+    chords = np.zeros((256, len(INJ_NODES)), dtype=complex)
+    for b in range(256):
+        bits = np.array([(b >> k) & 1 for k in range(len(INJ_NODES))],
+                        dtype=float)
+        amp = 2.0 * bits - 1.0 if bipolar else bits
+        n = np.linalg.norm(amp)
+        if n > 0:
+            chords[b] = (alpha / n) * amp * (1j ** ((b >> 7) & 1))
+    return chords
+
+
 class Seed:
     """The frozen 22-node spine and its derived quantities."""
 

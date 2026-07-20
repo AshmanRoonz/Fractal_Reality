@@ -65,7 +65,7 @@ import torch.nn.functional as F
 
 from spine import (Seed, INJ_NODES, N_NODES_SEED, TICKS_PER_BYTE,
                    RESERVED_NODE)
-from organs import Senses, Voice, count_params
+from organs import Senses, SensesBit, Voice, count_params
 
 RAND_CE = math.log(256.0)          # cross-entropy of a uniform guesser
 
@@ -101,9 +101,7 @@ class Life:
         torch.manual_seed(torch_seed)
         self.E = Senses(N_NODES_SEED, INJ_NODES, self.alpha).to(dev)
         self.D = Voice(N_NODES_SEED).to(dev)
-        self.opt = torch.optim.Adam(
-            list(self.E.parameters()) + list(self.D.parameters()),
-            lr=self.cfg.lr)
+        self.opt = torch.optim.Adam(self._trainable(), lr=self.cfg.lr)
 
         if noise_spine:
             rng = np.random.RandomState(torch_seed)
@@ -144,6 +142,38 @@ class Life:
                 self.home.mkdir(parents=True, exist_ok=True)
                 self._save()   # the worldline begins at boot
 
+    def _trainable(self):
+        return [p for p in list(self.E.parameters())
+                + list(self.D.parameters()) if p.requires_grad]
+
+    def adopt_bit_keyboard(self):
+        """Replace the learned Senses with the bit-station keyboard
+        (zero parameters; the senses become given, like the spine).
+        A worldline event, not a re-initialization: spine state, voice,
+        and history continue."""
+        if isinstance(self.E, SensesBit):
+            print("    (bit keyboard already adopted)")
+            return
+        self.E = SensesBit(N_NODES_SEED, INJ_NODES, self.alpha).to(
+            self.cfg.device)
+        self.opt = torch.optim.Adam(self._trainable(), lr=self.cfg.lr)
+        event = {
+            "event": "keyboard_replacement",
+            "at_bytes": self.bytes_lived,
+            "time": time.strftime("%Y-%m-%d %H:%M:%S"),
+            "reason": "bit-station keyboard adopted (probe keyboard "
+                      "study: accuracy keyboard-insensitive; bipolar "
+                      "bit chords win on structure and parameters; "
+                      "bits 0-6 to stations 0-6, tonic bit = i)",
+        }
+        self.growth_history.append(event)
+        self.loss_ema = None
+        if self.home is not None:
+            self._save()
+        print(f"    [worldline event] keyboard replaced at "
+              f"{self.bytes_lived:,} bytes lived; senses are now given "
+              f"(zero parameters); voice and spine state carried forward")
+
     # ----- one byte of experience (used by wake and by replay) -----
 
     def _cycle(self, byte_val: int, target_val: int):
@@ -182,9 +212,8 @@ class Life:
         loss = loss + 1e-3 * self.D.embedding_diversity()
         self.opt.zero_grad(set_to_none=True)
         loss.backward()
-        torch.nn.utils.clip_grad_norm_(
-            list(self.E.parameters()) + list(self.D.parameters()),
-            self.cfg.grad_clip)
+        torch.nn.utils.clip_grad_norm_(self._trainable(),
+                                       self.cfg.grad_clip)
         self.opt.step()
         self.psi = self.psi.detach()
         val = float(torch.stack(losses).mean().detach())
@@ -305,6 +334,7 @@ class Life:
     def _save(self):
         ckpt = {
             "psi": self.psi.detach().cpu(),
+            "senses_class": type(self.E).__name__,
             "senses": self.E.state_dict(),
             "voice": self.D.state_dict(),
             "opt": self.opt.state_dict(),
@@ -339,6 +369,10 @@ class Life:
                                   dtype=torch.float32)
             self.noise_spine = True
         self.psi = ckpt["psi"].to(dev)
+        if (ckpt.get("senses_class") == "SensesBit"
+                and not isinstance(self.E, SensesBit)):
+            self.E = SensesBit(N_NODES_SEED, INJ_NODES, self.alpha).to(dev)
+            self.opt = torch.optim.Adam(self._trainable(), lr=self.cfg.lr)
         self.E.load_state_dict(ckpt["senses"])
         voice_ok = True
         try:

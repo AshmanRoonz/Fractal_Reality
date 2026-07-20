@@ -83,6 +83,31 @@ class Senses(nn.Module):
         return out.squeeze(0) if squeeze else out
 
 
+class SensesBit(nn.Module):
+    """E: the bit-station keyboard. Zero learned parameters: the senses
+    are GIVEN, like the spine. Bits 0-6 -> stations 0-6 (bipolar phase
+    keying); bit 7, the tonic bit, applies a quarter-turn i to the
+    whole chord (the no-inject-on-seams law holds). Adopted per the
+    keyboard study (probe.py --keyboards): probe accuracy is
+    keyboard-insensitive, so structure wins on parameters and geometry.
+    """
+
+    def __init__(self, n_nodes: int, inj_nodes, alpha: float,
+                 bipolar: bool = True):
+        super().__init__()
+        from spine import make_bit_chords
+        chords = make_bit_chords(alpha, bipolar=bipolar)
+        table = torch.zeros(256, 2 * n_nodes)
+        idx = torch.tensor(list(inj_nodes), dtype=torch.long)
+        table[:, idx] = torch.tensor(chords.real, dtype=torch.float32)
+        table[:, idx + n_nodes] = torch.tensor(chords.imag,
+                                               dtype=torch.float32)
+        self.register_buffer("table", table)
+
+    def forward(self, byte: torch.Tensor) -> torch.Tensor:
+        return self.table[byte]
+
+
 class Voice(nn.Module):
     """D: cycle-end state (R^(2N)) -> byte logits. Memoryless."""
 

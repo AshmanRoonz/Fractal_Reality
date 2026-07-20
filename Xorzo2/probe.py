@@ -29,6 +29,13 @@ No organs, no gradient descent, no corpus: chords are random, probes
 are closed-form. What is being measured is the operator, alone.
 
 Revision history:
+- 2026-07-19 v1.1: keyboard study added (--keyboards): bit-station
+    chords (bits 0-6 -> stations 0-6; bit 7, the tonic bit, applies a
+    quarter-turn i to the whole chord, honoring the no-inject-on-seams
+    law) in on-off and bipolar variants, vs the individual's learned
+    keyboard (read from the worldline) vs random chords. Also the
+    F-only control (kappa removed) in the operator study: proves kappa
+    is the legibility mechanism (F alone is at chance at every lag).
 - 2026-07-19 v1.0: initial probe (ridge readout, singular spectra,
     multi-seed noise baselines).
 """
@@ -37,7 +44,8 @@ import sys
 
 import numpy as np
 
-from spine import Seed, INJ_NODES, N_NODES_SEED, TICKS_PER_BYTE
+from spine import (Seed, INJ_NODES, N_NODES_SEED, TICKS_PER_BYTE,
+                   make_bit_chords)
 
 BURN_IN = 200
 N_STEPS = 30000
@@ -51,6 +59,64 @@ def make_chords(alpha: float, rng: np.random.RandomState) -> np.ndarray:
     c = rng.randn(256, len(INJ_NODES)) + 1j * rng.randn(256, len(INJ_NODES))
     c *= (alpha / np.linalg.norm(c, axis=1, keepdims=True))
     return c
+
+
+def load_learned_chords() -> np.ndarray | None:
+    """The individual's current keyboard, read from the worldline."""
+    try:
+        import torch
+        from organs import Senses
+        from pathlib import Path
+        ckpt_path = Path(__file__).resolve().parent / "worldline" / "checkpoint.pt"
+        if not ckpt_path.exists():
+            return None
+        ckpt = torch.load(ckpt_path, weights_only=False)
+        E = Senses(N_NODES_SEED, INJ_NODES, Seed().alpha)
+        E.load_state_dict(ckpt["senses"])
+        with torch.no_grad():
+            inj = E(torch.arange(256)).numpy()
+        return inj[:, INJ_NODES] + 1j * inj[:, [n + N_NODES_SEED
+                                                for n in INJ_NODES]]
+    except Exception as e:
+        print(f"  (learned keyboard unavailable: {e})")
+        return None
+
+
+def chord_similarity(chords: np.ndarray) -> float:
+    """Mean pairwise |cosine| between chords (0 = orthogonal keyboard)."""
+    norms = np.linalg.norm(chords, axis=1, keepdims=True)
+    ok = norms[:, 0] > 0
+    c = chords[ok] / norms[ok]
+    sim = np.abs(np.conj(c) @ c.T)
+    off = sim - np.diag(np.diag(sim))
+    return float(off.sum() / (len(c) * (len(c) - 1)))
+
+
+def keyboard_study():
+    """Compare keyboards on the live spine: legibility and memory."""
+    seed_obj = Seed()
+    rng = np.random.RandomState(2026)
+    byte_seq = rng.randint(0, 256, size=N_STEPS + BURN_IN + max(LAGS))
+    Tc = cycle_operator(seed_obj.op.T)
+
+    keyboards = {
+        "random": make_chords(seed_obj.alpha, np.random.RandomState(2026)),
+        "bit on-off": make_bit_chords(seed_obj.alpha, bipolar=False),
+        "bit bipolar": make_bit_chords(seed_obj.alpha, bipolar=True),
+    }
+    learned = load_learned_chords()
+    if learned is not None:
+        keyboards["learned (E)"] = learned
+
+    print("Xorzo2 keyboard study: live spine, ridge probe, "
+          "chance = 0.0039")
+    print(f"  lag(cycles)  " + "".join(f"{k:>7d}" for k in LAGS)
+          + "   mean|cos|")
+    for name, chords in keyboards.items():
+        states = evolve(Tc, chords, byte_seq, seed_obj.attractor)
+        accs = [probe_accuracy(states, byte_seq, k) for k in LAGS]
+        print(f"  {name:12s}" + "".join(f"{a:>7.3f}" for a in accs)
+              + f"   {chord_similarity(chords):8.3f}")
 
 
 def cycle_operator(T: np.ndarray) -> np.ndarray:
@@ -158,4 +224,9 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    if "--keyboards" in sys.argv:
+        if hasattr(sys.stdout, "reconfigure"):
+            sys.stdout.reconfigure(encoding="utf-8")
+        keyboard_study()
+    else:
+        main()
