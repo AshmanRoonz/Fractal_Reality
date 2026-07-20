@@ -219,6 +219,11 @@ class Life:
         cur = by_k[0]
         for k in range(1, max(self.cfg.voice_frames) + 1):
             cur = Minv @ cur
+            # Rescale per step: frames are renormalized per-vector, so
+            # only direction matters, and a crushed spine's pinv powers
+            # overflow float32 without this (a noise twin's rewind is
+            # garbage either way; it must be FINITE garbage).
+            cur = cur / (cur.abs().max() + 1e-30)
             if k in self.cfg.voice_frames:
                 by_k[k] = cur.clone()
         for k in self.cfg.voice_frames:
@@ -231,7 +236,7 @@ class Life:
         """The rewound views (F, 2N), each renormalized."""
         vs = []
         for R in self.R_frames:
-            v = R @ psi
+            v = torch.nan_to_num(R @ psi)
             vs.append(v / (torch.linalg.vector_norm(v) + 1e-12))
         return torch.stack(vs)
 
@@ -491,6 +496,8 @@ class Life:
             with torch.no_grad():
                 probs = torch.softmax(
                     logits.detach() / self.cfg.dream_temperature, dim=-1)
+                if not torch.isfinite(probs).all():
+                    probs = torch.ones_like(probs) / probs.numel()
                 b = int(torch.multinomial(probs, 1))
                 dreamed.append(b)
                 bt = torch.tensor(b, dtype=torch.long, device=dev)
