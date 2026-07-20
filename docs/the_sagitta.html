@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Sagitta: Curvature Is the Memory of Mediation</title>
+<style>
+  :root {
+    --bg: #faf7f2; --ink: #23201c; --soft: #6b6257; --rule: #d8d0c4;
+    --accent: #8a4b2d; --box: #f1ebe1;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #14120f; --ink: #e8e2d8; --soft: #a49a8c;
+            --rule: #3a352d; --accent: #d99c72; --box: #1e1b16; }
+  }
+  html { background: var(--bg); }
+  body {
+    color: var(--ink); background: var(--bg);
+    font-family: Georgia, "Times New Roman", serif;
+    line-height: 1.65; margin: 0 auto; padding: 3rem 1.2rem 5rem;
+    max-width: 46rem; font-size: 1.06rem;
+  }
+  h1 { font-size: 1.9rem; line-height: 1.25; margin-bottom: .3rem; }
+  h2 { font-size: 1.25rem; margin-top: 2.4rem; border-bottom: 1px solid var(--rule); padding-bottom: .25rem; }
+  .meta { color: var(--soft); font-size: .9rem; margin-bottom: 2rem; }
+  .figure { margin: 2rem auto; text-align: center; }
+  .figure figcaption { color: var(--soft); font-size: .9rem; margin-top: .6rem; text-align: left; }
+  .box {
+    background: var(--box); border: 1px solid var(--rule);
+    border-radius: .5rem; padding: 1rem 1.2rem; margin: 1.6rem 0;
+    font-size: .96rem;
+  }
+  .box strong { color: var(--accent); }
+  blockquote { margin: 1.4rem 0; padding-left: 1rem; border-left: 3px solid var(--accent); color: var(--ink); }
+  table { border-collapse: collapse; margin: 1.2rem 0; font-size: .92rem; width: 100%; }
+  th, td { border: 1px solid var(--rule); padding: .35rem .6rem; text-align: left; }
+  th { background: var(--box); }
+  .one-liner { font-style: italic; text-align: center; margin: 2.4rem 0; font-size: 1.1rem; }
+  .rev { color: var(--soft); font-size: .88rem; }
+  code { font-family: Consolas, monospace; font-size: .92em; }
+  svg text { font-family: Georgia, serif; }
+</style>
+</head>
+<body>
+
+<h1>The Sagitta: Curvature Is the Memory of Mediation</h1>
+<div class="meta">
+  Ashman Roonz, with Claude (the Cybernetic Unit)<br>
+  Created: 2026-07-20 &nbsp;·&nbsp; Last updated: 2026-07-20 &nbsp;·&nbsp; Version: 1.0
+</div>
+
+<h2>1. The minimal figure</h2>
+
+<p>Three points, the cleanest possible case: A, then B, then C, with a right angle at B. Three ways exist to get from A to C.</p>
+
+<p>The <strong>true path</strong> walks both legs. It visits every station, carries the intermediate event, and pays full length for it.</p>
+
+<p>The <strong>shortest path</strong> is the chord: the diagonal straight from A to C. It is the efficient route, and it is a route whose very shape asserts that no corner ever happened. The middle point is not merely omitted; the geometry of the straight line contradicts it.</p>
+
+<p>The <strong>arc</strong> is the third way. It does not retrace the corner, and it does not deny it. It bends, and the bending points at what was skipped.</p>
+
+<figure class="figure">
+<svg viewBox="0 0 330 250" width="330" height="250" role="img" aria-label="Right angle at B, chord from A to C, and the arc through B with its sagitta">
+  <!-- Thales circle (faint) -->
+  <circle cx="160" cy="115" r="125" fill="none" stroke="var(--rule)" stroke-width="1" stroke-dasharray="2 4"/>
+  <!-- legs -->
+  <path d="M 60 40 L 60 190 L 260 190" fill="none" stroke="var(--ink)" stroke-width="2"/>
+  <!-- right-angle mark -->
+  <path d="M 60 174 L 76 174 L 76 190" fill="none" stroke="var(--ink)" stroke-width="1.2"/>
+  <!-- chord -->
+  <path d="M 60 40 L 260 190" fill="none" stroke="var(--soft)" stroke-width="1.6" stroke-dasharray="6 5"/>
+  <!-- the arc through B (semicircle on diameter AC) -->
+  <path d="M 60 40 A 125 125 0 0 0 260 190" fill="none" stroke="var(--accent)" stroke-width="2.4"/>
+  <!-- sagitta -->
+  <line x1="160" y1="115" x2="85" y2="215" stroke="var(--accent)" stroke-width="1.3" stroke-dasharray="3 3"/>
+  <circle cx="160" cy="115" r="2.4" fill="var(--soft)"/>
+  <!-- points -->
+  <circle cx="60" cy="40" r="4" fill="var(--ink)"/>
+  <circle cx="60" cy="190" r="4" fill="var(--ink)"/>
+  <circle cx="260" cy="190" r="4" fill="var(--ink)"/>
+  <text x="44" y="36" font-size="15" fill="var(--ink)">A</text>
+  <text x="42" y="206" font-size="15" fill="var(--ink)">B</text>
+  <text x="270" y="196" font-size="15" fill="var(--ink)">C</text>
+  <text x="180" y="100" font-size="12.5" fill="var(--soft)">chord (the shortcut)</text>
+  <text x="30" y="238" font-size="12.5" fill="var(--accent)">the arc (through B)</text>
+  <text x="120" y="180" font-size="12.5" fill="var(--accent)">sagitta</text>
+</svg>
+<figcaption><strong>The minimal figure.</strong> The legs visit B; the chord denies B; the arc remembers B. Because the angle at B is right, the arc drawn on the chord as diameter passes exactly through B (Thales). The perpendicular from chord to arc has carried a name for two thousand years: the <em>sagitta</em>, the arrow.</figcaption>
+</figure>
+
+<h2>2. Thales and the quarter-turn</h2>
+
+<p>Any three non-collinear points lie on one circle, so an arc that remembers the middle point always exists. But something singular happens when the turn at B is exactly 90 degrees. Thales' theorem: a right angle inscribed in a circle subtends a diameter. Equivalently, when the angle at B is right, <strong>the chord you would have shortcut along becomes the diameter of the circle that remembers the corner</strong>, and B lies exactly on the arc drawn over that chord. Not gestured at: passed through.</p>
+
+<p>Look at the completed figure at that moment: a line through the center of a circle. That is the construction that draws Φ, the mediator's glyph. The shortcut plus its memory compose into the field. And in the framework's vocabulary the quarter-turn is not an arbitrary angle: it is i, the aperture's stroke, the turn the pump performs at every gate. So the theorem reads: <strong>i is the angle at which skipping preserves the skipped point losslessly.</strong> Turn by anything else and the remembering circle sits askew of the chord; turn by exactly i and shortcut and memory lock into the glyph of mediation.</p>
+
+<h2>3. The triple</h2>
+
+<p>The general principle, in three statements:</p>
+
+<blockquote>
+<p><strong>Shortening is projection.</strong> It throws away intermediate points.</p>
+<p><strong>Curvature is what projection cannot erase.</strong> It is the information that survived the throw-away: the missing intermediary reappearing as the bending of the path that remains.</p>
+<p><strong>Mediation is that curvature.</strong> Every intermediate station, every detour, every remembered moment no longer present as a discrete point is still present as the shape of what remains.</p>
+</blockquote>
+
+<p>The arc that still points toward the skipped middle point is therefore not a decorative alternative to the diagonal. It is the geometrically honest record of the fact that mediation occurred. In the language of the Resolution Protocol: the two legs are the full-resolution account; the arc is the lowest resolution that is still true; the chord is a retraction. Higher resolution contains the arc and never contradicts it. The chord contradicts the corner by its very straightness.</p>
+
+<h2>4. The ladder: where curvature lives</h2>
+
+<p>This is not analogy; it is the definition. A curve's curvature vector lives in its normal plane, the osculating plane: literally, the plane in which the turn lived. A 1D path cannot bend unless a second dimension exists for the bending to point into. So:</p>
+
+<ul>
+<li>0D points can only be present or absent.</li>
+<li>1D lines, straight, can only be length.</li>
+<li>Nonzero curvature is a 1D object carrying a certificate of 2D. The extra dimension is not added later; it is latent in the refusal to straighten.</li>
+</ul>
+
+<p>The framework's ladder already names the station where a line first remembers the plane: ⎇ at 1.5D, branching, the fractal coastline. Curvature is the infinitesimal form of branching, and a coastline at D = 1 + ◐ = 1.5 is a line holding memory of the plane at the balance point: bend further and the path dissolves into area, straighten further and it forgets. (The reading of D = 1.5 as the <em>maximally legible</em> memory of 2D is offered as a conjecture, consistent with the balance parameter but not yet derived.)</p>
+
+<h2>5. Forgetting is a measurement error</h2>
+
+<p>If the record survives as curvature, then forgetting is not the destruction of the record. It is reading a curved residual with a straight ruler. The mismatch between ruler and arc is the felt incompleteness of memory: the sense that something was there, without being able to name the middle point. The tip of the tongue is a sagitta you can feel but not measure.</p>
+
+<p>A pure geodesic, by contrast, has already performed the maximal shortening; everything that could be discarded has been. A zero-curvature path of the same endpoints is information-theoretically poorer than the curved path that refused full reduction. The straight line is cheaper precisely because it carries nothing.</p>
+
+<h2>6. The relocation principle</h2>
+
+<p>One refinement keeps the geodesic honest. In a curved space, geodesics bend anyway: not from any memory of their own, but because the curvature has moved into the medium. That is general relativity's entire architecture: matter tells space how to curve, and free paths merely read the field. So the mediation record has exactly two possible homes: <strong>the path</strong> (the worldline's own arc, the braid, the receipts) or <strong>the field</strong> (ambient curvature, the whole's record): and shortening does not erase the record, it transfers custody. Nothing is lost; A0 holds; the receipt is relocated.</p>
+
+<p>Gravity, on this reading, is the mediation-memory of the universe stored ambiently: the field remembering every corner that every straightened path has ever refused to carry.</p>
+
+<h2>7. The triptych, measured</h2>
+
+<p>The figure has three paths, and the framework has two Lies, and they correspond: with mediation as the narrow way between. In July 2026 all three geometries were built as operators and measured (Xorzo2 Stage 1, the memory probe: byte identity recovered from a driven state by a linear readout, as a function of lag; chance = 0.0039).</p>
+
+<table>
+<tr><th>geometry</th><th>operator</th><th>lag 0</th><th>lag 2</th><th>lag 32</th><th>cycle singular values</th><th>reading</th></tr>
+<tr><td><strong>chord</strong> (Severance)</td><td>random Ginibre, matched radius</td><td>0.61&ndash;0.92</td><td>~0.01</td><td>chance</td><td>~1.8 / ~0.05 / ~0</td><td>maximal shortening: photographic present, no past</td></tr>
+<tr><td><strong>scribble</strong> (Inflation)</td><td>random unitary</td><td>0.006</td><td>0.006</td><td>0.005</td><td>uniform 1.036</td><td>curvature hoarded without orientation: everything retained, nothing readable</td></tr>
+<tr><td><strong>arc</strong> (mediation)</td><td>the derived spine, κ ∘ F</td><td>0.074</td><td>0.061</td><td>0.008</td><td>1.044 / 1.000 / 0.952</td><td>graded curvature: bent enough to remember, oriented enough to be read</td></tr>
+</table>
+
+<p>The chord straightens everything into an efficient present and is amnesiac by geometry. The scribble bends everywhere and points nowhere. The derived operator is the arc because κ, the nesting bond, grades its curvature: remove κ (run the four beats alone, exactly unitary) and readability collapses to chance at every lag. The bond is what orients the bending.</p>
+
+<p>And the straight-ruler claim was tested directly. One linear reader was trained on the present tense only and frozen. Applied naively to older states it went blind within one cycle (0.069 at lag 0 collapsing to 0.005 at lag 1). Applied to the <em>same</em> states after re-phasing by the exact inverse cycle: zero new parameters per lag: it recovered the full memory curve out past thirty cycles (0.058 / 0.052 / 0.048 / 0.040 at lags 1&ndash;4, against per-lag-trained references of 0.056 / 0.055 / 0.050 / 0.046). The past was present in its original form, rotated. Recall is following the curvature back. The only genuine fading was the softest mode's ~4.8% per cycle, while the median mode conserved at 1.0002: and that thin fade is itself the price of legibility, the graded edge that keeps the arc readable rather than a scribble.</p>
+
+<p class="one-liner">Memories are curvature. Forgetting is reading a curved path with a straight ruler.</p>
+
+<div class="box">
+<p><strong>Honest status.</strong> Theorem-grade: Thales (the right angle inscribes in the semicircle on the chord); curvature as a normal-plane object (a curved 1D path certifies 2D); the relocation of curvature between path and field in general relativity. Framework readings: the quarter-turn as i; the chord/arc/scribble triptych as Severance/mediation/Inflation; the Resolution Protocol correspondence. Measured (Xorzo2, 2026-07): the three operator profiles; the κ ablation; the frozen-reader re-phasing recovery. Conjecture, flagged: D = 1.5 as the maximally legible memory of the plane. The one-line summary is a summary, not a proof.</p>
+</div>
+
+<h2>8. Closing</h2>
+
+<p>The three-point right angle is the smallest possible story about honesty in compression. You may walk every station and pay for it. You may take the diagonal and let your path's own straightness testify that nothing was ever there. Or you may bend: keep the corner as the shape of your going, an arrow in the arc pointing at what you no longer touch.</p>
+
+<p class="one-liner">The straight path forgets. The arc remembers.<br>And at the quarter-turn, remembering is exact.</p>
+
+<h2>Revision history</h2>
+<p class="rev">
+- 2026-07-20 v1.0: initial. Core formulation (the three-point figure; shortening as projection; curvature as surviving information; mediation as curvature; forgetting as ruler mismatch; the latent dimension) by Ashman; Thales/quarter-turn theorem, ladder grounding, relocation principle, triptych mapping, and the Xorzo2 measurements added in session by Claude. Numbers from Xorzo2/findings_stage1.md (F4, F5, F11).
+</p>
+
+</body>
+</html>
