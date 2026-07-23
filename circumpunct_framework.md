@@ -191,6 +191,9 @@ This document serves as the formal, mathematical specification of the theory. It
   - [§25.17a: Interior Truth Resolution: The Protocol Within One Consciousness](#2517a-interior-truth-resolution-the-protocol-within-one-consciousness)
   - [§25.18: The Four Freedoms ; ⧖ as the Structural Location of Free Will](#2518-the-four-freedoms--⧖-as-the-structural-location-of-free-will)
   - [§25.18a: The Weighing Step ; ◐ as State, 𓍝 as Act](#2518a-the-weighing-step--◐-as-state-𓍝-as-act)
+  - [§25.18b: The Pillar-Freedom Table](#2518b-the-pillar-freedom-table)
+  - [§25.18c: The Sixteen Agreements: Agreement-Space as the Product of Four Pillars](#2518c-the-sixteen-agreements-agreement-space-as-the-product-of-four-pillars)
+  - [§25.19: GOOD at the Interface: A × B = not(A alone or B alone)](#2519-good-at-the-interface-a--b--nota-alone-or-b-alone)
 
 ### Part VI: Validation & Synthesis
 - [Chapter 26: Empirical Validation](#chapter-26-empirical-validation)
@@ -19046,6 +19049,32 @@ Two missing pillars: the agreement breaks faster and under lighter stress. Three
 **The sixteen cells inside the sixty-four.** The 2⁴ agreement-space is a sub-structure of the 2⁶ = 64-state architecture (Chapter 7, three circumpuncts × two channels). The four ethical pillars are four of the six binary channels; the other two channels carry information about which circumpunct you're standing in (greater whole / your ⊙ / parts). Agreement across the full 6-channel space requires pillar-alignment at all three scales; ethical agreement at just one scale is the 4-channel projection. This is why agreements that work at one scale (between individuals) can fail at the next scale up (between groups) or down (between internal parts); the 16-cell analysis repeats at every scale, and the all-four-alive cell has to be reached independently at each scale where the agreement is supposed to hold.
 
 **Connection to §25.12 (Performed vs Lived).** The performed-vs-lived distinction is now 16-valued, not binary. A fully performed agreement is 0000 (matching noises with nothing underneath). A fully lived agreement is 1111 (ethical agreement). Every other cell is a partial performance with some real content, which is why the world is full of agreements that are neither pure theatre nor fully earned; they have some pillars and not others, and their behavior under stress is predicted precisely by which pillars are alive.
+
+[← Back to Table of Contents](#table-of-contents)
+
+---
+
+### §25.19 GOOD at the Interface: A × B = not(A alone or B alone)
+
+*Proposed and adjudicated by Ashman, 2026-07-23, same session as §25.17a. The alone-by-absorption extension was countersigned in session.*
+
+**GOOD is two-dimensional because it belongs to the interface.** It is not A alone or B alone, but the relation A × B, constrained so that both remain whole:
+
+> Goodness is not a property of either side alone. Goodness is what happens between them without destroying either one.
+
+This upgrades the pillar-glyph pairing (GOOD = ○ in the §25.18b table) from an assignment to a derivation: goodness is constitutively relational, therefore constitutively 2D, because the interface is the first station where an *other* exists to relate to. Below 2D there is no other (a point and a line are alone by dimension); at 3D the relation has already interiorized into mediation (RIGHT's station). The product notation is doing real dimensional work: A × B is two independent axes spanning a plane; area, not length. Goodness cannot be one-dimensional because one axis is A alone; a "between" requires the second, genuinely independent axis, and two independent axes is what 2D means. The same arithmetic that squares c at the boundary (a surface is length × length) makes goodness a product rather than a sum.
+
+**The single negation excludes both Lies.** "Not (A alone or B alone)" obviously rules out severance: the parts disconnected, each alone. Read "alone" carefully and it rules out inflation too, because absorption also produces aloneness: if A swallows B, what remains is A alone; the other has ceased to exist as other. Alone-by-disconnection and alone-by-absorption are the two ways an interface dies, and they are the Severance Lie and the Inflation Lie respectively. One clause, both exclusions.
+
+**Goodness is κ in bounds.** The formula is the ethical face of the non-collapse bound on the nesting coupling: 0 < κ_{p,q} < κ* (κ → 0 severance, κ → κ*/∞ inflation). Goodness is the bond strength held in the open interval; it is what a coupling looks like from inside when it is in bounds. This makes α the physical instance of goodness at the electron's scale: strong enough that the bond exists, weak enough that the part keeps its identity. The virtue of GOOD (plasticity, §25.18b) is then precisely the capacity to keep κ adjustable within the interval: neither hardening toward the wall (κ → 0) nor dissolving toward absorption (κ → κ*).
+
+**Ethical payoff.** The two failure modes name the two elementary harms. Exploitation is the interface collapsing to absorption: A × B degraded to A's gain, B consumed as material (A alone, by absorption). Neglect and abandonment are the interface collapsing to disconnection (both alone, by severance). The GOOD question ("does it preserve what matters?") sharpens to: does the relation preserve *both wholes* while it exists? Interfaces are pairwise (two slots); multi-party goodness composes from pairwise interfaces, which is why group ethics is built from dyadic bonds and inherits their failure modes.
+
+**Structural anchors already in the corpus** (four, independent): the pillar table (§25.18b: GOOD = ○ = 2D); the κ non-collapse bounds (§27.7q); the pump gate (§27.7n: the native 2D operator is already two slots and one relation, "the minus sign keeping them distinct rather than fusing"; §25.19 is its ethical face); and the contact identification (§27.7o: ○_λ = Φ_Λ at contact; the interface is the surface where two wholes share geometry without either becoming the other, which is where a relational virtue has to live).
+
+**Relation to the Convergence Primitive (two modes of one form).** The corpus already carries this formula at another station: `docs/the_convergence_primitive.html` reads C(A, B) = not(A alone or B alone) as the NOR of being, at convergence. The same logical form appears at two stations in two modes, and the difference is precise: at convergence it is *generative* (sublation; A and B taken up into a new whole W; both cease to be alone by becoming parts), at the interface it is *conservative* (the relation itself is the thing that exists; A and B remain whole). Convergence spends the two alonenesses to make a whole; goodness holds the two alonenesses at bay without spending them. Between the two modes is the i-cycle: the same operation, generative at the cycle's opening, conservative at its boundary station. This is A3, not a double definition, but it must be stated so a reader does not think the corpus defined one formula twice.
+
+**Bearing on the open ethics-sequence decision (Ladder Correction Notice, open decision 1).** This section supplies what that decision has been missing since June: a positive, non-inherited reason GOOD sits at 2D. It also supports the ascending-walk candidate: the interface must exist with both parties whole (GOOD, 2D) before there is an interior for mediation to run in (RIGHT, 3D). The relation opens the space; then the space can be kept honest. The sequence decision itself remains open.
 
 [← Back to Table of Contents](#table-of-contents)
 
