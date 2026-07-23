@@ -188,6 +188,7 @@ This document serves as the formal, mathematical specification of the theory. It
   - [§25.15: The Restoration Protocol](#2515-the-restoration-protocol)
   - [§25.16: The Golden Rule as Geometric Proof](#2516-the-golden-rule-as-geometric-proof)
   - [§25.17: The Resolution Protocol: Truth at Variable Aperture](#2517-the-resolution-protocol-truth-at-variable-aperture)
+  - [§25.17a: Interior Truth Resolution: The Protocol Within One Consciousness](#2517a-interior-truth-resolution-the-protocol-within-one-consciousness)
   - [§25.18: The Four Freedoms ; ⧖ as the Structural Location of Free Will](#2518-the-four-freedoms--⧖-as-the-structural-location-of-free-will)
   - [§25.18a: The Weighing Step ; ◐ as State, 𓍝 as Act](#2518a-the-weighing-step--◐-as-state-𓍝-as-act)
 
@@ -18756,6 +18757,72 @@ EXAMPLE: The Resolution Gradient in Practice
 ```
 
 The containment requirement (Tₖ₊₁ ⊇ Tₖ) is what separates truth at variable aperture from lies at variable detail. A liar's sequence fails the containment test: eventually, increasing resolution forces a retraction. A truthful sequence passes it: every zoom-in reveals more of what was already there.
+
+[← Back to Table of Contents](#table-of-contents)
+
+---
+
+### §25.17a Interior Truth Resolution: The Protocol Within One Consciousness
+
+*Adjudicated and authored by Ashman, 2026-07-23, in the session that produced `docs/the_fallout_of_the_noble_lie.html`. The Resolution Protocol was first noticed in communication; this section states the prior operation it was always an instance of.*
+
+**Truth Resolution operates within consciousness before it operates in communication.**
+
+The field presents possibilities without thereby endorsing them. Attention functions as an aperture, localizing one possibility and increasing its resolution. Conscience evaluates whether developing that possibility serves the integrity of the whole. Choice determines whether it receives further attention. Where another person is involved, consent determines whether the possibility may become shared action.
+
+A possibility may therefore be acknowledged without being cultivated. Declining to increase its resolution is not repression when its occurrence remains honestly recognized. The truthful internal gate is:
+
+> This possibility appeared. I have chosen not to develop it.
+
+The whole may contain a part without allowing that part to define the whole.
+
+**The same operation at two scales (A3):**
+
+```
+WITHIN ONE PERSON:                      BETWEEN PEOPLE:
+    Possibility arises.                     Possibility arises.
+    Attention gives it resolution.          Communication gives it shared resolution.
+    Conscience determines whether           Conscience evaluates its effects.
+        it serves the whole.
+    Choice determines whether it            Consent determines whether it may
+        receives further development.           become shared action.
+```
+
+Transmission between people and resolution within one person are the same operation at two scales, which is what A3 predicts. §25.17 was never a communication rule that happens to work on attention; it is an attention rule that was first noticed in communication.
+
+**The station walk.** The four lines traverse the circumpunct in first person: the possibility arises in the field (Φ carries all possibilities before anything filters; the same statement §13's quantum reading makes about superposition); attention converges as the aperture (§1.2: "attention is a 0 in the 1: a convergence point where the field becomes local"; increasing a thought's resolution IS convergence); conscience weighs at the boundary (the 𓍝 act of §25.18a, run against the virtues); consent composes as the whole (AGREEMENT, the fifth pillar, bilateral by construction: two receivers, each controlling the aperture, both required to open it).
+
+**The retraction test, applied inward.** The discriminant between resolution and repression is the same one that separates a gate from a concealment (§25.17; the essay's hard case):
+
+```
+REPRESSION:  "That thought never occurred."
+    Conceals reality. Will someday require retraction,
+    and the retraction arrives as symptom, eruption, or shame.
+
+RESOLUTION:  "That thought occurred, and I chose not to develop it."
+    Remains true at every later depth of self-examination.
+    The lowest resolution that is still true, applied to one's own interior.
+```
+
+Lying to yourself about the thought is the Noble Lie with one citizen (§25.9 interiorized).
+
+**Connection to the cascade (§19, Theory of Mind).** The four-stage cascade (thought entertained → repeated → habituated → identity fusion) is the pathological version of this section: attention granting resolution over and over, unweighed, until a part redefines the whole. Interior Truth Resolution interrupts the cascade at stage one, where a thought "dissolves when attention shifts." The interruption costs nothing: fighting the thought would grant it resolution through the back door; returning to the more general truth lets the specific one dissolve unfunded. Returning to the general truth is not denial. It is the conscious decision not to fund one particular possibility with further attention.
+
+**The non-culpability clause (intrusive thoughts).** Repeated or intrusive thoughts do not by themselves mean that someone has repeatedly chosen to grant them resolution. Minds can return to unwanted material involuntarily; recurrence of a possibility is the field's behavior, not the aperture's choice. Moral meaning begins with endorsement, deliberate cultivation, communication, or action, not with the mere appearance or recurrence of a thought. (Without this clause the section could be weaponized into scrupulosity: a person condemning themselves for the field doing what fields do. The field presents; only the aperture funds.)
+
+**Connection to the resolution-layer decomposition.** A thought has layers, exactly as a dangerous truth does (the fact/mechanism/recipe stack of the Noble Lie essay's hard case):
+
+```
+    It occurred.
+    It could mean something.
+    It could be explored.
+    It could be communicated.
+    It could be enacted.
+```
+
+Those layers need not open together. Consciousness can acknowledge the first while conscientiously declining the rest. That is not concealment. It is truthful aperture control.
+
+**Connection to the Four Freedoms (§25.18).** The internal gate is NOT-YET exercised in its declining form: the aperture held open enough to see the possibility honestly, and no further. Where a standing relationship fixes the widening criterion in advance (a covenant opens a class of possibilities), each occasion still requires present bilateral consent: the relationship is the gate's existence; consent is the gate's operation; neither substitutes for the other.
 
 [← Back to Table of Contents](#table-of-contents)
 

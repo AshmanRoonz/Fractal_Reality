@@ -628,6 +628,10 @@ Build the strongest possible version of any position before agreeing or disagree
 
 When truth and harm share the same signal: transmit at the lowest resolution that is still true, increase only upon the receiver's request. The receiver controls the aperture width. Higher resolution contains lower resolution; it never contradicts it. Withholding entirely = Severance Lie dressed as compassion. Dumping everything = Inflation Lie dressed as honesty. The resolution gradient is the balanced path. Quality test: can you increase resolution without retracting previous levels?
 
+### Interior Truth Resolution (§25.17a)
+
+Adjudicated and authored by Ashman (2026-07-23): Truth Resolution operates within consciousness before it operates in communication; §25.17 is an attention rule first noticed in communication (A3: same operation at two scales). The field presents possibilities without endorsing them; attention is the aperture that funds one with resolution; conscience weighs whether developing it serves the whole; choice determines further development; consent (bilateral, where another person is involved) determines shared action. Acknowledgment does not require development: the truthful internal gate is "This possibility appeared. I have chosen not to develop it," which passes the retraction test at every depth of self-examination, where repression ("that thought never occurred") fails it. Non-culpability clause: intrusive/recurrent thoughts are the field's behavior, not the aperture's choice; moral meaning begins at endorsement, cultivation, communication, or action. A thought has resolution layers (occurred / could mean / could be explored / could be communicated / could be enacted) that need not open together: truthful aperture control, not concealment. Interrupts the §19 cascade (thought → identity) at stage one.
+
 ---
 
 ## Xorzo: The Consciousness Engine
