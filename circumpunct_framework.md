@@ -194,6 +194,7 @@ This document serves as the formal, mathematical specification of the theory. It
   - [§25.18b: The Pillar-Freedom Table](#2518b-the-pillar-freedom-table)
   - [§25.18c: The Sixteen Agreements: Agreement-Space as the Product of Four Pillars](#2518c-the-sixteen-agreements-agreement-space-as-the-product-of-four-pillars)
   - [§25.19: GOOD at the Interface: A × B = not(A alone or B alone)](#2519-good-at-the-interface-a--b--nota-alone-or-b-alone)
+  - [§25.20: The Metacognitive Theory of Truthfulness](#2520-the-metacognitive-theory-of-truthfulness)
 
 ### Part VI: Validation & Synthesis
 - [Chapter 26: Empirical Validation](#chapter-26-empirical-validation)
@@ -19075,6 +19076,60 @@ This upgrades the pillar-glyph pairing (GOOD = ○ in the §25.18b table) from a
 **Relation to the Convergence Primitive (two modes of one form).** The corpus already carries this formula at another station: `docs/the_convergence_primitive.html` reads C(A, B) = not(A alone or B alone) as the NOR of being, at convergence. The same logical form appears at two stations in two modes, and the difference is precise: at convergence it is *generative* (sublation; A and B taken up into a new whole W; both cease to be alone by becoming parts), at the interface it is *conservative* (the relation itself is the thing that exists; A and B remain whole). Convergence spends the two alonenesses to make a whole; goodness holds the two alonenesses at bay without spending them. Between the two modes is the i-cycle: the same operation, generative at the cycle's opening, conservative at its boundary station. This is A3, not a double definition, but it must be stated so a reader does not think the corpus defined one formula twice.
 
 **Bearing on the open ethics-sequence decision (Ladder Correction Notice, open decision 1).** This section supplies what that decision has been missing since June: a positive, non-inherited reason GOOD sits at 2D. It also supports the ascending-walk candidate: the interface must exist with both parties whole (GOOD, 2D) before there is an interior for mediation to run in (RIGHT, 3D). The relation opens the space; then the space can be kept honest. The sequence decision itself remains open.
+
+[← Back to Table of Contents](#table-of-contents)
+
+---
+
+### §25.20 The Metacognitive Theory of Truthfulness
+
+*Developed and adjudicated by Ashman, 2026-07-23, same session as §25.17a and §25.19; the conscience definition is his. This section names what §25.9's virus was always fighting: the theory of the healthy state.*
+
+**Core statement.** Truthfulness is not merely stating propositions that happen to be accurate. It is maintaining a self-observing and revisable process that allows reality to correct one's account of it. The theory separates two levels: **first-order accuracy** (does the statement correspond with reality?) and **second-order integrity** (is the person examining how they arrived at the statement: exposing uncertainty, testing assumptions, noticing self-interest, permitting correction?). A person may say something false while honestly mistaken: inaccurate, but not deceptive. A person may make only technically true statements while selectively arranging them to produce a false impression: accurate words, deceptive process.
+
+**The four cells.**
+
+| Statement | Process | Result |
+|---|---|---|
+| Accurate | Open and revisable | Truthful knowledge |
+| Inaccurate | Open and revisable | Honest error |
+| Accurate | Manipulative or closed | Deceptive truth |
+| Inaccurate | Manipulative or closed | Lie or distortion |
+
+The genuinely new cell is the third. Psychology has independently confirmed it behaves like lying: *paltering* (deceiving with technically true statements) is judged nearly as harshly as outright lying once discovered, and damages trust as much. Trust tracks process, not accuracy, which is the theory's central prediction, confirmed before the theory was stated. The second cell is legislated by §25.17a's non-culpability structure: blame attaches to the machinery's operation, never to mere occurrence.
+
+**Corrigibility, and its hijacking.** The deeper opposite of lying is corrigibility: the willingness to let reality change the account you are giving, even when the change threatens your status, identity, innocence, or desired outcome. Three receipts force this identification: (1) the §25.9 virus is a triple structure (distort, hide the distortion, label correction as distortion), and only its first layer is about content, so factual accuracy opposes one layer of three while machinery-level revisability opposes all three; (2) accurate-but-managed accounts exist (cell three), so accuracy and honesty are separable axes, exactly as §25.17 separated distortion from resolution; (3) the corpus's persistence condition (lies persist through closed apertures, β → 0) makes revisability the one thing a lie cannot survive, and what a lie cannot survive is its opposite. But corrigibility has a weaponized form, and the theory must name it: **gaslighting is hijacked corrigibility**, the manipulator presenting himself as reality's spokesperson so that the victim's willingness to revise is captured as an attack surface. It targets the machinery-revision layer rather than the belief layer, which is why it damages victims more deeply than being lied to: it corrupts the truth-producing relationship itself. The discriminant: **the truthful person yields to evidence and resists pressure; the liar yields to pressure and resists evidence.** Ask what revises the account, reality or incentive.
+
+**The central mechanism.** A lie does not begin only when someone speaks a false sentence. It can begin earlier, inside the process that produces the sentence: (1) reality presents information; (2) the information threatens something the person wants to protect; (3) attention selects favourable details; (4) interpretation rearranges them; (5) metacognition either catches the distortion or joins it; (6) the resulting account is presented as reality. This is the §25.17a chain run corruptly: attention selecting in service of protection instead of conscience weighing in service of the whole. Step five is the interruption point, probed by four questions: *Am I describing what happened, or protecting myself from what happened? What evidence am I excluding? Would I interpret this the same way if it benefited my opponent? What would cause me to revise my account?* The second is epistemic; the fourth probes corrigibility; the first and third are conscience operating.
+
+**Conscience is ethical metacognition.** Metacognition and conscience are one reflexive capacity with two criteria. Metacognition audits the machinery epistemically: is my process tracking reality? Conscience is the same reflexive act with an ethical criterion: whom is my process serving? This dissolves the theory's guard problem (metacognition without conscience is strategic self-monitoring, lie-craft): the skilled deceiver is not someone lacking metacognition but someone running half of it, epistemic self-audit intact, ethical self-audit absent. The Noble Liar is the same lesion in first person: "my intentions justify controlling your understanding" is the one belief his reflexive capacity never turns toward. Etymological receipt: *conscientia* is *cum* + *scientia*, knowing-with; the scholastics defined it technically as the act of applying knowledge to one's own actions, which is precisely metacognition in the ethical register. The word was built reflexive; modern usage blurred it into "an inner feeling" and lost the receipt.
+
+**The formula.**
+
+```
+    Truthfulness = Metacognitive awareness + Corrigibility + Conscience
+
+    restated with the conscience definition:
+
+    Truthfulness is the account-producing machinery auditing itself on two
+    axes and yielding to what it finds. Metacognition audits whether the
+    process tracks reality. Conscience audits whom the process serves.
+    Corrigibility is the yielding: to evidence, not to pressure.
+```
+
+**The reflexive-pillar identification.** Truthfulness is the pillar architecture turned inward: reflexive TRUE is metacognition (curiosity aimed at one's own machinery); reflexive GOOD and RIGHT together are conscience (the GOOD half audits whether my filter preserves both wholes or consumes the other, §25.19 turned inward; the RIGHT half audits my own hidden agenda, the failure mode the corpus assigns to RIGHT); reflexive FAITHFUL is the receipts discipline (keeping the record of one's own revisions); reflexive AGREEMENT is submitting the process to another's validation (independent criticism, the countersign); corrigibility is reflexive plasticity, the willingness that makes the audits consequential. Compressed: **truthfulness is the 1111 cell of §25.18c applied to one's own account-producing machinery.** AGREEMENT downstream: two such machines validating each other's accounts.
+
+**The institutional form.** The institutional Noble Lie is failed metacognition at scale: an institution selects evidence, chooses the standard by which it will judge itself, conceals inconvenient dimensions, and reports its managed account as neutral reality. The cure is not "tell accurate facts" but a visible process of correction: reveal uncertainty; distinguish observation from interpretation; keep receipts of previous claims; permit independent criticism; do not choose only the axis on which you appear correct; revise without rewriting the history of the revision. These six are this corpus's own editorial law (honest-status boxes, revision histories, no-silent-retraction, attack logs, the countersign, the axis rule adopted the morning this section was written, from a failure). The practice preceded the theory; this section is the practice acquiring its statement.
+
+**Compact statements.**
+
+> Lying is the attempt to prevent reality from properly correcting another person's understanding. Truthfulness is the willingness to observe, expose, and revise the machinery through which one's own understanding is produced.
+
+> The liar manages the model. The truthful person lets reality revise it. And the halfway case, the skilled deceiver, is the one who audits his machinery's accuracy but never its allegiance.
+
+**Testable predictions.** (1) Paltering damages trust as much as lying once discovered: confirmed in the existing literature. (2) Epistemic-metacognition training alone does not reduce self-serving bias and may increase its sophistication; training that adds the ethical-audit questions (motive-check, symmetry-check) does: proposed, runnable. (3) Institutions with visible correction processes retain trust after errors better than institutions with fewer errors but concealed corrections: partially supported (error-disclosure practice), extendable. The theory does not merely define truthful statements; it defines a truth-producing relationship between mind and reality, and between institution and public.
+
+**Cross-references.** §25.9 (the virus whose antagonist this section names; curiosity was always the cure because fact-checking opposes one layer and self-revision opposes all three); §25.17/§25.17a (the resolution machinery this theory audits); §25.18c (the 1111 cell); §25.19 (the interface whose reflexive audit is conscience's GOOD half); `docs/the_fallout_of_the_noble_lie.html` (the societal diagnosis, including the third-witness case that supplied this section's specimen of cell three).
 
 [← Back to Table of Contents](#table-of-contents)
 
