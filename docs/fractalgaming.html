@@ -4,11 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Fractal Gaming &mdash; Game Design Studio</title>
-<meta name="description" content="Fractal Gaming is the video game design studio of Ashman Roonz and a branch of Fractal Reality. Home of Last Ship Sailing and Ace Starship.">
+<meta name="description" content="Fractal Gaming is the video game design studio of Ashman Roonz and a branch of Fractal Reality. Home of Last Ship Sailing, Ace Starship, and Goopling.">
 <meta name="theme-color" content="#0a0d14">
 
 <meta property="og:title" content="Fractal Gaming">
-<meta property="og:description" content="Video game design studio. A branch of Fractal Reality. Makers of Last Ship Sailing and Ace Starship.">
+<meta property="og:description" content="Video game design studio. A branch of Fractal Reality. Makers of Last Ship Sailing, Ace Starship, and Goopling.">
 <meta property="og:image" content="https://fractalreality.ca/FractalGaming.png">
 <meta property="og:url" content="https://fractalreality.ca/fractalgaming.html">
 <meta property="og:type" content="website">
@@ -286,6 +286,84 @@
       </div>
     </article>
 
+    <!-- Goopling -->
+    <article class="reveal flex flex-col rounded-2xl overflow-hidden border border-rule bg-gradient-to-br from-leaf/[0.06] to-transparent" data-reveal-delay="200">
+      <div class="relative aspect-[4/3] flex items-center justify-center overflow-hidden border-b border-rule"
+           style="background:
+             radial-gradient(circle at 72% 30%, rgba(216,227,74,0.15), transparent 55%),
+             radial-gradient(circle at 25% 70%, rgba(102,204,136,0.13), transparent 55%),
+             #06070d;">
+        <!-- inline goo art: the game's own metaball trick (blur + alpha contrast), no asset needed -->
+        <svg viewBox="0 0 400 300" class="w-full h-full animate-float" role="img" aria-label="Goopling — a little cell with cilia adrift in yellow goop">
+          <defs>
+            <filter id="goo-fg" x="-30%" y="-30%" width="160%" height="160%">
+              <feGaussianBlur in="SourceGraphic" stdDeviation="9"/>
+              <feColorMatrix values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 22 -11"/>
+            </filter>
+          </defs>
+          <g filter="url(#goo-fg)" opacity="0.45">
+            <circle cx="86" cy="78" r="24" fill="#2b4a8c"/><circle cx="116" cy="94" r="17" fill="#2b4a8c"/>
+            <circle cx="298" cy="252" r="28" fill="#1e5c46"/><circle cx="330" cy="236" r="19" fill="#1e5c46"/>
+            <circle cx="56" cy="232" r="20" fill="#1e5c46"/>
+          </g>
+          <g filter="url(#goo-fg)">
+            <circle cx="248" cy="62" r="33" fill="#d8e34a"/><circle cx="299" cy="46" r="25" fill="#d8e34a"/>
+            <circle cx="284" cy="106" r="21" fill="#d8e34a"/><circle cx="332" cy="152" r="29" fill="#d8e34a"/>
+            <circle cx="311" cy="204" r="19" fill="#d8e34a"/><circle cx="366" cy="92" r="23" fill="#d8e34a"/>
+            <circle cx="160" cy="38" r="16" fill="#d8e34a"/><circle cx="204" cy="150" r="13" fill="#d8e34a"/>
+            <circle cx="256" cy="256" r="15" fill="#d8e34a"/>
+          </g>
+          <g transform="translate(122,206)">
+            <g stroke="#dcecea" stroke-width="1.7" stroke-linecap="round" opacity="0.85">
+              <line x1="52" y1="0" x2="62" y2="3" transform="rotate(0)"/><line x1="52" y1="0" x2="62" y2="3" transform="rotate(20)"/>
+              <line x1="52" y1="0" x2="62" y2="3" transform="rotate(40)"/><line x1="52" y1="0" x2="62" y2="3" transform="rotate(60)"/>
+              <line x1="52" y1="0" x2="62" y2="3" transform="rotate(80)"/><line x1="52" y1="0" x2="62" y2="3" transform="rotate(100)"/>
+              <line x1="52" y1="0" x2="62" y2="3" transform="rotate(120)"/><line x1="52" y1="0" x2="62" y2="3" transform="rotate(140)"/>
+              <line x1="52" y1="0" x2="62" y2="3" transform="rotate(160)"/><line x1="52" y1="0" x2="62" y2="3" transform="rotate(180)"/>
+              <line x1="52" y1="0" x2="62" y2="3" transform="rotate(200)"/><line x1="52" y1="0" x2="62" y2="3" transform="rotate(220)"/>
+              <line x1="52" y1="0" x2="62" y2="3" transform="rotate(240)"/><line x1="52" y1="0" x2="62" y2="3" transform="rotate(260)"/>
+              <line x1="52" y1="0" x2="62" y2="3" transform="rotate(280)"/><line x1="52" y1="0" x2="62" y2="3" transform="rotate(300)"/>
+              <line x1="52" y1="0" x2="62" y2="3" transform="rotate(320)"/><line x1="52" y1="0" x2="62" y2="3" transform="rotate(340)"/>
+            </g>
+            <circle r="50" fill="rgba(214,232,236,0.16)" stroke="#e8f4f2" stroke-width="2.4"/>
+            <circle cx="10" cy="18" r="22" fill="rgba(102,204,136,0.18)"/>
+            <circle cx="-6" cy="-2" r="17" fill="#f2f7f6"/>
+            <circle cx="-12" cy="-2" r="8" fill="#10141c"/>
+            <circle cx="12" cy="-24" r="3.2" fill="#e8f4f2" opacity="0.9"/>
+          </g>
+        </svg>
+        <span class="absolute top-3 right-3 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/55 border border-white/15 text-[10px] tracking-[0.18em] uppercase text-fog-100 backdrop-blur">
+          <i data-lucide="egg" class="w-3 h-3"></i> Just hatched
+        </span>
+      </div>
+      <div class="p-8 lg:p-9 flex flex-col flex-1 bg-ink-700/40">
+        <div class="font-display font-bold text-[11px] tracking-[0.28em] uppercase text-leaf mb-3">New release &middot; Browser</div>
+        <h3 class="font-display font-bold text-2xl leading-tight tracking-wide text-fog-100 mb-3">Goopling</h3>
+        <div class="font-serif italic text-[15px] text-gold mb-3">You are a speck in living goop. Slosh. Feed. Evolve.</div>
+        <p class="text-fog-300 text-[14.5px] mb-5">A touch-first toy-game: your finger is a growing cell sloshing through thousands of fluid goop particles. Graze slowly to feed, evolve cilia, vortices, spikes and tentacles, and drain procedurally generated biomes &mdash; solo, or in a peer-to-peer room with friends. Pinch to zoom.</p>
+        <div class="flex flex-wrap gap-x-4 gap-y-2 pt-4 border-t border-rule text-[10.5px] tracking-[0.12em] uppercase text-fog-500 mb-6">
+          <span class="flex items-center gap-1.5"><i data-lucide="globe" class="w-3.5 h-3.5"></i> <strong class="text-fog-100 font-medium">Free</strong> &middot; browser</span>
+          <span class="flex items-center gap-1.5"><i data-lucide="smartphone" class="w-3.5 h-3.5"></i> Touch-first</span>
+          <span class="flex items-center gap-1.5"><i data-lucide="users" class="w-3.5 h-3.5"></i> P2P co-op</span>
+        </div>
+        <div class="flex flex-wrap gap-3 mt-auto">
+          <a class="btn"
+             style="background:#66cc88;color:#0a0d14;border-color:#66cc88;"
+             href="https://lss.fractalreality.ca/goopling.html"
+             onmouseover="this.style.background='#85e0a4';this.style.transform='translateY(-1px)';this.style.boxShadow='0 6px 24px rgba(102,204,136,0.32)';"
+             onmouseout="this.style.background='#66cc88';this.style.transform='';this.style.boxShadow='';">
+            <i data-lucide="play" class="w-4 h-4"></i>
+            Launch
+            <i data-lucide="arrow-right" class="w-4 h-4 btn-arrow"></i>
+          </a>
+          <a class="btn btn-secondary" href="https://lss.fractalreality.ca/labs/particle_cloud_break_lab.html">
+            <i data-lucide="flask-conical" class="w-4 h-4"></i>
+            Born in the lab
+          </a>
+        </div>
+      </div>
+    </article>
+
   </div>
 </section>
 
@@ -360,6 +438,7 @@
         <h5 class="font-sans text-[11px] tracking-[0.22em] uppercase text-fog-500 mb-3 font-medium">Games</h5>
         <a href="https://lss.fractalreality.ca" class="block py-1 text-sm text-fog-300 hover:text-fog-100 transition-colors">Last Ship Sailing</a>
         <a href="https://www.roblox.com/games/87753657136129/Ace-Starship" class="block py-1 text-sm text-fog-300 hover:text-fog-100 transition-colors">Ace Starship</a>
+        <a href="https://lss.fractalreality.ca/goopling.html" class="block py-1 text-sm text-fog-300 hover:text-fog-100 transition-colors">Goopling</a>
       </div>
       <div>
         <h5 class="font-sans text-[11px] tracking-[0.22em] uppercase text-fog-500 mb-3 font-medium">More</h5>
