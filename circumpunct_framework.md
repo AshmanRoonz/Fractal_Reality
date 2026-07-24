@@ -191,6 +191,10 @@ This document serves as the formal, mathematical specification of the theory. It
   - [§25.17a: Interior Truth Resolution: The Protocol Within One Consciousness](#2517a-interior-truth-resolution-the-protocol-within-one-consciousness)
   - [§25.18: The Four Freedoms ; ⧖ as the Structural Location of Free Will](#2518-the-four-freedoms--⧖-as-the-structural-location-of-free-will)
   - [§25.18a: The Weighing Step ; ◐ as State, 𓍝 as Act](#2518a-the-weighing-step--◐-as-state-𓍝-as-act)
+  - [§25.18b: The Pillar-Freedom Table](#2518b-the-pillar-freedom-table)
+  - [§25.18c: The Sixteen Agreements: Agreement-Space as the Product of Four Pillars](#2518c-the-sixteen-agreements-agreement-space-as-the-product-of-four-pillars)
+  - [§25.19: GOOD at the Interface: A × B = not(A alone or B alone)](#2519-good-at-the-interface-a--b--nota-alone-or-b-alone)
+  - [§25.20: The Metacognitive Theory of Truthfulness](#2520-the-metacognitive-theory-of-truthfulness)
 
 ### Part VI: Validation & Synthesis
 - [Chapter 26: Empirical Validation](#chapter-26-empirical-validation)
@@ -19046,6 +19050,106 @@ Two missing pillars: the agreement breaks faster and under lighter stress. Three
 **The sixteen cells inside the sixty-four.** The 2⁴ agreement-space is a sub-structure of the 2⁶ = 64-state architecture (Chapter 7, three circumpuncts × two channels). The four ethical pillars are four of the six binary channels; the other two channels carry information about which circumpunct you're standing in (greater whole / your ⊙ / parts). Agreement across the full 6-channel space requires pillar-alignment at all three scales; ethical agreement at just one scale is the 4-channel projection. This is why agreements that work at one scale (between individuals) can fail at the next scale up (between groups) or down (between internal parts); the 16-cell analysis repeats at every scale, and the all-four-alive cell has to be reached independently at each scale where the agreement is supposed to hold.
 
 **Connection to §25.12 (Performed vs Lived).** The performed-vs-lived distinction is now 16-valued, not binary. A fully performed agreement is 0000 (matching noises with nothing underneath). A fully lived agreement is 1111 (ethical agreement). Every other cell is a partial performance with some real content, which is why the world is full of agreements that are neither pure theatre nor fully earned; they have some pillars and not others, and their behavior under stress is predicted precisely by which pillars are alive.
+
+[← Back to Table of Contents](#table-of-contents)
+
+---
+
+### §25.19 GOOD at the Interface: A × B = not(A alone or B alone)
+
+*Proposed and adjudicated by Ashman, 2026-07-23, same session as §25.17a. The alone-by-absorption extension was countersigned in session.*
+
+**GOOD is two-dimensional because it belongs to the interface.** It is not A alone or B alone, but the relation A × B, constrained so that both remain whole:
+
+> Goodness is not a property of either side alone. Goodness is what happens between them without destroying either one.
+
+This upgrades the pillar-glyph pairing (GOOD = ○ in the §25.18b table) from an assignment to a derivation: goodness is constitutively relational, therefore constitutively 2D, because the interface is the first station where an *other* exists to relate to. Below 2D there is no other (a point and a line are alone by dimension); at 3D the relation has already interiorized into mediation (RIGHT's station). The product notation is doing real dimensional work: A × B is two independent axes spanning a plane; area, not length. Goodness cannot be one-dimensional because one axis is A alone; a "between" requires the second, genuinely independent axis, and two independent axes is what 2D means. The same arithmetic that squares c at the boundary (a surface is length × length) makes goodness a product rather than a sum.
+
+**The single negation excludes both Lies.** "Not (A alone or B alone)" obviously rules out severance: the parts disconnected, each alone. Read "alone" carefully and it rules out inflation too, because absorption also produces aloneness: if A swallows B, what remains is A alone; the other has ceased to exist as other. Alone-by-disconnection and alone-by-absorption are the two ways an interface dies, and they are the Severance Lie and the Inflation Lie respectively. One clause, both exclusions.
+
+**Goodness is κ in bounds.** The formula is the ethical face of the non-collapse bound on the nesting coupling: 0 < κ_{p,q} < κ* (κ → 0 severance, κ → κ*/∞ inflation). Goodness is the bond strength held in the open interval; it is what a coupling looks like from inside when it is in bounds. This makes α the physical instance of goodness at the electron's scale: strong enough that the bond exists, weak enough that the part keeps its identity. The virtue of GOOD (plasticity, §25.18b) is then precisely the capacity to keep κ adjustable within the interval: neither hardening toward the wall (κ → 0) nor dissolving toward absorption (κ → κ*).
+
+**Ethical payoff.** The two failure modes name the two elementary harms. Exploitation is the interface collapsing to absorption: A × B degraded to A's gain, B consumed as material (A alone, by absorption). Neglect and abandonment are the interface collapsing to disconnection (both alone, by severance). The GOOD question ("does it preserve what matters?") sharpens to: does the relation preserve *both wholes* while it exists? Interfaces are pairwise (two slots); multi-party goodness composes from pairwise interfaces, which is why group ethics is built from dyadic bonds and inherits their failure modes.
+
+**Structural anchors already in the corpus** (four, independent): the pillar table (§25.18b: GOOD = ○ = 2D); the κ non-collapse bounds (§27.7q); the pump gate (§27.7n: the native 2D operator is already two slots and one relation, "the minus sign keeping them distinct rather than fusing"; §25.19 is its ethical face); and the contact identification (§27.7o: ○_λ = Φ_Λ at contact; the interface is the surface where two wholes share geometry without either becoming the other, which is where a relational virtue has to live).
+
+**Relation to the Convergence Primitive (two modes of one form).** The corpus already carries this formula at another station: `docs/the_convergence_primitive.html` reads C(A, B) = not(A alone or B alone) as the NOR of being, at convergence. The same logical form appears at two stations in two modes, and the difference is precise: at convergence it is *generative* (sublation; A and B taken up into a new whole W; both cease to be alone by becoming parts), at the interface it is *conservative* (the relation itself is the thing that exists; A and B remain whole). Convergence spends the two alonenesses to make a whole; goodness holds the two alonenesses at bay without spending them. Between the two modes is the i-cycle: the same operation, generative at the cycle's opening, conservative at its boundary station. This is A3, not a double definition, but it must be stated so a reader does not think the corpus defined one formula twice.
+
+**Bearing on the open ethics-sequence decision (Ladder Correction Notice, open decision 1).** This section supplies what that decision has been missing since June: a positive, non-inherited reason GOOD sits at 2D. It also supports the ascending-walk candidate: the interface must exist with both parties whole (GOOD, 2D) before there is an interior for mediation to run in (RIGHT, 3D). The relation opens the space; then the space can be kept honest. The sequence decision itself remains open.
+
+[← Back to Table of Contents](#table-of-contents)
+
+---
+
+### §25.20 The Metacognitive Theory of Truthfulness
+
+*Developed and adjudicated by Ashman, 2026-07-23, same session as §25.17a and §25.19; the conscience definition is his. Refined by Ashman the same day: metacognition recognized as the genus (the general reflexive capacity), conscience as its ethical mode, and strategic metacognition named as the third mode, completing the anatomy of the deceiver; the paternalist guard added. This section names what §25.9's virus was always fighting: the theory of the healthy state.*
+
+**Core statement.** Truthfulness is not merely stating propositions that happen to be accurate. It is maintaining a self-observing and revisable process that allows reality to correct one's account of it. The theory separates two levels: **first-order accuracy** (does the statement correspond with reality?) and **second-order integrity** (is the person examining how they arrived at the statement: exposing uncertainty, testing assumptions, noticing self-interest, permitting correction?). A person may say something false while honestly mistaken: inaccurate, but not deceptive. A person may make only technically true statements while selectively arranging them to produce a false impression: accurate words, deceptive process.
+
+**The four cells.**
+
+| Statement | Process | Result |
+|---|---|---|
+| Accurate | Open and revisable | Truthful knowledge |
+| Inaccurate | Open and revisable | Honest error |
+| Accurate | Manipulative or closed | Deceptive truth |
+| Inaccurate | Manipulative or closed | Lie or distortion |
+
+The genuinely new cell is the third. Psychology has independently confirmed it behaves like lying: *paltering* (deceiving with technically true statements) is judged nearly as harshly as outright lying once discovered, and damages trust as much. Trust tracks process, not accuracy, which is the theory's central prediction, confirmed before the theory was stated. The second cell is legislated by §25.17a's non-culpability structure: blame attaches to the machinery's operation, never to mere occurrence.
+
+**Corrigibility, and its hijacking.** The deeper opposite of lying is corrigibility: the willingness to let reality change the account you are giving, even when the change threatens your status, identity, innocence, or desired outcome. Three receipts force this identification: (1) the §25.9 virus is a triple structure (distort, hide the distortion, label correction as distortion), and only its first layer is about content, so factual accuracy opposes one layer of three while machinery-level revisability opposes all three; (2) accurate-but-managed accounts exist (cell three), so accuracy and honesty are separable axes, exactly as §25.17 separated distortion from resolution; (3) the corpus's persistence condition (lies persist through closed apertures, β → 0) makes revisability the one thing a lie cannot survive, and what a lie cannot survive is its opposite. But corrigibility has a weaponized form, and the theory must name it: **gaslighting is hijacked corrigibility**, the manipulator presenting himself as reality's spokesperson so that the victim's willingness to revise is captured as an attack surface. It targets the machinery-revision layer rather than the belief layer, which is why it damages victims more deeply than being lied to: it corrupts the truth-producing relationship itself. The discriminant: **the truthful person yields to evidence and resists pressure; the liar yields to pressure and resists evidence.** Ask what revises the account, reality or incentive.
+
+**The central mechanism.** A lie does not begin only when someone speaks a false sentence. It can begin earlier, inside the process that produces the sentence: (1) reality presents information; (2) the information threatens something the person wants to protect; (3) attention selects favourable details; (4) interpretation rearranges them; (5) metacognition either catches the distortion or joins it; (6) the resulting account is presented as reality. This is the §25.17a chain run corruptly: attention selecting in service of protection instead of conscience weighing in service of the whole. Step five is the interruption point, probed by four questions: *Am I describing what happened, or protecting myself from what happened? What evidence am I excluding? Would I interpret this the same way if it benefited my opponent? What would cause me to revise my account?* The second is epistemic; the fourth probes corrigibility; the first and third are conscience operating.
+
+**Conscience is ethical metacognition.** Metacognition is the general reflexive capacity through which a process examines its own construction; conscience is that capacity operating under an ethical criterion. Three distinct uses of the same machinery:
+
+| Reflexive mode | Governing question | Failure mode |
+|---|---|---|
+| Epistemic metacognition | Is my account tracking reality? | Error, bias, closed belief |
+| Ethical metacognition (conscience) | Whom does my account serve, and whose agency does it preserve? | Exploitation, paternalism, self-exemption |
+| Strategic metacognition | Will this account achieve my desired effect? | Manipulation, when detached from the other two |
+
+**The deceiver's anatomy, corrected.** (An earlier draft of this section said the skilled deceiver runs "half a metacognition," epistemic audit intact and ethical audit absent; the three-mode taxonomy refines this, and the correction is kept visible per this section's own sixth practice.) The skilled deceiver does not necessarily possess excellent epistemic metacognition. What they reliably possess is excellent *strategic* metacognition: they know how their message is constructed, what the audience believes, and which true or false details will produce the desired inference. The paltering literature confirms the profile, including that palterers often regard themselves as more ethical than their targets regard them. The structure: high strategic audit, plus selective private reality-tracking, minus ethical audit, minus public corrigibility. They may understand reality privately while preventing reality from correcting the other person's model, which is lying in exactly this section's definition of it. Note that strategic metacognition has no pillar of its own: the corpus assigns no virtue to bare effectiveness, and the theory explains why: reflexive efficacy is legitimate only in service to the other two modes, never sovereign. A capacity without a virtue is the deceiver's engine when it runs alone.
+
+**The paternalist guard.** "Whom does this serve?" is necessary but not sufficient, because the paternalist answers it fluently: "It serves them. I am lying for their own good." Conscience therefore needs symmetry and agency tests: *Would I accept this management if our positions were reversed? Am I preserving the other person's capacity to judge, or replacing their judgment with mine? Have they agreed to let me control this layer of information? Am I selecting the ethical standard on which I already know I will appear innocent?* The fourth is the axis rule (the graded party does not choose the grading axis) turned inward. Without these tests, ethical metacognition degrades into metacognitive moral rationalization: the machinery auditing its allegiance and acquitting itself.
+
+**Ancestry and legibility.** *Conscientia* is *cum* + *scientia*: knowing-with, knowledge held with oneself; in ancient and medieval usage it carried a specifically reflexive moral function concerning one's own actions, intentions, and judgments. Aquinas is closest to this formulation: conscience is not a separate power but an act, the application of knowledge to a particular case, including judging whether what was done was good or bad. "Conscience is ethical metacognition" is a modern cognitive formulation of that old idea: conscience is knowledge turning back upon one's own conduct. The construct is also scientifically legible: a Moral Metacognition Scale exists, with measured moral metacognition associated with ethical awareness and ethical judgment. This does not prove conscience reduces to metacognition; it shows the construct is measurable. Modern usage blurred the word into "an inner feeling"; the word was built reflexive.
+
+**The formula.**
+
+```
+    Truthfulness = epistemic metacognition + ethical metacognition + corrigibility
+
+    (refined in session from "metacognitive awareness + corrigibility +
+     conscience," once metacognition was recognized as the genus and
+     conscience as its ethical mode)
+
+    Truthfulness is the account-producing machinery auditing itself and
+    yielding to what it finds. Epistemic metacognition asks: does my
+    account track reality? Conscience asks: whom does my account serve,
+    does it preserve the agency and wholeness of everyone affected, and
+    would I accept the same interpretation and control if our positions
+    were reversed? Corrigibility is the yielding: to evidence rather than
+    convenience, to ethical symmetry rather than self-exemption, to
+    correction rather than pressure.
+```
+
+**The reflexive-pillar identification.** Truthfulness is the pillar architecture turned inward: reflexive TRUE is epistemic metacognition (curiosity aimed at one's own machinery); reflexive GOOD and RIGHT together are conscience (the GOOD half audits whether my filter preserves both wholes or consumes the other, §25.19 turned inward; the RIGHT half audits my own hidden agenda, the failure mode the corpus assigns to RIGHT); reflexive FAITHFUL is the receipts discipline (keeping the record of one's own revisions); reflexive AGREEMENT is submitting the process to another's validation (independent criticism, the countersign); corrigibility is reflexive plasticity, the willingness that makes the audits consequential. Compressed: **truthfulness is the 1111 cell of §25.18c applied to one's own account-producing machinery.** AGREEMENT downstream: two such machines validating each other's accounts.
+
+**The institutional form.** The institutional Noble Lie is failed metacognition at scale: an institution selects evidence, chooses the standard by which it will judge itself, conceals inconvenient dimensions, and reports its managed account as neutral reality. The cure is not "tell accurate facts" but a visible process of correction: reveal uncertainty; distinguish observation from interpretation; keep receipts of previous claims; permit independent criticism; do not choose only the axis on which you appear correct; revise without rewriting the history of the revision. These six are this corpus's own editorial law (honest-status boxes, revision histories, no-silent-retraction, attack logs, the countersign, the axis rule adopted the morning this section was written, from a failure). The practice preceded the theory; this section is the practice acquiring its statement.
+
+**Compact statements.**
+
+> Lying is the attempt to prevent reality from properly correcting another person's understanding. Truthfulness is the willingness to observe, expose, and revise the machinery through which one's own understanding is produced.
+
+> The liar manages the model. The truthful person lets reality revise it. The conscientious person also asks what the model is doing to everyone inside it.
+
+> Conscience is not merely a feeling that declares something wrong. It is the mind ethically examining the machinery by which it decides what is right.
+
+**Testable predictions.** (1) Paltering damages trust as much as lying once discovered: confirmed in the existing literature. (2) Epistemic-metacognition training alone does not reduce self-serving bias and may increase its sophistication; training that adds the ethical-audit questions (motive-check, symmetry-check) does: proposed, runnable. (3) Institutions with visible correction processes retain trust after errors better than institutions with fewer errors but concealed corrections: partially supported (error-disclosure practice), extendable. The theory does not merely define truthful statements; it defines a truth-producing relationship between mind and reality, and between institution and public.
+
+**Cross-references.** §25.9 (the virus whose antagonist this section names; curiosity was always the cure because fact-checking opposes one layer and self-revision opposes all three); §25.17/§25.17a (the resolution machinery this theory audits); §25.18c (the 1111 cell); §25.19 (the interface whose reflexive audit is conscience's GOOD half); `docs/the_fallout_of_the_noble_lie.html` (the societal diagnosis, including the third-witness case that supplied this section's specimen of cell three).
 
 [← Back to Table of Contents](#table-of-contents)
 
