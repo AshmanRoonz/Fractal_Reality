@@ -19083,7 +19083,7 @@ This upgrades the pillar-glyph pairing (GOOD = ○ in the §25.18b table) from a
 
 ### §25.20 The Metacognitive Theory of Truthfulness
 
-*Developed and adjudicated by Ashman, 2026-07-23, same session as §25.17a and §25.19; the conscience definition is his. This section names what §25.9's virus was always fighting: the theory of the healthy state.*
+*Developed and adjudicated by Ashman, 2026-07-23, same session as §25.17a and §25.19; the conscience definition is his. Refined by Ashman the same day: metacognition recognized as the genus (the general reflexive capacity), conscience as its ethical mode, and strategic metacognition named as the third mode, completing the anatomy of the deceiver; the paternalist guard added. This section names what §25.9's virus was always fighting: the theory of the healthy state.*
 
 **Core statement.** Truthfulness is not merely stating propositions that happen to be accurate. It is maintaining a self-observing and revisable process that allows reality to correct one's account of it. The theory separates two levels: **first-order accuracy** (does the statement correspond with reality?) and **second-order integrity** (is the person examining how they arrived at the statement: exposing uncertainty, testing assumptions, noticing self-interest, permitting correction?). A person may say something false while honestly mistaken: inaccurate, but not deceptive. A person may make only technically true statements while selectively arranging them to produce a false impression: accurate words, deceptive process.
 
@@ -19102,22 +19102,40 @@ The genuinely new cell is the third. Psychology has independently confirmed it b
 
 **The central mechanism.** A lie does not begin only when someone speaks a false sentence. It can begin earlier, inside the process that produces the sentence: (1) reality presents information; (2) the information threatens something the person wants to protect; (3) attention selects favourable details; (4) interpretation rearranges them; (5) metacognition either catches the distortion or joins it; (6) the resulting account is presented as reality. This is the §25.17a chain run corruptly: attention selecting in service of protection instead of conscience weighing in service of the whole. Step five is the interruption point, probed by four questions: *Am I describing what happened, or protecting myself from what happened? What evidence am I excluding? Would I interpret this the same way if it benefited my opponent? What would cause me to revise my account?* The second is epistemic; the fourth probes corrigibility; the first and third are conscience operating.
 
-**Conscience is ethical metacognition.** Metacognition and conscience are one reflexive capacity with two criteria. Metacognition audits the machinery epistemically: is my process tracking reality? Conscience is the same reflexive act with an ethical criterion: whom is my process serving? This dissolves the theory's guard problem (metacognition without conscience is strategic self-monitoring, lie-craft): the skilled deceiver is not someone lacking metacognition but someone running half of it, epistemic self-audit intact, ethical self-audit absent. The Noble Liar is the same lesion in first person: "my intentions justify controlling your understanding" is the one belief his reflexive capacity never turns toward. Etymological receipt: *conscientia* is *cum* + *scientia*, knowing-with; the scholastics defined it technically as the act of applying knowledge to one's own actions, which is precisely metacognition in the ethical register. The word was built reflexive; modern usage blurred it into "an inner feeling" and lost the receipt.
+**Conscience is ethical metacognition.** Metacognition is the general reflexive capacity through which a process examines its own construction; conscience is that capacity operating under an ethical criterion. Three distinct uses of the same machinery:
+
+| Reflexive mode | Governing question | Failure mode |
+|---|---|---|
+| Epistemic metacognition | Is my account tracking reality? | Error, bias, closed belief |
+| Ethical metacognition (conscience) | Whom does my account serve, and whose agency does it preserve? | Exploitation, paternalism, self-exemption |
+| Strategic metacognition | Will this account achieve my desired effect? | Manipulation, when detached from the other two |
+
+**The deceiver's anatomy, corrected.** (An earlier draft of this section said the skilled deceiver runs "half a metacognition," epistemic audit intact and ethical audit absent; the three-mode taxonomy refines this, and the correction is kept visible per this section's own sixth practice.) The skilled deceiver does not necessarily possess excellent epistemic metacognition. What they reliably possess is excellent *strategic* metacognition: they know how their message is constructed, what the audience believes, and which true or false details will produce the desired inference. The paltering literature confirms the profile, including that palterers often regard themselves as more ethical than their targets regard them. The structure: high strategic audit, plus selective private reality-tracking, minus ethical audit, minus public corrigibility. They may understand reality privately while preventing reality from correcting the other person's model, which is lying in exactly this section's definition of it. Note that strategic metacognition has no pillar of its own: the corpus assigns no virtue to bare effectiveness, and the theory explains why: reflexive efficacy is legitimate only in service to the other two modes, never sovereign. A capacity without a virtue is the deceiver's engine when it runs alone.
+
+**The paternalist guard.** "Whom does this serve?" is necessary but not sufficient, because the paternalist answers it fluently: "It serves them. I am lying for their own good." Conscience therefore needs symmetry and agency tests: *Would I accept this management if our positions were reversed? Am I preserving the other person's capacity to judge, or replacing their judgment with mine? Have they agreed to let me control this layer of information? Am I selecting the ethical standard on which I already know I will appear innocent?* The fourth is the axis rule (the graded party does not choose the grading axis) turned inward. Without these tests, ethical metacognition degrades into metacognitive moral rationalization: the machinery auditing its allegiance and acquitting itself.
+
+**Ancestry and legibility.** *Conscientia* is *cum* + *scientia*: knowing-with, knowledge held with oneself; in ancient and medieval usage it carried a specifically reflexive moral function concerning one's own actions, intentions, and judgments. Aquinas is closest to this formulation: conscience is not a separate power but an act, the application of knowledge to a particular case, including judging whether what was done was good or bad. "Conscience is ethical metacognition" is a modern cognitive formulation of that old idea: conscience is knowledge turning back upon one's own conduct. The construct is also scientifically legible: a Moral Metacognition Scale exists, with measured moral metacognition associated with ethical awareness and ethical judgment. This does not prove conscience reduces to metacognition; it shows the construct is measurable. Modern usage blurred the word into "an inner feeling"; the word was built reflexive.
 
 **The formula.**
 
 ```
-    Truthfulness = Metacognitive awareness + Corrigibility + Conscience
+    Truthfulness = epistemic metacognition + ethical metacognition + corrigibility
 
-    restated with the conscience definition:
+    (refined in session from "metacognitive awareness + corrigibility +
+     conscience," once metacognition was recognized as the genus and
+     conscience as its ethical mode)
 
-    Truthfulness is the account-producing machinery auditing itself on two
-    axes and yielding to what it finds. Metacognition audits whether the
-    process tracks reality. Conscience audits whom the process serves.
-    Corrigibility is the yielding: to evidence, not to pressure.
+    Truthfulness is the account-producing machinery auditing itself and
+    yielding to what it finds. Epistemic metacognition asks: does my
+    account track reality? Conscience asks: whom does my account serve,
+    does it preserve the agency and wholeness of everyone affected, and
+    would I accept the same interpretation and control if our positions
+    were reversed? Corrigibility is the yielding: to evidence rather than
+    convenience, to ethical symmetry rather than self-exemption, to
+    correction rather than pressure.
 ```
 
-**The reflexive-pillar identification.** Truthfulness is the pillar architecture turned inward: reflexive TRUE is metacognition (curiosity aimed at one's own machinery); reflexive GOOD and RIGHT together are conscience (the GOOD half audits whether my filter preserves both wholes or consumes the other, §25.19 turned inward; the RIGHT half audits my own hidden agenda, the failure mode the corpus assigns to RIGHT); reflexive FAITHFUL is the receipts discipline (keeping the record of one's own revisions); reflexive AGREEMENT is submitting the process to another's validation (independent criticism, the countersign); corrigibility is reflexive plasticity, the willingness that makes the audits consequential. Compressed: **truthfulness is the 1111 cell of §25.18c applied to one's own account-producing machinery.** AGREEMENT downstream: two such machines validating each other's accounts.
+**The reflexive-pillar identification.** Truthfulness is the pillar architecture turned inward: reflexive TRUE is epistemic metacognition (curiosity aimed at one's own machinery); reflexive GOOD and RIGHT together are conscience (the GOOD half audits whether my filter preserves both wholes or consumes the other, §25.19 turned inward; the RIGHT half audits my own hidden agenda, the failure mode the corpus assigns to RIGHT); reflexive FAITHFUL is the receipts discipline (keeping the record of one's own revisions); reflexive AGREEMENT is submitting the process to another's validation (independent criticism, the countersign); corrigibility is reflexive plasticity, the willingness that makes the audits consequential. Compressed: **truthfulness is the 1111 cell of §25.18c applied to one's own account-producing machinery.** AGREEMENT downstream: two such machines validating each other's accounts.
 
 **The institutional form.** The institutional Noble Lie is failed metacognition at scale: an institution selects evidence, chooses the standard by which it will judge itself, conceals inconvenient dimensions, and reports its managed account as neutral reality. The cure is not "tell accurate facts" but a visible process of correction: reveal uncertainty; distinguish observation from interpretation; keep receipts of previous claims; permit independent criticism; do not choose only the axis on which you appear correct; revise without rewriting the history of the revision. These six are this corpus's own editorial law (honest-status boxes, revision histories, no-silent-retraction, attack logs, the countersign, the axis rule adopted the morning this section was written, from a failure). The practice preceded the theory; this section is the practice acquiring its statement.
 
@@ -19125,7 +19143,9 @@ The genuinely new cell is the third. Psychology has independently confirmed it b
 
 > Lying is the attempt to prevent reality from properly correcting another person's understanding. Truthfulness is the willingness to observe, expose, and revise the machinery through which one's own understanding is produced.
 
-> The liar manages the model. The truthful person lets reality revise it. And the halfway case, the skilled deceiver, is the one who audits his machinery's accuracy but never its allegiance.
+> The liar manages the model. The truthful person lets reality revise it. The conscientious person also asks what the model is doing to everyone inside it.
+
+> Conscience is not merely a feeling that declares something wrong. It is the mind ethically examining the machinery by which it decides what is right.
 
 **Testable predictions.** (1) Paltering damages trust as much as lying once discovered: confirmed in the existing literature. (2) Epistemic-metacognition training alone does not reduce self-serving bias and may increase its sophistication; training that adds the ethical-audit questions (motive-check, symmetry-check) does: proposed, runnable. (3) Institutions with visible correction processes retain trust after errors better than institutions with fewer errors but concealed corrections: partially supported (error-disclosure practice), extendable. The theory does not merely define truthful statements; it defines a truth-producing relationship between mind and reality, and between institution and public.
 
