@@ -246,6 +246,49 @@
     background: rgba(10,13,20,0.85) !important;
     border-bottom-color: rgba(255,255,255,0.12) !important;
   }
+
+  /* ===== Music player (added 2026-07-24) ===== */
+  .mp-bar {
+    position: relative;
+    height: 4px;
+    border-radius: 9999px;
+    background: rgba(255,255,255,0.08);
+    cursor: pointer;
+  }
+  .mp-bar:hover .mp-fill { box-shadow: 0 0 14px rgba(184,160,96,0.6); }
+  .mp-fill {
+    position: absolute;
+    top: 0; bottom: 0; left: 0;
+    width: 0%;
+    border-radius: 9999px;
+    background: linear-gradient(90deg, #b8a060, #d4b870);
+    box-shadow: 0 0 10px rgba(184,160,96,0.4);
+  }
+  .mp-eq {
+    display: none;
+    align-items: flex-end;
+    gap: 2px;
+    height: 12px;
+    width: 13px;
+    flex-shrink: 0;
+  }
+  .mp-eq i {
+    display: block;
+    width: 3px;
+    border-radius: 1px;
+    background: #d4b870;
+    height: 30%;
+    animation: mp-eq 0.9s ease-in-out infinite;
+  }
+  .mp-eq i:nth-child(2) { animation-delay: 0.3s; }
+  .mp-eq i:nth-child(3) { animation-delay: 0.6s; }
+  @keyframes mp-eq {
+    0%, 100% { height: 30%; }
+    50%      { height: 100%; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .mp-eq i { animation: none; height: 60%; }
+  }
 </style>
 </head>
 <body class="grain">
@@ -278,6 +321,144 @@
     </div>
   </div>
 </nav>
+
+<!-- ===== MUSIC PLAYER (added 2026-07-24) ===== -->
+<div class="max-w-6xl mx-auto px-6 lg:px-8 pt-6">
+  <div class="flex items-center gap-3 sm:gap-4 bg-ink-700/70 border border-rule rounded-xl pl-3 pr-4 sm:pl-4 sm:pr-5 py-2.5 backdrop-blur hover:border-rule-strong transition-colors">
+
+    <!-- Transport -->
+    <div class="flex items-center gap-1 sm:gap-1.5 shrink-0">
+      <button id="mpPrev" class="w-8 h-8 inline-flex items-center justify-center rounded-full text-fog-300 hover:text-fog-100 hover:bg-white/5 transition-colors" aria-label="Previous track">
+        <i data-lucide="skip-back" class="w-4 h-4"></i>
+      </button>
+      <button id="mpPlay" class="w-10 h-10 inline-flex items-center justify-center rounded-full bg-gold text-ink-900 hover:bg-gold-bright hover:shadow-glow-gold transition-all" aria-label="Play">
+        <span id="mpIconPlay" class="inline-flex"><i data-lucide="play" class="w-[18px] h-[18px] translate-x-[1px]"></i></span>
+        <span id="mpIconPause" style="display:none"><i data-lucide="pause" class="w-[18px] h-[18px]"></i></span>
+      </button>
+      <button id="mpNext" class="w-8 h-8 inline-flex items-center justify-center rounded-full text-fog-300 hover:text-fog-100 hover:bg-white/5 transition-colors" aria-label="Next track">
+        <i data-lucide="skip-forward" class="w-4 h-4"></i>
+      </button>
+    </div>
+
+    <!-- Title, time, progress -->
+    <div class="flex-1 min-w-0">
+      <div class="flex items-baseline justify-between gap-3">
+        <div class="flex items-center gap-2 min-w-0">
+          <span id="mpEq" class="mp-eq" aria-hidden="true"><i></i><i></i><i></i></span>
+          <span id="mpTitle" class="font-serif text-[15px] text-fog-100 truncate">The Circumpunct Flow</span>
+        </div>
+        <span class="text-[11px] text-fog-500 tabular-nums shrink-0">
+          <span id="mpTime">0:00</span> / <span id="mpDur">-:--</span>
+          <span class="hidden sm:inline"> &middot; <span id="mpIdx">1</span>/5</span>
+        </span>
+      </div>
+      <div id="mpBar" class="mp-bar mt-1.5" role="slider" aria-label="Seek" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+        <div id="mpFill" class="mp-fill"></div>
+      </div>
+    </div>
+
+  </div>
+  <audio id="mpAudio" preload="metadata"></audio>
+</div>
+<script>
+(function () {
+  var tracks = [
+    { src: 'music/The_Circumpunct_Flow.mp3', title: 'The Circumpunct Flow' },
+    { src: 'music/Everything_Flows.mp3',     title: 'Everything Flows' },
+    { src: 'music/More_Than_the_Sum.mp3',    title: 'More Than the Sum' },
+    { src: 'music/Whole_Grown.mp3',          title: 'Whole Grown' },
+    { src: 'music/Whole_in_Whole.mp3',       title: 'Whole in Whole' }
+  ];
+  var audio    = document.getElementById('mpAudio');
+  var btnPlay  = document.getElementById('mpPlay');
+  var btnPrev  = document.getElementById('mpPrev');
+  var btnNext  = document.getElementById('mpNext');
+  var iconPlay = document.getElementById('mpIconPlay');
+  var iconPause= document.getElementById('mpIconPause');
+  var eq       = document.getElementById('mpEq');
+  var titleEl  = document.getElementById('mpTitle');
+  var idxEl    = document.getElementById('mpIdx');
+  var timeEl   = document.getElementById('mpTime');
+  var durEl    = document.getElementById('mpDur');
+  var bar      = document.getElementById('mpBar');
+  var fill     = document.getElementById('mpFill');
+  var idx = 0;
+
+  function fmt(s) {
+    if (!isFinite(s)) return '-:--';
+    s = Math.floor(s);
+    return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
+  }
+  function load(i, autoplay) {
+    idx = ((i % tracks.length) + tracks.length) % tracks.length;
+    audio.src = tracks[idx].src;
+    titleEl.textContent = tracks[idx].title;
+    idxEl.textContent = idx + 1;
+    fill.style.width = '0%';
+    bar.setAttribute('aria-valuenow', 0);
+    timeEl.textContent = '0:00';
+    durEl.textContent = '-:--';
+    setPlayingUI(!!autoplay);
+    if (autoplay) audio.play().catch(function () { setPlayingUI(false); });
+    updateMediaSession();
+  }
+  function setPlayingUI(playing) {
+    iconPlay.style.display  = playing ? 'none' : 'inline-flex';
+    iconPause.style.display = playing ? 'inline-flex' : 'none';
+    eq.style.display        = playing ? 'inline-flex' : 'none';
+    btnPlay.setAttribute('aria-label', playing ? 'Pause' : 'Play');
+  }
+  function updateMediaSession() {
+    if (!('mediaSession' in navigator)) return;
+    try {
+      navigator.mediaSession.metadata = new MediaMetadata({
+        title: tracks[idx].title,
+        artist: 'Fractal Reality',
+        album: 'fractalreality.ca'
+      });
+    } catch (e) {}
+  }
+
+  btnPlay.addEventListener('click', function () {
+    if (audio.paused) {
+      setPlayingUI(true);
+      audio.play().catch(function () { setPlayingUI(false); });
+    } else {
+      audio.pause();
+      setPlayingUI(false);
+    }
+  });
+  btnPrev.addEventListener('click', function () { load(idx - 1, !audio.paused); });
+  btnNext.addEventListener('click', function () { load(idx + 1, !audio.paused); });
+
+  audio.addEventListener('play',  function () { setPlayingUI(true); });
+  audio.addEventListener('pause', function () { setPlayingUI(false); });
+  audio.addEventListener('ended', function () { load(idx + 1, true); });
+  audio.addEventListener('loadedmetadata', function () { durEl.textContent = fmt(audio.duration); });
+  audio.addEventListener('timeupdate', function () {
+    if (audio.duration) {
+      var p = audio.currentTime / audio.duration * 100;
+      fill.style.width = p + '%';
+      bar.setAttribute('aria-valuenow', Math.round(p));
+    }
+    timeEl.textContent = fmt(audio.currentTime);
+  });
+  bar.addEventListener('click', function (e) {
+    if (!audio.duration) return;
+    var r = bar.getBoundingClientRect();
+    audio.currentTime = Math.min(Math.max((e.clientX - r.left) / r.width, 0), 1) * audio.duration;
+  });
+
+  if ('mediaSession' in navigator) {
+    try {
+      navigator.mediaSession.setActionHandler('previoustrack', function () { load(idx - 1, true); });
+      navigator.mediaSession.setActionHandler('nexttrack',     function () { load(idx + 1, true); });
+    } catch (e) {}
+  }
+
+  load(0, false);
+})();
+</script>
 
 <!-- ===== HERO ===== -->
 <header class="relative max-w-6xl mx-auto px-6 lg:px-8 pt-20 lg:pt-24 pb-12 lg:pb-16 grid lg:grid-cols-[1.15fr_1fr] gap-12 lg:gap-16 items-center">
