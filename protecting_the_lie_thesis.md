@@ -5,21 +5,22 @@ A thesis architecture (masters or doctoral) built from the essay "Narcissism Is 
 ```
 Created: 2026-07-26
 Last updated: 2026-07-26
-Version: 1.0
+Version: 1.1
 ```
 
 **Author of the thesis claim:** Ashman Roonz
-**Document status:** Complete thesis architecture with drafted core chapters, study designs, and a framework-formalization chapter. Citations are reconstructed from memory and must be verified against the primary sources before any academic submission; each is flagged in the References section.
+**Document status:** This is a thesis proposal and research architecture, not a completed thesis. It is a map of what the idea could become; nothing in it is evidence that the idea has already become it. Theoretical claims are stated as model predictions awaiting the proposed studies, and where a sentence below reads as settled, the register rule and Chapter 4's falsification handles govern. Citations are reconstructed from memory and must be verified against the primary sources before any academic submission; each is flagged in the References section.
+**Register rule (v1.1):** Two levels of language run through this document. The public-facing name of the thesis and its central construct ("Protecting the Lie"; "the Lie") is retained for force and for continuity with the corpus. The academic construct is the **Protected Identity Proposition (PIP)**: a self-claim defined by exemption from revision, not by proven falsity (Definition 3.1). Anything submitted to a committee should lead with the PIP register; the proposition *functions* as a lie because it is insulated from correction, and no claim of conscious deception is made or required.
 **Seed text:** The original essay is preserved verbatim in Appendix A. Nothing in this document retracts it; every chapter is the essay at higher resolution (Resolution Protocol, §25.17: higher resolution contains lower resolution and never contradicts it).
 
 ---
 
 ## How to use this document
 
-This file is written so that it can be walked into either degree:
+This file is written so that it can be walked into either degree. The full program in Chapter 5 is a research agenda of roughly a decade; neither degree attempts all of it.
 
-- **Masters thesis (MA/MSc, 1 to 2 years):** Chapters 1 through 4, plus Study 1 from Chapter 5, plus Chapters 7 through 9. This yields a theoretical contribution with one original empirical or systematic-review component. Skip Chapter 6 unless the program welcomes formal models.
-- **Doctoral thesis (PhD, 3 to 5 years):** The whole document. Chapters 3 and 4 become the theory papers; Chapter 5's four studies become the empirical program (each study is a publishable unit); Chapter 6 becomes either a formal-modeling chapter or a separate paper.
+- **Masters thesis (MA/MSc, 1 to 2 years):** one sharpened question: *does narcissistic defensiveness respond more strongly to identity-diagnostic contradiction than to attention deprivation, or to socially unpleasant but identity-irrelevant feedback?* That supports one theoretical chapter (Chapters 1 to 4, narrowed), a disciplined literature review, one preregistered study (a reduced Study 2, or Study 1), and limitations and implications (Chapters 6 to 8). Leave Appendix C out of the main argument.
+- **Doctoral thesis (PhD, 3 to 5 years):** three connected papers, not the whole program. (1) Theory paper: confirmation versus fuel models (Chapters 3 and 4). (2) Experimental paper: contradiction, status threat, and deprivation (Study 2, with Study 1 as its field companion). (3) Measurement or corpus paper: the corrigibility signature or the defense-operations coding scheme (Study 3, or the Self-Claim Elicitation Protocol validation). Study 4 (clinical longitudinal) is a later project, likely postdoctoral. Appendix C is a conceptual appendix or a separate theoretical paper in a psychology program; it could be central only in a philosophy-of-psychiatry program, where it would need sustained engagement with the self-deception, belief, and epistemic-injustice literatures.
 - **Discipline homes, in order of fit:** (1) personality/social psychology (the supply construct, self-regulation models, ego threat); (2) clinical psychology (NPD, pathological narcissism, treatment implications); (3) philosophy of psychiatry or theoretical psychology (the construct-level argument that "supply" mistakes fuel for engine).
 
 Appendix B contains the supervisor pitch, scoping table, and a candidate-program checklist.
@@ -33,14 +34,17 @@ Appendix B contains the supervisor pitch, scoping table, and a candidate-program
 1. Protecting the Lie: Reconceptualizing Narcissistic Supply as Identity-Defense Confirmation
 2. The Fuel Is Not the Engine: A Confirmation-Based Model of Narcissistic Supply
 3. An Organized Refusal of Reality: Narcissism as Identity-Lie Protection
+4. Exempt from Revision: The Protected Identity Proposition in Narcissistic Self-Regulation (academic register)
 
 ### Abstract (draft, ~300 words)
 
-"Narcissistic supply" is conventionally described as the attention, admiration, fear, sympathy, or obedience that a narcissistic person extracts from others, and narcissism itself is frequently glossed, in both popular and academic writing, as an addiction to such supply. This thesis argues that the conventional account inverts the causal structure it describes. The person does not protect a false self in order to obtain supply; they seek supply because it protects the false self. At the center of the narcissistic organization is a proposition about the self that cannot be safely questioned (I am superior; I am innocent; I am the real victim; my failures are someone else's fault). The function of supply is not hedonic but epistemic: each form of supply is a confirmation signal that the protected proposition is still holding against reality. Praise confirms superiority, obedience confirms entitlement, fear confirms power, sympathy confirms innocence, and even persecution confirms victimhood. This reframing, here developed as the Protected Lie Model (PLM), explains three phenomena that supply-as-fuel accounts handle poorly: the insatiability of supply (no quantity of confirmation can stabilize an identity that depends on the suppression of ongoing evidence); the disproportionate violence of the response to contradiction (contradiction is not lost fuel but a structural attack, and DARVO (deny, attack, reverse victim and offender) is its emergency defense system); and the functional interchangeability of superficially opposite supplies (admiration and pity serve one function when matched for confirmation content). The thesis situates the PLM against psychodynamic, self-regulatory, addiction-metaphor, and status-pursuit models; derives six discriminating predictions; and proposes a four-study empirical program (experience sampling, experimental contradiction versus deprivation, DARVO corpus linguistics, and longitudinal clinical assessment). Implications for treatment (targeting corrigibility rather than esteem), for survivor education, and for institutional analogues of narcissistic defense are developed.
+"Narcissistic supply" is conventionally described as the attention, admiration, fear, sympathy, or obedience that a narcissistic person extracts from others, and narcissism itself is frequently glossed, in both popular and academic writing, as an addiction to such supply. This thesis argues that the conventional account inverts the causal structure it describes. The person does not protect a false self in order to obtain supply; they seek supply because it protects the false self. At the center of the narcissistic organization is a proposition about the self that cannot be safely questioned (I am superior; I am innocent; I am the real victim; my failures are someone else's fault). The function of supply is not hedonic but epistemic: each form of supply is a confirmation signal that the protected proposition is still holding against reality. Praise confirms superiority, obedience confirms entitlement, fear confirms power, sympathy confirms innocence, and even persecution confirms victimhood. This reframing, here developed as the Protected Lie Model (PLM; in the academic register, the Protected Identity Proposition model), is argued to explain three phenomena that supply-as-fuel accounts handle poorly: the insatiability of supply (no quantity of confirmation can stabilize an identity that depends on the suppression of ongoing evidence); the disproportionate violence of the response to contradiction (on this account contradiction is not lost fuel but a structural attack, and DARVO (deny, attack, reverse victim and offender) is modeled as its emergency defense system); and the functional interchangeability of superficially opposite supplies (admiration and pity serve one function when matched for confirmation content). The thesis situates the PLM against psychodynamic, self-regulatory, addiction-metaphor, and status-pursuit models; derives six discriminating predictions; and proposes a four-study empirical program (experience sampling, experimental contradiction versus deprivation, DARVO corpus linguistics, and longitudinal clinical assessment). Implications for treatment (targeting corrigibility rather than esteem), for survivor education, and for institutional analogues of narcissistic defense are developed.
 
-### Thesis statement (one sentence)
+### Thesis statement
 
-Narcissistic supply is not the goal of the narcissistic organization but its instrument: supply is confirmation that a protected, reality-suppressing identity proposition is still functioning, which is why supply never satisfies, why contradiction detonates, and why opposite-seeming supplies substitute for one another.
+**Public register (one sentence):** Narcissistic supply is not the goal of the narcissistic organization but its instrument: supply is confirmation that a protected, reality-suppressing identity proposition is still functioning, which is why supply never satisfies, why contradiction detonates, and why opposite-seeming supplies substitute for one another.
+
+**Academic register (one sentence):** Narcissistic pathology may be defined less by a need for attention than by an inability to permit certain self-defining propositions to enter ordinary processes of evidence, correction, and revision; supply is the class of social signals that report those propositions as still standing.
 
 ---
 
@@ -56,7 +60,7 @@ The received view has real strengths. It predicts approach behavior (narcissists
 
 Three well-documented phenomena fit the fuel picture badly.
 
-**Anomaly 1: insatiability.** Fuel models predict satiation dynamics: a tank, once filled, stays full for a while. The clinical literature is unanimous that admiration does not accumulate; yesterday's triumph is inert today. Addiction models answer with tolerance (escalating dose requirement), but tolerance is a specific pharmacological curve, and what is observed is closer to reassurance-seeking dynamics: relief that decays rapidly regardless of dose, because the underlying threat is untouched by the reassurance.
+**Anomaly 1: insatiability.** Fuel models predict satiation dynamics: a tank, once filled, stays full for a while. Clinical descriptions from Kernberg onward converge on the observation that admiration does not accumulate; yesterday's triumph is inert today. (Whether the convergence of clinical description survives quantitative measurement is exactly what Study 1 tests.) Addiction models answer with tolerance (escalating dose requirement), but tolerance is a specific pharmacological curve, and what is observed is closer to reassurance-seeking dynamics: relief that decays rapidly regardless of dose, because the underlying threat is untouched by the reassurance.
 
 **Anomaly 2: the response to contradiction.** On the fuel picture, criticism is a supply interruption, and the predicted response is renewed extraction elsewhere. What is actually observed is a stereotyped emergency sequence: deny the evidence, discredit the witness, rewrite the history, attack the critic, reverse victim and offender. Freyd named the core of this sequence DARVO. A fuel interruption does not explain why the witness must be destroyed rather than merely replaced; witnesses are only worth destroying if they threaten something structural.
 
@@ -64,13 +68,13 @@ Three well-documented phenomena fit the fuel picture badly.
 
 ### 1.3 The inversion
 
-The thesis inverts the standard causal arrow. The center of the narcissistic organization is not an appetite but a proposition: a claim about the self whose content varies (superiority, innocence, victimhood, entitlement, blamelessness) but whose function is constant. The proposition protects the person from shame, accountability, vulnerability, and the possibility that the preferred identity is not real. Because the proposition is counterfactual, reality continuously threatens it, and the organization's primary activity is therefore defense. Supply is whatever incoming social signal confirms that the defense is holding. The person does not protect the false self in order to obtain supply; they seek supply because it helps protect the false self.
+The thesis inverts the standard causal arrow. The center of the narcissistic organization is not an appetite but a proposition: a claim about the self whose content varies (superiority, innocence, victimhood, entitlement, blamelessness) but whose function is constant. The proposition protects the person from shame, accountability, vulnerability, and the possibility that the preferred identity is not real. Because the proposition may not be revised no matter what the evidence does, reality continuously threatens it, and the organization's primary activity is therefore defense. Supply is whatever incoming social signal confirms that the defense is holding. The person does not protect the false self in order to obtain supply; they seek supply because it helps protect the false self.
 
 This is not a relabeling. Section 4.3 shows the two accounts make divergent, testable predictions about source credibility, satiation curves, threat response scaling, and the effect of domain-irrelevant affirmation.
 
 ### 1.4 Terminology and scope
 
-- **The Lie (capitalized, technical):** the protected identity proposition. "Lie" is used structurally, not morally: the proposition functions as a lie (it is maintained against evidence by active suppression), whether or not the person could articulate it or is lying in the ordinary deliberate sense. Chapter 3 gives the formal definition; Chapter 8 discusses the ethics of the term.
+- **The Lie (capitalized; public register) / Protected Identity Proposition (PIP; academic register):** the protected self-claim at the center of the organization. "Lie" is used structurally, not morally: the proposition functions as a lie because it is insulated from correction, whether or not the person could articulate it or is lying in the ordinary deliberate sense (which normally implies awareness of the truth and intentional deception; neither is required here). Chapter 3 gives the formal definition; Chapter 7 discusses the ethics of the term. In committee-facing text, lead with PIP and introduce "the Lie" as its functional gloss.
 - **Protection operations:** the behaviors whose function is keeping the Lie unquestioned (denial, discrediting, history revision, aggression, victim-offender reversal, preemptive control of witnesses).
 - **Supply:** any incoming signal whose content confirms a clause of the Lie. The thesis retains the word for continuity with the literature while redefining its function.
 - **Scope:** the model targets narcissistic personality organization across the spectrum (subclinical trait narcissism through NPD), with the strong claims made for the pathological range. It is explicitly not a claim that every self-serving bias is narcissism; Section 3.6 gives the demarcation (the difference between a bias and a Lie is whether correction is survivable).
@@ -81,7 +85,7 @@ This is not a relabeling. Section 4.3 shows the two accounts make divergent, tes
 2. The Protected Lie Model: a functional model in which supply is confirmation, contradiction is structural threat, and DARVO is the emergency subsystem.
 3. Six discriminating predictions separating the PLM from addiction, status-pursuit, mask-model, and self-regulatory accounts, with a four-study empirical program.
 4. A treatment reframe: the therapeutic target is not esteem repair or supply management but corrigibility (the capacity to survive being corrected), with shame tolerance as its load-bearing prerequisite.
-5. (Doctoral scope) A formalization chapter connecting the model to a general theory of part-whole misrepresentation, including institutional analogues.
+5. (Corpus and philosophy-of-psychiatry scope) A formalization appendix connecting the model to a general theory of part-whole misrepresentation, including institutional analogues (Appendix C; deliberately separable, so the empirical argument stands for a reader who rejects the framework).
 
 ---
 
@@ -93,13 +97,13 @@ The review is organized as four passes over the same terrain: where "supply" cam
 
 - **Freud (1914), On Narcissism:** libido directed at the ego; the origin of the term but not yet of "supply."
 - **Fenichel (1938; 1945):** "narcissistic supplies" as external provisions required for self-esteem regulation in dependent personalities. The original usage is closer to the PLM than to the popular usage: supplies are needed because internal structure is missing, not because attention is pleasurable.
-- **Kohut (1971; 1977):** the selfobject: others used as functional parts of the self to perform regulation the self cannot perform internally. Kohut's mirroring selfobject is precisely a confirmation channel. The PLM can be read as Kohut with the regulated quantity respecified: not cohesion-in-general but the standing of a specific counterfactual self-claim.
+- **Kohut (1971; 1977):** the selfobject: others used as functional parts of the self to perform regulation the self cannot perform internally. Kohut's mirroring selfobject is precisely a confirmation channel. The PLM can be read as Kohut with the regulated quantity respecified: not cohesion-in-general but the standing of a specific revision-exempt self-claim.
 - **Kernberg (1975):** the grandiose self as a defensive fusion (ideal self, ideal object, real self) walling off envy, rage, and devaluation of the dependent position. Kernberg supplies the PLM's structural core: grandiosity as defense, not as appetite.
 - **Popular inflation (1990s onward):** the migration of "supply" through self-help literature and survivor communities (Vaknin's popularization should be cited as a cultural datum, not an academic authority) into its current commodity meaning. Documenting this drift is itself a publishable history-of-psychology contribution.
 
 ### 2.2 Contemporary models of what the narcissist is doing
 
-- **Dynamic self-regulatory processing model (Morf & Rhodewalt, 2001):** narcissism as a system of intra- and interpersonal strategies for constructing and maintaining a grandiose self, played out in social arenas with chronic costs. This is the PLM's nearest academic neighbor. Difference: Morf and Rhodewalt's regulated object is a desired self needing construction; the PLM's is a counterfactual claim needing protection. Construction seeks material; protection seeks confirmation and threat suppression. Section 4.3 derives where these diverge empirically.
+- **Dynamic self-regulatory processing model (Morf & Rhodewalt, 2001):** narcissism as a system of intra- and interpersonal strategies for constructing and maintaining a grandiose self, played out in social arenas with chronic costs. This is the PLM's nearest academic neighbor. Difference: Morf and Rhodewalt's regulated object is a desired self needing construction; the PLM's is a revision-exempt claim needing protection. Construction seeks material; protection seeks confirmation and threat suppression. Section 4.3 derives where these diverge empirically.
 - **Addiction to esteem (Baumeister & Vohs, 2001):** the explicit fuel model; the PLM's primary foil.
 - **Narcissistic Admiration and Rivalry Concept (Back et al., 2013):** two behavioral pathways (self-promotion versus self-defense) serving one goal, maintaining a grandiose self. NARC is half-agreed with the PLM: it already subordinates both charm and aggression to grandiosity maintenance. The PLM adds the epistemic reading (what is maintained is a proposition's protection from evidence) and extends to vulnerable presentations.
 - **Narcissism Spectrum Model (Krizan & Herlache, 2018):** entitled self-importance as the common core of grandiose and vulnerable presentations. Consistent with the PLM's claim that one Lie underlies oscillating surface presentations.
@@ -111,7 +115,7 @@ The review is organized as four passes over the same terrain: where "supply" cam
 - **Lewis (1971); Tracy & Robins (2004):** shame as global negative self-evaluation; the self-conscious emotion architecture.
 - **Kernberg and Kohut again, plus Ronningstam (2005):** clinical consensus that grandiosity covaries with shame vulnerability.
 - **Threatened egotism (Bushman & Baumeister, 1998):** aggression follows ego threat specifically in high-narcissism individuals; foundational for the PLM's threat-response predictions.
-- **Discrepant implicit/explicit self-esteem (Jordan et al., 2003; Zeigler-Hill, 2006):** the "mask model" evidence base and its known instabilities. The PLM does not require low implicit self-esteem; it requires that the protected proposition be counterfactual and known-to-be-fragile at some level of processing, a weaker and more defensible commitment. This distinction matters because the mask model's mixed empirical record is often used to dismiss defense accounts wholesale.
+- **Discrepant implicit/explicit self-esteem (Jordan et al., 2003; Zeigler-Hill, 2006):** the "mask model" evidence base and its known instabilities. The PLM does not require low implicit self-esteem; it requires that the protected proposition be treated as fragile at some level of processing (the load-bearing condition), a weaker and more defensible commitment. This distinction matters because the mask model's mixed empirical record is often used to dismiss defense accounts wholesale.
 - **Separating narcissism from self-esteem (Brummelman, Thomaes, & Sedikides, 2016):** narcissism is not inflated self-esteem; the two have distinct developmental antecedents. Supports the PLM's claim that the regulated quantity is not esteem level.
 
 ### 2.4 The defense repertoire
@@ -127,23 +131,24 @@ NPI (Raskin & Terry, 1988); PNI (Pincus et al., 2009); FFNI (Glover et al., 2012
 
 ---
 
-## Chapter 3. The Protected Lie Model
+## Chapter 3. The Protected Lie Model (academic register: the Protected Identity Proposition model)
 
-### 3.1 Primitive: the Lie
+### 3.1 Primitive: the Protected Identity Proposition (publicly, the Lie)
 
-**Definition 3.1 (the Lie, L).** A proposition about the self, held as identity rather than as belief, satisfying three conditions:
+**Definition 3.1 (Protected Identity Proposition, L).** A self-relevant claim, held as identity rather than as belief, satisfying two conditions:
 
-1. **Counterfactuality:** L is false, or is maintained with a confidence that the person's own evidence cannot support.
-2. **Load-bearing:** the person's identity coherence depends on L's standing; the felt alternative to L is not "I was wrong" but self-dissolution (annihilating shame).
-3. **Protected status:** L is exempted from the person's ordinary belief-revision machinery. Evidence against L is not weighed; it is handled.
+1. **Load-bearing:** the claim's continued standing is treated as necessary for identity coherence; the felt alternative to L is not "I was wrong" but self-dissolution (annihilating shame).
+2. **Exemption from revision:** L is defended through asymmetric standards of evidence, witness management, and resistance to correction; it is exempted from the person's ordinary belief-revision machinery. Evidence against L is not weighed; it is handled. In short: the belief is not allowed to lose.
+
+**Remark (falsity is deliberately not a defining condition).** An earlier draft of this model defined L partly by counterfactuality, and that definition fails operationally: a researcher cannot decisively score the truth of "I am unusually intelligent," "I am usually treated unfairly," "I am a good parent," or "my coworkers resent me because I outperform them." These claims may be false, partly true, context-dependent, or unadjudicable, and all of them can serve as L. The pathology is located in the closed correction process, not in a truth value the investigator would have to adjudicate. Falsity is the *typical consequence* rather than the definition: a proposition maintained under condition 2 drifts from the evidence, because whatever error it contains can never be removed; so Ls are commonly false or held with unsupportable confidence, and the model covers exaggerations, selective truths, and unfalsifiable stories as readily as clean falsehoods. The public-register word "lie" is retained because a proposition exempted from correction functions as a lie regardless of the holder's awareness; no conscious deception is asserted.
 
 The content of L varies across persons and presentations: *I am superior* (grandiose), *I am innocent / the real victim* (vulnerable), *I am entitled to special treatment*, *my failures are caused by others*. A single organization typically carries several clauses with a shared function.
 
-**Remark.** Condition 3 is the demarcation between a Lie and an ordinary self-serving belief. Everyone maintains flattering beliefs through mild motivated reasoning; those beliefs remain inside the revision machinery (sufficient evidence updates them, with pain but without structural collapse). A Lie is outside the machinery. The operational signature is developed in 3.6.
+**Remark (demarcation).** Condition 2 is the demarcation between an L and an ordinary self-serving belief. Everyone maintains flattering beliefs through mild motivated reasoning; those beliefs remain inside the revision machinery (sufficient evidence updates them, with pain but without structural collapse). An L is outside the machinery. The operational signature is developed in 3.6.
 
 ### 3.2 Why a Lie requires an economy
 
-Because L is counterfactual, reality bears on it continuously: every ordinary failure, every unimpressed stranger, every accurate memory held by another person is standing evidence against L. A protected counterfactual therefore generates a permanent defense workload. Two currencies pay for it:
+Because L must be maintained regardless of what the evidence does, reality bears on it continuously: every ordinary failure, every unimpressed stranger, every accurate memory held by another person is a standing challenge that cannot be metabolized as an update and must therefore be defended against. A revision-exempt self-claim generates a permanent defense workload. Two currencies pay for it:
 
 - **Confirmation** (supply): incoming signals whose content entails or suggests a clause of L. Praise entails superiority; obedience entails entitlement; fear entails power; sympathy entails innocence; a persecution narrative entails victimhood. Confirmation does not strengthen L evidentially (nothing can, since L is not evidence-governed); it indicates that the social field is currently not challenging L. Supply is a *status report on the defense perimeter*, which is why its value is real but non-cumulative.
 - **Suppression** (protection operations): active handling of disconfirming signals and their sources.
@@ -168,7 +173,7 @@ The defense repertoire decomposes into five operations. The first four, run in s
 - **P4 Attack and reverse** (the critic becomes the offender, the offender the victim; the reversal is L-restoring because victimhood is itself a clause of L or can be recruited as one).
 - **P5 Preemptive witness management** (gaslighting, isolation of partners from corroborating others, control of shared records): protection run in advance so that P1 through P4 are less often needed.
 
-**Remark (why DARVO is stereotyped).** On the fuel account, the uniformity of the DARVO sequence across unrelated individuals is a coincidence of temperament. On the PLM it is convergent function: there are only so many ways to keep a falsified proposition standing, namely handle the evidence, the witness, the record, and the moral valence. DARVO is the exhaustive checklist run in the only sensible order.
+**Remark (on the apparent regularity of the sequence, stated as hypothesis).** On the fuel account, the recurrence of DARVO-like sequences across unrelated individuals is a coincidence of temperament. The PLM's proposed explanation is convergent function: if a challenged proposition is to be kept standing, the available targets are the evidence, the witness, the record, and the moral valence, which would produce the observed family resemblance without any shared script. The claim is therefore: DARVO is a recurrent *family* of identity-protection operations, with selection and ordering shaped by whether earlier operations successfully neutralize the contradiction. Whether the sequence is genuinely ordered, and how often stages are skipped, combined, or entered mid-sequence (an attack-first opening under power asymmetry is entirely compatible with the family reading), is what Study 3 measures rather than assumes. A second restraint is built in: these operations are not exclusive to narcissism. Institutions, frightened children, guilty organizations, and ordinary people under acute threat use some of them. The model's discriminator is not the presence of the operations but their frequency, rigidity, deployment at low stakes, and persistence after the contradiction has been neutralized; behavior alone is never treated as proof of narcissistic organization.
 
 ### 3.5 Substitutability and presentation switching
 
@@ -180,13 +185,13 @@ This yields the PLM's account of why "supply" was such a confusing construct in 
 
 **Definition 3.2 (corrigibility).** The capacity to let evidence revise a self-relevant account, distinguishable from compliance (yielding to social pressure).
 
-**Proposition 3.6 (the signature).** Ordinary self-serving cognition yields to evidence and (imperfectly) resists pressure. The narcissistic organization inverts this: it *yields to pressure and resists evidence*. Flattery moves it, force moves it, status moves it; documentation does not. This inversion is measurable (Study 2) and provides the demarcation Condition 3.1(3) needs: a belief is a Lie exactly insofar as its holder's revision behavior shows the inverted signature in its domain.
+**Proposition 3.6 (the signature).** Ordinary self-serving cognition yields to evidence and (imperfectly) resists pressure. The narcissistic organization inverts this: it *yields to pressure and resists evidence*. Flattery moves it, force moves it, status moves it; documentation does not. This inversion is measurable (Study 2) and provides the demarcation Condition 3.1(2) needs: a belief is a Lie exactly insofar as its holder's revision behavior shows the inverted signature in its domain.
 
-**Remark.** The signature also cleanly separates the PLM from a cynical-manipulator model (psychopathy-adjacent): a pure manipulator yields to evidence privately (updates their model of the world) while managing appearances. The narcissistic organization cannot afford the private update, because L is identity, not strategy. Mixed cases exist and are discussed in Chapter 8.
+**Remark.** The signature also separates the PLM from a cynical-manipulator model (psychopathy-adjacent): a pure manipulator yields to evidence privately (updates their model of the world) while managing appearances. The PLM predicts that the narcissistic organization does not perform the private update, because L is identity rather than strategy; manipulator map-management and narcissistic map-protection should therefore dissociate under conditions where private accuracy pays and appearance does not. This is a prediction to be tested, not an established fact, and mixed cases exist; both are discussed in Chapter 7.
 
 ### 3.7 Developmental and maintenance sketch
 
-(Kept brief; the thesis is functional, not etiological.) The model is agnostic among developmental routes (indulgent overvaluation, cold intrusive parenting, shame-saturated environments) and requires only that some route installs a load-bearing counterfactual before mature belief-revision machinery could refuse it. Maintenance is then self-sealing: every successful protection operation removes the corrective experience that could have demoted L from identity to belief, so the organization's competence at defense and its dependence on defense grow together.
+(Kept brief; the thesis is functional, not etiological.) The model is agnostic among developmental routes (indulgent overvaluation, cold intrusive parenting, shame-saturated environments) and requires only that some route installs a load-bearing, revision-exempt self-claim before mature belief-revision machinery could refuse it. Maintenance is then self-sealing: every successful protection operation removes the corrective experience that could have demoted L from identity to belief, so the organization's competence at defense and its dependence on defense grow together.
 
 ---
 
@@ -232,7 +237,7 @@ The model is stated to be wrong in public if these come out against it; the fals
 
 ### 5.0 General methods notes
 
-Populations: (a) community adults screened on NPI/NARQ/PNI for a full-spectrum sample; (b) clinical NPD sample for Studies 3 and 4 (recruitment through personality-disorder services; power will constrain claims); (c) informant reports (partners, ex-partners, colleagues) wherever feasible, given the population's self-report distortions, which are themselves a PLM prediction and must be handled as data, not noise. Preregistration throughout; ethics discussed in Chapter 8.
+Populations: (a) community adults screened on NPI/NARQ/PNI for a full-spectrum sample; (b) clinical NPD sample for Studies 3 and 4 (recruitment through personality-disorder services; power will constrain claims); (c) informant reports (partners, ex-partners, colleagues) wherever feasible, given the population's self-report distortions, which are themselves a PLM prediction and must be handled as data, not noise. Preregistration throughout; ethics discussed in Chapter 7.
 
 ### 5.1 Study 1 (the masters study): experience sampling of supply dynamics
 
@@ -240,7 +245,9 @@ Populations: (a) community adults screened on NPI/NARQ/PNI for a full-spectrum s
 
 **Design.** Four-week experience sampling (5 pings/day). Each ping: recent social feedback events, coded for (i) hedonic value, (ii) confirmation content with respect to individually elicited self-claims (see instrument below), (iii) source credibility; plus state measures (grandiosity, shame, defensiveness) and a brief threat inventory (was any self-claim contradicted since last ping?).
 
-**Key instrument (novel contribution): the Self-Claim Elicitation Protocol.** A structured interview eliciting each participant's identity-level self-claims and, per claim, (a) confidence, (b) what evidence would revise it, (c) affective forecast under revision. Claims for which (b) returns nothing and (c) returns annihilation-language are operationally Lie-candidates (Definition 3.1(3)). This instrument, validated, is a standalone publishable product.
+**Key instrument (novel contribution): the Self-Claim Elicitation Protocol.** A structured interview eliciting each participant's identity-level self-claims and, per claim, (a) confidence, (b) what evidence would revise it, (c) affective forecast under revision. Claims for which (b) returns nothing and (c) returns annihilation-language are operationally Lie-candidates (Definition 3.1(2)). This instrument, validated, is a standalone publishable product.
+
+**Instrument caveat (load-bearing).** The protocol is a candidate-generation instrument, not a validation instrument, and it is easy to game: participants with strong defensive patterns may offer socially acceptable hypothetical revision conditions, misrepresent their likely responses, present as highly rational, lack insight into their own reactions, or behave differently when actual stakes appear. The theory itself predicts that self-report is least reliable at exactly the point being measured, so the protocol's outputs count as instances of the construct only when they predict behavior under real contradiction (Study 2), informant report, or longitudinal observation. Convergence between elicited candidates and behavioral response is a reportable result; so is divergence, which would locate where insight fails, and which the model predicts will be concentrated on precisely the load-bearing claims.
 
 **Predictions.** PLM: state relief after supply decays within hours regardless of event magnitude; decay is faster on days containing contradiction events; confirmation content, not hedonic value, predicts state change in high-narcissism participants (interaction), while hedonic value predicts it in controls. Fuel: magnitude-proportional, slower decay; no diagnosticity interaction.
 
@@ -250,13 +257,15 @@ Populations: (a) community adults screened on NPI/NARQ/PNI for a full-spectrum s
 
 **Predictions.** PLM: (3) > (2) > (1) on defense outcomes in the high-narcissism group with the reverse or flat ordering in controls; affirmation fails to attenuate (4) vs (3) in high-narcissism, succeeds in controls; witness derogation in (3) scales with a credibility manipulation nested in the design.
 
-### 5.3 Study 3: DARVO as an ordered grammar (corpus linguistics)
+### 5.3 Study 3: DARVO sequence structure (corpus linguistics)
 
-**Question.** Is DARVO an ordered defense grammar (as the PLM's "exhaustive checklist" reading predicts) or an unordered aggression repertoire?
+**Question.** Does DARVO behave as a contingently ordered family of identity-protection operations (selection and ordering shaped by whether earlier operations neutralize the contradiction), as an invariantly ordered grammar, or as an unordered aggression repertoire? The three outcomes are distinguishable in transition data, and the PLM commits only to the first.
 
 **Design.** Corpus assembly from (a) family-court and employment-tribunal transcripts where independent fact-finding later established the record (providing ground truth on who was contradicting whom with what evidence), (b) recorded therapy sessions from consenting clinical participants, (c) public-figure response archives. Utterance-level annotation with the P1 to P5 taxonomy; sequence analysis (Markov transition structure) testing for the predicted P1 to P4 ordering and for escalation gating (P2 engaged when P1 fails, etc.); dose-response between witness credibility (codable from transcripts) and P2 effort.
 
-**Deliverable.** A validated DARVO sequence-annotation scheme; transition-structure evidence for or against the emergency-subsystem reading; a bridge to Harsey and Freyd's effectiveness findings.
+**Specificity control.** Because the operations are common property under threat, the design requires comparison corpora: accused parties later vindicated by the record, and ordinary defensiveness under acute accusation in non-clinical samples. The PLM's discriminating prediction is not the presence of P-operations but their profile: frequency, rigidity across contexts, deployment at low stakes, insensitivity to the quality of the contradicting evidence, and persistence after the contradiction has been neutralized or withdrawn.
+
+**Deliverable.** A validated DARVO sequence-annotation scheme; transition-structure evidence adjudicating the three readings above; a specificity profile separating narcissistic defense from ordinary defensiveness; a bridge to Harsey and Freyd's effectiveness findings.
 
 ### 5.4 Study 4: longitudinal clinical study of corrigibility as the active treatment ingredient
 
@@ -266,76 +275,46 @@ Populations: (a) community adults screened on NPI/NARQ/PNI for a full-spectrum s
 
 ### 5.5 Program summary
 
-Study 1 tests the economy (Propositions 3.1, 3.2). Study 2 tests the threat model (3.3, 3.4, 3.6, and the Steele discriminator). Study 3 tests the defense grammar (3.4, P1 to P5). Study 4 tests the treatment corollary. Masters scope: Study 1 alone, with the discrimination table as the theory contribution.
+Study 1 tests the economy (Propositions 3.1, 3.2). Study 2 tests the threat model (3.3, 3.4, 3.6, and the Steele discriminator). Study 3 tests the defense-family hypothesis and its specificity (3.4, P1 to P5). Study 4 tests the treatment corollary. Masters scope: the narrowed contradiction-versus-deprivation question (a reduced Study 2) or Study 1 alone, with the discrimination table as the theory contribution. Doctoral scope: three connected papers as laid out in "How to use this document"; the full four-study program is a research agenda, not a dissertation.
 
 ---
 
-## Chapter 6. Formalization: the Lie as a part-whole misrepresentation
+## Chapter 6. Implications
 
-*(For the corpus, and for programs receptive to formal models. This chapter is separable: the empirical thesis stands without it. Framework-native readers: this is the essay's thesis located inside the two-Lies structure; mainstream readers: this is a generalization argument, and the framework vocabulary is defined where used.)*
+### 6.1 Clinical
 
-### 6.1 The general form
-
-The Circumpunct Framework identifies exactly two ways a part-whole relation can be misrepresented from inside. Writing the relation as ⊙λ ⊂ ⊙Λ (a whole-at-its-scale genuinely contained in a greater whole):
-
-- **The Inflation Lie:** the part claims to be the whole ("I am the source; there is nothing above me"): asserting ⊙λ = ⊙Λ.
-- **The Severance Lie:** the part denies its own wholeness or the containing whole ("I am only a piece" / "there is no source").
-
-Grandiose narcissism is the Inflation Lie installed as identity: the self claims exemption from the containing order (accountability to others, to the shared record, to reality's feedback). The vulnerable presentation's innocence/victim clause is structurally interesting: it presents as smallness but functions as inflation (the claim "I am the real victim, always" is a claim of exemption from the offender position, i.e., from symmetric moral containment). The PLM's substitutability result (Proposition 3.5) falls out: both presentations defend one inflated exemption; they differ in costume.
-
-### 6.2 Coupling dynamics
-
-In framework notation the part-whole bond carries a coupling κ with non-collapse bounds 0 < κ < κ*: below the band the part floats free of correction (Severance), above it the part is absorbed (loss of distinct identity). Two readings for the narcissistic organization:
-
-- Toward correction sources, the organization drives its coupling toward 0: a closed aperture (β → 0), a system that refuses correction. This is the framework's standing definition of how lies persist: "lies persist through closed apertures; systems that refuse correction."
-- Toward supply sources, the organization demands the other's absorption (the other exists as selfobject, confirmation instrument, part of the self's regulation): pushing the *other's* κ past its collapse bound. The characteristic relational harm of narcissism (the partner's engulfment) is the mirror image of the narcissist's own severance from correction. One organization, both Lie directions, distributed across the two channel types (correction in, confirmation in).
-
-### 6.3 The cascade and the cure
-
-The framework's four-stage cascade (thought entertained, repeated, habituated, fused with identity) gives the installation route: L is a thought that completed stage four, which is why its removal "feels existential" (Definition 3.1(2) is stage-four fusion restated). The framework's solvent for stage-four structures is curiosity, defined there as a filter about filters, which is this thesis's corrigibility construct at the disposition level: §25.20's discriminant ("the truthful person yields to evidence and resists pressure; the liar yields to pressure and resists evidence") is Proposition 3.6, and was in fact its source. The treatment corollary (Study 4) is the clinical face of the framework's restoration ethic: the goal is not to destroy the person's structure (annihilation is what the Lie was protecting against, and threatening it only re-arms the defense) but to restore range of motion: making correction survivable, so that the proposition can demote from identity to belief and re-enter the revision machinery.
-
-### 6.4 Institutional analogue
-
-Because the form is scale-free, organizations exhibit the same economy: an institution with a load-bearing counterfactual (we do not make mistakes; we are the good ones) harvests confirmation (PR, awards, loyalty rituals), runs P1 to P5 against whistleblowers (deny, discredit, rewrite the record, attack, reverse victim and offender, manage witnesses), and shows the corrigibility inversion (yields to power, resists documentation). The Noble Lie literature and the framework's essay on its fallout supply the bridge. For the doctoral thesis this is a chapter; it also immunizes the model against the objection that it pathologizes individuals: the PLM describes an information structure wherever it runs.
-
----
-
-## Chapter 7. Implications
-
-### 7.1 Clinical
-
-1. **Target respecification.** If the PLM holds, esteem support and supply management are palliative at best: the deficit is not esteem level but corrigibility. Therapy succeeds when correction becomes survivable, which requires shame tolerance first (the annihilation forecast in Definition 3.1(2) is the barrier), then graded exposure to being wrong in low-stakes domains, then migration toward L's domain.
+1. **Target respecification.** If the PLM holds, esteem support and supply management are palliative at best: the deficit is not esteem level but corrigibility. Therapy succeeds when correction becomes survivable, which requires shame tolerance first (the annihilation forecast in Definition 3.1(1) is the barrier), then graded exposure to being wrong in low-stakes domains, then migration toward L's domain.
 2. **Alliance prediction.** The therapist is a high-credibility witness, and Proposition 3.4 predicts the observed alliance pattern: idealization while confirming, devaluation precisely when most accurate. Rupture timing becomes prognostic data rather than failure.
 3. **Presentation-switch warning.** Esteem gains without corrigibility gains predict costume change, not recovery (Study 4's mediation test); a treatment literature that measures presentation rather than function will misread switching as improvement.
 
-### 7.2 For survivors and their advisors
+### 6.2 For survivors and their advisors
 
 The received advice ("cut off the supply and they will leave") follows from the fuel model and partly works, but the PLM adds precision with safety consequences: the dangerous act is not withholding admiration but *credible contradiction of L*, especially with documentation and witnesses. Row 4 of the discrimination table is a threat-assessment principle: the nobody with proof is in more danger than the rude VIP. Survivor education should distinguish deprivation (annoying to the organization) from falsification (emergency), and safety planning should treat escalation risk as tracking diagnosticity. Grey rock works not because it starves fuel but because it makes the survivor a null witness: no confirmation, but crucially no credible contradiction either.
 
-### 7.3 For epistemics and public life
+### 6.3 For epistemics and public life
 
 The corrigibility signature generalizes into a public diagnostic: for any actor (person, party, brand, movement), ask which moves it: evidence or pressure. The PLM predicts that organizations and public figures running protected Lies will show the same stereotyped defense grammar under documentation, and Study 3's annotation scheme is directly applicable to public discourse analysis.
 
 ---
 
-## Chapter 8. Limitations, objections, ethics
+## Chapter 7. Limitations, objections, ethics
 
-### 8.1 Objections taken seriously
+### 7.1 Objections taken seriously
 
 - **"Unfalsifiable defense reading":** any behavior can be redescribed as defense post hoc. Answer: Chapter 4's falsification handles are prospective and preregistered; the PLM stakes itself on ordering effects (diagnosticity over social cost, credibility-scaled discrediting, affirmation failure) that fuel models predict the other way.
-- **"The Lie is unmeasurable":** it is a hypothesized internal proposition. Answer: the Self-Claim Elicitation Protocol operationalizes it behaviorally (revision-condition emptiness plus annihilation forecast), without requiring introspective access to L's content; the construct earns its keep through the predictions it licenses, like any latent variable.
-- **"Moralizing language":** calling it a Lie imports blame into psychopathology. Answer: the term is defined structurally (3.1), the developmental section explicitly removes culpability for installation, and Chapter 6's institutional analogue shows the same structure running with no individual liar present. What the term preserves, deliberately, is the epistemic fact the euphemisms lose: the organization's central activity is the maintenance of a falsehood against evidence, and treating that as a neutral "self-esteem regulation style" misdescribes the harm to witnesses. The framework's own non-culpability clause (thoughts appearing is not chosen; endorsement and cultivation are where moral meaning begins) marks the line.
+- **"The Lie is unmeasurable":** it is a hypothesized internal proposition. Answer: the Self-Claim Elicitation Protocol generates candidates behaviorally (revision-condition emptiness plus annihilation forecast) without requiring introspective access to L's content, and candidates count as instances of the construct only when they predict behavior under real contradiction, informant report, or longitudinal course (the validation chain in 5.1); the construct earns its keep through the predictions it licenses, like any latent variable. The instrument's gameability is acknowledged in 5.1 and is itself a model prediction.
+- **"Moralizing language":** calling it a Lie imports blame into psychopathology, and "lie" ordinarily implies awareness of the truth, deliberate deception, and intentional maintenance of falsehood, none of which the model requires. Answer: the two-register policy (front matter) confines "the Lie" to public-facing text; the academic construct is the Protected Identity Proposition, defined by exemption from revision (3.1), with falsity a typical consequence rather than a criterion. The developmental section explicitly removes culpability for installation, and Appendix C's institutional analogue shows the same structure running with no individual liar present. What the public term preserves, deliberately, is the epistemic fact the euphemisms lose: a proposition insulated from correction functions as a lie for everyone downstream of it, and treating that as a neutral "self-esteem regulation style" misdescribes the harm to witnesses. The framework's own non-culpability clause (thoughts appearing is not chosen; endorsement and cultivation are where moral meaning begins) marks the line.
 - **"Overlap with existing models":** NARC and Morf & Rhodewalt already subordinate behavior to grandiosity maintenance. Answer: acknowledged as the nearest neighbors and cited as such; the PLM's additions are the epistemic respecification (protection of a proposition from evidence, with the corrigibility inversion as its signature), the confirmation-content account of supply substitutability, and the discriminating predictions of Chapter 4, none of which the neighbors derive.
 
-### 8.2 Research ethics
+### 7.2 Research ethics
 
-Ego-threat paradigms with a population selected for explosive response to ego threat require: graded threat calibrated per participant, in-session debrief with restoration, clinical backup, exclusion criteria for violence history in lab studies, and special care with informant reports (the informant may be a survivor at risk; contact protocols must not create traceable disclosure). Study 3's transcript corpora require data agreements that protect all parties, including the accused. The thesis should not become an instrument for diagnosing individuals at a distance; Chapter 7.3's diagnostic is stated for organizations and behavior patterns, and the ethics section binds the author to that line (the graded party does not choose the grading axis, and neither does the grader escape it: the corrigibility test applies to the thesis itself, which is what Chapter 4.4 is for).
+Ego-threat paradigms with a population selected for explosive response to ego threat require: graded threat calibrated per participant, in-session debrief with restoration, clinical backup, exclusion criteria for violence history in lab studies, and special care with informant reports (the informant may be a survivor at risk; contact protocols must not create traceable disclosure). Study 3's transcript corpora require data agreements that protect all parties, including the accused. The thesis should not become an instrument for diagnosing individuals at a distance; Chapter 6.3's diagnostic is stated for organizations and behavior patterns, and the ethics section binds the author to that line (the graded party does not choose the grading axis, and neither does the grader escape it: the corrigibility test applies to the thesis itself, which is what Chapter 4.4 is for).
 
 ---
 
-## Chapter 9. Conclusion
+## Chapter 8. Conclusion
 
-The supply construct survives, demoted and clarified: supply is real, sought, and harvested, but it is the perimeter report of a defended falsehood, not the commodity of an appetite. The reframe explains what the fuel picture cannot: why no dose suffices, why accuracy is the unforgivable offense, why the witness must be destroyed rather than replaced, why opposite supplies substitute, and why the same grammar of defense (deny, discredit, rewrite, attack, reverse, manage the witnesses) reappears in every unrelated case: there are only so many ways to keep a dead proposition standing. Narcissism is better understood not as an addiction to attention but as an organized refusal of reality, and supply as whatever helps keep the refusal intact. The clinical hope in this is concrete: appetites can only be fed or starved, but a defense can be made unnecessary. Correction that does not annihilate is the treatment; corrigibility is the outcome variable; and the measure of recovery is not how the person shines but what they do when they are accurately, credibly, and kindly contradicted.
+The supply construct survives, demoted and clarified: supply is real, sought, and harvested, but on the model proposed here it is the perimeter report of a defended proposition, not the commodity of an appetite. The reframe is built to explain what the fuel picture handles poorly, and it stakes that claim on the tests of Chapter 4: whether no dose suffices, whether accuracy rather than insult is the deeper offense, whether the credible witness is discredited rather than replaced, whether opposite supplies substitute, and whether the recurring family of defense operations (deny, discredit, rewrite, attack, reverse, manage the witnesses) shows the ordering and specificity the model predicts. The proposed answer to that last recurrence, which Study 3 exists to test, is convergent function: there are only so many targets available when a challenged proposition must be kept standing. If the program bears out, narcissism is better understood not as an addiction to attention but as an organized refusal of reality, and supply as whatever helps keep the refusal intact; if the program comes out against the model, Chapter 4.4 says so in advance and the construct is surrendered. The clinical hope in the model is concrete: appetites can only be fed or starved, but a defense can be made unnecessary. Correction that does not annihilate is the treatment; corrigibility is the outcome variable; and the measure of recovery is not how the person shines but what they do when they are accurately, credibly, and kindly contradicted.
 
 ---
 
@@ -364,15 +343,15 @@ The supply construct survives, demoted and clarified: supply is real, sought, an
 | Ch 1 to 3 (theory) | Full | Full, expanded into 1 to 2 theory papers |
 | Ch 4 (discrimination) | Full (the core contribution) | Full, preregistered |
 | Ch 5 Study 1 (ESM) | The empirical chapter | Paper 1 |
-| Ch 5 Study 2 (lab) | Optional pilot (N ~ 60) | Paper 2 |
-| Ch 5 Study 3 (corpus) | Skip | Paper 3 |
-| Ch 5 Study 4 (clinical) | Skip | Paper 4 (or postdoc) |
-| Ch 6 (formalization) | Skip or appendix | Chapter or separate paper |
+| Ch 5 Study 2 (lab) | The masters study in reduced form (contradiction vs deprivation vs identity-irrelevant unpleasantness), or an optional pilot alongside Study 1 | Paper 2 |
+| Ch 5 Study 3 (corpus) | Skip | Paper 3 (or the measurement paper, if SCEP validation is chosen instead) |
+| Ch 5 Study 4 (clinical) | Skip | Later project, likely postdoctoral |
+| Appendix C (formalization) | Omit from the main argument | Conceptual appendix or separate theoretical paper (central only in philosophy of psychiatry) |
 | Self-Claim Elicitation Protocol | Developed, piloted | Validated (its own methods paper) |
 
 ### B.2 The supervisor pitch (one paragraph, ready to send)
 
-"The construct 'narcissistic supply' is doing enormous work in both clinical discourse and public psychoeducation, yet it has never been given a functional analysis: the field treats supply as a consumable and narcissism as the appetite for it, despite three anomalies that picture cannot absorb (insatiability without tolerance dynamics, disproportionate and stereotyped response to contradiction, and hedonically opposite supplies substituting for one another). I propose a confirmation-based respecification, the Protected Lie Model: supply is evidence that a protected counterfactual self-claim is still standing, contradiction is structural threat, and DARVO is the resulting emergency grammar. The model yields six preregisterable predictions that separate it from the addiction (Baumeister & Vohs), status-pursuit (Grapsas et al.), and self-regulatory (Morf & Rhodewalt) accounts, including a sharp one: domain-irrelevant self-affirmation should fail to reduce defensiveness in the pathological range while succeeding in controls. I would begin with an experience-sampling study of supply decay dynamics and a self-claim elicitation instrument that operationalizes the protected proposition behaviorally."
+"The construct 'narcissistic supply' is doing enormous work in both clinical discourse and public psychoeducation, yet it has never been given a functional analysis: the field treats supply as a consumable and narcissism as the appetite for it, despite three anomalies that picture cannot absorb (insatiability without tolerance dynamics, disproportionate and stereotyped response to contradiction, and hedonically opposite supplies substituting for one another). I propose a confirmation-based respecification built around a Protected Identity Proposition: a self-claim defined not by falsity but by exemption from revision (defended through asymmetric evidence standards, witness management, and resistance to correction). On this model supply is evidence that the protected claim is still standing, contradiction is structural threat, and DARVO-type responses form a recurrent family of protection operations whose sequencing is an empirical question. The model yields six preregisterable predictions that separate it from the addiction (Baumeister & Vohs), status-pursuit (Grapsas et al.), and self-regulatory (Morf & Rhodewalt) accounts, including a sharp one: domain-irrelevant self-affirmation should fail to reduce defensiveness in the pathological range while succeeding in controls. I would begin with an experience-sampling study of supply decay dynamics and a self-claim elicitation instrument that operationalizes the protected proposition behaviorally."
 
 ### B.3 Checklist before submission anywhere
 
@@ -382,6 +361,38 @@ The supply construct survives, demoted and clarified: supply is real, sought, an
 - [ ] Check current DARVO literature (post-2020 work by Freyd's lab and others) for sequence-structure findings that Study 3 must build on rather than duplicate.
 - [ ] Confirm the Steele affirmation paradigm has not already been run against narcissism measures; if it has, the result either supports Chapter 4 or forces revision, and it goes in either way.
 - [ ] Ethics pre-consultation for Studies 2 through 4 before program commitment.
+- [ ] Register audit: any committee-facing extract leads with the Protected Identity Proposition construct and states model claims as predictions; "the Lie" appears only as the defined public gloss.
+- [ ] If Appendix C travels with a philosophy-of-psychiatry application, add engagement with the self-deception literature (at minimum Mele, Davidson, and the belief/acceptance distinction), theories of belief, and epistemic injustice (Fricker) before submission.
+
+## Appendix C. Formalization: the Lie as a part-whole misrepresentation (Circumpunct Framework)
+
+*(Deliberately an appendix, not a chapter. The empirical argument of Chapters 1 through 8 must stand for a reader who rejects everything below. Placement guidance: masters, omit entirely; psychology PhD, conceptual appendix or separate theoretical paper; philosophy-of-psychiatry PhD, potentially central, but only after sustained engagement with the self-deception, theories-of-belief, and epistemic-injustice literatures, which this sketch does not yet contain. For the corpus, this is the load-bearing connection. Framework vocabulary is defined where used.)*
+
+### C.1 The general form
+
+The Circumpunct Framework identifies exactly two ways a part-whole relation can be misrepresented from inside. Writing the relation as ⊙λ ⊂ ⊙Λ (a whole-at-its-scale genuinely contained in a greater whole):
+
+- **The Inflation Lie:** the part claims to be the whole ("I am the source; there is nothing above me"): asserting ⊙λ = ⊙Λ.
+- **The Severance Lie:** the part denies its own wholeness or the containing whole ("I am only a piece" / "there is no source").
+
+On this reading, grandiose narcissism is the Inflation Lie installed as identity: the self claims exemption from the containing order (accountability to others, to the shared record, to reality's feedback). The vulnerable presentation's innocence/victim clause is structurally interesting: it presents as smallness but functions as inflation (the claim "I am the real victim, always" is a claim of exemption from the offender position, i.e., from symmetric moral containment). The PLM's substitutability proposition (3.5) falls out: both presentations defend one inflated exemption; they differ in costume. Note the alignment with Definition 3.1 as revised: the framework reading also centers exemption, not falsity; inflation is a claim of exemption from correction by the containing order.
+
+### C.2 Coupling dynamics
+
+In framework notation the part-whole bond carries a coupling κ with non-collapse bounds 0 < κ < κ*: below the band the part floats free of correction (Severance), above it the part is absorbed (loss of distinct identity). Two readings for the narcissistic organization:
+
+- Toward correction sources, the organization drives its coupling toward 0: a closed aperture (β → 0), a system that refuses correction. This is the framework's standing definition of how lies persist: "lies persist through closed apertures; systems that refuse correction."
+- Toward supply sources, the organization demands the other's absorption (the other exists as selfobject, confirmation instrument, part of the self's regulation): pushing the *other's* κ past its collapse bound. The characteristic relational harm of narcissism (the partner's engulfment) is the mirror image of the narcissist's own severance from correction. One organization, both Lie directions, distributed across the two channel types (correction in, confirmation in).
+
+### C.3 The cascade and the cure
+
+The framework's four-stage cascade (thought entertained, repeated, habituated, fused with identity) gives the installation route: L is a thought that completed stage four, which is why its removal "feels existential" (Definition 3.1(1) is stage-four fusion restated). The framework's solvent for stage-four structures is curiosity, defined there as a filter about filters, which is this thesis's corrigibility construct at the disposition level: §25.20's discriminant ("the truthful person yields to evidence and resists pressure; the liar yields to pressure and resists evidence") is Proposition 3.6, and was in fact its source. The treatment corollary (Study 4) is the clinical face of the framework's restoration ethic: the goal is not to destroy the person's structure (annihilation is what the Lie was protecting against, and threatening it only re-arms the defense) but to restore range of motion: making correction survivable, so that the proposition can demote from identity to belief and re-enter the revision machinery.
+
+### C.4 Institutional analogue
+
+Because the form is scale-free, the framework predicts that organizations exhibit the same economy: an institution with a load-bearing protected proposition (we do not make mistakes; we are the good ones) harvests confirmation (PR, awards, loyalty rituals), runs P1 to P5 against whistleblowers (deny, discredit, rewrite the record, attack, reverse victim and offender, manage witnesses), and shows the corrigibility inversion (yields to power, resists documentation). The Noble Lie literature and the framework's essay on its fallout supply the bridge. For a doctoral program this is at most a separate paper; its function here is partly ethical: it immunizes the model against the objection that it pathologizes individuals, since the PLM describes an information structure wherever it runs.
+
+---
 
 ## References (from-memory reconstructions; every entry must be verified before submission)
 
@@ -416,10 +427,11 @@ The supply construct survives, demoted and clarified: supply is real, sought, an
 - Tracy, J. L., & Robins, R. W. (2004). Putting the self into self-conscious emotions: A theoretical model. Psychological Inquiry, 15(2), 103 to 125. [verify]
 - Zeigler-Hill, V. (2006). Discrepancies between implicit and explicit self-esteem: Implications for narcissism and self-esteem instability. Journal of Personality, 74(1), 119 to 144. [verify]
 
-Framework-internal sources (Chapter 6): `circumpunct_framework.md` (the two Lies; §19 cascade; §25.17 Resolution Protocol; §25.20 Metacognitive Theory of Truthfulness), `docs/the_fallout_of_the_noble_lie.html`, `docs/the_metacognitive_theory_of_truthfulness.html`, `docs/UNDERSTANDING_NARCISSISTIC_ABUSE.html`.
+Framework-internal sources (Appendix C): `circumpunct_framework.md` (the two Lies; §19 cascade; §25.17 Resolution Protocol; §25.20 Metacognitive Theory of Truthfulness), `docs/the_fallout_of_the_noble_lie.html`, `docs/the_metacognitive_theory_of_truthfulness.html`, `docs/UNDERSTANDING_NARCISSISTIC_ABUSE.html`.
 
 ---
 
 ## Revision history
 
+- 2026-07-26 v1.1: revised against Ashman's external review, same day. (1) Document restated as a thesis proposal and research architecture, not a thesis; overreaching declaratives converted to model predictions ("clinical literature is unanimous," "exhaustive checklist," "cannot afford the private update," conclusion hedged with the falsification handles). (2) Core construct redefined: falsity dropped as a defining condition of L in favor of exemption from revision ("the belief is not allowed to lose"), with falsity as typical consequence; the counterfactuality-scoring problem acknowledged inside 3.1. (3) Two-register naming added: public "Protecting the Lie" / academic "Protected Identity Proposition (PIP)," with a register rule in front matter and a register-audit checklist item. (4) SCEP demoted to candidate-generation with an explicit gameability caveat (the theory predicts self-report failure at the measured point; behavioral validation chain required). (5) DARVO reframed from ordered grammar to recurrent family with contingent sequencing; Study 3 rewritten to adjudicate three readings and given specificity controls (the operations are not exclusive to narcissism; the discriminator is frequency, rigidity, stakes, persistence). (6) Circumpunct chapter moved out of the numbered chapters to Appendix C with placement guidance per degree path; chapters renumbered (Implications 6, Limitations 7, Conclusion 8). (7) Scoping corrected: masters narrowed to the single contradiction-versus-deprivation question; PhD restructured as three connected papers; the four-study program named as a decade-scale agenda; Study 4 marked postdoctoral.
 - 2026-07-26 v1.0: initial. Full thesis architecture built from the seed essay: PLM formal statement (six propositions), discrimination table against four rival models with falsification handles, four-study empirical program including the Self-Claim Elicitation Protocol, framework-formalization chapter (Inflation Lie, coupling bounds, cascade, corrigibility from §25.20), implications, ethics, degree scoping, and from-memory reference list flagged for verification.
