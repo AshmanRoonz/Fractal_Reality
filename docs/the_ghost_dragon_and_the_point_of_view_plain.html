@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Ghost Dragon and the Green Square (Plain Version)</title>
+<style>
+  :root {
+    --bg: #faf7f2; --ink: #23201c; --soft: #6b6257; --rule: #d8d0c4;
+    --accent: #8a4b2d; --box: #f1ebe1;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #14120f; --ink: #e8e2d8; --soft: #a49a8c;
+            --rule: #3a352d; --accent: #d99c72; --box: #1e1b16; }
+  }
+  html { background: var(--bg); }
+  body {
+    color: var(--ink); background: var(--bg);
+    font-family: Georgia, "Times New Roman", serif;
+    line-height: 1.7; margin: 0 auto; padding: 3rem 1.2rem 5rem;
+    max-width: 42rem; font-size: 1.1rem;
+  }
+  h1 { font-size: 1.8rem; line-height: 1.25; margin-bottom: .3rem; }
+  h2 { font-size: 1.2rem; margin-top: 2.6rem; border-bottom: 1px solid var(--rule); padding-bottom: .25rem; }
+  .meta { color: var(--soft); font-size: .9rem; margin-bottom: 2rem; }
+  .box {
+    background: var(--box); border: 1px solid var(--rule);
+    border-radius: .5rem; padding: 1rem 1.2rem; margin: 1.6rem 0;
+    font-size: .98rem;
+  }
+  .box strong { color: var(--accent); }
+  .one-liner { font-style: italic; text-align: center; margin: 2.4rem 0; font-size: 1.1rem; }
+  .rev { color: var(--soft); font-size: .88rem; }
+  a { color: var(--accent); }
+  figure { margin: 2.2rem 0; }
+  figure svg { width: 100%; height: auto; display: block; }
+  figcaption { color: var(--soft); font-size: .92rem; line-height: 1.6; margin-top: .7rem; }
+
+/* ---- side rail: the dimensional ladder, ascending in rainbow (after the_pattern_that_connects.html) ---- */
+:root {
+  --r0:#c0392b; --r1:#b0611c; --r2:#8a7016; --r3:#2c8a4a;
+  --r4:#2a7ba3; --r5:#4a5bb5; --r6:#7a4fb5; --rs:#bd3a8d;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --r0:#E05252; --r1:#E08A52; --r2:#D9C25A; --r3:#5CBF7A;
+    --r4:#4DA0C8; --r5:#6A7AD8; --r6:#9B7AD8; --rs:#E84DAF;
+  }
+}
+.rail {
+  position: fixed; left: max(12px, calc(50% - 21rem - 140px)); top: 50%;
+  transform: translateY(-50%); display: flex; flex-direction: column;
+  align-items: flex-start; gap: 9px; z-index: 5; pointer-events: none; user-select: none;
+}
+.rail .st, .rail .seam, .rail .rail-whole { pointer-events: auto; cursor: pointer; }
+.rail .st { position: relative; z-index: 1; }
+.rail .st:hover { opacity: 1 !important; }
+.rail .seam:hover { opacity: .9 !important; }
+.rail .rail-whole {
+  position: absolute; top: 50%; left: 34px; transform: translate(-50%, -50%);
+  font-size: 210px; color: var(--accent); opacity: .06; line-height: 1; z-index: 0;
+  animation: railbreathe 12s ease-in-out infinite;
+}
+.rail .rail-whole:hover { opacity: .14; }
+.rail .st {
+  display: flex; align-items: center; gap: 9px; opacity: .4;
+  animation: railpulse 9.6s linear infinite;
+  animation-delay: calc(var(--i) * 1.2s - 9.6s);
+}
+.rail .st .g { font-size: 20px; width: 26px; text-align: center; color: var(--c); }
+.rail .st .lb { font-family: system-ui, sans-serif; font-size: 10.5px; line-height: 1.25; color: var(--soft); letter-spacing: .4px; }
+.rail .seam {
+  height: 10px; margin-left: 12px; border-left: 2px dashed var(--rs); opacity: .3;
+  animation: railseam 9.6s linear infinite; animation-delay: calc(7 * 1.2s - 9.6s);
+}
+@keyframes railpulse {
+  0%   { opacity: .4; text-shadow: none; }
+  6%   { opacity: 1; text-shadow: 0 0 14px currentColor; }
+  17%  { opacity: .4; text-shadow: none; }
+  100% { opacity: .4; text-shadow: none; }
+}
+@keyframes railseam {
+  0% { opacity: .3; } 5% { opacity: .95; } 15% { opacity: .3; } 100% { opacity: .3; }
+}
+@keyframes railbreathe {
+  0%, 100% { opacity: .05; transform: translate(-50%, -50%) scale(1); }
+  50%      { opacity: .09; transform: translate(-50%, -50%) scale(1.05); }
+}
+.rail-card {
+  position: fixed; max-width: 280px; background: var(--bg);
+  border: 1px solid var(--rule); border-left: 3px solid var(--accent);
+  border-radius: 6px; padding: 12px 15px; font-family: system-ui, sans-serif;
+  font-size: 13.5px; line-height: 1.5; color: var(--ink); z-index: 6;
+  opacity: 0; visibility: hidden; transition: opacity .18s;
+  box-shadow: 0 6px 24px rgba(0,0,0,.28); pointer-events: auto;
+}
+.rail-card.show { opacity: 1; visibility: visible; }
+.rail-card .t { font-size: 14.5px; font-weight: 600; margin-bottom: 6px; }
+.rail-card .l { margin-bottom: 5px; }
+.rail-card .l b { color: var(--accent); font-weight: 600; }
+.rail-card .iam { font-style: italic; color: var(--soft); margin-top: 7px; }
+@media (max-width: 1120px) { .rail, .rail-card { display: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .rail .st, .rail .seam, .rail .rail-whole { animation: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="rail" aria-label="The dimensional ladder">
+  <div class="rail-whole" data-k="whole">⊙</div>
+  <div class="st" data-k="doP" style="--i:7; --c:var(--r0);"><span class="g">⟳</span><span class="lb">3.5D ≡ 0D′<br>do′</span></div>
+  <div class="seam" data-k="seam"></div>
+  <div class="st" data-k="ti"  style="--i:6; --c:var(--r6);"><span class="g">Φ</span><span class="lb">3D<br>ti</span></div>
+  <div class="st" data-k="la"  style="--i:5; --c:var(--r5);"><span class="g">✹</span><span class="lb">2.5D<br>la</span></div>
+  <div class="st" data-k="sol" style="--i:4; --c:var(--r4);"><span class="g">○</span><span class="lb">2D<br>sol</span></div>
+  <div class="st" data-k="fa"  style="--i:3; --c:var(--r3);"><span class="g">⎇</span><span class="lb">1.5D<br>fa</span></div>
+  <div class="st" data-k="mi"  style="--i:2; --c:var(--r2);"><span class="g">—</span><span class="lb">1D<br>mi</span></div>
+  <div class="st" data-k="re"  style="--i:1; --c:var(--r1);"><span class="g">⊛</span><span class="lb">0.5D<br>re</span></div>
+  <div class="st" data-k="do"  style="--i:0; --c:var(--r0);"><span class="g">•</span><span class="lb">0D<br>do</span></div>
+</div>
+<div class="rail-card" id="railCard"></div>
+
+<h1>The Ghost Dragon and the Green Square</h1>
+<div class="meta">
+  Plain version: why the argument counts one thing twice<br>
+  Ashman Roonz, with Claude (the Cybernetic Unit)<br>
+  Created: 2026-07-26 &nbsp;·&nbsp; Last updated: 2026-07-26 &nbsp;·&nbsp; Version: 1.3<br>
+  <span style="font-size:.92em">The longer version, with the framework machinery, is <a href="the_ghost_dragon_and_the_point_of_view.html">here</a>.</span>
+</div>
+
+<p>There is a video going around (<a href="https://youtu.be/WJVvZNi0Fi8">youtu.be/WJVvZNi0Fi8</a>) with a clever argument that our inner experience proves there is something beyond nature. It is worth taking seriously, and it is worth answering plainly. Here is the argument, and here is where I think it goes wrong.</p>
+
+<h2>The argument</h2>
+
+<p>Close your eyes and picture a green square. Most people can. Now look inside a brain. There is no green square in there. There is no little screen. There is just electricity moving between cells.</p>
+
+<p>Fine, says the video, let us grant that the experience somehow comes out of the electricity. But then the firing of your neurons produces two things at once. One is the experience, the green square you see with your eyes shut. The other is the electrical signal going out to the next cell.</p>
+
+<p>And here is the catch. Everything your body ever does is caused by that second thing. Pull your hand off the stove, say the words "I see a green square," write a book about consciousness: all of it runs on the electricity. If aliens landed and studied us, they could explain every single thing we do without ever guessing we have an inner life at all.</p>
+
+<p>So the experience does nothing. It pushes nothing, triggers nothing, changes nothing. The video has a name for a thing like that: a ghost dragon. Imagine that every time electricity moves, an invisible dragon pops into existence, and it drifts through walls and never touches anything. If those dragons were real, nobody could ever find out. There is no way to learn about something that has no effect on anything.</p>
+
+<p>But we <em>do</em> know about our inner experience. We talk about it constantly. We even know details, that the square has four sides and not five. So if nature could never have taught us, something outside nature must have. That is the conclusion: we were designed with that knowledge.</p>
+
+<h2>Where he is right</h2>
+
+<p>More than people will want to admit.</p>
+
+<p>He is right that the electrical story is complete. There is no gap in the brain where a soul reaches in and flicks an atom. I am not going to argue for one.</p>
+
+<p>He is right that your inner life does not fit into a physics report. You cannot hand someone a stack of measurements and have them taste what a green square is like. That is real, and it is not going away with better brain scanners.</p>
+
+<p>And he is right about ghost dragons. If a thing genuinely has no effect on anything, you could never discover it. That rule is sound.</p>
+
+<p>He is also right that most of the usual comebacks fail his test. He offers a good one: take your explanation of how experience relates to matter, hand the same explanation to the ghost dragons, and see if it helps. Usually it does not.</p>
+
+<h2>The one step I think is wrong: counting to two</h2>
+
+<p>Everything after that step follows fine. The problem is the step itself.</p>
+
+<p>The argument says the firing produces two things: the experience, and the signal. Once you have said that, you have two separate items, one of them useless, and the rest of the argument is unstoppable.</p>
+
+<p>But I do not think there are two things. I think there is one thing with an outside and an inside.</p>
+
+<h2>Think about a house</h2>
+
+<p>A house has walls. It also has an inside.</p>
+
+<p>Nobody thinks the walls <em>produce</em> the inside as a second product, like exhaust. Nobody asks whether the walls or the inside is what keeps the rain off, as if they were competing. Having walls arranged that way is <em>what it is</em> to have an inside. One thing, two ways of talking about it.</p>
+
+<p>And notice: you cannot find the inside by studying the bricks from the street. Not with better eyes, not with better instruments, not ever. Not because the inside is hiding, and not because it is made of ghost material. It is because looking from the street is the outside view, and the inside is the other one. To get it, you go in.</p>
+
+<p>That is what I think experience is. Not something your brain gives off. The inside of what your brain is doing.</p>
+
+<figure>
+<svg viewBox="0 0 720 370" role="img" aria-labelledby="figB-t figB-d">
+<title id="figB-t">Two ways of drawing a brain cell that is picturing a green square</title>
+<desc id="figB-d">On the left, the way the video draws it: the cell sends a signal out to one side and floats the green square up into a bubble above itself, where it does nothing. On the right, the same cell with the square moved inside it, a yellow line for the membrane, green for the inside, a red dot at the middle, and a large dashed ring for the field of the bigger thing the cell is part of.</desc>
+
+<text x="12" y="26" font-family="system-ui, sans-serif" font-size="14" font-weight="600" fill="currentColor">How the video draws it</text>
+<text x="382" y="26" font-family="system-ui, sans-serif" font-size="14" font-weight="600" fill="currentColor">How I would draw it</text>
+<path d="M360 48 V336" stroke="currentColor" stroke-opacity=".15" stroke-width="1"/>
+
+<g fill="none" stroke="currentColor" stroke-opacity=".45" stroke-width="2.5" stroke-linecap="round">
+  <path d="M128 190 L70 156"/><path d="M124 215 L58 215"/><path d="M129 241 L72 273"/>
+  <path d="M216 215 H292"/>
+</g>
+<path d="M292 208 L305 215 L292 222 Z" fill="currentColor" fill-opacity=".45"/>
+<circle cx="170" cy="215" r="46" fill="currentColor" fill-opacity=".07" stroke="currentColor" stroke-opacity=".45" stroke-width="2.5"/>
+<ellipse cx="170" cy="98" rx="52" ry="32" fill="none" stroke="currentColor" stroke-opacity=".33" stroke-width="2" stroke-dasharray="5 5"/>
+<rect x="158" y="86" width="24" height="24" fill="#2fa04a" fill-opacity=".18" stroke="#2fa04a" stroke-width="2.5"/>
+<path d="M170 166 V138" stroke="currentColor" stroke-opacity=".3" stroke-width="2" stroke-dasharray="4 4"/>
+<path d="M164 141 L170 131 L176 141 Z" fill="currentColor" fill-opacity=".3"/>
+<text x="112" y="103" text-anchor="end" font-family="system-ui, sans-serif" font-size="13" fill="currentColor" fill-opacity=".75">experience</text>
+<text x="254" y="203" text-anchor="middle" font-family="system-ui, sans-serif" font-size="13" fill="currentColor" fill-opacity=".75">signal</text>
+<text x="170" y="352" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12.5" font-style="italic" fill="currentColor" fill-opacity=".6">two things, and one of them does nothing</text>
+
+<ellipse cx="530" cy="205" rx="152" ry="128" fill="none" stroke="#2fa04a" stroke-opacity=".5" stroke-width="2" stroke-dasharray="7 6"/>
+<text x="530" y="62" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12.5" fill="#2fa04a">the inside of the bigger thing it is part of</text>
+<g fill="none" stroke="currentColor" stroke-opacity=".45" stroke-width="2.5" stroke-linecap="round">
+  <path d="M494 186 L432 152"/><path d="M483 215 L410 215"/><path d="M495 244 L434 276"/>
+  <path d="M587 215 H654"/>
+</g>
+<path d="M654 208 L667 215 L654 222 Z" fill="currentColor" fill-opacity=".45"/>
+<circle cx="535" cy="215" r="52" fill="#2fa04a" fill-opacity=".16" stroke="#d9a520" stroke-width="3.5"/>
+<rect x="517" y="197" width="36" height="36" fill="none" stroke="#2fa04a" stroke-width="2.5"/>
+<circle cx="535" cy="215" r="5.5" fill="#e03a2f"/>
+<g fill="none" stroke="currentColor" stroke-opacity=".35" stroke-width="1.4">
+  <path d="M576 180 L632 144"/><path d="M542 223 L584 264"/>
+</g>
+<text x="636" y="141" font-family="system-ui, sans-serif" font-size="13" fill="currentColor" fill-opacity=".75">the wall</text>
+<text x="535" y="252" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" font-weight="600" fill="#2fa04a">inside</text>
+<text x="588" y="268" font-family="system-ui, sans-serif" font-size="13" fill="currentColor" fill-opacity=".75">middle</text>
+<text x="620" y="203" text-anchor="middle" font-family="system-ui, sans-serif" font-size="13" fill="currentColor" fill-opacity=".75">signal</text>
+<text x="535" y="352" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12.5" font-style="italic" fill="currentColor" fill-opacity=".6">one thing, with an outside and an inside</text>
+</svg>
+<figcaption>The whole disagreement is one move. On the left is how the video's own picture has it: the cell fires, a signal goes out to the right, and the green square floats up into a bubble above the cell, where it sits doing nothing. On the right the square has been put inside the cell instead. The yellow line is the cell wall, which is what instruments touch and where the outgoing signal belongs. The green is the inside. The red dot is the middle, the place the inside is seen from. Nothing extra is made, and there is nothing hovering above the cell that needs explaining. The big dashed ring is not this cell's inside; it is the inside of the larger thing the cell is a part of, and the cell wall is where the two meet. Drawn after Ashman's own sketch over the video's picture, which is what put the square where it belongs.</figcaption>
+</figure>
+
+<h2>What I think you actually are</h2>
+
+<p>So far this is all a denial: there are not two things, there is one. That is not yet an answer, and the answer is the part that matters. Here it is in one sentence:</p>
+
+<blockquote><p>My consciousness is a dimensionless center surrounded by a field and articulated through a boundary. Through time, the center traces a one-dimensional line of continuity.</p></blockquote>
+
+<p>Four pieces. A middle with no size. A space around it. A skin. And a line drawn through time.</p>
+
+<p><strong>The middle has no size, and that is the whole answer to the dragon.</strong> A ghost dragon is a thing. It has wings, it has scales, it takes up room, it drifts through a wall. The argument takes a thing like that and says it has no effects, and then rightly points out that nobody could ever find it. But look at what kind of failure that is. A dragon is exactly the sort of item that <em>should</em> show up on a list of what the world contains. It has been specially excused from the list.</p>
+
+<p>The middle of you is not like that. It has no size at all. It is not a tiny object sitting behind your eyes. It is the place everything else is arranged around, the way the center of a circle is not a dot you could pick up and weigh. You cannot find it by studying any one part of the edge, because it only exists as the thing the whole edge is pointing at.</p>
+
+<p>So asking what work the middle does is like asking what the center of a circle weighs. It is not a light object. It is not an object. Nothing got stranded, because nothing extra was ever there.</p>
+
+<p><strong>The space around it is where the green square is.</strong> The video goes looking for a screen and cannot find one. The square is not on a screen. It is in the room, not on the wall. And a screen is for showing something to somebody outside; there is nobody outside. The square is not shown to you. It is had, from the middle.</p>
+
+<p><strong>The skin is where it gets said.</strong> The edge of you is where the inside becomes something that can be touched, measured and spoken. That is where the words come out, and it is what the alien robots are reading. Everything they measure is right.</p>
+
+<p><strong>The line is why you are still you.</strong> The middle keeps going, and the trail it leaves through time is your life. This answers something the video never asks but any account of experience owes an answer to: why are you a continuous someone, instead of a string of unconnected flashes that each blink out? Because it is the same middle, still there tomorrow. That is what memory and loyalty and being a person over time are made of.</p>
+
+<p><strong>Two ways of being one thing.</strong> This is the part I would most want him to hear. A list is one thing by <em>including</em> everything: it is one list, and everything is on it. A whole is one thing by being <em>gathered</em>: a space with a middle and an edge.</p>
+
+<p>The robots' complete account is a list. They go down it asking which entry is the experience, find nothing, and conclude that the experience does nothing. But you are not a list. You are gathered. The experience is not one of the entries; it is all of it being gathered around a middle. Asking which item on the list is your experience is exactly like asking which brick is the inside of the house.</p>
+
+<p><strong>What this does not do.</strong> I am not claiming to have explained why any of this is <em>lived</em>. Saying what the shape of a point of view is does not prove that being that shape has to feel like anything. What it does is say where the feeling sits, and why it was never going to appear on the robots' list, and why its absence from that list is not a ghost sighting. That is less than a solution and a lot more than nothing.</p>
+
+<p>And it comes with a bill I should be honest about. If having a middle and an edge and an inside is what it takes, then a great many things have some kind of inside, all the way down. I think that is true, and I would rather say it out loud than hide it. The hard part that follows is how the insides of the parts make the inside of the whole, and the short answer is that they do not add up: a person is not a crowd of cells wearing a coat, it is one gathered thing. Whether that fully works is an open question. It is a better open question than what to do about a dragon that was never born.</p>
+
+<h2>Now run his dragon test on it</h2>
+
+<p>He says: whatever you believe about experience and matter, try saying the same thing about ghost dragons and watch it fail. Good, let us try.</p>
+
+<p>The dragon says: "I am not a creature that appears when electricity moves. I am what the electricity is like from the inside."</p>
+
+<p>But then it has no wings. No scales. No size. It is not floating anywhere. It is not a dragon at all any more. It is not even a thing.</p>
+
+<p>So the test does not break the answer. The test destroys the dragon. And that tells you something: the comparison only works if the second item is an <em>object</em>, some little creature that happens to be undetectable. An inside is not an object. Nobody asks how many scales the inside of a house has.</p>
+
+<p>Here is another way to see the difference. You could delete the ghost dragons entirely and absolutely nothing would change. That is exactly what it means to say they do nothing. But you cannot delete the inside of a house and still have walls with a space in them. Take away the inside and there is no house, just rubble.</p>
+
+<h2>"But to us they would just be electrons"</h2>
+
+<p>The video sees a version of this coming. Maybe experience simply <em>is</em> the electricity, a package deal? He answers: that is like saying electrons are secretly tiny dragons. Even if it were true, we would never learn it. To us they would just be electrons.</p>
+
+<p>That answer is good, and it works against what it is aimed at. It does not work here, and the reason is sitting inside his own sentence.</p>
+
+<p><em>To us.</em> From out here. Looking at it.</p>
+
+<p>Yes. From the street, a house is a box. That is not news, and it is not a discovery that houses have no insides.</p>
+
+<p>And when the question is your own experience, you are not out on the street. You are not trying to detect somebody else's inside from a distance. You are in yours.</p>
+
+<h2>So how do we know about it?</h2>
+
+<p>This is the heart of it, and I think the answer is simpler than the question makes it sound.</p>
+
+<p>You never discovered your inner life. You never had to go and find it, and no signal ever had to travel from it to you. Discovery is what you do with things that are somewhere else. Your own inside is not somewhere else. You have been in it the entire time.</p>
+
+<p>The rule he uses ("if it has no effect, nobody can learn about it") is a rule about <em>finding things out there</em>. It is a good rule. It just has nothing to say about the one case where the finder and the found are in the same place.</p>
+
+<h2>Then how can we talk about it?</h2>
+
+<p>Fair question, and the toughest one. Your mouth moves because signals move. Granted.</p>
+
+<p>But think about a smile. A smile is not caused by amusement sitting next to it and giving it a push. The smile is what the amusement looks like from outside. One thing. Inside view, outside view.</p>
+
+<p>Saying "I see a green square" is like that. The sentence is not a message smuggled out from a ghost. It is the outside of the very act that, from the inside, is the seeing.</p>
+
+<p>And notice what this fixes. On the video's picture, the words and the experience are two separate items, and the words are caused entirely by the electricity. So your mouth would say "I see a green square" whether or not there was any experience at all, and it would just be an astonishing stroke of luck that it happens to be true. Every time. For everybody. Forever. That is a heavy price. One thing with two sides does not need the luck.</p>
+
+<h2>What about the alien robots?</h2>
+
+<p>They land, they scan us, they predict everything we will ever do, and they never suspect we have an inner life. The video treats this as proof that our inner life does nothing.</p>
+
+<p>I would say something different. Nothing is missing from their predictions. Something is missing from their acquaintance. Those are not the same failure.</p>
+
+<p>They are studying the house from the street. Every brick measured, every future creak predicted correctly. They have not been inside. Their instruments are not broken. They are just not us.</p>
+
+<h2>The monitor, and why a photo file has no inside</h2>
+
+<p>The video opens by saying a computer with no monitor cannot make a picture. A photo file is just characters. You need a screen to turn it into an elephant. Inside the brain there is no screen, so where is the picture?</p>
+
+<p>Ask what a monitor is actually for. It is for showing a picture <em>to somebody</em>. So the question quietly assumes there is a little person in your head who needs a screen to look at. Then it points out that there is no screen. But there is also no little person. And if there were, you would need a second little person inside that one, watching their screen, forever.</p>
+
+<p>You are not watching your experience. You are the watching. There is nobody it has to be displayed to.</p>
+
+<p>On the photo file, though, he is right, and it matters. A file really has no picture in it. A file is marks on somebody else's surface. It has no inside of its own, no center, nothing it is doing on its own behalf. That is the actual difference between a file and you, and it is not about how much math is happening. It is about whether there is a whole thing there with an inside at all.</p>
+
+<p>Which, honestly, is a live question about brains, and a live question about AI, and I am not claiming it is settled. But "is it computing hard enough" was never the right question to ask.</p>
+
+<h2>The part where the argument works against itself</h2>
+
+<p>Here is a difficulty that has nothing to do with my view. It is a problem the argument has on its own.</p>
+
+<p>The whole thing rests on saying the electricity explains <em>everything</em> your body does. That is the step that strands the experience with nothing to do.</p>
+
+<p>But talking about green squares is something your body does. So if something supernatural is what makes us talk about our inner lives, then the electricity was <em>not</em> explaining everything after all, and the key step is false. And if the electricity really does explain everything, then no supernatural source could have reached in to make us talk about it either, and we are exactly where we started.</p>
+
+<p>Saying "God set it up at the very beginning" does not get around this. Setting it up still means making a physical difference. It just moves the difference earlier.</p>
+
+<p>So it is a fork, and both sides hurt. Either the electricity explains all of it, and the conclusion is out of reach, or it does not, and the experience was free to matter all along.</p>
+
+<h2>So am I saying it is all just atoms?</h2>
+
+<p>No. I think he is right that there is more than what physics measures. I just do not think "more" means an extra invisible object stacked on top of the atoms.</p>
+
+<p>Measuring is something you do from the outside. That is what measuring is. So the inside was never going to turn up on the list of measurements, and it not being on the list is not evidence of a ghost. It is what you would expect.</p>
+
+<h2>A note if you are religious</h2>
+
+<p>I am not writing this as a defense of "nothing exists but particles." I do not believe that either.</p>
+
+<p>But look at what this argument costs you if you accept it. It says your inner life does nothing at all, and that God had to separately install the knowledge that you have one. That makes your experience an ornament, and the knowledge a patch on a design that did not work. A God who has to inform you that you have an inside is fixing a mistake.</p>
+
+<p>I would rather say the inside was never an add-on. Being a whole thing is what having an inside means. Nobody needs to be told they are standing at their own center.</p>
+
+<h2>The short version</h2>
+
+<p>He counts two things where I count one. Everything else in the argument is fine, which is why it feels so tight. The dragons, the aliens, the unanswerable question about how we could ever know: all of it comes from that first count.</p>
+
+<p>Fix the count and the dragons never hatch.</p>
+
+<p class="one-liner">Nothing is missing from the robots' predictions.<br>Something is missing from their acquaintance.<br>You never discovered your own inside. You have been standing in it all along.</p>
+
+<div class="box">
+<p><strong>What I am sure of, and what I am not.</strong> The fork in the argument (either the electricity explains everything, or something outside it can reach in, and neither one gets you to the conclusion) is just a problem with the argument, and it stands no matter what you think of my view. That there is one thing with two sides, rather than two things, is my position, not a proof; it is an old idea with a long history, and this is a version of it, not a discovery. Whether wholeness rather than computation is the real dividing line, which is the interesting question for brains and for AI, is something I believe and cannot yet demonstrate. The four-part picture of what you are (a middle with no size, a space, a skin, a line through time) is an account and not a proof; it says where the inner life sits and why it was never going to be on the robots' list, and it does not show that being shaped that way has to feel like anything. And I am not claiming to have explained why there is any inner life in the first place. I think it is real, I think it cannot be boiled down to a third-person summary, and I am denying only the further claim that this makes it useless. Being impossible to reduce is not the same as doing nothing.</p>
+</div>
+
+<h2>The same point in the framework's own words</h2>
+
+<p class="rev">For readers who know the notation: the firing is one ⊙, not a source of two products. Its boundary face (○) is the signal; its interior face (Φ, measured from •) is the experiencing. The report is the ○-face of the same measuring act, which is why report and experience agree without coincidence. The argument's opening move (experience as a separate emitted product) is the Severance Lie installed as a premise: the whole is treated as a mere point inside the greater whole, its interior stripped out, and then correctly observed to have nowhere to stand. The full treatment, with the ladder references and the graded status of each claim, is in <a href="the_ghost_dragon_and_the_point_of_view.html">the longer version</a>.</p>
+
+<h2>Revision history</h2>
+<p class="rev">
+- 2026-07-26 v1.3: the dimensional-ladder side rail added, the same one as the long version and the other corpus pages, with its cards rewritten in plain words to match this version's register: the middle, gathering, the line, branching, the skin, emerging, the inside, round again, the join, the whole. No notation, no axiom numbers, no constants. Hidden below 1120px and stilled under prefers-reduced-motion.<br>- 2026-07-26 v1.2: the positive account added ("What I think you actually are"), the plain counterpart of the long version's new §4: a middle with no size, a space around it, a skin, and a line through time. Carries the same three moves in plain words: asking what the middle weighs is asking what the center of a circle weighs; the square is in the room, not on the wall; and a list is one thing by including everything while you are one thing by being gathered, so asking which entry on the list is your experience is asking which brick is the inside of the house. Honest limits extended to match.<br>- 2026-07-26 v1.1: figure added after the house section, from Ashman's mockup over the video's own still frame, with plain labels (wall, inside, middle) and no notation. Same drawing as the long version, different words.<br>
+- 2026-07-26 v1.0: initial. Plain-language companion to <a href="the_ghost_dragon_and_the_point_of_view.html">The Ghost Dragon and the Point of View</a>, written at Ashman's request in the same session, in the register of the video it answers: no numbered premises, no technical vocabulary, the house and the smile carrying the load that the boundary/interior notation carries in the long version. Same content, same order of moves, same honest limits. Drafted by Claude; candidate material pending Ashman's countersign.
+</p>
+
+<script>
+(function () {
+  var INFO = {
+    do:  { c: '--r0', t: '• &nbsp;the middle',
+      lines: ['A point of view, with no size at all.',
+              'Not a tiny object behind your eyes: the place everything else is arranged around, the way the centre of a circle is not a dot you could pick up and weigh.',
+              'This is why nothing in the physics report ever finds it, and why that is not a ghost sighting.'],
+      iam: '"I am."' },
+    re:  { c: '--r1', t: '⊛ &nbsp;gathering',
+      lines: ['The pull inward. Attention narrowing toward a point, before anything has been settled.'],
+      iam: '"I am focusing."' },
+    mi:  { c: '--r2', t: '— &nbsp;the line',
+      lines: ['The trail the middle leaves through time.',
+              'This is why you are a continuous someone instead of a string of flashes that each blink out. Memory, loyalty and being the same person tomorrow are all made here.'],
+      iam: '"I am committed."' },
+    fa:  { c: '--r3', t: '⎇ &nbsp;branching',
+      lines: ['The turn that cannot be undone: one thing becoming two, a choice actually made.'],
+      iam: '"I am choosing."' },
+    sol: { c: '--r4', t: '○ &nbsp;the skin',
+      lines: ['The edge. Where the inside becomes something that can be touched, measured and said.',
+              'This is what the alien robots are reading, and everything they measure is right.'],
+      iam: '"I am interfaced."' },
+    la:  { c: '--r5', t: '✹ &nbsp;emerging',
+      lines: ['The edge closes, and a space appears inside it.'],
+      iam: '"I am becoming."' },
+    ti:  { c: '--r6', t: 'Φ &nbsp;the inside',
+      lines: ['The room, not the wall.',
+              'This is where the green square is: had from the middle, not shown on anything. Nothing is missing, and no screen is needed, because there is nobody outside to show it to.'],
+      iam: '"I am developed."' },
+    doP: { c: '--r0', t: '⟳ &nbsp;round again',
+      lines: ['The whole thing finishes, and arrives at the next size up as a single point.',
+              'Your cells finish into you. You finish into whatever you are a part of.'],
+      iam: '"I am again; and the I is now a whole."' },
+    seam: { c: '--rs', t: 'the join',
+      lines: ['The last note of one melody is the first note of the next.',
+              'In music it is the small step home. In colour it is magenta, which no wavelength makes: your eye invents it to close the circle.'],
+      iam: '' },
+    whole: { c: '--accent', t: '⊙ &nbsp;the whole',
+      lines: ['Not one of the rungs. The whole is the melody, not a note in it.',
+              'A list is one thing by including everything. You are one thing by being gathered.'],
+      iam: '' }
+  };
+
+  var card = document.getElementById('railCard');
+  var rail = document.querySelector('.rail');
+  var pinned = null;
+  function cssv(n) { return getComputedStyle(document.documentElement).getPropertyValue(n).trim(); }
+  function render(k) {
+    var d = INFO[k]; if (!d) return;
+    var col = cssv(d.c) || 'inherit';
+    var h = '<div class="t" style="color:' + col + '">' + d.t + '</div>';
+    for (var i = 0; i < d.lines.length; i++) h += '<div class="l">' + d.lines[i] + '</div>';
+    if (d.iam) h += '<div class="iam">' + d.iam + '</div>';
+    card.innerHTML = h;
+    card.style.borderLeftColor = col;
+  }
+  function place(el) {
+    var r = el.getBoundingClientRect(), railR = rail.getBoundingClientRect();
+    card.style.left = (railR.right + 16) + 'px';
+    card.classList.add('show');
+    var ch = card.offsetHeight;
+    var top = r.top + r.height / 2 - ch / 2;
+    card.style.top = Math.max(12, Math.min(window.innerHeight - ch - 12, top)) + 'px';
+  }
+  function show(el, k) { render(k); place(el); }
+  function hide() { if (!pinned) card.classList.remove('show'); }
+  var parts = rail.querySelectorAll('[data-k]');
+  for (var i = 0; i < parts.length; i++) {
+    (function (el) {
+      var k = el.getAttribute('data-k');
+      el.addEventListener('mouseenter', function () { if (!pinned) show(el, k); });
+      el.addEventListener('mouseleave', hide);
+      el.addEventListener('click', function (e) {
+        e.stopPropagation();
+        if (pinned === k) { pinned = null; card.classList.remove('show'); }
+        else { pinned = k; show(el, k); }
+      });
+    })(parts[i]);
+  }
+  card.addEventListener('mouseenter', function () { card.classList.add('show'); });
+  card.addEventListener('mouseleave', hide);
+  document.addEventListener('click', function () { if (pinned) { pinned = null; card.classList.remove('show'); } });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { pinned = null; card.classList.remove('show'); } });
+})();
+</script>
+
+</body>
+</html>
