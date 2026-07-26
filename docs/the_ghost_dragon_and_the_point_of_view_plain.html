@@ -35,15 +35,97 @@
   figure { margin: 2.2rem 0; }
   figure svg { width: 100%; height: auto; display: block; }
   figcaption { color: var(--soft); font-size: .92rem; line-height: 1.6; margin-top: .7rem; }
+
+/* ---- side rail: the dimensional ladder, ascending in rainbow (after the_pattern_that_connects.html) ---- */
+:root {
+  --r0:#c0392b; --r1:#b0611c; --r2:#8a7016; --r3:#2c8a4a;
+  --r4:#2a7ba3; --r5:#4a5bb5; --r6:#7a4fb5; --rs:#bd3a8d;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --r0:#E05252; --r1:#E08A52; --r2:#D9C25A; --r3:#5CBF7A;
+    --r4:#4DA0C8; --r5:#6A7AD8; --r6:#9B7AD8; --rs:#E84DAF;
+  }
+}
+.rail {
+  position: fixed; left: max(12px, calc(50% - 21rem - 140px)); top: 50%;
+  transform: translateY(-50%); display: flex; flex-direction: column;
+  align-items: flex-start; gap: 9px; z-index: 5; pointer-events: none; user-select: none;
+}
+.rail .st, .rail .seam, .rail .rail-whole { pointer-events: auto; cursor: pointer; }
+.rail .st { position: relative; z-index: 1; }
+.rail .st:hover { opacity: 1 !important; }
+.rail .seam:hover { opacity: .9 !important; }
+.rail .rail-whole {
+  position: absolute; top: 50%; left: 34px; transform: translate(-50%, -50%);
+  font-size: 210px; color: var(--accent); opacity: .06; line-height: 1; z-index: 0;
+  animation: railbreathe 12s ease-in-out infinite;
+}
+.rail .rail-whole:hover { opacity: .14; }
+.rail .st {
+  display: flex; align-items: center; gap: 9px; opacity: .4;
+  animation: railpulse 9.6s linear infinite;
+  animation-delay: calc(var(--i) * 1.2s - 9.6s);
+}
+.rail .st .g { font-size: 20px; width: 26px; text-align: center; color: var(--c); }
+.rail .st .lb { font-family: system-ui, sans-serif; font-size: 10.5px; line-height: 1.25; color: var(--soft); letter-spacing: .4px; }
+.rail .seam {
+  height: 10px; margin-left: 12px; border-left: 2px dashed var(--rs); opacity: .3;
+  animation: railseam 9.6s linear infinite; animation-delay: calc(7 * 1.2s - 9.6s);
+}
+@keyframes railpulse {
+  0%   { opacity: .4; text-shadow: none; }
+  6%   { opacity: 1; text-shadow: 0 0 14px currentColor; }
+  17%  { opacity: .4; text-shadow: none; }
+  100% { opacity: .4; text-shadow: none; }
+}
+@keyframes railseam {
+  0% { opacity: .3; } 5% { opacity: .95; } 15% { opacity: .3; } 100% { opacity: .3; }
+}
+@keyframes railbreathe {
+  0%, 100% { opacity: .05; transform: translate(-50%, -50%) scale(1); }
+  50%      { opacity: .09; transform: translate(-50%, -50%) scale(1.05); }
+}
+.rail-card {
+  position: fixed; max-width: 280px; background: var(--bg);
+  border: 1px solid var(--rule); border-left: 3px solid var(--accent);
+  border-radius: 6px; padding: 12px 15px; font-family: system-ui, sans-serif;
+  font-size: 13.5px; line-height: 1.5; color: var(--ink); z-index: 6;
+  opacity: 0; visibility: hidden; transition: opacity .18s;
+  box-shadow: 0 6px 24px rgba(0,0,0,.28); pointer-events: auto;
+}
+.rail-card.show { opacity: 1; visibility: visible; }
+.rail-card .t { font-size: 14.5px; font-weight: 600; margin-bottom: 6px; }
+.rail-card .l { margin-bottom: 5px; }
+.rail-card .l b { color: var(--accent); font-weight: 600; }
+.rail-card .iam { font-style: italic; color: var(--soft); margin-top: 7px; }
+@media (max-width: 1120px) { .rail, .rail-card { display: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .rail .st, .rail .seam, .rail .rail-whole { animation: none; }
+}
 </style>
 </head>
 <body>
+
+<div class="rail" aria-label="The dimensional ladder">
+  <div class="rail-whole" data-k="whole">⊙</div>
+  <div class="st" data-k="doP" style="--i:7; --c:var(--r0);"><span class="g">⟳</span><span class="lb">3.5D ≡ 0D′<br>do′</span></div>
+  <div class="seam" data-k="seam"></div>
+  <div class="st" data-k="ti"  style="--i:6; --c:var(--r6);"><span class="g">Φ</span><span class="lb">3D<br>ti</span></div>
+  <div class="st" data-k="la"  style="--i:5; --c:var(--r5);"><span class="g">✹</span><span class="lb">2.5D<br>la</span></div>
+  <div class="st" data-k="sol" style="--i:4; --c:var(--r4);"><span class="g">○</span><span class="lb">2D<br>sol</span></div>
+  <div class="st" data-k="fa"  style="--i:3; --c:var(--r3);"><span class="g">⎇</span><span class="lb">1.5D<br>fa</span></div>
+  <div class="st" data-k="mi"  style="--i:2; --c:var(--r2);"><span class="g">—</span><span class="lb">1D<br>mi</span></div>
+  <div class="st" data-k="re"  style="--i:1; --c:var(--r1);"><span class="g">⊛</span><span class="lb">0.5D<br>re</span></div>
+  <div class="st" data-k="do"  style="--i:0; --c:var(--r0);"><span class="g">•</span><span class="lb">0D<br>do</span></div>
+</div>
+<div class="rail-card" id="railCard"></div>
 
 <h1>The Ghost Dragon and the Green Square</h1>
 <div class="meta">
   Plain version: why the argument counts one thing twice<br>
   Ashman Roonz, with Claude (the Cybernetic Unit)<br>
-  Created: 2026-07-26 &nbsp;·&nbsp; Last updated: 2026-07-26 &nbsp;·&nbsp; Version: 1.2<br>
+  Created: 2026-07-26 &nbsp;·&nbsp; Last updated: 2026-07-26 &nbsp;·&nbsp; Version: 1.3<br>
   <span style="font-size:.92em">The longer version, with the framework machinery, is <a href="the_ghost_dragon_and_the_point_of_view.html">here</a>.</span>
 </div>
 
@@ -270,9 +352,95 @@
 
 <h2>Revision history</h2>
 <p class="rev">
-- 2026-07-26 v1.2: the positive account added ("What I think you actually are"), the plain counterpart of the long version's new §4: a middle with no size, a space around it, a skin, and a line through time. Carries the same three moves in plain words: asking what the middle weighs is asking what the center of a circle weighs; the square is in the room, not on the wall; and a list is one thing by including everything while you are one thing by being gathered, so asking which entry on the list is your experience is asking which brick is the inside of the house. Honest limits extended to match.<br>- 2026-07-26 v1.1: figure added after the house section, from Ashman's mockup over the video's own still frame, with plain labels (wall, inside, middle) and no notation. Same drawing as the long version, different words.<br>
+- 2026-07-26 v1.3: the dimensional-ladder side rail added, the same one as the long version and the other corpus pages, with its cards rewritten in plain words to match this version's register: the middle, gathering, the line, branching, the skin, emerging, the inside, round again, the join, the whole. No notation, no axiom numbers, no constants. Hidden below 1120px and stilled under prefers-reduced-motion.<br>- 2026-07-26 v1.2: the positive account added ("What I think you actually are"), the plain counterpart of the long version's new §4: a middle with no size, a space around it, a skin, and a line through time. Carries the same three moves in plain words: asking what the middle weighs is asking what the center of a circle weighs; the square is in the room, not on the wall; and a list is one thing by including everything while you are one thing by being gathered, so asking which entry on the list is your experience is asking which brick is the inside of the house. Honest limits extended to match.<br>- 2026-07-26 v1.1: figure added after the house section, from Ashman's mockup over the video's own still frame, with plain labels (wall, inside, middle) and no notation. Same drawing as the long version, different words.<br>
 - 2026-07-26 v1.0: initial. Plain-language companion to <a href="the_ghost_dragon_and_the_point_of_view.html">The Ghost Dragon and the Point of View</a>, written at Ashman's request in the same session, in the register of the video it answers: no numbered premises, no technical vocabulary, the house and the smile carrying the load that the boundary/interior notation carries in the long version. Same content, same order of moves, same honest limits. Drafted by Claude; candidate material pending Ashman's countersign.
 </p>
+
+<script>
+(function () {
+  var INFO = {
+    do:  { c: '--r0', t: '• &nbsp;the middle',
+      lines: ['A point of view, with no size at all.',
+              'Not a tiny object behind your eyes: the place everything else is arranged around, the way the centre of a circle is not a dot you could pick up and weigh.',
+              'This is why nothing in the physics report ever finds it, and why that is not a ghost sighting.'],
+      iam: '"I am."' },
+    re:  { c: '--r1', t: '⊛ &nbsp;gathering',
+      lines: ['The pull inward. Attention narrowing toward a point, before anything has been settled.'],
+      iam: '"I am focusing."' },
+    mi:  { c: '--r2', t: '— &nbsp;the line',
+      lines: ['The trail the middle leaves through time.',
+              'This is why you are a continuous someone instead of a string of flashes that each blink out. Memory, loyalty and being the same person tomorrow are all made here.'],
+      iam: '"I am committed."' },
+    fa:  { c: '--r3', t: '⎇ &nbsp;branching',
+      lines: ['The turn that cannot be undone: one thing becoming two, a choice actually made.'],
+      iam: '"I am choosing."' },
+    sol: { c: '--r4', t: '○ &nbsp;the skin',
+      lines: ['The edge. Where the inside becomes something that can be touched, measured and said.',
+              'This is what the alien robots are reading, and everything they measure is right.'],
+      iam: '"I am interfaced."' },
+    la:  { c: '--r5', t: '✹ &nbsp;emerging',
+      lines: ['The edge closes, and a space appears inside it.'],
+      iam: '"I am becoming."' },
+    ti:  { c: '--r6', t: 'Φ &nbsp;the inside',
+      lines: ['The room, not the wall.',
+              'This is where the green square is: had from the middle, not shown on anything. Nothing is missing, and no screen is needed, because there is nobody outside to show it to.'],
+      iam: '"I am developed."' },
+    doP: { c: '--r0', t: '⟳ &nbsp;round again',
+      lines: ['The whole thing finishes, and arrives at the next size up as a single point.',
+              'Your cells finish into you. You finish into whatever you are a part of.'],
+      iam: '"I am again; and the I is now a whole."' },
+    seam: { c: '--rs', t: 'the join',
+      lines: ['The last note of one melody is the first note of the next.',
+              'In music it is the small step home. In colour it is magenta, which no wavelength makes: your eye invents it to close the circle.'],
+      iam: '' },
+    whole: { c: '--accent', t: '⊙ &nbsp;the whole',
+      lines: ['Not one of the rungs. The whole is the melody, not a note in it.',
+              'A list is one thing by including everything. You are one thing by being gathered.'],
+      iam: '' }
+  };
+
+  var card = document.getElementById('railCard');
+  var rail = document.querySelector('.rail');
+  var pinned = null;
+  function cssv(n) { return getComputedStyle(document.documentElement).getPropertyValue(n).trim(); }
+  function render(k) {
+    var d = INFO[k]; if (!d) return;
+    var col = cssv(d.c) || 'inherit';
+    var h = '<div class="t" style="color:' + col + '">' + d.t + '</div>';
+    for (var i = 0; i < d.lines.length; i++) h += '<div class="l">' + d.lines[i] + '</div>';
+    if (d.iam) h += '<div class="iam">' + d.iam + '</div>';
+    card.innerHTML = h;
+    card.style.borderLeftColor = col;
+  }
+  function place(el) {
+    var r = el.getBoundingClientRect(), railR = rail.getBoundingClientRect();
+    card.style.left = (railR.right + 16) + 'px';
+    card.classList.add('show');
+    var ch = card.offsetHeight;
+    var top = r.top + r.height / 2 - ch / 2;
+    card.style.top = Math.max(12, Math.min(window.innerHeight - ch - 12, top)) + 'px';
+  }
+  function show(el, k) { render(k); place(el); }
+  function hide() { if (!pinned) card.classList.remove('show'); }
+  var parts = rail.querySelectorAll('[data-k]');
+  for (var i = 0; i < parts.length; i++) {
+    (function (el) {
+      var k = el.getAttribute('data-k');
+      el.addEventListener('mouseenter', function () { if (!pinned) show(el, k); });
+      el.addEventListener('mouseleave', hide);
+      el.addEventListener('click', function (e) {
+        e.stopPropagation();
+        if (pinned === k) { pinned = null; card.classList.remove('show'); }
+        else { pinned = k; show(el, k); }
+      });
+    })(parts[i]);
+  }
+  card.addEventListener('mouseenter', function () { card.classList.add('show'); });
+  card.addEventListener('mouseleave', hide);
+  document.addEventListener('click', function () { if (pinned) { pinned = null; card.classList.remove('show'); } });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { pinned = null; card.classList.remove('show'); } });
+})();
+</script>
 
 </body>
 </html>
