@@ -71,7 +71,7 @@ button:focus-visible, select:focus-visible { outline: 2px solid var(--gold); out
   <div class="kicker">Circumpunct Octave · la · i³ = −i · emergence</div>
   <h1>The Pole Gap</h1>
   <p class="tagline">Randomness isn’t in the number. It’s the distance between what ∞ can see and what ⊙ can.</p>
-  <div class="meta">Created: 2026-07-27 &middot; Last updated: 2026-07-27 &middot; Version: 1.0 &middot; companion to the <a href="../experiments/pole_gap_transfer_findings_v1.md">transfer experiment</a></div>
+  <div class="meta">Created: 2026-07-27 &middot; Last updated: 2026-07-27 &middot; Version: 1.1 &middot; companion to the <a href="../experiments/pole_gap_transfer_findings_v1.md">transfer experiment</a></div>
 
   <div class="polerow">
     <span class="sym" style="color: var(--white)">∞ substrate</span>
@@ -112,9 +112,15 @@ button:focus-visible, select:focus-visible { outline: 2px solid var(--gold); out
       <span class="txt" id="fExistsTxt">no revisit yet · 0 rows checked</span>
     </div>
     <div class="floor" id="fFound">
-      <span class="sym">⊙</span><span class="lab">FLOOR FOUND</span>
-      <span class="txt" id="fFoundTxt">unfound; still paying 1.00 bits/step</span>
+      <span class="sym">⊙</span><span class="lab">GAP CLOSED</span>
+      <span class="txt" id="fFoundTxt">open; still paying 1.00 bits/step</span>
     </div>
+  </div>
+  <div style="font-size:12.5px; color:var(--ink); font-style:italic; margin-top:8px; line-height:1.45;">
+    ⊙'s light means the live gap fell below 0.3 bits/step and stayed there. That is not the same as
+    finding the floor. The floor is found only when every repeated context has one successor, and on
+    the 15-ring that needs order 21; at order 12 the observer is permanently 0.157 bits/step short and
+    plateaus near 90% accuracy. Below order 21 this light closes a gap it cannot close all the way.
   </div>
 
   <div class="controls">
@@ -158,6 +164,7 @@ button:focus-visible, select:focus-visible { outline: 2px solid var(--gold); out
   <div class="rev">
     <h2>Revision history</h2>
     <ul>
+      <li>2026-07-27 v1.1: the ⊙ indicator relabelled from FLOOR FOUND to GAP CLOSED, with a note on what it does and does not mean. It tests an absolute display threshold (0.3 bits/step), not the floor theorem's condition H(Y|C_k) = 0, and on the 15-ring those diverge: k_min is 21, so at the shipped default of order 12 the observer is permanently 0.157 bits/step short, plateaus near 90% accuracy, and can never find the floor, while the old label announced a discovery at step 8,252. It read falsely at every order from 12 to 20. Measured in <a href="../experiments/pole_gap_kmin_findings_v1.md" style="color: var(--odot)">pole_gap_kmin_findings_v1.md</a>. Mirror image of the v1.0 ∞-side fault below: one indicator overclaiming at each pole, both the same shape.</li>
       <li>2026-07-27 v1.0: initial. Ported to a self-contained page from the chat session’s React component (pole-gap.jsx); logic, constants, palette, and copy carried over unchanged except house punctuation, plus one correctness fix found on import: the ∞-side revisit detector now uses exact packed-row keys. The chat original keyed rows by a pair of seeded 32-bit FNV hashes, which are correlated over 1/2-valued bytes; both seeds collided on the 101 ring at step 9,637 (rows differing in 46 of 101 cells), lighting FLOOR EXISTS on a floor that did not exist. Caught because the false period (3,766) contradicted the Python transfer experiment’s statistics; verified by direct row comparison. Companion to <a href="../experiments/pole_gap_transfer_findings_v1.md" style="color: var(--odot)">pole_gap_transfer_findings_v1.md</a>; the parent essay “The Pole Gap” is still chat-side.</li>
     </ul>
   </div>
@@ -320,11 +327,11 @@ function updateUI() {
   const ff = el("fFound"), fft = el("fFoundTxt");
   if (s.foundAt != null) {
     ff.className = "floor lit-red";
-    fft.textContent = `discovered at step ${fmt(s.foundAt)}` +
+    fft.textContent = `closed at step ${fmt(s.foundAt)}` +
       (s.cycleAt != null ? `: ${fmt(s.foundAt - s.cycleAt)} steps after the loop actually closed` : "");
   } else {
     ff.className = "floor";
-    fft.textContent = `unfound; still paying ${s.ema.toFixed(2)} bits/step`;
+    fft.textContent = `open; still paying ${s.ema.toFixed(2)} bits/step`;
   }
 }
 
