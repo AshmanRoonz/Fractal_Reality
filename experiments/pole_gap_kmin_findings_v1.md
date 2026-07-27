@@ -72,6 +72,42 @@ This does not sink the program, but it relocates it. A "Pole Gap Calculus" prese
 
 **The coherence dividend beyond two parts.** Ω = I(A';B'|M) is correct and is conditional mutual information under a new name, and it is non-negative, so it cannot detect anti-coherence. For three or more parts the analogous decomposition is the partial information decomposition problem (Williams and Beer, and the unresolved synergy/redundancy debate), and integrated information theory has spent two decades on the same difficulty. Worth noting that IIT's symbol for it is Φ, which in this corpus already means the field.
 
+## 8. Second round: verification of Ashman's reply (code: `pole_gap_kstar_v1.py`)
+
+**His corrections are confirmed exactly.** The ideal order-12 majority predictor on the cycle reaches **92.6460%**, matching his 92.646%. My "plateaus at 89.6%" was the page's online rule over the tested duration, not the order-12 prediction limit, and conflating them was my error. H(Y|C₁₂) = 0.156936675 matches his figure to all printed digits, and k_min = 21 reproduces.
+
+This forces the third layer he names: the process limit, the model-class limit, and the learning-algorithm's behaviour are three distinct things, and the page's accuracy readout measures the third while the floor theorem constrains the second.
+
+**His correction to my synchronization claim is right, and the numbers make it vivid.** I said synchronization time is Λ_k; it is not. Measured on ring 15:
+
+| quantity | value | what it is |
+|---|---|---|
+| τ_sync | **21 symbols** | shortest window that uniquely pins the phase, given the model |
+| τ_threshold | 3,575-6,750 steps | crossing the page's 0.3 bits/step bar |
+| τ_learn | ~20,000-30,000 steps | reaching within 0.05 bits of the observer's own floor |
+
+Three timescales spanning two to three orders of magnitude, which is why they cannot share one symbol. For this sequence τ_sync coincides with k_min at 21: the shortest window with a unique successor is also the shortest that identifies the phase.
+
+**His Γ decomposition is correct, including the step I went looking for a gap in.** Writing Γ with H(Y_{t+1}|X_t) rather than H(Y_{t+1}|X_t, M_t) would generally leave a residual −I(Y_{t+1}; M_t | X_t). It vanishes: X_t is the full state and the dynamics are Markov in it, so Y_{t+1} is conditionally independent of M_t given X_t. The two-projection form holds for stochastic substrates too, not only deterministic ones.
+
+**k\*(n) tested: sound equation, wrong testbed.** Predicted argmin_k [H_k + S_k·log₂(n)/(2n)] against the empirical argmin of realized prequential loss:
+
+| n | predicted k\* | empirical k\* | match |
+|---|---|---|---|
+| 2,000 | 8 | 21 | no |
+| 5,000 | 8 | 21 | no |
+| 10,000 | 14 | 21 | no |
+| 25,000 - 190,000 | 21 | 21 | yes (4/4) |
+
+The failures are pre-asymptotic and diagnostic: the KT redundancy term S_k·log(n)/(2n) charges for all S_k contexts, but at n = 2,000 the observer has not yet *visited* most of the 1,455. The penalty should count contexts actually encountered by time n, not the asymptotic total. With that correction the disagreement at small n should close.
+
+**The larger negative result: ring 15 shows no non-monotonicity in k at any budget tested.** Realized loss at n = 2,000 runs 1.088 (k=8), 0.895 (k=12), 0.853 (k=24); at n = 190,000 it runs 0.870, 0.186, 0.033. Deeper memory helps everywhere, immediately. The interior optimum that makes k\*(n) interesting never appears.
+
+The reason is that S_k saturates at the period, 1,455, so the learning tax stops growing while the structural term keeps falling. On Xorzo2's byte corpus the context space is not bounded that way and an interior optimum does exist, at k\* = 2 for 830K bytes. So the effective-integration-depth phenomenon needs the context space to outrun the data, and a bounded-state periodic source cannot exhibit it.
+
+That is a real design constraint on testing this program: you need H_k computable, which wants a synthetic source, and you need the context space to outrun the data, which ring 15 does not do and natural text does while making H_k unknowable. A synthetic source with a large alphabet or a much longer period satisfies both, and is the right next testbed for k\*(n).
+
 ## Revision history
 
+- 2026-07-27 v1.1: added section 8. Verified Ashman's A\*₁₂ = 92.646% and his correction on synchronization time (τ_sync = 21 symbols against τ_learn ~25,000); verified the two-projection Γ decomposition including the conditional-independence step; tested k\*(n) and found the equation sound but ring 15 degenerate for it, since S_k saturates at the period.
 - 2026-07-27 v1.0: initial. Run to test the Pole Gap Calculus draft's two measurable quantities; found k_min = 21 against a shipped default of 12, and a false-positive indicator in the live page.
