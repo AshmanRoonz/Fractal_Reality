@@ -6,7 +6,7 @@ Last updated: 2026-07-27
 Version: 1.0
 ```
 
-*Section draft for "The Pole Gap" (the parent essay and its attack document are still chat-side; this pair is the first of that thread to land in the repo). Companion code: `pole_gap_transfer_v1.py` (deterministic seeds; all numbers below reproduce exactly; re-verified 2026-07-27 under Python 3.11 / NumPy 2.4.0). Method and burden of proof per the attack document: one piece of reasoning must move between fields because the schema identifies them, or the unification claim downgrades honestly.*
+*Section draft for "The Pole Gap" (the parent essay and its attack document are still chat-side). Companion code: `pole_gap_transfer_v1.py` (deterministic seeds; all numbers below reproduce exactly; re-verified 2026-07-27 under Python 3.11 / NumPy 2.4.0). Interactive companion: `../docs/the_pole_gap_live.html`, which runs the same two poles live on a Rule 30 ring and separates the floor's existence from its discovery. Method and burden of proof per the attack document: one piece of reasoning must move between fields because the schema identifies them, or the unification claim downgrades honestly.*
 
 ---
 

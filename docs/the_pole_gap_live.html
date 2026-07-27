@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>⊙ The Pole Gap, Live</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap');
+:root {
+  --bg: #08080c; --panel: #0d0d13; --line: #1b1b24;
+  --white: #f2efe4;   /* ∞ · one by inclusion */
+  --dim: #3a3a46;
+  --gold: #e3a63c;    /* la · emergence */
+  --gold-soft: #7a5c22;
+  --odot: #cba14e;    /* ⊙ · one by integration */
+  --red: #d64a4a;
+  --ink: #8a8a99;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { background: var(--bg); }
+body { color: var(--white); font-family: 'EB Garamond', Georgia, serif; padding: 22px 16px 30px; }
+.wrap { max-width: 620px; margin: 0 auto; }
+.kicker { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 3px; color: var(--gold); text-transform: uppercase; }
+h1 { font-family: 'EB Garamond', serif; font-weight: 500; font-size: 34px; letter-spacing: 0.5px; margin: 6px 0 2px; }
+.tagline { font-style: italic; font-size: 15.5px; color: var(--ink); margin: 0 0 6px; max-width: 520px; }
+.meta { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: var(--ink); margin: 0 0 18px; letter-spacing: 0.5px; }
+.meta a { color: var(--odot); text-decoration: none; }
+.meta a:hover { color: var(--gold); }
+.polerow { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 6px; gap: 10px; flex-wrap: wrap; }
+.polerow .sym { font-family: 'JetBrains Mono', monospace; font-size: 12px; }
+.polerow .gloss { font-style: italic; font-size: 13px; color: var(--ink); }
+#cwrap { border-radius: 3px; overflow: hidden; border: 1px solid var(--line); background: #000; }
+canvas { display: block; width: 100%; }
+.caption { text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--gold); letter-spacing: 1px; margin: 7px 0 9px; }
+#bits { display: flex; flex-wrap: wrap; gap: 3px; padding: 10px 8px; background: var(--panel); border: 1px solid var(--line); border-radius: 3px; min-height: 30px; }
+#bits span { font-family: 'JetBrains Mono', monospace; font-size: 13px; width: 10px; text-align: center; }
+#bits span.on { color: var(--gold); text-shadow: 0 0 6px var(--gold-soft); }
+#bits span.off { color: var(--dim); }
+.meters { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 18px; }
+.meter { flex: 1; min-width: 96px; border-top: 1px solid var(--line); padding-top: 10px; }
+.meter .lab { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.5px; color: var(--ink); }
+.meter .val { font-family: 'JetBrains Mono', monospace; font-size: 22px; margin-top: 4px; line-height: 1; }
+.meter .val.big { font-size: 30px; }
+.meter .sub { font-style: italic; font-size: 12.5px; color: var(--ink); margin-top: 5px; }
+.floors { display: grid; gap: 6px; margin-top: 16px; }
+.floor { display: flex; align-items: baseline; gap: 10px; padding: 8px 10px; background: var(--panel); border: 1px solid var(--line); border-radius: 3px; }
+.floor .sym { font-family: 'JetBrains Mono', monospace; font-size: 15px; color: var(--dim); width: 18px; }
+.floor .lab { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 1.5px; color: var(--ink); min-width: 92px; }
+.floor .txt { font-style: italic; font-size: 13.5px; color: var(--ink); }
+.floor.lit-white { border-color: var(--white); }
+.floor.lit-white .sym, .floor.lit-white .lab { color: var(--white); }
+.floor.lit-red { border-color: var(--red); }
+.floor.lit-red .sym, .floor.lit-red .lab { color: var(--red); }
+.floor.lit-white .txt, .floor.lit-red .txt { color: var(--white); }
+.controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--line); }
+button { font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.5px; color: var(--white); background: var(--line); border: 1px solid var(--line); border-radius: 3px; padding: 8px 14px; cursor: pointer; }
+button.on { background: var(--gold); color: var(--bg); }
+label { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--ink); display: inline-flex; align-items: center; gap: 4px; }
+select { -webkit-appearance: none; appearance: none; font-family: 'JetBrains Mono', monospace; font-size: 11px; background: var(--panel); color: var(--white); border: 1px solid var(--line); border-radius: 3px; padding: 6px 8px; cursor: pointer; }
+button:focus-visible, select:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+.explain { font-size: 13.5px; color: var(--ink); margin-top: 18px; line-height: 1.5; }
+.footer { text-align: center; font-size: 12.5px; color: var(--dim); margin-top: 20px; letter-spacing: 1px; }
+.rev { max-width: 620px; margin: 34px auto 0; border-top: 1px solid var(--line); padding-top: 12px; }
+.rev h2 { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 2px; color: var(--ink); text-transform: uppercase; font-weight: 400; margin-bottom: 8px; }
+.rev ul { list-style: none; }
+.rev li { font-size: 13px; color: var(--ink); margin-bottom: 4px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="kicker">Circumpunct Octave · la · i³ = −i · emergence</div>
+  <h1>The Pole Gap</h1>
+  <p class="tagline">Randomness isn’t in the number. It’s the distance between what ∞ can see and what ⊙ can.</p>
+  <div class="meta">Created: 2026-07-27 &middot; Last updated: 2026-07-27 &middot; Version: 1.0 &middot; companion to the <a href="../experiments/pole_gap_transfer_findings_v1.md">transfer experiment</a></div>
+
+  <div class="polerow">
+    <span class="sym" style="color: var(--white)">∞ substrate</span>
+    <span class="gloss">one by inclusion: sees every cell, predicts perfectly</span>
+  </div>
+
+  <div id="cwrap"><canvas id="cv"></canvas></div>
+
+  <div class="caption" id="caption">▲ π · the center column · a 101→1 projection that destroys information ▲</div>
+
+  <div class="polerow">
+    <span class="sym" style="color: var(--odot)">⊙ observer</span>
+    <span class="gloss">one by integration: prices every bit before it lands</span>
+  </div>
+  <div id="bits"></div>
+
+  <div class="meters">
+    <div class="meter">
+      <div class="lab">∞ PREDICTS</div>
+      <div class="val" style="color: var(--white)">100.00%</div>
+      <div class="sub">next bit, from the full row</div>
+    </div>
+    <div class="meter">
+      <div class="lab">⊙ GUESSES</div>
+      <div class="val" style="color: var(--odot)"><span id="soul">50.00</span>%</div>
+      <div class="sub">every step scored, no context skipped</div>
+    </div>
+    <div class="meter">
+      <div class="lab">POLE GAP</div>
+      <div class="val big" style="color: var(--gold)" id="ema">1.000</div>
+      <div class="sub">bits ⊙ pays per step, live · lifetime <span id="cum">1.000</span></div>
+    </div>
+  </div>
+
+  <div class="floors">
+    <div class="floor" id="fExists">
+      <span class="sym">∞</span><span class="lab">FLOOR EXISTS</span>
+      <span class="txt" id="fExistsTxt">no revisit yet · 0 rows checked</span>
+    </div>
+    <div class="floor" id="fFound">
+      <span class="sym">⊙</span><span class="lab">FLOOR FOUND</span>
+      <span class="txt" id="fFoundTxt">unfound; still paying 1.00 bits/step</span>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button id="runBtn" class="on">pause</button>
+    <button id="resetBtn">reset octave</button>
+    <label>ring
+      <select id="ringSel">
+        <option value="15">15 · reachable floor</option>
+        <option value="51">51</option>
+        <option value="101" selected>101</option>
+        <option value="201">201 · deep floor</option>
+      </select>
+    </label>
+    <label>⊙ memory
+      <select id="orderSel">
+        <option value="4">order 4</option>
+        <option value="8">order 8</option>
+        <option value="12" selected>order 12</option>
+        <option value="16">order 16</option>
+      </select>
+    </label>
+    <label>speed
+      <select id="fpsSel">
+        <option value="6">slow</option>
+        <option value="18" selected>live</option>
+        <option value="60">fast</option>
+        <option value="240">sprint</option>
+      </select>
+    </label>
+  </div>
+
+  <p class="explain">
+    ⊙ must state its price for every bit before that bit arrives (a Krichevsky-Trofimov estimator), so a context seen
+    once cannot fake certainty; fresh contexts cost a full coin-flip. Shrink the ring and give ⊙ time: the substrate
+    closes its loop first, ⊙ discovers it later, and the lag between the two floors is how long the center lived
+    inside a cycle it couldn’t feel. Widen the ring beyond ⊙’s memory and observation budget and the floor stays out
+    of reach: the entropy lasts exactly that long.
+  </p>
+  <div class="footer">⊙ &nbsp; THE CIRCUMPUNCT FRAMEWORK &nbsp; ∞</div>
+
+  <div class="rev">
+    <h2>Revision history</h2>
+    <ul>
+      <li>2026-07-27 v1.0: initial. Ported to a self-contained page from the chat session’s React component (pole-gap.jsx); logic, constants, palette, and copy carried over unchanged except house punctuation, plus one correctness fix found on import: the ∞-side revisit detector now uses exact packed-row keys. The chat original keyed rows by a pair of seeded 32-bit FNV hashes, which are correlated over 1/2-valued bytes; both seeds collided on the 101 ring at step 9,637 (rows differing in 46 of 101 cells), lighting FLOOR EXISTS on a floor that did not exist. Caught because the false period (3,766) contradicted the Python transfer experiment’s statistics; verified by direct row comparison. Companion to <a href="../experiments/pole_gap_transfer_findings_v1.md" style="color: var(--odot)">pole_gap_transfer_findings_v1.md</a>; the parent essay “The Pole Gap” is still chat-side.</li>
+    </ul>
+  </div>
+</div>
+
+<script>
+// ─────────────────────────────────────────────────────────────
+// prequential scoring constants (identical to the chat component)
+// ─────────────────────────────────────────────────────────────
+const ALPHA = 1 / 400;    // EMA horizon for the live gap
+const FOUND_EMA = 0.3;    // bits/step: sustained below this = floor found
+const FOUND_RUN = 1500;   // consecutive scored steps required below threshold
+const MIN_SCORED = 3000;  // minimum evidence before "found" can fire
+const SEEN_CAP = 150000;  // rows tracked for ∞-side cycle detection
+
+const fmt = (n) => (n == null ? "·" : n.toLocaleString());
+// Exact revisit key: the row packed 16 cells per code unit. String equality is
+// exact, so the ∞-side floor can never false-fire. (The chat original paired
+// two seeded 32-bit FNV hashes; over rows whose bytes are only ever 1 or 2 the
+// two seeds are correlated and BOTH collided on ring 101 at ~10k rows,
+// lighting a floor that did not exist. The inclusion-pole's marker must not
+// itself be a lossy projection.)
+const packRow = (arr) => {
+  let out = "";
+  for (let i = 0; i < arr.length; i += 16) {
+    let v = 0;
+    for (let j = 0; j < 16 && i + j < arr.length; j++) v |= arr[i + j] << j;
+    out += String.fromCharCode(v);
+  }
+  return out;
+};
+
+let W = 101, ORDER = 12, FPS = 18;
+let running = true;
+let S = null;
+let acc = 0, last = null;   // last stays null until first frame: no startup burst
+
+function reset(width, k) {
+  const row = new Uint8Array(width);
+  row[width >> 1] = 1;                 // do (0D): light the center
+  S = {
+    W: width, k, row,
+    counts: new Map(),                 // context -> [n0, n1]
+    ctx: [], marg: [0, 0],
+    stepIdx: 0, scored: 0, hits: 0,
+    cumLoss: 0, ema: 1, belowRun: 0,   // ⊙ starts paying a full bit/step
+    foundAt: null,
+    seen: new Map(),                   // row-hash -> step (∞ cycle detection)
+    hashStopped: false, cycleAt: null, period: null,
+    rows: [], stream: [],
+  };
+  acc = 0;
+  updateUI();
+  draw();
+}
+
+function step() {
+  const s = S;
+  const w = s.W, r = s.row, n = new Uint8Array(w);
+  for (let i = 0; i < w; i++) {
+    const l = r[(i - 1 + w) % w], c = r[i], rt = r[(i + 1) % w];
+    n[i] = l ^ (c | rt);               // Rule 30: the ∞ substrate
+  }
+  s.stepIdx += 1;
+  const center = n[w >> 1];            // π · emergence: the aperture
+
+  // ∞-side marker: has the full state revisited itself? (the floor EXISTS)
+  if (s.cycleAt == null && !s.hashStopped && s.seen) {
+    const hk = packRow(n);           // exact: no false floors
+    const prev = s.seen.get(hk);
+    if (prev !== undefined) {
+      s.cycleAt = s.stepIdx;
+      s.period = s.stepIdx - prev;
+      s.seen = null;
+    } else {
+      s.seen.set(hk, s.stepIdx);
+      if (s.seen.size >= SEEN_CAP) { s.hashStopped = true; s.seen = null; }
+    }
+  }
+
+  // ⊙-side: prequential KT. Price the bit BEFORE it lands, pay the log-loss.
+  // A context seen once cannot fake certainty; fresh contexts cost a full bit.
+  if (s.ctx.length === s.k) {
+    const key = s.ctx.join("");
+    let cell = s.counts.get(key);
+    if (!cell) { cell = [0, 0]; s.counts.set(key, cell); }
+    const t = cell[0] + cell[1];
+    const p1 = (cell[1] + 0.5) / (t + 1);            // KT estimator
+    const pObs = center ? p1 : 1 - p1;
+    const loss = -Math.log2(Math.max(pObs, 1e-12));  // bits ⊙ actually pays
+    const pred = p1 > 0.5 ? 1 : p1 < 0.5 ? 0 : (s.marg[1] >= s.marg[0] ? 1 : 0);
+    s.hits += pred === center ? 1 : 0;
+    s.scored += 1;
+    s.cumLoss += loss;
+    s.ema += (loss - s.ema) * ALPHA;
+    if (s.scored > MIN_SCORED && s.ema < FOUND_EMA) s.belowRun += 1;
+    else s.belowRun = 0;
+    if (s.foundAt == null && s.belowRun >= FOUND_RUN) s.foundAt = s.stepIdx;  // floor FOUND
+    cell[center] += 1;                 // learn only after paying
+  }
+  s.marg[center] += 1;
+  s.ctx.push(center);
+  if (s.ctx.length > s.k) s.ctx.shift();
+
+  s.row = n;
+  s.rows.unshift(n);
+  if (s.rows.length > 120) s.rows.pop();
+  s.stream.push(center);
+  if (s.stream.length > 96) s.stream.shift();
+}
+
+const cv = document.getElementById("cv");
+function draw() {
+  const s = S;
+  if (!cv || !s) return;
+  const ctx = cv.getContext("2d");
+  const w = cv.width, h = cv.height, cw = w / s.W;
+  ctx.fillStyle = "#08080c"; ctx.fillRect(0, 0, w, h);
+  const rowsVis = Math.min(s.rows.length, Math.ceil(h / Math.max(cw, 2)));
+  const ch = h / Math.max(rowsVis, 1);
+  const mid = s.W >> 1;
+  ctx.fillStyle = "rgba(227,166,60,0.06)";
+  ctx.fillRect(mid * cw, 0, cw, h);
+  for (let y = 0; y < rowsVis; y++) {
+    const r = s.rows[y], py = y * ch;
+    for (let x = 0; x < s.W; x++) {
+      if (!r[x]) continue;
+      if (x === mid) { ctx.fillStyle = "#e3a63c"; ctx.fillRect(x * cw, py, Math.max(cw, 1.5), ch); }
+      else { ctx.fillStyle = "rgba(242,239,228,0.82)"; ctx.fillRect(x * cw, py, Math.max(cw, 1), ch); }
+    }
+  }
+  ctx.strokeStyle = "rgba(227,166,60,0.5)";
+  ctx.lineWidth = 1; ctx.beginPath();
+  ctx.moveTo(0, h - 1); ctx.lineTo(w, h - 1); ctx.stroke();
+}
+
+const el = (id) => document.getElementById(id);
+function updateUI() {
+  const s = S;
+  el("soul").textContent = ((s.scored ? s.hits / s.scored : 0.5) * 100).toFixed(2);
+  el("ema").textContent = s.ema.toFixed(3);
+  el("cum").textContent = (s.scored ? s.cumLoss / s.scored : 1).toFixed(3);
+  el("caption").textContent = `▲ π · the center column · a ${s.W}→1 projection that destroys information ▲`;
+
+  const bits = s.stream.slice(-48);
+  el("bits").innerHTML = bits.map((b) => `<span class="${b ? "on" : "off"}">${b}</span>`).join("");
+
+  const fe = el("fExists"), fet = el("fExistsTxt");
+  if (s.cycleAt != null) {
+    fe.className = "floor lit-white";
+    fet.textContent = `the substrate closed its cycle at step ${fmt(s.cycleAt)} · period ${fmt(s.period)}`;
+  } else if (s.hashStopped) {
+    fe.className = "floor";
+    fet.textContent = `no revisit in the first ${fmt(SEEN_CAP)} rows; the state space is too deep to track`;
+  } else {
+    fe.className = "floor";
+    fet.textContent = `no revisit yet · ${fmt(s.stepIdx)} rows checked`;
+  }
+
+  const ff = el("fFound"), fft = el("fFoundTxt");
+  if (s.foundAt != null) {
+    ff.className = "floor lit-red";
+    fft.textContent = `discovered at step ${fmt(s.foundAt)}` +
+      (s.cycleAt != null ? `: ${fmt(s.foundAt - s.cycleAt)} steps after the loop actually closed` : "");
+  } else {
+    ff.className = "floor";
+    fft.textContent = `unfound; still paying ${s.ema.toFixed(2)} bits/step`;
+  }
+}
+
+function tick(t) {
+  requestAnimationFrame(tick);
+  if (last == null) { last = t; return; }   // timing fix: no startup burst
+  if (!running) { last = t; return; }
+  const dt = t - last; last = t;
+  acc += dt;
+  const interval = 1000 / FPS;
+  let did = false, batch = 0;
+  while (acc >= interval && batch < 300) {
+    step(); acc -= interval; did = true; batch += 1;
+  }
+  if (acc > interval * 300) acc = 0;        // drop backlog
+  if (did) { draw(); updateUI(); }
+}
+
+function fit() {
+  const wrap = document.getElementById("cwrap");
+  const width = Math.max(240, wrap.clientWidth);
+  cv.width = width; cv.height = Math.round(Math.min(360, width * 0.9));
+  draw();
+}
+
+el("runBtn").addEventListener("click", () => {
+  running = !running;
+  el("runBtn").textContent = running ? "pause" : "run";
+  el("runBtn").className = running ? "on" : "";
+});
+el("resetBtn").addEventListener("click", () => reset(W, ORDER));
+el("ringSel").addEventListener("change", (e) => { W = +e.target.value; reset(W, ORDER); });
+el("orderSel").addEventListener("change", (e) => { ORDER = +e.target.value; reset(W, ORDER); });
+el("fpsSel").addEventListener("change", (e) => { FPS = +e.target.value; });
+
+window.addEventListener("resize", fit);
+reset(W, ORDER);
+fit();
+requestAnimationFrame(tick);
+
+// debug handle (house pattern, cf. window.M in staggered_tqc.html):
+// PG.stepMany(n) advances the sim off-clock, then repaints.
+window.PG = {
+  state: () => S,
+  stepMany: (n) => { for (let i = 0; i < n; i++) step(); draw(); updateUI(); },
+};
+</script>
+</body>
+</html>
