@@ -64,21 +64,42 @@ The two-term decomposition, verified:
 
 > Γ = I(Y_{t+1}; X_t | M_t) + E[ D_KL( P(Y_{t+1}|M_t) ‖ q(Y_{t+1}|M_t) ) ]
 
-**Refinement (2026-07-28).** Both convergence steps are many-to-one, so the first term contains two different losses and they should not be lumped. Under the same Markov-full-state assumption the two-term form already uses:
+**Refinement (2026-07-28).** Both convergence steps are many-to-one, so the first term contains two different losses and they should not be lumped:
 
-> **Γ = I(Y;X|O_≤t) + I(Y;O_≤t|M) + E[D_KL]**
+> **Γ_q = Γ_π + Γ_⊙ + Γ_learn**
+> = I(Y;X|O_≤t) + I(Y;O_≤t|M) + E[D_KL(P(Y|M) ‖ q(Y|M))]
+
+holding under two conditions: M = f(O), and the full state screens the observation history from the target, Y ⊥ O | X.
 
 | term | what it is | who can recover it |
 |---|---|---|
-| I(Y;X\|O_≤t) | destroyed at the aperture | **nobody** observing through π |
-| I(Y;O_≤t\|M) | discarded in integration | a better-memoried observer |
-| E[D_KL] | not yet learned | more data |
+| **Γ_π** = I(Y;X\|O_≤t) | never passed the external aperture | **nobody** observing through π |
+| **Γ_⊙** = I(Y;O_≤t\|M) | passed, but not retained by integration | a better-memoried observer |
+| **Γ_learn** = E[D_KL] | retained, not yet correctly expressed | more data |
 
-Verified numerically (`pole_gap_three_term_v1.py`) on a stochastic 2-bit substrate with a lossy projection and a depth-1 observer: aperture loss 0.46709, integration loss 0.53284, sum 0.99993 against Γ_rep = 0.99993, residual 1e-16, with the screening condition H(Y|X,O) = H(Y|X) holding exactly.
+So "the observer cannot access it" was hiding two different claims: *it was never given*, and *it was given and discarded*.
 
-The algebra is telescoping; the content is that the split separates **irrecoverable** from **recoverable** loss, which the two-term form hides. It also locates the earlier work: k_min is where the middle term vanishes, and the whole k\*(n) apparatus is the trade between the middle and third terms.
+Verified (`pole_gap_three_term_v1.py`) on a stochastic 2-bit substrate with a lossy projection and a depth-1 observer: 0.46709 + 0.53284 = 0.99993 against Γ_rep = 0.99993, residual 1e-16, with the screening condition checked rather than assumed. The aperture floor is analytically h₂(p) for the fresh noise bit; against the run's *realised* p = 0.09940 that is 0.46710 against a measured 0.46709, so the 0.0019 offset from the nominal h₂(0.1) = 0.46900 is sampling variation in the noise rate, not estimator bias (dh₂/dp = log₂9 = 3.17).
 
-And the three terms land on three octave stations: aperture, integration, emergence.
+**Caveat on the "nobody" column.** The experiment uses a three-observation window as O, not the literal infinite history. Here that window is provably sufficient, since Y_t = a_t ⊕ a_{t−1} ⊕ N_{t−1} and the fresh noise bit is in no earlier observation. In a different testbed the sufficiency of the window is an assumption requiring its own argument, and without it Γ_π and Γ_⊙ are not cleanly separated.
+
+The algebra is telescoping; the content is that it separates **irrecoverable** from **recoverable** loss.
+
+**Where the experimental arm lives.** Define the internal-aperture loss at memory depth k:
+
+> J_k = I(Y; O_≤t | M_t^{(k)}), with M_t^{(k)} = (O_{t−k+1}, …, O_t).
+
+Then **k_min = min{k : J_k = 0}** is the general predictive Markov order: the first depth at which finite memory retains everything in the *accessible* history that matters. On ring 15 the full observable history predicts perfectly, H(Y|O_≤t) = 0, so J_k collapses to H(Y|C_t^{(k)}) and k_min = 21 is exactly where the **internal** aperture loss vanishes, not where the external aperture disappears.
+
+And since Γ_π is fixed by the projection and constant across observers,
+
+> **k\*(n) = argmin_k [ J_k + R_k(n) ]**,
+
+which is sharper than "entropy against complexity": it trades information discarded by the internal aperture against information not yet learned because that aperture is more complex. The projection-architecture pilot was aimed at J_k, that is, at how different ways of organising the same available observations preserve or discard predictive information.
+
+**Wording on the third term.** Γ_learn is not emergence itself. It measures the inaccuracy of the emergent output relative to what the current integrated state could already support.
+
+The three terms land on three octave transitions: what reality made observable, what the observer retained, what it learned to express.
 
 ## 8. The Instrument Pole Gap: the octave recursing onto itself
 
@@ -106,16 +127,24 @@ Some correspondences survived: Γ_rep ≠ Γ_learn is real and now three-way. On
 
 | octave | operational |
 |---|---|
-| ∞ | full state, one by inclusion |
-| π | aperture or projection |
-| — (line) | observation through time |
+| ∞ | X_t, the included whole |
+| π_outer | X_t → O_t, the observation aperture |
+| — (line) | O_≤t, observations through time |
+| π_inner | O_≤t → M_t, the integration aperture |
 | A × B | interface preserving both coordinates |
 | GOOD | neither severance nor absorption |
-| ⊙ | one by integration |
+| ⊙ | M_t, one by integration |
+| emergence | q(Y_{t+1}|M_t), outward prediction or action |
 | S(A,B→Y) | measurable whole-only emergence |
 | recursion | apply the same structure to the instrument itself |
 
-> ∞ − ⊙ = what is included − what has been integrated.
+The two poles are no longer joined by one undifferentiated distance. There is a path, and every transition fails differently:
+
+> ∞ → what reality makes observable → what the observer retains → what the observer learns to express
+
+> **Pole Gap = not transmitted + not retained + not learned.**
+
+That also says why the two arms are one project. The Instrument Pole Gap concerns failures at the first transition, where a marker destroys distinctions a claim requires. The observer-architecture work concerns failures at the second. KT and CTW measure the third.
 
 The octave generated the distinctions; the Pole Gap translated some into information theory; the failed experiments showed which symbolic correspondences were real enough to survive measurement.
 
