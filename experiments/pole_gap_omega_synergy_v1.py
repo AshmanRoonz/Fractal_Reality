@@ -68,10 +68,16 @@ for c, u, v in itertools.product((0, 1), repeat=3):
     j[(c, u, v, u ^ v)] = 0.125
 cases["5 shared C, synergistic U xor V"] = (j, (0, 1), (0, 2), (3,))
 
-# 6. Both parts carry UNIQUE information, no synergy at all.
+# 6. Both parts carry UNIQUE information, and no joint-only capacity.
 #    Y = (Y1,Y2) independent fair bits; A = Y1, B = Y2.
-#    Here S = 0 but the proxy is positive, because it also picks up
-#    min{U_A,U_B}. This is why the column is not called synergy.
+#    The proxy is positive here because it picks up min{U_A,U_B}.
+#
+#    NOTE: S = 0 here is a STRUCTURAL claim about the construction, not a
+#    computed quantity. This file implements no PID measure, and no single
+#    PID synergy measure is universally accepted, so any numerical synergy
+#    claim would have to name its decomposition. In case 6, A supplies Y1
+#    and B supplies Y2 and neither contribution requires combining the
+#    sources, which is why the joint-only term is zero by construction.
 j = {}
 for y1, y2 in itertools.product((0, 1), repeat=2):
     j[(y1, y2, y1, y2)] = 0.25
@@ -96,9 +102,14 @@ CURRENT:
   case 5  I(A;B) = 1 AND joint-beyond-best = 1. Dependence and synergy are
           both maximal, so they are not opposites. The shared bit C is simply
           irrelevant to the synergistic target.
-  case 6  joint-beyond-best = 1 with NO synergy: Y1 and Y2 are independent and
-          each part carries only its own. The column equals S + min{U_A,U_B},
-          which is why it is not labelled synergy.
+  case 6  joint-beyond-best = 1 with no joint-only capacity: Y1 and Y2 are
+          independent and each part carries only its own. The column equals
+          S + min{U_A,U_B}, which is why it is not labelled synergy.
+
+  SCOPE OF THIS FILE: no PID measure is computed here, and none is universally
+  agreed on. The columns above are all mutual informations. Where S is said to
+  be zero (cases 4 and 6) that is structural, read off the construction, not
+  output from a decomposition. Any numerical synergy claim must name its PID.
 
   Omega measures dependence between the parts, full stop. It is not synergy
   and it is not redundancy: redundancy and synergy are target-relative, and
