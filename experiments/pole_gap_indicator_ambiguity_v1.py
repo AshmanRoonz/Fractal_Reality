@@ -52,6 +52,23 @@ def IPG_max(rows, T):
     return max(math.log2(len(v)) for v in groups.values())
 
 
+def worst_prior_gap(rows, T):
+    """Construct the maximising prior explicitly and evaluate H_mu(C|T).
+
+    Concentrate all mass on the most ambiguous fiber and spread it evenly
+    across the distinct claim values inside it. Should reach IPG_max.
+    """
+    groups = {}
+    for r in rows:
+        groups.setdefault(T(*r), {}).setdefault(CLAIM(*r), []).append(r)
+    tstar = max(groups, key=lambda t: len(groups[t]))
+    byclaim = groups[tstar]
+    # mass 1 on fiber tstar, split evenly over its distinct claim values
+    share = 1.0/len(byclaim)
+    probs = [share for _ in byclaim]
+    return -sum(p*math.log2(p) for p in probs), tstar, len(byclaim)
+
+
 def is_refinement(rows, T_coarse, T_fine):
     """Is T_coarse = f(T_fine)? Each fine fiber must carry one coarse value."""
     m = {}
@@ -73,6 +90,14 @@ def main():
             rows = [r for r in DATA if lo <= r[0] <= hi]
             print(f"  IPG_mu   prior {lab:<12} = {IPG_mu(rows, T):.4f} bits")
         print(f"  IPG_max  (prior-free)      = {IPG_max(DATA, T):.4f} bits\n")
+
+    print("SUP IDENTITY: IPG_max should equal sup over priors of IPG_mu.")
+    for name, T in (("light", LIGHT), ("period", PERIOD)):
+        g, tstar, nvals = worst_prior_gap(DATA, T)
+        print(f"  {name:<7} worst fiber t={tstar} carries {nvals} claim value(s);"
+              f" witness prior gives H_mu(C|T) = {g:.4f}"
+              f"  (IPG_max = {IPG_max(DATA, T):.4f})")
+    print()
 
     print("REFINEMENT CHECK. Refinement requires the old reading to be")
     print("recoverable from the new one; only then is improvement guaranteed")

@@ -75,7 +75,25 @@ Measured: the threshold light has IPG_max = **1 bit** (its firing fiber contains
 
 But the repair made to the live page is **not** an instance of it. Checked explicitly: the light is not a function of the period marker and the period marker is not a function of the light. Neither refines the other; the period marker is a **replacement**. It is still universally at least as good, but because it attains IPG_max = 0, not by the refinement order. The distinction matters: a replacement that does not reach 0 carries no cross-prior guarantee at all, and only a genuine refinement does. Calling a replacement a refinement would be a small instance of exactly the error this section names.
 
-**Two legitimate repairs when IPG > 0.** Improve the marker, finding T' with IPG(C; T') = 0, which is what S_k = P does. Or weaken the claim to one that factors through the indicator. The live page took the second: the light was relabelled to state that recent KT loss stayed below 0.3 bits per step for a sustained window, which is exactly what it measures and therefore has zero Instrument Pole Gap. The original error was inflating that operational reading into an ontological one.
+**Three relations, not two.** The correction above forces a distinction that must not be collapsed:
+
+| relation | definition | guarantee |
+|---|---|---|
+| **Refinement** | T = f(T′) | H_μ(C\|T′) ≤ H_μ(C\|T) for every claim C and every μ |
+| **Claim-specific dominance** | T′ ⪰_C T | the inequality for every μ, but only for that C |
+| **Mere replacement** | neither determines the other | none, unless dominance is demonstrated |
+
+Refinement implies dominance for every claim; the converse fails. The period marker dominates the light *for this claim* while being globally incomparable with it, which is why the replacement is safe here and why replacement in general is not.
+
+**IPG_max is exactly the worst case of IPG_μ.** IPG_max(C; T) = sup_μ H_μ(C | T), because a prior can concentrate on the most ambiguous fiber and spread evenly across the claim values inside it. Verified by constructing the witness: for the threshold light the maximising prior yields H_μ(C|T) = 1.0000 against IPG_max = 1.0000; for the period marker, 0. So the two measures are the same quantity under a specified environment and under the worst one.
+
+**Two legitimate repairs when IPG > 0, now sharply distinct.**
+
+*Claim-preserving:* keep C, find T′ with C = h(T′). The period marker.
+
+*Indicator-preserving:* keep T, weaken the claim to C′ = q(T). The relabelled light, which now asserts that recent KT loss stayed below 0.3 bits per step for the required sustained interval. That claim is not less true than the ontological one; it is narrower and exactly supported.
+
+**The Inflation Lie's formal signature.** Asserting C when only some C′ = q(T) factors through the indicator. The marker supports one statement while the label announces a larger one. That is the day's five failures in a single line, and it is the corpus's existing notion of inflation with the ambiguity made measurable.
 
 Note also that the S_k = period equivalence is empirical on this substrate, not a theorem.
 
@@ -134,9 +152,17 @@ And, as a program rather than a result: one operational framework in which proje
 
 Any of these is a real result: no reliable interaction appears; aggregating projections do not produce greater depth heterogeneity; heterogeneity does not predict the advantage; the interaction vanishes under difficulty matching; the fixed-order mixture performs equally well everywhere.
 
-## 8. The standard
+## 8. The standard, and when to stop
 
 The Pole Gap is not validated when it explains the observer's errors. It is validated when it helps the observer discover that the error was its own.
+
+Never ask only whether an indicator correlates with a claim. Ask which opposing realities still share the same reading.
+
+**Closure condition** (Ashman, 2026-07-27). A line of correction does not end when nothing further could be corrected, which is never. It ends when:
+
+> the distinctions are explicit, the claims factor through their evidence, and further corrections no longer change the predicted result or the protocol required to test it.
+
+Assessed against this document as it stands: the distinctions are in §2a and §3; the claims have been made to factor through their evidence (the withdrawn ranking is marked withdrawn, the live page's label was narrowed to what it measures, the epistemic statuses are separated); and the protocol in §6 has been stable across the last several rounds of refinement, which added precision to the formalism without changing a single element of the experiment to be run. The condition is met. The next move is to run §6, not to refine §2a further.
 
 ---
 
