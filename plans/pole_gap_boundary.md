@@ -40,6 +40,33 @@ that is, when the instrument's many-to-one map collapses a distinction the concl
 
 The response is not to abandon indicators, which is impossible, but to characterise what each one destroys and to verify conclusions with a less destructive measurement wherever one exists. In this corpus's own vocabulary the failure mode is the Inflation Lie at instrument scale: a part claiming to be the whole. Its signature is the one the framework predicts, confident assertion of a closure that is not there.
 
+## 2a. The Instrument Pole Gap, made quantitative
+
+Let T: Z → I map a condition to an indicator, and let C(Z) be the claim the indicator is meant to establish. T is **sufficient for C** exactly when C is constant on the fibers of T:
+
+> T(Z₁) = T(Z₂) ⟹ C(Z₁) = C(Z₂),
+
+equivalently when C factors through T. It **overclaims** exactly when T(Z₁) = T(Z₂) while C(Z₁) ≠ C(Z₂). The residual ambiguity is
+
+> **A_T(C) = H( C(Z) | T(Z) )**, zero for a sufficient indicator, positive for a misleading one however well it correlates.
+
+**This is sufficiency, stated information-theoretically, and it has prior art.** A_T(C) = 0 iff C is T-measurable is the standard characterisation; the applied version is the surrogate-endpoint validity literature in biostatistics (Prentice's criteria, and the surrogate paradox where marker and endpoint move in opposite directions), and the failure mode is what the formal treatments of Goodhart's law describe for proxy metrics. The contribution here is not the quantity. It is the discipline of reporting it before interpreting any indicator.
+
+**Worked on this program's own failure.** Claim C = "the floor is found" (H(Y|C_k) = 0). Indicator T = the live page's threshold light. Over the measured ring-15 sweep:
+
+| indicator | prior over k | A_T(C) |
+|---|---|---|
+| threshold light (EMA < 0.3 sustained) | 8..24 | 0.681 bits |
+| threshold light | 10..22 | 0.579 bits |
+| threshold light | 12..24 | 0.891 bits |
+| S_k = period | any of the above | **0.000 bits** |
+
+The threshold leaves most of a bit of ambiguity about the very claim it was labelled with, and a different marker available from the same data resolves it exactly. That is the discipline in one line: the fix for an overclaiming indicator is usually not more caution, it is a marker whose fibers respect the claim.
+
+**The caution that must travel with the quantity.** A_T(C) is not a property of the instrument alone. It is defined against a distribution over conditions Z, and the table shows it moving from 0.579 to 0.891 bits purely by changing the range of k considered. There is rarely a canonical prior. So the measure is observer-relative in exactly the way the rest of the program is, which is consistent rather than damaging, but it must never be quoted as an intrinsic property of a marker. Note also that the S_k = period equivalence is empirical on this substrate, not a theorem.
+
+**Name.** "The Instrument Pole Gap" is preferred over "Indicator Sufficiency," because the latter reads as claiming a concept that statistics has had since Fisher, while the former names it as what it is: the schema applied to the measuring apparatus, with sufficiency cited in the definition.
+
 ## 3. Epistemic status, kept visibly separate
 
 | status | content |
