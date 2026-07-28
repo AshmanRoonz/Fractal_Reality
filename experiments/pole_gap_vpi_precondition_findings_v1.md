@@ -17,13 +17,28 @@ Version: 1.1
 > | aggregating | 0.68 - 0.82 | 0.665 - 0.805 | 0.939 - 0.986 | 0.914 - 0.976 |
 > | algebraic | 0.14 - 0.16 | 0.138 - 0.157 | 0.901 - 0.971 | 0.890 - 0.957 |
 >
-> **The difficulty gap was a coverage gap.** XOR projections spread mass evenly so few contexts clear MINCOUNT; aggregating projections concentrate mass so many do. A fivefold ρ difference produced the fivefold H difference. Corrected, the ranges **overlap**: [0.939, 0.971] renormalised, [0.914, 0.957] over all occupied contexts. Every projection in both families is nearly maximally unpredictable at depth 12, and they are similar in difficulty rather than disjoint.
+> **The difficulty gap was a coverage gap.** XOR projections spread mass evenly so few contexts clear MINCOUNT; aggregating projections concentrate mass so many do. A fivefold ρ difference produced the fivefold H difference.
+>
+> **Amendment (2026-07-28, second pass).** The corrected values in the row above were themselves computed on the misaligned contexts of defect 4: they condition on O_{t−1} onward and never include O_t. They destroy the claimed empty separation, but they do not characterise the intended task. A separate aligned audit gives, at n = 60,000 and D = 12:
+>
+> | family | H_qualified (aligned) | H over all occupied (aligned) |
+> |---|---|---|
+> | aggregating | 0.759 - 0.973 | 0.722 - 0.969 |
+> | algebraic | 0.331 - 0.969 | 0.341 - 0.956 |
+>
+> So **the ranges overlap and matching is not impossible**, which is the load-bearing retraction and it survives alignment. But this sentence does not survive and is withdrawn: *"Every projection in both families is nearly maximally unpredictable at depth 12."* Aligned xor3 sits at 0.331 bits and maj3 at 0.759, while others remain near 0.96. The spread within the algebraic family alone is 0.638 bits. The intended task contains far more difficulty variation than the shifted task revealed.
 >
 > Consequences: the "empty overlap" result is false; matching is not impossible; the pooled corr(V_π, H) = +0.797 measures coverage rather than a genuine confound; and the recommendation to abandon the two-family contrast rested on a false premise.
 >
-> **V_π is suspect for the same reason and is not rehabilitated by this notice.** It is computed over the same MINCOUNT-qualified subset, so at 15% coverage it describes a biased, high-count minority of contexts. The z = +7.26 separation in section 1 may be measuring coverage structure rather than depth heterogeneity, and has not been rechecked.
+> **V_π is retracted and has two faults, not one.** First, coverage: it is computed over the same MINCOUNT-qualified subset, so at 15% coverage it describes a biased, high-count minority of contexts, and the z = +7.26 separation may be measuring coverage structure. Second, and surviving any coverage repair: the estimator fits the depth-D conditional probability and then searches for the shortest suffix resembling *that same estimate*, on the same observations. Selection and target share their noise, so ℓ(c) is optimistic and unstable wherever the deep context is sparse, and a noisy deep estimate can make some shorter suffix look adequate by chance.
 >
-> Verification: `pole_gap_defect_audit_v1.py`. Nothing below this notice has been edited; it is left as written so the error is legible.
+> The repair is sample separation: fit the deep and suffix models on calibration-train, and declare adequacy by held-out predictive loss on calibration-validation. Difficulty and heterogeneity then become separate instruments with separate failure states, and coverage is reported alongside both rather than multiplied into either. No context should silently vanish from a difficulty estimate; sparse ones get KT or shrinkage, not omission.
+>
+> **Status after this notice:** empty family separation, retracted. Matching impossible, retracted. Families nearly equally difficult, unsupported. V_π separation, retracted pending aligned held-out estimation. The projection-by-architecture hypothesis, still untested.
+>
+> The next run should not be another CTW pilot. It should be a measurement-validation study showing that aligned, held-out estimates of difficulty and V_π are stable across seeds and calibration budgets.
+>
+> Verification: `pole_gap_defect_audit_v1.py` (defects 4 and 5) and `pole_gap_aligned_audit_v1.py` (the aligned ranges, with an alignment oracle applied to the entropy function itself). Nothing below this notice has been edited; it is left as written so the error is legible.
 
 *Code: `pole_gap_vpi_precondition_v1.py`. Pilot for the projection x architecture protocol (`plans/pole_gap_boundary.md` §6). Calibration only: rings 101 and 151, n = 60,000, D = 12, forty prospective projections per family built by rule before any results were seen. No CTW, no architecture comparison.*
 
