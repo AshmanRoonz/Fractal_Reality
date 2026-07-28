@@ -63,7 +63,21 @@ equivalently when C factors through T. It **overclaims** exactly when T(Z₁) = 
 
 The threshold leaves most of a bit of ambiguity about the very claim it was labelled with, and a different marker available from the same data resolves it exactly. That is the discipline in one line: the fix for an overclaiming indicator is usually not more caution, it is a marker whose fibers respect the claim.
 
-**The caution that must travel with the quantity.** A_T(C) is not a property of the instrument alone. It is defined against a distribution over conditions Z, and the table shows it moving from 0.579 to 0.891 bits purely by changing the range of k considered. There is rarely a canonical prior. So the measure is observer-relative in exactly the way the rest of the program is, which is consistent rather than damaging, but it must never be quoted as an intrinsic property of a marker. Note also that the S_k = period equivalence is empirical on this substrate, not a theorem.
+**The caution that must travel with the quantity, and the notation that carries it.** The average measure is not a property of the instrument alone: it is defined against a distribution μ over conditions, and the table shows it moving from 0.579 to 0.891 bits purely by changing the range of k considered. So it is written **IPG_μ(C; T) = H_μ(C | T)**, and quoting it without μ is incomplete.
+
+Its prior-free companion is the worst fiber:
+
+> **IPG_max(C; T) = max_t log₂ |C(T⁻¹(t))|**, the ambiguity the instrument permits *at all*, rather than the ambiguity expected under conditions we happen to anticipate.
+
+Measured: the threshold light has IPG_max = **1 bit** (its firing fiber contains both claim values), the period marker has **0**. Reporting both prevents a favourable prior from making an intrinsically unsafe indicator look sufficient.
+
+**Refinement, and a correction to the obvious reading of it.** If T = f(T'), the old reading is recoverable and H(C|T') ≤ H(C|T) for *every* prior. That is a genuine partial order on instruments.
+
+But the repair made to the live page is **not** an instance of it. Checked explicitly: the light is not a function of the period marker and the period marker is not a function of the light. Neither refines the other; the period marker is a **replacement**. It is still universally at least as good, but because it attains IPG_max = 0, not by the refinement order. The distinction matters: a replacement that does not reach 0 carries no cross-prior guarantee at all, and only a genuine refinement does. Calling a replacement a refinement would be a small instance of exactly the error this section names.
+
+**Two legitimate repairs when IPG > 0.** Improve the marker, finding T' with IPG(C; T') = 0, which is what S_k = P does. Or weaken the claim to one that factors through the indicator. The live page took the second: the light was relabelled to state that recent KT loss stayed below 0.3 bits per step for a sustained window, which is exactly what it measures and therefore has zero Instrument Pole Gap. The original error was inflating that operational reading into an ontological one.
+
+Note also that the S_k = period equivalence is empirical on this substrate, not a theorem.
 
 **Name.** "The Instrument Pole Gap" is preferred over "Indicator Sufficiency," because the latter reads as claiming a concept that statistics has had since Fisher, while the former names it as what it is: the schema applied to the measuring apparatus, with sufficiency cited in the definition.
 
