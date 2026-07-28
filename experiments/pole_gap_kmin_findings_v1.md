@@ -82,9 +82,28 @@ Worse than a mislabel: on the canonical cases the two run in opposite directions
 | A = B = Y | **1.000** | 1.000 | **0.000** |
 | Y = A (unique to A) | 0.000 | 1.000 | 0.000 |
 
-Ω is maximal exactly where synergy is absent (perfect redundancy) and zero where synergy is maximal (XOR). So the "coherence dividend" is a **redundancy** measure, and using it to formalise D5 (the whole is not the sum of its parts) gets the sign of the intended phenomenon backwards: it rewards parts that overlap, not wholes that do what no part can.
+Ω is maximal in the perfectly redundant case and zero in the XOR case.
 
-The prose formulation "wholeness is parts plus relations not contained in either part alone" spans two distinct quantities that must not be collapsed: mutual dependence (the parts constrain one another) and synergy (the pair reveals or does what neither can). Ω captures the first only.
+**Amendment (2026-07-28, second pass).** I then wrote that Ω "is a redundancy measure" that "runs the wrong way," which overreaches from those two extreme cases and is refuted by a third:
+
+> C, U, V independent fair bits; A = (C, U), B = (C, V), Y = U ⊕ V.
+> Then I(A;B) = H(C) = **1 bit** (they share C) while I(Y;A) = I(Y;B) = 0 and I(Y;A,B) = 1, so synergy = **1 bit**. Verified in `pole_gap_omega_synergy_v1.py`.
+
+Dependence and synergy are both maximal here. They are not opposites; they measure different structures, and the shared bit C is simply irrelevant to the synergistic target.
+
+The precise statement is that **Ω = I(A;B|M) measures dependence between the parts, and nothing more.** It is not synergy (the first table shows that). It is also not redundancy, and the reason is structural rather than empirical: redundancy and synergy are *target-relative*, and I(A;B|M) never mentions a target at all. Calling it redundancy is a category error, not merely an inaccuracy.
+
+**The correct decomposition.** Once a target Y is named, partial information decomposition splits
+
+> I(Y;A,B|M) = R + U_A + U_B + S
+
+into redundant, unique-to-A, unique-to-B, and synergistic parts. The phrase "information that exists in neither part alone" is **S**, not I(A;B|M). No single PID measure is universally accepted, so any numerical synergy claim must name its decomposition; the conceptual distinction is stable regardless.
+
+**Three quantities, not one**, which the framework should keep apart: I(A;B|M) is coupling between the parts; U_A + U_B is the distinct contribution preserved from each; S(A,B→Y|M) is capacity belonging only to the whole. Suggested naming: Ω_dep = I(A;B|M), Ω_syn = S(A,B→Y|M).
+
+**Consequence for the primitive.** The Cartesian product preserves both coordinates and so preserves the *possibility* of unique contribution from each side; the admissibility condition R(A,B) ∧ ¬(A alone ∨ B alone) excludes severance and absorption. Neither guarantees synergy: two parts can coexist, both intact, and produce no whole-only capacity. So **GOOD preserves the possibility of synergy; it does not assert that synergy occurred.** That is the empirical bridge. The primitive stays definitional, and a measurable system instantiates the stronger claim only when a specified joint outcome contains demonstrable synergistic information.
+
+The original error was therefore upstream of every experiment: Ω was not a poorly calibrated indicator of whole-only information, it was a different mathematical object. The repair is replacement, not recalibration.
 
 ## 8. Second round: verification of Ashman's reply (code: `pole_gap_kstar_v1.py`)
 

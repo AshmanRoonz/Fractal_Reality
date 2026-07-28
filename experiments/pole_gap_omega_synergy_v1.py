@@ -57,3 +57,27 @@ for name, j in cases.items():
     print(f"{name:<34}{om:>14.3f}{iya:>9.3f}{iyb:>9.3f}{iyab:>11.3f}{syn:>10.3f}")
 print("\nOmega is MAXIMAL where synergy is zero (redundant) and ZERO where")
 print("synergy is maximal (xor). On the canonical cases it runs the wrong way.")
+
+
+# ---------------------------------------------------------------------------
+# Amendment (2026-07-28): the two extreme cases above do NOT establish that
+# dependence and synergy are opposites. Ashman's counterexample, verified:
+#   C, U, V independent fair bits;  A = (C,U),  B = (C,V),  Y = U xor V
+# gives I(A;B) = 1 bit AND synergy = 1 bit. Both maximal at once.
+# ---------------------------------------------------------------------------
+def _amendment():
+    j = {}
+    for c, u, v in itertools.product((0, 1), repeat=3):
+        j[(c, u, v, u ^ v)] = 0.125          # coords: C, U, V, Y
+    A, B, Yv = (0, 1), (0, 2), (3,)
+    iab = MI(j, A, B); iya = MI(j, Yv, A); iyb = MI(j, Yv, B)
+    iyab = MI(j, Yv, A+B)
+    print("\nAMENDMENT -- A=(C,U), B=(C,V), Y=U xor V")
+    print(f"  I(A;B) = {iab:.3f}   I(Y;A) = {iya:.3f}   I(Y;B) = {iyb:.3f}"
+          f"   I(Y;A,B) = {iyab:.3f}   synergy = {iyab-max(iya,iyb):.3f}")
+    print("  dependence and synergy both maximal: they are not opposites.")
+    print("  I(A;B) names no target, so it cannot be a redundancy measure;")
+    print("  redundancy and synergy are target-relative, I(A;B) is not.")
+
+
+_amendment()
