@@ -123,13 +123,17 @@ Note also that the S_k = period equivalence is empirical on this substrate, not 
 |---|---|
 | **Identity (proved, machine-verified)** | L_KT,k = Ĥ_k + R_KT,k exactly, from KT's sequential-to-block property. Residual against H_k is exactly Ĥ_k − H_k, an entropy-estimation problem, not a tax-model one. |
 | **Validated instruments** | Prequential KT; CTW (checked against explicit enumeration of all permitted trees to machine precision); exact stationary-distribution H_k on finite-order sources; full-state versus projected-state measurement. |
-| **Established measurements** | Ring 15: P = 1,455, τ_X = 1,502, k_min = 21, τ_sync = 21 symbols, τ_learn ≈ 20,000-30,000. Occupancy tax beats the crude tax 17.6×. Interior k\*(n) exists and migrates. |
-| **Withdrawn** | The preliminary projection-dependent architecture ranking. Withdrawn on design defects, **not** on implementation: the CTW arm was independently validated afterwards and is correct. |
-| **Live hypothesis** | V_π (context-depth heterogeneity) predicts the fair CTW-versus-uniform-depth advantage. |
+| **Established measurements** | Ring 15: P = 1,455, τ_X = 1,502, k_min = 21, τ_sync = 21 symbols, τ_learn ≈ 20,000-30,000, threshold crossing ≈ 3,575-6,750. A\*₁₂ = 92.646% ideal against ≈ 89.6% for the page's online rule. Occupancy tax beats the crude tax 17.6×. Interior k\*(n) exists and migrates. Aligned family difficulty ranges overlap at [0.759, 0.969]. |
+| **Distinctions forced by the work** | Process closure vs representability vs synchronization vs learning vs threshold crossing. Process limit vs model-class limit vs learning-algorithm behaviour. Ideal Bayes accuracy vs realized online accuracy. Refinement vs claim-specific dominance vs mere replacement. Dependence vs redundancy vs synergy. Defect discovery vs confirmation vs repair validation. |
+| **Withdrawn** | The preliminary projection-dependent architecture ranking (design, **not** implementation: CTW was validated afterwards). The precondition study's family separation and its "matching is impossible" conclusion (the difficulty gap was a coverage gap). "All projections nearly maximally unpredictable." All existing V_π values (misaligned, coverage-biased, and selection-on-the-same-data). The pilot's ≤ 0.002 bit effect-size estimate. Ω as redundancy, and Ω as anti-synergy. |
+| **Live hypothesis** | V_π (context-depth heterogeneity) predicts the fair CTW-versus-uniform-depth advantage. Untested. |
 | **Unvalidated conjecture** | The usable-depth scaling law k\*(n) ≍ (g/f)⁻¹(n^γ/ℓ(n)). First slope test was non-discriminating. |
 | **Research program** | Joint measurement of (π_o, π_y, 𝒜, n). |
+| **Pending Ashman's adjudication** | The Xorzo2 null result (`pole_gap_xorzo2_null_findings_v1.md`): the unigram line is the wrong severance threshold, and the reported 3.070 nats is beaten by a one-byte lookup table smaller than the voice. Unaffected by every retraction above, since it used neither V_π nor the two-stream observers. If the readout is the bottleneck, Stage 2's growth program is tuning the wrong lever. |
 
 Keeping these separated is itself part of the contribution. A framework that reports all of them at one confidence level has told you nothing about any of them.
+
+**Next step is not another pilot.** It is a measurement-validation study: correct O_t → Y_{t+1} alignment; two-stream CTW checked against brute-force enumeration (only the single-stream form has been); difficulty and heterogeneity computed by *separate* functions; held-out estimation of adequate suffix depth; explicit coverage reporting with no sentinels; functional deduplication; hard assertions that every checkpoint fires; and a discrimination test for each known defect. Only after those instruments pass does the fair projection-by-architecture experiment run again.
 
 ## 4. Prior art, stated so the boundary is not flattering
 
