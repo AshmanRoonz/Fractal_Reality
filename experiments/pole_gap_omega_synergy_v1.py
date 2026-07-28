@@ -1,83 +1,107 @@
-"""Does the coherence dividend measure synergy or redundancy?
+"""What does the coherence dividend Omega = I(A;B|M) actually measure?
 
 Created: 2026-07-28
 Last updated: 2026-07-28
-Version: 1.0
+Version: 1.1
 History:
-- 2026-07-28 v1.0: initial. Ashman corrected the gloss of Omega = I(A;B|M) as
-  "information in neither part alone"; that is synergy, and MI does not
-  measure it. This checks the stronger claim: on the canonical cases Omega is
-  maximal where synergy is zero and zero where synergy is maximal, so it is a
-  redundancy measure running opposite to the phenomenon D5 names.
+- 2026-07-28 v1.1: RETRACTED the v1.0 conclusion. v1.0 concluded from two
+  extreme cases that Omega "is a redundancy measure running opposite to
+  synergy." That is scope inflation: a relationship asserted from n = 2.
+  Ashman's counterexample refutes it (case 5 below). Also renamed the proxy
+  column: I(Y;A,B) - max{I(Y;A),I(Y;B)} equals S + min{U_A,U_B} under a PID
+  decomposition, not S, so it is now labelled joint_beyond_best_single and
+  case 6 exhibits a run where it is positive with zero synergy.
+- 2026-07-28 v1.0: initial. Established (correctly) that Omega is not synergy.
+  Its further conclusion is retracted; see above.
+
+CURRENT POSITION. Omega = I(A;B|M) measures dependence between the parts and
+nothing more. It is not synergy. It is also not redundancy, for a structural
+reason: redundancy and synergy are target-relative and I(A;B|M) names no
+target. "Information in neither part alone" is the synergistic term S of
+I(Y;A,B|M) = R + U_A + U_B + S, which requires a named target and a chosen
+PID measure.
 
 Run: py -3.11 experiments/pole_gap_omega_synergy_v1.py
 """
-"""Does the coherence dividend measure 'information in neither part alone'?
-Ashman says no: it measures shared dependence. Check whether it is worse than
-that -- whether it is ANTI-correlated with synergy on the canonical cases."""
 import itertools, math
+
+
 def H(dist):
     return -sum(p*math.log2(p) for p in dist.values() if p > 0)
+
+
 def marg(joint, idx):
     d = {}
     for k, p in joint.items():
         kk = tuple(k[i] for i in idx)
         d[kk] = d.get(kk, 0.0) + p
     return d
+
+
 def MI(joint, ia, ib):
     return H(marg(joint, ia)) + H(marg(joint, ib)) - H(marg(joint, ia+ib))
 
-print(f"{'case':<34}{'Omega=I(A;B)':>14}{'I(Y;A)':>9}{'I(Y;B)':>9}{'I(Y;A,B)':>11}{'synergy':>10}")
+
+# Each case: (joint, A-coords, B-coords, Y-coords)
 cases = {}
-# 1. synergistic: A,B independent fair bits, Y = A xor B
+
 j = {}
-for a, b in itertools.product((0,1), repeat=2):
+for a, b in itertools.product((0, 1), repeat=2):
     j[(a, b, a ^ b)] = 0.25
-cases["synergistic (Y = A xor B)"] = j
-# 2. redundant: A = B fair bit, Y = A
+cases["1 synergistic (Y = A xor B)"] = (j, (0,), (1,), (2,))
+
+j = {(a, a, a): 0.5 for a in (0, 1)}
+cases["2 redundant (A = B = Y)"] = (j, (0,), (1,), (2,))
+
+j = {k: 0.125 for k in itertools.product((0, 1), repeat=3)}
+cases["3 independent, Y unrelated"] = (j, (0,), (1,), (2,))
+
 j = {}
-for a in (0,1):
-    j[(a, a, a)] = 0.5
-cases["redundant (A = B = Y)"] = j
-# 3. independent-irrelevant
-j = {}
-for a, b, y in itertools.product((0,1), repeat=3):
-    j[(a, b, y)] = 0.125
-cases["independent, Y unrelated"] = j
-# 4. unique to A
-j = {}
-for a, b in itertools.product((0,1), repeat=2):
+for a, b in itertools.product((0, 1), repeat=2):
     j[(a, b, a)] = 0.25
-cases["unique to A (Y = A)"] = j
+cases["4 unique to A (Y = A)"] = (j, (0,), (1,), (2,))
 
-for name, j in cases.items():
-    om = MI(j, (0,), (1,))
-    iya = MI(j, (2,), (0,)); iyb = MI(j, (2,), (1,)); iyab = MI(j, (2,), (0,1))
-    syn = iyab - max(iya, iyb)   # crude synergy proxy: joint beyond best single
-    print(f"{name:<34}{om:>14.3f}{iya:>9.3f}{iyb:>9.3f}{iyab:>11.3f}{syn:>10.3f}")
-print("\nOmega is MAXIMAL where synergy is zero (redundant) and ZERO where")
-print("synergy is maximal (xor). On the canonical cases it runs the wrong way.")
+# 5. Ashman's counterexample: dependence AND synergy both maximal.
+#    C,U,V independent fair bits; A=(C,U), B=(C,V), Y=U xor V.
+j = {}
+for c, u, v in itertools.product((0, 1), repeat=3):
+    j[(c, u, v, u ^ v)] = 0.125
+cases["5 shared C, synergistic U xor V"] = (j, (0, 1), (0, 2), (3,))
 
+# 6. Both parts carry UNIQUE information, no synergy at all.
+#    Y = (Y1,Y2) independent fair bits; A = Y1, B = Y2.
+#    Here S = 0 but the proxy is positive, because it also picks up
+#    min{U_A,U_B}. This is why the column is not called synergy.
+j = {}
+for y1, y2 in itertools.product((0, 1), repeat=2):
+    j[(y1, y2, y1, y2)] = 0.25
+cases["6 unique to BOTH, no synergy"] = (j, (0,), (1,), (2, 3))
 
-# ---------------------------------------------------------------------------
-# Amendment (2026-07-28): the two extreme cases above do NOT establish that
-# dependence and synergy are opposites. Ashman's counterexample, verified:
-#   C, U, V independent fair bits;  A = (C,U),  B = (C,V),  Y = U xor V
-# gives I(A;B) = 1 bit AND synergy = 1 bit. Both maximal at once.
-# ---------------------------------------------------------------------------
-def _amendment():
-    j = {}
-    for c, u, v in itertools.product((0, 1), repeat=3):
-        j[(c, u, v, u ^ v)] = 0.125          # coords: C, U, V, Y
-    A, B, Yv = (0, 1), (0, 2), (3,)
-    iab = MI(j, A, B); iya = MI(j, Yv, A); iyb = MI(j, Yv, B)
-    iyab = MI(j, Yv, A+B)
-    print("\nAMENDMENT -- A=(C,U), B=(C,V), Y=U xor V")
-    print(f"  I(A;B) = {iab:.3f}   I(Y;A) = {iya:.3f}   I(Y;B) = {iyb:.3f}"
-          f"   I(Y;A,B) = {iyab:.3f}   synergy = {iyab-max(iya,iyb):.3f}")
-    print("  dependence and synergy both maximal: they are not opposites.")
-    print("  I(A;B) names no target, so it cannot be a redundancy measure;")
-    print("  redundancy and synergy are target-relative, I(A;B) is not.")
+print(f"{'case':<32}{'Omega=I(A;B)':>14}{'I(Y;A)':>9}{'I(Y;B)':>9}"
+      f"{'I(Y;A,B)':>11}{'joint_beyond_best':>19}")
+print("-"*94)
+for name, (j, A, B, Y) in cases.items():
+    om = MI(j, A, B)
+    iya = MI(j, Y, A); iyb = MI(j, Y, B); iyab = MI(j, Y, A+B)
+    proxy = iyab - max(iya, iyb)        # = S + min{U_A,U_B}, NOT S
+    print(f"{name:<32}{om:>14.3f}{iya:>9.3f}{iyb:>9.3f}{iyab:>11.3f}"
+          f"{proxy:>19.3f}")
 
+print("""
+RETRACTED (v1.0 conclusion): "Omega is maximal where synergy is zero and zero
+where synergy is maximal, so it is a redundancy measure running the wrong way."
+Cases 1 and 2 alone suggested that; case 5 refutes it.
 
-_amendment()
+CURRENT:
+  case 5  I(A;B) = 1 AND joint-beyond-best = 1. Dependence and synergy are
+          both maximal, so they are not opposites. The shared bit C is simply
+          irrelevant to the synergistic target.
+  case 6  joint-beyond-best = 1 with NO synergy: Y1 and Y2 are independent and
+          each part carries only its own. The column equals S + min{U_A,U_B},
+          which is why it is not labelled synergy.
+
+  Omega measures dependence between the parts, full stop. It is not synergy
+  and it is not redundancy: redundancy and synergy are target-relative, and
+  I(A;B) names no target at all. Whole-only capacity is the S term of a PID,
+  which needs a named target and a chosen decomposition.
+""")

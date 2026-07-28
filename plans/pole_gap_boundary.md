@@ -40,6 +40,24 @@ that is, when the instrument's many-to-one map collapses a distinction the concl
 
 The response is not to abandon indicators, which is impossible, but to characterise what each one destroys and to verify conclusions with a less destructive measurement wherever one exists. In this corpus's own vocabulary the failure mode is the Inflation Lie at instrument scale: a part claiming to be the whole. Its signature is the one the framework predicts, confident assertion of a closure that is not there.
 
+### Scope inflation (Ashman, 2026-07-28)
+
+The most frequent instance in this program, and the one the author produced three times in two days, has its own name. A valid claim over a restricted domain is silently promoted to a claim over a larger one: evidence establishes C_S for S ⊂ D, and C_D is reported.
+
+| the local claim, which was true | the inflated claim, which was not |
+|---|---|
+| one experimental arm: external prompting found most deep defects | "my verification loop generally cannot generate defect hypotheses" |
+| two canonical cases: dependence high where synergy low, and the reverse | "dependence and synergy run oppositely" |
+| coverage-distorted samples: reported family entropies were separated | "the projection families intrinsically differ in difficulty" |
+
+This is the Instrument Pole Gap with the *sample itself* as the indicator: T(Z) = Z|_S. Two global conditions can agree perfectly on S while supporting opposite conclusions over D, so the sample's fibers mix realities in which the general claim is true and false. Same form as every other defect here, T(Z₁) = T(Z₂) with C_D(Z₁) ≠ C_D(Z₂), except that the measuring apparatus is a selected example or an observer's own attention rather than code.
+
+The lesson is not to avoid generalising, since generalisation is how theory is made. It is:
+
+> **Every time a claim changes quantifiers, domains, or relational scope, treat that change as a new claim requiring a new test.**
+
+Or in the framework's own terms: a part may suggest the whole; it may not announce the whole without testing the boundary it crossed.
+
 ## 2a. The Instrument Pole Gap, made quantitative
 
 Let T: Z → I map a condition to an indicator, and let C(Z) be the claim the indicator is meant to establish. T is **sufficient for C** exactly when C is constant on the fibers of T:
