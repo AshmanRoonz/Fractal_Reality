@@ -2,9 +2,28 @@
 
 ```
 Created: 2026-07-27
-Last updated: 2026-07-27
-Version: 1.0
+Last updated: 2026-07-28
+Version: 1.1
 ```
+
+> ## RETRACTION NOTICE (2026-07-28)
+>
+> **The central claim of this document is withdrawn.** Sections 2 and 3 below are wrong, and section 1 is unreliable. Ashman's audit of the harness found that the entropy figure this study used is a partial-mass sum: `stats()` weights each qualifying context by `m / tot` where `tot` includes contexts excluded by MINCOUNT, so the reported quantity is ρ · H_qualified, with ρ the fraction of sample mass in qualifying contexts.
+>
+> The two families differ enormously in ρ, and barely at all in entropy:
+>
+> | family | ρ | H reported | H renormalised | H over all occupied |
+> |---|---|---|---|---|
+> | aggregating | 0.68 - 0.82 | 0.665 - 0.805 | 0.939 - 0.986 | 0.914 - 0.976 |
+> | algebraic | 0.14 - 0.16 | 0.138 - 0.157 | 0.901 - 0.971 | 0.890 - 0.957 |
+>
+> **The difficulty gap was a coverage gap.** XOR projections spread mass evenly so few contexts clear MINCOUNT; aggregating projections concentrate mass so many do. A fivefold ρ difference produced the fivefold H difference. Corrected, the ranges **overlap**: [0.939, 0.971] renormalised, [0.914, 0.957] over all occupied contexts. Every projection in both families is nearly maximally unpredictable at depth 12, and they are similar in difficulty rather than disjoint.
+>
+> Consequences: the "empty overlap" result is false; matching is not impossible; the pooled corr(V_π, H) = +0.797 measures coverage rather than a genuine confound; and the recommendation to abandon the two-family contrast rested on a false premise.
+>
+> **V_π is suspect for the same reason and is not rehabilitated by this notice.** It is computed over the same MINCOUNT-qualified subset, so at 15% coverage it describes a biased, high-count minority of contexts. The z = +7.26 separation in section 1 may be measuring coverage structure rather than depth heterogeneity, and has not been rechecked.
+>
+> Verification: `pole_gap_defect_audit_v1.py`. Nothing below this notice has been edited; it is left as written so the error is legible.
 
 *Code: `pole_gap_vpi_precondition_v1.py`. Pilot for the projection x architecture protocol (`plans/pole_gap_boundary.md` §6). Calibration only: rings 101 and 151, n = 60,000, D = 12, forty prospective projections per family built by rule before any results were seen. No CTW, no architecture comparison.*
 
