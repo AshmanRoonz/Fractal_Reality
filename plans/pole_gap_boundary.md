@@ -148,6 +148,20 @@ And, as a program rather than a result: one operational framework in which proje
 
 **Instrument verification, done.** All four CTW checks pass to machine precision, including exact agreement with brute-force enumeration over every permitted tree at depths 1 to 3. See `experiments/pole_gap_ctw_validation_v1.py`.
 
+### Two kinds of test, and why passing one proves nothing about the other
+
+Every validation suite in this program must carry both (Ashman, 2026-07-28):
+
+**Confirmation tests** verify known identities and known behaviour: depth-zero CTW equals KT, recursive CTW equals the enumerated tree mixture, probabilities normalise, checkpoint keys exist.
+
+**Discrimination tests** are built so that a *specific suspected defect* changes the answer radically: Y_{t+1} = O_t for temporal alignment; synthetic low-coverage contexts for missing-mass handling; functionally identical projections under different names for deduplication; deliberately sparse deep contexts for held-out adequacy; a missing checkpoint that must raise rather than return an incomplete table.
+
+The governing rule:
+
+> **A test is informative about defect d only when its expected output changes under d.** A test that passes equally with and without the suspected defect has not tested it.
+
+This is not abstract. The depth-zero CTW identity passed while the observers were misaligned by one time step, because depth zero has no context to misalign: the test was invariant to the defect and therefore silent about it. The alignment oracle caught it immediately because it was constructed around the fault. Four of the five harness defects survived a validation suite made entirely of confirmation tests.
+
 ## 7. How this fails
 
 Any of these is a real result: no reliable interaction appears; aggregating projections do not produce greater depth heterogeneity; heterogeneity does not predict the advantage; the interaction vanishes under difficulty matching; the fixed-order mixture performs equally well everywhere.
@@ -155,6 +169,22 @@ Any of these is a real result: no reliable interaction appears; aggregating proj
 ## 8. The standard, and when to stop
 
 The Pole Gap is not validated when it explains the observer's errors. It is validated when it helps the observer discover that the error was its own.
+
+### Qualification on self-correction (Ashman, 2026-07-28)
+
+> The program's corrections were not produced autonomously by a single observer. In the projection-architecture arm, most consequential defects were first identified by an external collaborating observer and then independently reproduced, diagnosed, and entered into the record by the author. The demonstrated strength is therefore distributed correction: adversarial defect generation joined to independent verification. The record does not establish that either observer, working alone, would have found the same failures.
+
+Three functions must be kept apart, because the record supports different claims about each:
+
+> defect **discovery** ≠ defect **confirmation** ≠ repair **validation**
+
+In this arm, verification was strong once a concrete failure mode was proposed, and spontaneous discovery was substantially less sensitive. That is a statement about this arm, on one tightly coupled codebase, under fatigue, and it should not be inflated into a general claim about either observer's capability; doing so would repeat the error of treating a local sample as the full condition.
+
+What verification did earn is specific and not small: it kept a plausible-sounding diagnosis from being accepted on plausibility, reproduced each defect numerically, traced defect 5 into an already-committed finding, surfaced a further retraction neither observer had stated, and converted the failures into discrimination tests that future implementations cannot pass by accident. "Checked it myself" does not mean "I discovered it." It means the correction does not rest solely on the observer who proposed it.
+
+So the honest unit of reliability here was neither observer but the relation between them: **challenge ↔ independent verification**. External critique without reproduction can be wrong; internal reproduction without external challenge repeatedly validates only what someone has already made visible. Call it epistemic reliability through observer plurality.
+
+Which is the schema applied to the research process itself. One observer's blind spot became visible from a different projection, and the finding became trustworthy only when the first observer could reproduce what the second could see.
 
 Never ask only whether an indicator correlates with a claim. Ask which opposing realities still share the same reading.
 
