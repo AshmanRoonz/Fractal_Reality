@@ -111,9 +111,19 @@ Verified (`pole_gap_same_floor_v1.py`) on a known-order source with exactly comp
 | 50,000 | −0.00234 | −0.00175 | −0.00060 |
 | 299,000 | −0.00033 | −0.00025 | −0.00008 |
 
-Both excess terms converge on the *same* floor H_D = 0.24429 while the between-observer difference shrinks by a factor of ~35. Shared J_D; the architectures differ in how fast they pay it down.
+Both realized prequential losses approach the *same* theoretical floor H_D = 0.24429, while the between-observer difference shrinks by a factor of ~35. Shared J_D; the architectures differ in how fast they pay it down.
+
+**These are realized deviations, not "excess" terms.** The middle columns go negative at the larger budgets, which is not a defect: an individual generated sequence can be easier than its own source's entropy rate. Only the expectation is bounded below, E[L̂(n)] − H_D ≥ 0. The evidence is not that each displayed difference stays positive; it is that L_FO(n) → H_D and L_CTW(n) → H_D while L_FO(n) − L_CTW(n) → 0. The theoretical reason for the common asymptote is representability plus consistency; the table is a finite-run illustration of it, not the proof.
 
 A genuinely lossy architecture comparison *could* move the middle term, for instance if one architecture permanently pooled contexts the other kept. That is not this design.
+
+**The hypothesis, stated precisely.** V_π predicts
+
+> R_FO,π(n) − R_CTW,π(n),  **not**  J_FO,π − J_CTW,π.
+
+CTW is hypothesised to pay less for learning heterogeneous context structure, not to perceive or retain more. Falsification condition: *after matching projection difficulty and using a common sufficient depth D, context-depth heterogeneity does not predict the finite-budget prequential advantage of CTW over the fixed-order mixture.*
+
+If that happens the hypothesis fails without touching the three-term decomposition, the aperture/integration distinction, k_min, or k\*(n). The live claim is now independently falsifiable from the established structure, which it was not while it sat on the middle term.
 
 **Experimental map.**
 
@@ -179,7 +189,13 @@ The two poles are no longer joined by one undifferentiated distance. There is a 
 
 > **Pole Gap = not transmitted + not retained + not learned.**
 
-That also says why the two arms are one project. The Instrument Pole Gap concerns failures at the first transition, where a marker destroys distinctions a claim requires. The observer-architecture work concerns failures at the second. KT and CTW measure the third.
+That also says why the two arms are one project. The Instrument Pole Gap concerns failures at the first transition, where a marker destroys distinctions a claim requires. Memory depth governs the second. KT and CTW compete on the third.
+
+Three operational levers, fully separated:
+
+> projection choice → what is transmitted
+> memory depth → what is retained
+> learning architecture → how efficiently it is learned
 
 The octave generated the distinctions; the Pole Gap translated some into information theory; the failed experiments showed which symbolic correspondences were real enough to survive measurement.
 
