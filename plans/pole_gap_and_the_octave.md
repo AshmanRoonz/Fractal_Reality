@@ -75,7 +75,7 @@ holding under two conditions: M = f(O), and the full state screens the observati
 |---|---|---|
 | **Γ_π** = I(Y;X\|O_≤t) | never passed the external aperture | **nobody** observing through π |
 | **Γ_⊙** = I(Y;O_≤t\|M) | passed, but not retained by integration | a better-memoried observer |
-| **Γ_learn** = E[D_KL] | retained, not yet correctly expressed | more data |
+| **Γ_learn** = E[D_KL] | retained, not yet correctly expressed | more data, **conditionally** (see below) |
 
 So "the observer cannot access it" was hiding two different claims: *it was never given*, and *it was given and discarded*.
 
@@ -95,9 +95,44 @@ And since Γ_π is fixed by the projection and constant across observers,
 
 > **k\*(n) = argmin_k [ J_k + R_k(n) ]**,
 
-which is sharper than "entropy against complexity": it trades information discarded by the internal aperture against information not yet learned because that aperture is more complex. The projection-architecture pilot was aimed at J_k, that is, at how different ways of organising the same available observations preserve or discard predictive information.
+which is sharper than "entropy against complexity": it trades information discarded by the internal aperture against information not yet learned because that aperture is more complex.
+
+**Placement correction (2026-07-28).** I first wrote that the CTW-versus-fixed-order pilot was aimed at J_k. It is not, under the fair common-D protocol. Both observers receive the same observations at the same maximum depth D, and both families *contain the complete depth-D model*: the fixed-order mixture as its deepest component, CTW as one tree in its mixture. So neither discards anything the other retains,
+
+> J_D^FO = J_D^CTW,
+
+and their difference is the learning term, L_FO − L_CTW ≈ Γ_learn^FO − Γ_learn^CTW, up to finite-sample noise. CTW's proposed advantage is not that it preserves information a uniform-depth mixture must discard. It is that a prior over tree structures encodes heterogeneous dependency more economically: short contexts where short suffice, deep only where needed. So **V_π predicts an architecture-dependent difference in learning cost, not in retention.**
+
+Verified (`pole_gap_same_floor_v1.py`) on a known-order source with exactly computable H_D at D = 8:
+
+| n | L_FO − H_D | L_CTW − H_D | L_FO − L_CTW |
+|---|---|---|---|
+| 2,000 | +0.01341 | +0.01634 | −0.00293 |
+| 50,000 | −0.00234 | −0.00175 | −0.00060 |
+| 299,000 | −0.00033 | −0.00025 | −0.00008 |
+
+Both excess terms converge on the *same* floor H_D = 0.24429 while the between-observer difference shrinks by a factor of ~35. Shared J_D; the architectures differ in how fast they pay it down.
+
+A genuinely lossy architecture comparison *could* move the middle term, for instance if one architecture permanently pooled contexts the other kept. That is not this design.
+
+**Experimental map.**
+
+| experiment | term it addresses |
+|---|---|
+| projection sweep | Γ_π |
+| memory-depth sweep | J_k = Γ_⊙(k) |
+| k\*(n) | J_k + R_k(n) |
+| CTW vs fixed-order at common D | R_CTW(n) vs R_FO(n) |
+| Instrument Pole Gap | Γ_π applied recursively to measurement |
 
 **Wording on the third term.** Γ_learn is not emergence itself. It measures the inaccuracy of the emergent output relative to what the current integrated state could already support.
+
+**And "more data" carries two conditions**, without which the third column is false. Γ_learn itself splits:
+
+> Γ_learn = inf_{q ∈ 𝒬} E[D_KL(P ‖ q)] + finite-data excess loss
+> = model-class approximation + what more data actually fixes
+
+Only the second part is recoverable by observation. The first vanishes when the predictor family can represent P(Y|M) and the learning procedure is consistent. For KT conditionals over a fixed finite context set that holds asymptotically, and for both bounded-depth mixtures used here it holds provided D is sufficient, since both contain the full depth-D model. Outside those conditions, an irreducible approximation term sits inside Γ_learn and no amount of data removes it.
 
 The three terms land on three octave transitions: what reality made observable, what the observer retained, what it learned to express.
 
