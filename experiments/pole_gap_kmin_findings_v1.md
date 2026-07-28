@@ -72,6 +72,20 @@ This does not sink the program, but it relocates it. A "Pole Gap Calculus" prese
 
 **The coherence dividend beyond two parts.** Ω = I(A';B'|M) is correct and is conditional mutual information under a new name, and it is non-negative, so it cannot detect anti-coherence. For three or more parts the analogous decomposition is the partial information decomposition problem (Williams and Beer, and the unresolved synergy/redundancy debate), and integrated information theory has spent two decades on the same difficulty. Worth noting that IIT's symbol for it is Φ, which in this corpus already means the field.
 
+**Correction (2026-07-28, Ashman).** I glossed Ω as "the information that exists in neither part alone." That is wrong. Mutual information measures dependence *shared between* the parts, not information available only from their joint presence. The latter is synergy, and reaching it requires PID.
+
+Worse than a mislabel: on the canonical cases the two run in opposite directions.
+
+| case | Ω = I(A;B) | I(Y;A,B) | synergy |
+|---|---|---|---|
+| Y = A ⊕ B, A ⊥ B | **0.000** | 1.000 | **1.000** |
+| A = B = Y | **1.000** | 1.000 | **0.000** |
+| Y = A (unique to A) | 0.000 | 1.000 | 0.000 |
+
+Ω is maximal exactly where synergy is absent (perfect redundancy) and zero where synergy is maximal (XOR). So the "coherence dividend" is a **redundancy** measure, and using it to formalise D5 (the whole is not the sum of its parts) gets the sign of the intended phenomenon backwards: it rewards parts that overlap, not wholes that do what no part can.
+
+The prose formulation "wholeness is parts plus relations not contained in either part alone" spans two distinct quantities that must not be collapsed: mutual dependence (the parts constrain one another) and synergy (the pair reveals or does what neither can). Ω captures the first only.
+
 ## 8. Second round: verification of Ashman's reply (code: `pole_gap_kstar_v1.py`)
 
 **His corrections are confirmed exactly.** The ideal order-12 majority predictor on the cycle reaches **92.6460%**, matching his 92.646%. My "plateaus at 89.6%" was the page's online rule over the tested duration, not the order-12 prediction limit, and conflating them was my error. H(Y|C₁₂) = 0.156936675 matches his figure to all printed digits, and k_min = 21 reproduces.
