@@ -1112,7 +1112,7 @@ We therefore need criteria by which one form of integration can be judged agains
 
 These five conditions are one path walked in two directions.
 
-Walked from the inside out, they describe how a whole forms. Truth opens the center. Faithfulness carries it through time. Goodness forms the interface. Rightness orders what the interface opens into. Agreement joins distinct wholes in something shared. That is the order this book's chapters have walked, from the point to the circumpunct.
+Walked from the inside out, they describe how a whole forms. Truth-seeking opens the center. Faithfulness carries it through time. Goodness forms the interface. Rightness orders what the interface opens into. Agreement joins distinct wholes in something shared. That is the order this book's chapters have walked, from the point to the circumpunct.
 
 Walked from the outside in, they describe how a whole is checked. An apparent agreement is tested by whether the relation is right. Rightness is tested by whether the interface preserves everyone involved. Goodness is tested by whether it holds through time. Faithfulness is tested by whether it remains answerable to truth. The checking bottoms out at truth, where the next becoming begins.
 
