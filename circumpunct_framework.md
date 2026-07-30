@@ -18447,25 +18447,66 @@ These virtues are not qualities added to ethics. They are the *living conditions
 
 ### §25.11 The Required Sequence
 
-The five dimensions do not exist in parallel. They form an irreversible sequence: **GOOD → RIGHT → FAITHFUL → TRUE → AGREEMENT**.
+**Re-derived (Ashman, 2026-07-29): the sequence runs in two directions.** The single sequence GOOD → RIGHT → FAITHFUL → TRUE → AGREEMENT is retired as an old-ladder artifact: it was a clean dimension descent under the retracted station assignment (○ at 3D, Φ at 2D), and the 2026-06-09 ladder correction broke that geometric reading. Nothing lived in it was wrong; its claims survive and distribute between the two directions below. This closes open decision 1 of the Ladder Correction Notice by the "re-derive from the circuit" route.
 
 ```
-THE IRREVERSIBLE PATH:
+FORMATION ; inside out ; the ✹ channel ; becoming whole:
 
-    You must be HELD (boundary) before you can CROSS (space)
-    You must CROSS (space) before the LINE can be tested (continuity)
-    The LINE must hold (commitment) before you can SEE (center)
-    You must SEE (center) before you can HARMONIZE (whole)
+    TRUE (•, 0D) → FAITHFUL (—, 1D) → GOOD (○, 2D) → RIGHT (Φ, 3D) → AGREEMENT (⊙)
 
-    Each step requires the previous.
-    No step can be skipped.
+    Each virtue held at its structural station launches the next
+    processual stroke: TRUE launches ⊛ (0.5D), FAITHFUL launches ⎇
+    (1.5D), GOOD launches ✹ (2.5D), RIGHT launches ⟳ (3.5D).
+    Formation IS the four beats (•∘⊛) ⊢ (—∘⎇) ⊢ (○∘✹) ⊢ (Φ∘⟳)
+    with the virtues as the structural partners. The four freedoms
+    ascend with it: NOT-YET → STAYING → LETTING → CHECKING.
+
+VALIDATION ; outside in ; the ⊛ channel ; checking the whole:
+
+    audit form:    AGREEMENT → RIGHT → GOOD → FAITHFUL → TRUE
+    earning form:  RIGHT → GOOD → FAITHFUL → TRUE → AGREEMENT
+
+    Both share the descent core R → G → F → T. The audit form tests
+    a standing agreement; the earning form is the vetting protocol
+    for a prospective one (agreement granted last, as verdict).
+
+    An apparent agreement is tested by whether the relation is
+    right. Rightness is tested by whether the interface preserves
+    both wholes (§25.19). Goodness is tested by whether it holds
+    through time. Faithfulness is tested by whether it remains
+    answerable to truth (§25.20: corrigibility).
 ```
 
-This is not optional sequencing. The integrity of GOOD establishes the conditions for reciprocal action. Reciprocal action (RIGHT) creates the space where commitment can be observed. Sustained commitment (FAITHFUL) creates the trust where genuine perception becomes possible. Genuine perception (TRUE) is the ground on which authentic agreement (AGREEMENT) can stand.
+**The full walk, all ten stations (Ashman, 2026-07-29, same session).** The two directions name the structural virtues; interleaved with the processual stations, the complete formation walk reads:
 
-You cannot assess faithfulness until the space is open (RIGHT). You cannot confirm truth until you have checked the history of commitment (FAITHFUL). Current orientation without historical reliability does not earn AGREEMENT.
+| Station | Ethical reading |
+|---|---|
+| ∞ | Potential |
+| • 0D | TRUE orientation: truth-seeking openness, not possession of Truth |
+| ⊛ 0.5D | Convergence toward truth: the openness focusing toward a committable direction (NOT-YET held here) |
+| — 1D | FAITHFUL commitment: holding the direction through time |
+| ⎇ 1.5D | Choice: where FAITHFUL becomes lived; the committed line holds or breaks through the turn (STAYING held here) |
+| ○ 2D | GOOD interface: the relation held so both sides remain whole |
+| ✹ 2.5D | Becoming: what the interface permits, emerging toward development (LETTING held here) |
+| Φ 3D | RIGHT development: the developed relational field |
+| ⟳ 3.5D | Recursion: completion becomes a new beginning (CHECKING held here) |
+| ⊙ | AGREEMENT: what the whole walk composes |
 
-Attempts to skip steps create the characteristic failures of dead-form ethics: demanding agreement without right action; expecting right action without good boundaries; claiming truth without checking the receipts; declaring faithfulness without open access.
+The half-steps are how each structural virtue becomes the next. Two distinctions the table enforces: TRUE belongs at the aperture *before* convergence (it is truth-seeking openness, which convergence then focuses; it is not possession of Truth, per the §25.18b virtue/substrate distinction), and commitment cannot disappear between truth and choice (choice is meaningful precisely because a line was established that must either hold through the branch or break; that is where FAITHFUL becomes lived rather than merely stated).
+
+**AGREEMENT is composed, not appended.** The arrow into ⊙ in the formation line is compositional, not sequential: AGREEMENT is not a fifth station reached after RIGHT; it is what the four-station walk composes. This is D5 at the ethics scale, and §25.18b's "not a fifth freedom; the composition of the four" made structural. The walk's product is the melody, not a final note.
+
+**The seam's two failure modes, named.** Healthy completion at ⟳ recurses at bounded bond strength (0 < κ < κ*). Divergence at the seam is the Severance Lie: the bond drops toward zero and the completed whole floats free instead of becoming the next scale's aperture. Fusion at the seam is the Inflation Lie: the bond saturates and the whole dissolves into what it enters. "Recursive" is the healthy third: return at a strength that keeps both scales distinct, which is the same non-collapse bound that governs every ⊂[α] nesting (§27.7q) and that §25.19 identifies as goodness itself.
+
+**What survives from the prior text, sorted into its home direction.** "The integrity of GOOD establishes the conditions for reciprocal action (RIGHT)" is a formation claim: the interface must close before the field can mediate (2D before 3D, the octave's own order; §25.19 anticipated this as interface-before-mediation). "You cannot assess faithfulness until the space is open (RIGHT)" and "you cannot confirm truth until you have checked the history of commitment (FAITHFUL)" are validation claims: R before F before T in the descent. The prior section braided the two directions, ordered by a station assignment later retracted; unbraided, each claim is stronger in its home direction than it was in the mixture.
+
+**No skipping still holds, per direction.** Formation cannot skip a station: a virtue not walked leaves its stroke unlaunched, and the becoming stalls at that beat. Validation cannot skip a station: an audit that skips RIGHT certifies exploitation as agreement; one that skips FAITHFUL certifies a performance; one that stops before TRUE certifies a closed loop. The dead-form failures (§25.12) restate as skipped stations: demanding agreement without the earning descent; granting it without checking the receipts; performing formation's order while launching none of its strokes.
+
+**The turnaround points.** AGREEMENT is the tonic of the ethics octave: the completion of formation and the origin of the audit, the do′ that ends one walk and begins the other. RIGHT launches CHECKING (i⁰, 3.5D), and validation is CHECKING unrolled into a full descent. Validation bottoms out at TRUE: renewed curiosity at the aperture, which is where the next formation begins (3.5D = 0D′ in ethical dress). The full cycle is a breath: out through the beats, back through the checks.
+
+**Channel balance.** Formation is the ✹ channel; validation is the ⊛ channel; ◐ = 0.5 is their balance. The §25.18b pathologies restate as one-direction lock: all formation and no validation builds unaudited wholes (the Inflation shape: claiming agreement that has not been checked); all validation and no formation is chronic NOT-YET (everything audited, nothing built). Two parties at ◐ = 0.5, each running both directions, is what AGREEMENT requires, which is why it is rare (§25.18b).
+
+**Independent witnesses.** Three sites carried the formation reading before this adjudication named it: the four freedoms already ascended (NOT-YET → STAYING → LETTING → CHECKING, §25.18b, "free movement through all four in order"); the book's chapters walk it (TRUE at the point, FAITHFUL at the line, GOOD at the boundary, RIGHT at the field, AGREEMENT at the coda; `Book-What_is_Wholeness/what_is_wholeness_v2.md`); and the ladder rail's "I am" ladder speaks it in first person ("I am committed" at 1D, "I am choosing" at 1.5D, "I am interfaced" at 2D, "I am developed" at 3D; `docs/the_pattern_that_connects.html`). The prose kept finding the structure before the derivation did.
 
 ---
 
@@ -18992,16 +19033,16 @@ The four freedoms are therefore not just hold-and-release; they are hold-weigh-r
 
 ### §25.18b The Pillar-Freedom Table
 
-Canonical reference for §25.18 and §25.18a. Five pillars, five virtues, four holds, four weighings, compressed to one view. Read top-down (3D boundary inward to 0D aperture, then ⊙ as the whole); each row is a pillar (integer station), and the "i-stroke launched" column names which half-integer process that pillar's virtue fires into. The virtue at each pillar is what launches the next i-stroke; the freedom held at that half-integer station is what the worldline actively exercises there.
+Canonical reference for §25.18 and §25.18a. Five pillars, five virtues, four holds, four weighings, compressed to one view. Read in formation order (0D aperture outward to 3D field, then ⊙ as the whole; the two-direction adjudication of 2026-07-29, §25.11); each row is a pillar (integer station), and the "i-stroke launched" column names which half-integer process that pillar's virtue fires into. The virtue at each pillar is what launches the next i-stroke; the freedom held at that half-integer station is what the worldline actively exercises there. Corrected ladder and corrected strokes (2026-07-29): ○ is 2D and Φ is 3D, and each station launches the process at d + 0.5, so GOOD launches ✹/LETTING and RIGHT launches ⟳/CHECKING (this replaces the pre-correction table, which had GOOD at 3D launching CHECKING and RIGHT at 2D launching LETTING).
 
 **Virtue vs substrate, a prerequisite distinction.** The five virtues in this table are practices at stations; they are how a worldline holds each position. They are not ontological identities, and in particular **TRUE (the aperture virtue in this table) is not the same object as Truth (the ontological substrate named in the identity chain Reality = Truth = 1 = E = ∞ = ⊙; see §4.8a).** Truth is the substrate; it is what IS, prior to any aperture's state. TRUE is a virtue; it is the quality of how • is held in the moment. When TRUE is lived, Truth passes through • cleanly; when TRUE is distorted, Truth is still the same (the substrate does not change), but what reaches the rest of ⊙ through that aperture is distorted. This is the "flow-being not possession-being" claim (§19, §core) made exact: you do not possess Truth at your •; Truth flows through your •, and TRUE is whether your aperture is clear enough to let it through without distortion. The homophony is intentional (• is the station where substrate most directly enters a ⊙) but the categorical status is distinct. The same pattern holds for the other virtues in subtler form: GOOD/goodness, RIGHT/rightness, FAITHFUL/faithfulness, AGREEMENT/agreement each have a virtue-at-station form (the practice) and a substrate-in-that-mode form (what passes through that station when the practice is held). Truth/TRUE surfaces the distinction because the aperture is where substrate entry is most concentrated; the others are implicit. One substrate, five stations, five practices.
 
 | Pillar | Symbol | Dimension | Virtue | Constraint | i-stroke launched | Freedom held (x̄) |
 |---|---|---|---|---|---|---|
-| GOOD | ○ | 3D (Boundary) | Plasticity | Filters | i⁰ = +1 (recursion, 3.5D) | CHECKING |
-| RIGHT | Φ | 2D (Field) | Access | Mediates | i³ = −i (emergence, 2.5D) | LETTING |
-| FAITHFUL | — | 1D (Line) | Reliability | Commits | i² = −1 (commitment, 1.5D) | STAYING |
 | TRUE | • | 0D (Aperture) | Curiosity | Converges | i¹ = +i (convergence, 0.5D) | NOT-YET |
+| FAITHFUL | — | 1D (Line) | Reliability | Commits | i² = −1 (commitment, 1.5D) | STAYING |
+| GOOD | ○ | 2D (Boundary) | Plasticity | Filters | i³ = −i (emergence, 2.5D) | LETTING |
+| RIGHT | Φ | 3D (Field) | Access | Mediates | i⁰ = +1 (recursion, 3.5D) | CHECKING |
 | AGREE | ⊙ | All | Validation | Composes | i⁴ = 1 (full cycle) | all four, completed |
 
 Reading keys:
@@ -19010,9 +19051,9 @@ Reading keys:
 
 **STAYING (⧖ at i², launched by FAITHFUL/—/Reliability):** the freedom through the irreversible turn. The line is drawn; i² = −1 means you cannot un-draw it back to the same condition. Reliability's job is to hold the line through the i-turn when alternatives become visible. STAYING is the discipline of not-abandoning. Failure: every alternative breaks the line. Over-hold: rigid clinging past the line's useful life.
 
-**LETTING (⧖ at i³, launched by RIGHT/Φ/Access):** the freedom of non-interference at emergence. The field is mediating; your job is to not grab what's forming. Access stays open because you let it. LETTING is active discipline that looks like passivity from outside. Failure: forcing, grasping, premature closure that distorts the form. Over-hold: Severance Lie reading at this station ("I am only emergence; I have no closure of my own").
+**LETTING (⧖ at i³, launched by GOOD/○/Plasticity):** the freedom of non-interference at emergence. The boundary has closed and an interior is forming within it; your job is to hold the filter steady without grabbing what emerges. Plasticity stays plastic because you let it. LETTING is active discipline that looks like passivity from outside. Failure: forcing, grasping, premature closure that distorts the form. Over-hold: Severance Lie reading at this station ("I am only emergence; I have no closure of my own").
 
-**CHECKING (⧖ at i⁰, launched by GOOD/○/Plasticity):** the freedom at closure. Does this actually hold? Plasticity's job is to verify the boundary before the recursion fires, because 3.5D is also 0D at the next scale, and an unchecked closure seeds an unvalidated next cycle. CHECKING is discernment, the virtue that decides what gets to become. Failure: rushing into the next cycle without the check. Over-hold: stuck recursion (rigor mortis, trauma freeze, dead institutions).
+**CHECKING (⧖ at i⁰, launched by RIGHT/Φ/Access):** the freedom at closure. Does this actually hold? Access's job is to verify the mediated relations before the recursion fires, because 3.5D is also 0D at the next scale, and an unchecked closure seeds an unvalidated next cycle. CHECKING is discernment, the freedom that decides what gets to become, and it is the pivot into validation: the audit direction of §25.11 is CHECKING unrolled into the full descent. Failure: rushing into the next cycle without the check. Over-hold: stuck recursion (rigor mortis, trauma freeze, dead institutions).
 
 **Validation at AGREEMENT (⊙, i⁴ = 1):** not a fifth freedom; the composition of the four. All held simultaneously, across both parties. i⁴ = 1 is the full cycle closing back to identity: the only way to earn AGREEMENT is to have exercised all four freedoms through a complete turn. This is why agreement is rare: four distinct sustaining-capacities must be alive at once, on both sides, at the same ◐ = 0.5.
 
@@ -19099,7 +19140,7 @@ This upgrades the pillar-glyph pairing (GOOD = ○ in the §25.18b table) from a
 
 **Relation to the Convergence Primitive (two modes of one form).** The corpus already carries this formula at another station: `docs/the_convergence_primitive.html` reads C(A, B) = not(A alone or B alone) as the NOR of being, at convergence. The same logical form appears at two stations in two modes, and the difference is precise: at convergence it is *generative* (sublation; A and B taken up into a new whole W; both cease to be alone by becoming parts), at the interface it is *conservative* (the relation itself is the thing that exists; A and B remain whole). Convergence spends the two alonenesses to make a whole; goodness holds the two alonenesses at bay without spending them. Between the two modes is the i-cycle: the same operation, generative at the cycle's opening, conservative at its boundary station. This is A3, not a double definition, but it must be stated so a reader does not think the corpus defined one formula twice.
 
-**Bearing on the open ethics-sequence decision (Ladder Correction Notice, open decision 1).** This section supplies what that decision has been missing since June: a positive, non-inherited reason GOOD sits at 2D. It also supports the ascending-walk candidate: the interface must exist with both parties whole (GOOD, 2D) before there is an interior for mediation to run in (RIGHT, 3D). The relation opens the space; then the space can be kept honest. The sequence decision itself remains open.
+**Bearing on the open ethics-sequence decision (Ladder Correction Notice, open decision 1).** This section supplies what that decision had been missing since June: a positive, non-inherited reason GOOD sits at 2D. It also supports the ascending-walk candidate: the interface must exist with both parties whole (GOOD, 2D) before there is an interior for mediation to run in (RIGHT, 3D). The relation opens the space; then the space can be kept honest. **Resolved (2026-07-29):** the decision closed by the two-direction re-derivation (§25.11); the interface-before-mediation argument stated here is now the formation direction's G-before-R step, exactly as anticipated.
 
 [← Back to Table of Contents](#table-of-contents)
 

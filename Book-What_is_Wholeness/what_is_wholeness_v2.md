@@ -9,7 +9,7 @@
 ```
 Created: 2026-07-29
 Last updated: 2026-07-29
-Version: 2.4
+Version: 2.5
 ```
 
 ## Introduction: Your Ontology Matters
@@ -42,7 +42,7 @@ But reality is not being destroyed.
 
 Only your model of it is.
 
-Cognitive dissonance may arise as the old structure begins to conflict with the new. But once you arrive at an ontology that is more good, more right, more faithful, more true, and more agreeable, the contradictions within your former worldview become increasingly difficult to ignore.
+Cognitive dissonance may arise as the old structure begins to conflict with the new. But once you arrive at an ontology that is more right, more good, more faithful, more true, and more agreeable, the contradictions within your former worldview become increasingly difficult to ignore.
 
 What once appeared necessary may begin to look absurd. What once seemed coherent may reveal itself as a collection of beliefs held together by habit, fear, authority, or social reinforcement.
 
@@ -1110,39 +1110,21 @@ These may resemble wholeness structurally while remaining internally corrupted.
 
 We therefore need criteria by which one form of integration can be judged against another.
 
+These five conditions are one path walked in two directions.
+
+Walked from the inside out, they describe how a whole forms. Truth opens the center. Faithfulness carries it through time. Goodness forms the interface. Rightness orders what the interface opens into. Agreement joins distinct wholes in something shared. That is the order this book's chapters have walked, from the point to the circumpunct.
+
+Walked from the outside in, they describe how a whole is checked. An apparent agreement is tested by whether the relation is right. Rightness is tested by whether the interface preserves everyone involved. Goodness is tested by whether it holds through time. Faithfulness is tested by whether it remains answerable to truth. The checking bottoms out at truth, where the next becoming begins.
+
+This chapter's work is judging, so its sections follow the checking order: test rightness, goodness, faithfulness, and truth, and only then grant agreement.
+
 A fuller wholeness must become:
 
-more good, more right, more faithful, more true, and more agreeable.
+more right, more good, more faithful, more true, and more agreeable.
 
 These values are not decorative additions placed on top of the ontology.
 
 They are conditions required for coherent wholeness.
-
-### Good
-
-Goodness concerns the interface and what it permits.
-
-It is judged by emergence and consequence, because that is where what the interface allowed becomes visible.
-
-What does this process produce?
-
-What becomes possible because of it?
-
-What is nourished, diminished, protected, or destroyed?
-
-The good supports flourishing across the relevant scales of wholeness.
-
-This does not mean maximizing immediate pleasure or avoiding every difficulty. Growth may involve effort, uncertainty, correction, and loss.
-
-Goodness asks whether the process ultimately strengthens the capacity of wholes to exist, develop, relate, and participate.
-
-A good society does not merely survive. It creates conditions in which its people can become more fully themselves while contributing to something shared.
-
-A good relationship does not demand permanent comfort. It creates enough honesty, care, trust, and freedom for both people to grow.
-
-A good idea does not merely win arguments. It improves our ability to meet reality.
-
-Goodness is the quality of what emerges.
 
 ### Right
 
@@ -1175,6 +1157,32 @@ Does it strengthen the whole without consuming the conditions that sustain it?
 Rightness is the geometry of ethical relation.
 
 It asks whether we are facing the right way.
+
+### Good
+
+Goodness concerns the interface and what it permits.
+
+It is judged by emergence and consequence, because that is where what the interface allowed becomes visible.
+
+What does this process produce?
+
+What becomes possible because of it?
+
+What is nourished, diminished, protected, or destroyed?
+
+The good supports flourishing across the relevant scales of wholeness.
+
+This does not mean maximizing immediate pleasure or avoiding every difficulty. Growth may involve effort, uncertainty, correction, and loss.
+
+Goodness asks whether the process ultimately strengthens the capacity of wholes to exist, develop, relate, and participate.
+
+A good society does not merely survive. It creates conditions in which its people can become more fully themselves while contributing to something shared.
+
+A good relationship does not demand permanent comfort. It creates enough honesty, care, trust, and freedom for both people to grow.
+
+A good idea does not merely win arguments. It improves our ability to meet reality.
+
+Goodness is the quality of what emerges.
 
 ### Faithful
 
@@ -1322,13 +1330,13 @@ Does it produce a concept of unity that preserves difference?
 
 Then the five values can be applied.
 
-Is the ontology becoming more good?
-
-What kinds of lives, institutions, and futures emerge from it?
-
-Is it becoming more right?
+Is the ontology becoming more right?
 
 Does it orient our relationships more coherently?
+
+Is it becoming more good?
+
+What kinds of lives, institutions, and futures emerge from it?
 
 Is it becoming more faithful?
 
@@ -1600,9 +1608,9 @@ This question does not guarantee that the Circumpunct Framework is final.
 
 It explains why the framework must remain revisable.
 
-A good ontology should improve the wholes built upon it.
-
 A right ontology should allow correction.
+
+A good ontology should improve the wholes built upon it.
 
 A faithful ontology should preserve what remains valid through revision.
 
@@ -1662,15 +1670,15 @@ It is not the mere inclusion of everything within one category.
 
 It is the centered integration of difference.
 
-That integration requires consequence, direction, continuity, reality, and participation.
+That integration requires reality, continuity, consequence, direction, and participation.
 
-It must become more good.
-
-More right.
+It must become more true.
 
 More faithful.
 
-More true.
+More good.
+
+More right.
 
 More agreeable.
 
@@ -1760,6 +1768,7 @@ And every completed whole opens into something greater.
 
 ## Revision history
 
+- 2026-07-29 v2.5: the two-direction ethics adjudication applied (Ashman, same day; framework §25.11). The five conditions are one path walked in two directions: formation, inside out (TRUE, FAITHFUL, GOOD, RIGHT, AGREEMENT: the order the chapters already walk), and validation, outside in (audit form AGREEMENT, RIGHT, GOOD, FAITHFUL, TRUE; earning form RIGHT, GOOD, FAITHFUL, TRUE, AGREEMENT). A plain-language two-direction passage added to the Five Conditions intro. Summary lists assigned by function: evaluative lists take the earning order (the Introduction dissonance line, the Five Conditions intro and subsection order, the Test for Ontology question pairs, the science-section ontology lines); the Conclusion's aspirational list takes formation order, with its gloss list realigned (reality, continuity, consequence, direction, participation). This replaces v2.4's uniform GOOD, RIGHT, FAITHFUL, TRUE, AGREEMENT, which followed the then-operative sequence, retired the same day as an old-ladder artifact.
 - 2026-07-29 v2.4: five review findings applied. (a) The Coda assembled the whole from center, boundary, and field, omitting the line; it now states that the line is absent from the figure because the figure is one moment, and that drawing the circumpunct again an instant later traces it. (b) The five values appeared in two different non-canonical orders across six locations (T,R,G,F,A in the Introduction, the Test chapter, and the science section; R,G,T,F,A in the Five Conditions and the Conclusion, including its subsection order). All six now use the operative sequence GOOD, RIGHT, FAITHFUL, TRUE, AGREEMENT (§25.18b required sequence), and the Conclusion's gloss list was reordered to match. Ladder order (TRUE, FAITHFUL, GOOD, RIGHT, AGREEMENT) is the alternative if the open ethics-sequence decision resolves that way; the book walks its chapters in ladder order already, so only these summary lists would change. (c) "Or musically" implied the ten-term sequence translated to eight notes; replaced with a line naming the eight interior stations. (d) Revision history reordered newest-first per project convention. (e) "Agreeable" glossed once in the Agreement subsection against its ordinary sense of pleasant, rather than replaced at all five occurrences, which would have cost the parallel list its cadence.
 - 2026-07-29 v2.3: added "Why Change Your Ontology?" between the Introduction and The Circumpunct Octave. The draft established the cost of ontology revision and never the payoff, so a reader reached Chapter One knowing the price and not the purchase. The section's spine is the cost asymmetry (revision is concentrated, living through a false foundation is distributed), carried by three cases where correcting an instance preserves its generator. It adds the one-sided-failure catalog, the argument that the change is additive rather than substitutive at most positions (the materialist keeps physics, the reductionist keeps reduction as a method, the believer keeps God and gains a distinction their tradition already carries, and only exclusivity is surrendered), and the argument that the reader already lives this, so the ask is articulation rather than adoption. Closes on examination rather than conversion, which is what the Test chapter's own standard requires. Deliberately not used: "All is Whole" as a thesis-slogan, which reads as one by inclusion, the pole the Prelude establishes cannot complete the octave; the Final Meditation already carries the better line.
 - 2026-07-29 v2.2: relocated the rightness doctrine from Chapter Four to Chapter Seven. v2.1 had left it in the branching chapter behind a disclaimer, so the chapter denied that rightness lived there and then taught it at length. The definition, the three worked cases (boundary, loyalty, disagreement), "not mere obedience," "proper orientation within relationship," and the competing-needs and tension passages all now sit in the field chapter where rightness lives; "a right branch" became "a right direction" accordingly. Chapter Four gained its own ethical content in their place: the irreversibility of the turn, and faithfulness as what the branch actually tests (per §25.18b, FAITHFUL at 1D launches the 1.5D commitment stroke and the freedom held there is STAYING). That passage is new prose rather than relocated, and is the one part of this pass to check against your intent.
