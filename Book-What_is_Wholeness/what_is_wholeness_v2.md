@@ -9,7 +9,7 @@
 ```
 Created: 2026-07-29
 Last updated: 2026-07-29
-Version: 2.3
+Version: 2.4
 ```
 
 ## Introduction: Your Ontology Matters
@@ -42,7 +42,7 @@ But reality is not being destroyed.
 
 Only your model of it is.
 
-Cognitive dissonance may arise as the old structure begins to conflict with the new. But once you arrive at an ontology that is truer, more right, more good, more faithful, and more agreeable, the contradictions within your former worldview become increasingly difficult to ignore.
+Cognitive dissonance may arise as the old structure begins to conflict with the new. But once you arrive at an ontology that is more good, more right, more faithful, more true, and more agreeable, the contradictions within your former worldview become increasingly difficult to ignore.
 
 What once appeared necessary may begin to look absurd. What once seemed coherent may reveal itself as a collection of beliefs held together by habit, fear, authority, or social reinforcement.
 
@@ -198,7 +198,7 @@ The octave can be expressed as:
 
 ∞ → point → convergence → line → branching → boundary → emergence → field → recursion → ⊙
 
-Or musically:
+The eight interior stations, from point through recursion, can be sung as:
 
 do → re → mi → fa → so → la → ti → do′
 
@@ -1000,7 +1000,9 @@ The circle is the boundary.
 
 The space between them is the field.
 
-Together, they form a whole.
+The line does not appear in the figure, because the figure is a single moment. Draw the same circumpunct again an instant later, and the center has traced a line. That continuity is the fourth structure, and it is what makes the second figure the same whole as the first.
+
+Together, the four structures form a whole.
 
 The circumpunct is not one by inclusion alone. It contains distinctions.
 
@@ -1110,11 +1112,37 @@ We therefore need criteria by which one form of integration can be judged agains
 
 A fuller wholeness must become:
 
-more right, more good, more true, more faithful, and more agreeable.
+more good, more right, more faithful, more true, and more agreeable.
 
 These values are not decorative additions placed on top of the ontology.
 
 They are conditions required for coherent wholeness.
+
+### Good
+
+Goodness concerns the interface and what it permits.
+
+It is judged by emergence and consequence, because that is where what the interface allowed becomes visible.
+
+What does this process produce?
+
+What becomes possible because of it?
+
+What is nourished, diminished, protected, or destroyed?
+
+The good supports flourishing across the relevant scales of wholeness.
+
+This does not mean maximizing immediate pleasure or avoiding every difficulty. Growth may involve effort, uncertainty, correction, and loss.
+
+Goodness asks whether the process ultimately strengthens the capacity of wholes to exist, develop, relate, and participate.
+
+A good society does not merely survive. It creates conditions in which its people can become more fully themselves while contributing to something shared.
+
+A good relationship does not demand permanent comfort. It creates enough honesty, care, trust, and freedom for both people to grow.
+
+A good idea does not merely win arguments. It improves our ability to meet reality.
+
+Goodness is the quality of what emerges.
 
 ### Right
 
@@ -1148,62 +1176,6 @@ Rightness is the geometry of ethical relation.
 
 It asks whether we are facing the right way.
 
-### Good
-
-Goodness concerns the interface and what it permits.
-
-It is judged by emergence and consequence, because that is where what the interface allowed becomes visible.
-
-What does this process produce?
-
-What becomes possible because of it?
-
-What is nourished, diminished, protected, or destroyed?
-
-The good supports flourishing across the relevant scales of wholeness.
-
-This does not mean maximizing immediate pleasure or avoiding every difficulty. Growth may involve effort, uncertainty, correction, and loss.
-
-Goodness asks whether the process ultimately strengthens the capacity of wholes to exist, develop, relate, and participate.
-
-A good society does not merely survive. It creates conditions in which its people can become more fully themselves while contributing to something shared.
-
-A good relationship does not demand permanent comfort. It creates enough honesty, care, trust, and freedom for both people to grow.
-
-A good idea does not merely win arguments. It improves our ability to meet reality.
-
-Goodness is the quality of what emerges.
-
-### True
-
-Truth concerns alignment with reality.
-
-A true claim does not become true because it is useful, popular, comforting, traditional, or spoken by authority.
-
-Truth is what remains answerable to what is.
-
-Answerability begins at the center. A whole that has closed its center cannot be corrected by anything the field delivers.
-
-Every perspective is partial, but perspectives can become more or less accurate.
-
-A whole needs truth because coordination depends upon reliable mediation.
-
-When the field becomes corrupted by deception, the parts can no longer respond coherently to their actual condition.
-
-Truth allows reality to enter the whole.
-
-A truthful ontology does not protect itself from correction. It becomes more capable of correction.
-
-It does not treat every challenge as hostility.
-
-It does not mistake inherited language for reality itself.
-
-It does not demand certainty where only probability is available.
-
-Truth is not the possession of a final model.
-
-Truth is faithfulness between model and reality.
-
 ### Faithful
 
 Faithfulness concerns continuity through relationship and time.
@@ -1236,6 +1208,36 @@ To remain faithful to oneself may require releasing an identity that was built f
 
 Faithfulness preserves the line without freezing it.
 
+### True
+
+Truth concerns alignment with reality.
+
+A true claim does not become true because it is useful, popular, comforting, traditional, or spoken by authority.
+
+Truth is what remains answerable to what is.
+
+Answerability begins at the center. A whole that has closed its center cannot be corrected by anything the field delivers.
+
+Every perspective is partial, but perspectives can become more or less accurate.
+
+A whole needs truth because coordination depends upon reliable mediation.
+
+When the field becomes corrupted by deception, the parts can no longer respond coherently to their actual condition.
+
+Truth allows reality to enter the whole.
+
+A truthful ontology does not protect itself from correction. It becomes more capable of correction.
+
+It does not treat every challenge as hostility.
+
+It does not mistake inherited language for reality itself.
+
+It does not demand certainty where only probability is available.
+
+Truth is not the possession of a final model.
+
+Truth is faithfulness between model and reality.
+
 ### Agreement
 
 Agreement concerns integration among distinct centers.
@@ -1247,6 +1249,8 @@ It is not compliance.
 It is not silence.
 
 It is not the absence of visible conflict.
+
+And "agreeable," where this book calls for an ontology to become more agreeable, does not mean pleasant or easy to get along with. It means capable of genuine agreement.
 
 Agreement occurs when distinct beings freely align around a shared center, purpose, understanding, or action.
 
@@ -1318,21 +1322,21 @@ Does it produce a concept of unity that preserves difference?
 
 Then the five values can be applied.
 
-Is the ontology becoming truer?
+Is the ontology becoming more good?
 
-Does it fit reality better, including evidence that challenges it?
+What kinds of lives, institutions, and futures emerge from it?
 
 Is it becoming more right?
 
 Does it orient our relationships more coherently?
 
-Is it becoming more good?
-
-What kinds of lives, institutions, and futures emerge from it?
-
 Is it becoming more faithful?
 
 Does it preserve what is real and valuable through change?
+
+Is it becoming truer?
+
+Does it fit reality better, including evidence that challenges it?
 
 Is it becoming more agreeable?
 
@@ -1596,13 +1600,13 @@ This question does not guarantee that the Circumpunct Framework is final.
 
 It explains why the framework must remain revisable.
 
-A true ontology should not fear truth.
+A good ontology should improve the wholes built upon it.
 
 A right ontology should allow correction.
 
-A good ontology should improve the wholes built upon it.
-
 A faithful ontology should preserve what remains valid through revision.
+
+A true ontology should not fear truth.
 
 An agreeable ontology should invite participation rather than demand submission.
 
@@ -1658,15 +1662,15 @@ It is not the mere inclusion of everything within one category.
 
 It is the centered integration of difference.
 
-That integration requires direction, consequence, reality, continuity, and participation.
+That integration requires consequence, direction, continuity, reality, and participation.
 
-It must become more right.
+It must become more good.
 
-More good.
-
-More true.
+More right.
 
 More faithful.
+
+More true.
 
 More agreeable.
 
@@ -1756,7 +1760,8 @@ And every completed whole opens into something greater.
 
 ## Revision history
 
-- 2026-07-29 v2.0: forked from `what_is_wholeness.docx` into markdown. Heading structure made explicit and diffable (the source document carried no named paragraph styles, only direct formatting; soft line breaks preserved as hard breaks). Added the two Lies to Chapter Eight, named as inflation and severance, with a note tying them back to fusion and fragmentation at the boundary. Added a falsification note to "A Test for Ontology," which previously offered reflective questions where a reader would expect kill conditions. Added the header block.
+- 2026-07-29 v2.4: five review findings applied. (a) The Coda assembled the whole from center, boundary, and field, omitting the line; it now states that the line is absent from the figure because the figure is one moment, and that drawing the circumpunct again an instant later traces it. (b) The five values appeared in two different non-canonical orders across six locations (T,R,G,F,A in the Introduction, the Test chapter, and the science section; R,G,T,F,A in the Five Conditions and the Conclusion, including its subsection order). All six now use the operative sequence GOOD, RIGHT, FAITHFUL, TRUE, AGREEMENT (§25.18b required sequence), and the Conclusion's gloss list was reordered to match. Ladder order (TRUE, FAITHFUL, GOOD, RIGHT, AGREEMENT) is the alternative if the open ethics-sequence decision resolves that way; the book walks its chapters in ladder order already, so only these summary lists would change. (c) "Or musically" implied the ten-term sequence translated to eight notes; replaced with a line naming the eight interior stations. (d) Revision history reordered newest-first per project convention. (e) "Agreeable" glossed once in the Agreement subsection against its ordinary sense of pleasant, rather than replaced at all five occurrences, which would have cost the parallel list its cadence.
 - 2026-07-29 v2.3: added "Why Change Your Ontology?" between the Introduction and The Circumpunct Octave. The draft established the cost of ontology revision and never the payoff, so a reader reached Chapter One knowing the price and not the purchase. The section's spine is the cost asymmetry (revision is concentrated, living through a false foundation is distributed), carried by three cases where correcting an instance preserves its generator. It adds the one-sided-failure catalog, the argument that the change is additive rather than substitutive at most positions (the materialist keeps physics, the reductionist keeps reduction as a method, the believer keeps God and gains a distinction their tradition already carries, and only exclusivity is surrendered), and the argument that the reader already lives this, so the ask is articulation rather than adoption. Closes on examination rather than conversion, which is what the Test chapter's own standard requires. Deliberately not used: "All is Whole" as a thesis-slogan, which reads as one by inclusion, the pole the Prelude establishes cannot complete the octave; the Final Meditation already carries the better line.
 - 2026-07-29 v2.2: relocated the rightness doctrine from Chapter Four to Chapter Seven. v2.1 had left it in the branching chapter behind a disclaimer, so the chapter denied that rightness lived there and then taught it at length. The definition, the three worked cases (boundary, loyalty, disagreement), "not mere obedience," "proper orientation within relationship," and the competing-needs and tension passages all now sit in the field chapter where rightness lives; "a right branch" became "a right direction" accordingly. Chapter Four gained its own ethical content in their place: the irreversibility of the turn, and faithfulness as what the branch actually tests (per §25.18b, FAITHFUL at 1D launches the 1.5D commitment stroke and the freedom held there is STAYING). That passage is new prose rather than relocated, and is the one part of this pass to check against your intent.
 - 2026-07-29 v2.1: virtue-to-station mapping conformed to framework §25.18b (Ashman's adjudication, same session). The draft placed RIGHT at branching (1.5D), GOOD at emergence (2.5D), and TRUE at the field (3D); §25.18b places them at the field (3D), the boundary (2D), and the aperture (0D), with §25.19 (2026-07-23) supplying the positive rationale for GOOD at 2D. Each virtue's home moved to its corpus station and each chapter's original insight was kept as where that virtue is posed, tested, or made visible: branching poses rightness and the field answers it; the boundary establishes goodness and emergence audits it; the center is where truth enters and the field is where it survives or fails. TRUE is now named at the point (Chapter One) and GOOD at the boundary (Chapter Five), neither of which the draft did. FAITHFUL (1D) and AGREEMENT (⊙) were already correct and are unchanged.
+- 2026-07-29 v2.0: forked from `what_is_wholeness.docx` into markdown. Heading structure made explicit and diffable (the source document carried no named paragraph styles, only direct formatting; soft line breaks preserved as hard breaks). Added the two Lies to Chapter Eight, named as inflation and severance, with a note tying them back to fusion and fragmentation at the boundary. Added a falsification note to "A Test for Ontology," which previously offered reflective questions where a reader would expect kill conditions. Added the header block.
