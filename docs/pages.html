@@ -506,6 +506,61 @@
             .start-here-sub { margin-left: 0; width: 100%; }
         }
 
+        /* ===== Share-link toast ===== */
+        .url-toast {
+            position: fixed;
+            left: 50%;
+            bottom: 1.5rem;
+            transform: translateX(-50%) translateY(12px);
+            max-width: min(92vw, 640px);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: var(--bg-card);
+            border: 1px solid var(--gold-dim);
+            border-radius: 10px;
+            padding: 0.7rem 0.9rem;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+            z-index: 200;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+        .url-toast.visible {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+            pointer-events: auto;
+        }
+        .url-toast-icon { color: var(--gold); flex-shrink: 0; }
+        .url-toast-body { flex: 1; min-width: 0; }
+        .url-toast-label { font-size: 0.76rem; color: var(--text-muted); margin-bottom: 0.15rem; }
+        .url-toast-url {
+            font-size: 0.88rem;
+            color: var(--text);
+            white-space: nowrap;
+            overflow-x: auto;
+            user-select: all;
+            font-family: 'Space Grotesk', monospace;
+        }
+        .url-toast-copy {
+            background: rgba(212, 175, 55, 0.12);
+            border: 1px solid var(--gold-dim);
+            color: var(--gold);
+            border-radius: 6px;
+            padding: 0.4rem 0.7rem;
+            font-size: 0.82rem;
+            cursor: pointer;
+            flex-shrink: 0;
+            white-space: nowrap;
+            transition: background 0.15s, color 0.15s, border-color 0.15s;
+        }
+        .url-toast-copy:hover { background: rgba(212, 175, 55, 0.2); }
+        .url-toast-copy.copied { color: var(--green); border-color: var(--green); }
+        @media (max-width: 700px) {
+            .url-toast { left: 0.75rem; right: 0.75rem; transform: translateY(12px); max-width: none; }
+            .url-toast.visible { transform: translateY(0); }
+        }
+
         /* ===== Entrance animation ===== */
         @media (prefers-reduced-motion: no-preference) {
             .domain-section {
@@ -560,21 +615,21 @@
             <p class="start-here-sub">New? Read these three in order.</p>
         </div>
         <div class="start-here-cards">
-            <a href="how_reality_is_built.html" class="start-card">
+            <a href="how_reality_is_built.html" class="start-card" target="_blank" rel="noopener">
                 <span class="start-num">1</span>
                 <div class="start-card-body">
                     <div class="start-card-title">How Reality Is Built</div>
                     <div class="start-card-desc">The dimensional walk — from infinite potential to 3D space. The core architecture.</div>
                 </div>
             </a>
-            <a href="circumpunct_ethics_and_virtues.html" class="start-card">
+            <a href="circumpunct_ethics_and_virtues.html" class="start-card" target="_blank" rel="noopener">
                 <span class="start-num">2</span>
                 <div class="start-card-body">
                     <div class="start-card-title">Ethics & Virtues</div>
                     <div class="start-card-desc">True, Good, Right, Agreed; four pillars, four virtues, diagnostics, restoration.</div>
                 </div>
             </a>
-            <a href="dimensional_ladder.html" class="start-card">
+            <a href="dimensional_ladder.html" class="start-card" target="_blank" rel="noopener">
                 <span class="start-num">3</span>
                 <div class="start-card-body">
                     <div class="start-card-title">The Dimensional Ladder</div>
@@ -585,6 +640,15 @@
     </div>
 
     <div class="results-container" id="results"></div>
+
+    <div class="url-toast" id="urlToast">
+        <span class="url-toast-icon">&#8853;</span>
+        <div class="url-toast-body">
+            <div class="url-toast-label">Opened in a new tab &mdash; link copied, ready to share</div>
+            <div class="url-toast-url" id="urlToastText"></div>
+        </div>
+        <button class="url-toast-copy" id="urlToastCopy" type="button">Copy</button>
+    </div>
 
     <footer>
         <p><a href="index.html">fractalreality.ca</a> · <a href="https://github.com/AshmanRoonz/Fractal_Reality" target="_blank" style="color:var(--gold-dim)">GitHub</a> — The Circumpunct Framework by Ashman Roonz</p>
@@ -626,6 +690,8 @@
                 { href: "every_lie_made_you_smaller.html", name: "Every Lie Made You Smaller", desc: "How installed falsehoods compress identity by locking apertures closed" },
                 { href: "you_are_circumpunct.html", name: "You Are ⊙λ", desc: "Four readings of yourself: self-view, top-down, bottom-up, and the apophatic closure" },
                 { href: "circumpunct_consciousness_theory_plain.html", name: "What Consciousness Is (Plain Language)", desc: "A companion to the Circumpunct Theory of Consciousness; accessible walkthrough" },
+                { href: "the_ghost_dragon_and_the_point_of_view.html", name: "The Ghost Dragon and the Point of View", desc: "Reply to the causal-inertness argument against qualia; experience as the inside of wholeness, not an extra product" },
+                { href: "the_ghost_dragon_and_the_point_of_view_plain.html", name: "The Ghost Dragon and the Green Square (Plain Language)", desc: "Plain-language companion to the Ghost Dragon essay; the house, the smile, the middle with no size" },
             ]
         },
         cell: {
@@ -770,6 +836,14 @@
                 { href: "alpha_running.html", name: "The Running of α", desc: "How |•_electron| varies with how closely the 2D mediator resolves the aperture" },
                 { href: "quark_masses.html", name: "Quark Masses in Framework Form", desc: "Quark mass spectrum expressed through the dimensional ladder" },
                 { href: "octave_wrap_lemma.html", name: "The Octave-Wrap Lemma", desc: "360 = P! · T · (Φ+○) and the identity that forces T = 3" },
+                { href: "the_pattern_that_connects.html", name: "The Pattern That Connects", desc: "Bateson's question answered: the shared-note thesis, connection at the tonic; the interactive dimensional-ladder rail with the full ethical walk" },
+                { href: "the_staggered_octave_heard.html", name: "The Staggered Octave, Heard", desc: "The staggered octave performed: diatonic vs whole-tone as a listening test, the ascending fixed-point ring, real band data embedded" },
+                { href: "staggered_tqc.html", name: "The Staggered Quantum Machine", desc: "Live 22-site tonic-shared operator in the browser; composition order as a computable resource, all meters live" },
+                { href: "helix_audio.html", name: "The Pitch Helix", desc: "Hearing the staggered octave: the pitch helix as sound, chroma returning while height ascends" },
+                { href: "the_holon_evolved.html", name: "The Circumpunct: The Holon Evolved", desc: "Koestler's holon (1967), extended: the seam as the missing junction, the two divergences as one bond, holon as verb" },
+                { href: "the_convergence_primitive.html", name: "The Convergence Primitive", desc: "A + B = not(A alone or B alone) as sublation at convergence; period-4 theorem, i as the cycle's faithful character" },
+                { href: "the_sagitta.html", name: "The Sagitta", desc: "Curvature is the memory of mediation; the three-point right angle, influence vs retrieval, forgetting as a ruler mismatch" },
+                { href: "the_pole_gap_live.html", name: "The Pole Gap, Live", desc: "Randomness as a projection gap between an inclusion-pole and an integration-pole; Rule 30 live, floor found vs floor exists" },
                 { href: "the_staggered_octave.html", name: "The Staggered Octave", desc: "The dimensional axis as melody: d + 3.5 = d′, one shared tonic per octave, and the I-am ladder with a shifting speaker" },
                 { href: "circumpunct-octave.html", name: "The Circumpunct Octave", desc: "The operator engine and the 4th roots of 1; reading the ladder two ways" },
                 { href: "unified_expression_math_map.html", name: "The Unified Expression, Read in Standard Math", desc: "Symbol-by-symbol translation into computable operators: the four-beat unitary F, the nesting operator κ, and T = κ ∘ F" },
@@ -830,6 +904,8 @@
                 { href: "the_fractal_divide.html", name: "The Fractal Divide", desc: "Why left and right can't hear each other — the same wound at civilizational scale" },
                 { href: "the_first_lie.html", name: "The First Lie — Genesis as Narcissism", desc: "Before the apple — the serpent's opening move and the installation of shame" },
                 { href: "circumpunct_ethics_and_virtues.html", name: "Ethics & Virtues (Complete)", desc: "Full treatment: four pillars, four virtues, diagnostics, restoration" },
+                { href: "the_metacognitive_theory_of_truthfulness.html", name: "The Metacognitive Theory of Truthfulness", desc: "Truthfulness as reflexive discipline, not accurate statements; conscience as ethical metacognition; honest error vs deceptive truth" },
+                { href: "the_fallout_of_the_noble_lie.html", name: "The Fallout of the Noble Lie", desc: "The Noble Lie's societal fallout; the Truth Resolution Protocol lifted to society; the dangerous-capability hard case" },
                 { href: "cognitive_virus_theory.html", name: "Cognitive Virus Theory", desc: "How lies propagate as cognitive viruses" },
                 { href: "darvo_geometry.html", name: "DARVO Geometry", desc: "The geometric structure of Deny, Attack, Reverse Victim and Offender" },
                 { href: "honest_exit.html", name: "The Honest Exit", desc: "A field guide to ending the Noble Lie; the lesson of the unsafe no" },
@@ -872,6 +948,7 @@
                 { href: "one_and_zero.html", name: "The One and the Zero", desc: "The 1/0 ontology: everything and its convergence" },
                 { href: "one_and_zero_friendly.html", name: "The One and the Zero (Friendly)", desc: "Accessible introduction to the 1/0 ontology" },
                 { href: "toe_map.html", name: "Theory of Everything Map", desc: "Visual map of the complete framework" },
+                { href: "index_legacy.html", name: "Framework Index (Legacy Home)", desc: "The corrected ten-dimensions card and the \"What Is Wholeness?\" essay, corrected-ladder form" },
                 { href: "wholeness.html", name: "What Is Wholeness?", desc: "The foundational question: what makes a whole whole" },
                 { href: "wholeness_plain.html", name: "What Is Wholeness? (Plain Language)", desc: "Accessible exploration of wholeness" },
                 { href: "belief_circumpunct.html", name: "The Circumpunct Framework (Belief)", desc: "Core framework applied to belief systems" },
@@ -1080,7 +1157,7 @@
             html += `<div class="domain-pages">`;
 
             for (const page of pages) {
-                html += `<a href="${page.href}" class="page-row"${page.href.startsWith('http') ? ' target="_blank" rel="noopener"' : ''}>`;
+                html += `<a href="${page.href}" class="page-row" target="_blank" rel="noopener">`;
                 html += `<span class="page-icon">⊙</span>`;
                 html += `<div class="page-info">`;
                 html += `<div class="page-name">${highlight(page.name, currentQuery)}</div>`;
@@ -1156,6 +1233,60 @@
             }
         }
     });
+
+    // ===== Share-link toast =====
+    const urlToast = document.getElementById('urlToast');
+    const urlToastText = document.getElementById('urlToastText');
+    const urlToastCopy = document.getElementById('urlToastCopy');
+    let toastTimer = null;
+
+    function fallbackCopy(text) {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand('copy'); } catch (e) { /* clipboard unavailable; text is still shown and selectable */ }
+        document.body.removeChild(ta);
+    }
+
+    function copyText(text) {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text).catch(() => fallbackCopy(text));
+        } else {
+            fallbackCopy(text);
+        }
+    }
+
+    function showUrlToast(url) {
+        urlToastText.textContent = url;
+        urlToastCopy.textContent = 'Copy';
+        urlToastCopy.classList.remove('copied');
+        urlToast.classList.add('visible');
+        copyText(url);
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => urlToast.classList.remove('visible'), 6000);
+    }
+
+    urlToastCopy.addEventListener('click', () => {
+        copyText(urlToastText.textContent);
+        urlToastCopy.textContent = 'Copied';
+        urlToastCopy.classList.add('copied');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => urlToast.classList.remove('visible'), 2500);
+    });
+
+    function shareLinkFrom(container, selector) {
+        container.addEventListener('click', (e) => {
+            const link = e.target.closest(selector);
+            if (!link) return;
+            const resolved = new URL(link.getAttribute('href'), window.location.href).href;
+            showUrlToast(resolved);
+        });
+    }
+    shareLinkFrom(document.getElementById('results'), 'a.page-row');
+    shareLinkFrom(document.getElementById('startHere'), 'a.start-card');
 
     // ===== Init =====
     renderFilterPills();
