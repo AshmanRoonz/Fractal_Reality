@@ -9,7 +9,7 @@
 ```
 Created: 2026-07-29
 Last updated: 2026-07-29
-Version: 2.2
+Version: 2.3
 ```
 
 ## Introduction: Your Ontology Matters
@@ -107,6 +107,78 @@ The final pole is the circumpunct, one by integration.
 Between them, difference becomes organized without being erased.
 
 That movement is wholeness.
+
+## Why Change Your Ontology?
+
+This book has already said that changing an ontology is expensive.
+
+Why would anyone accept the cost?
+
+Because refusing to examine your ontology does not release you from it.
+
+The cost of revising an ontology is concentrated. The cost of living through a false one is distributed across your entire life.
+
+A distorted foundation does not produce one mistaken belief. It produces a supply of them, each resembling the last, arriving from a source you have not identified.
+
+This is why changing your opinions is often not enough.
+
+You can reject one abusive authority while continuing to believe that authority defines truth.
+
+You can leave one unhealthy relationship while continuing to believe that love requires self-erasure.
+
+You can oppose one oppressive institution while continuing to equate unity with obedience.
+
+You can learn a great many facts while retaining a model in which relationships, wholes, other perspectives, or your own interior life are not permitted to be fully real.
+
+In each case the particular error has been corrected and the generator has been preserved. The pattern reproduces itself, and its recurrence begins to look like the nature of the world rather than the shape of a model.
+
+Many destructive systems begin by denying one half of a single fact: that we are whole, and that we are also part.
+
+Individualism forgets that we are parts.
+
+Collectivism forgets that we are wholes.
+
+Reductionism finds the components and loses the organized being.
+
+Totalizing spirituality finds the One and erases distinction.
+
+Authoritarianism grants reality to the greater whole and treats the person as expendable.
+
+Narcissism grants reality to the person and treats everyone else as material.
+
+Each of these positions is coherent. Each can be defended at length. Each is missing the same thing.
+
+What follows in this book asks for less than it may appear to ask.
+
+It does not require a materialist to abandon matter. Every result in physics is kept. What is set aside is only the further claim that organization is not itself real.
+
+It does not require a reductionist to abandon reduction. Decomposition remains among the most powerful methods we have. What is set aside is the claim that the method exhausts what exists.
+
+It does not require a religious believer to abandon God. It offers a distinction most traditions already carry: between the greater whole one participates in and the source beyond all naming.
+
+What is surrendered in each case is not content. It is exclusivity: the assumption that one scale of description is the only scale that is real.
+
+There is also less to adopt than it may appear.
+
+You already know that a crowd is not a community.
+
+You already know that a bag of clock parts is not a clock.
+
+You already act as though you are a whole, and as though you belong to something.
+
+The pattern described here is not being introduced to you. It is being named. What may be new is having a model with room in it for what you already do.
+
+So do not replace your ontology because a book has offered you another.
+
+Make your present ontology visible.
+
+Examine what rests upon it. Notice what it explains well, and notice what it must repeatedly explain away.
+
+Then walk through the octave that follows, and compare.
+
+You do not have to accept this ontology.
+
+But you should become conscious of the one you already obey.
 
 ## The Circumpunct Octave
 
@@ -1685,5 +1757,6 @@ And every completed whole opens into something greater.
 ## Revision history
 
 - 2026-07-29 v2.0: forked from `what_is_wholeness.docx` into markdown. Heading structure made explicit and diffable (the source document carried no named paragraph styles, only direct formatting; soft line breaks preserved as hard breaks). Added the two Lies to Chapter Eight, named as inflation and severance, with a note tying them back to fusion and fragmentation at the boundary. Added a falsification note to "A Test for Ontology," which previously offered reflective questions where a reader would expect kill conditions. Added the header block.
+- 2026-07-29 v2.3: added "Why Change Your Ontology?" between the Introduction and The Circumpunct Octave. The draft established the cost of ontology revision and never the payoff, so a reader reached Chapter One knowing the price and not the purchase. The section's spine is the cost asymmetry (revision is concentrated, living through a false foundation is distributed), carried by three cases where correcting an instance preserves its generator. It adds the one-sided-failure catalog, the argument that the change is additive rather than substitutive at most positions (the materialist keeps physics, the reductionist keeps reduction as a method, the believer keeps God and gains a distinction their tradition already carries, and only exclusivity is surrendered), and the argument that the reader already lives this, so the ask is articulation rather than adoption. Closes on examination rather than conversion, which is what the Test chapter's own standard requires. Deliberately not used: "All is Whole" as a thesis-slogan, which reads as one by inclusion, the pole the Prelude establishes cannot complete the octave; the Final Meditation already carries the better line.
 - 2026-07-29 v2.2: relocated the rightness doctrine from Chapter Four to Chapter Seven. v2.1 had left it in the branching chapter behind a disclaimer, so the chapter denied that rightness lived there and then taught it at length. The definition, the three worked cases (boundary, loyalty, disagreement), "not mere obedience," "proper orientation within relationship," and the competing-needs and tension passages all now sit in the field chapter where rightness lives; "a right branch" became "a right direction" accordingly. Chapter Four gained its own ethical content in their place: the irreversibility of the turn, and faithfulness as what the branch actually tests (per §25.18b, FAITHFUL at 1D launches the 1.5D commitment stroke and the freedom held there is STAYING). That passage is new prose rather than relocated, and is the one part of this pass to check against your intent.
 - 2026-07-29 v2.1: virtue-to-station mapping conformed to framework §25.18b (Ashman's adjudication, same session). The draft placed RIGHT at branching (1.5D), GOOD at emergence (2.5D), and TRUE at the field (3D); §25.18b places them at the field (3D), the boundary (2D), and the aperture (0D), with §25.19 (2026-07-23) supplying the positive rationale for GOOD at 2D. Each virtue's home moved to its corpus station and each chapter's original insight was kept as where that virtue is posed, tested, or made visible: branching poses rightness and the field answers it; the boundary establishes goodness and emergence audits it; the center is where truth enters and the field is where it survives or fails. TRUE is now named at the point (Chapter One) and GOOD at the boundary (Chapter Five), neither of which the draft did. FAITHFUL (1D) and AGREEMENT (⊙) were already correct and are unchanged.

@@ -2611,6 +2611,30 @@ Every name in this chain is the same substrate, read from a different position. 
 
 **What the identity chain does structurally.** The chain welds the ontology (Reality, 1, E, ∞) to the epistemology (Truth: what IS when named accurately) to the architecture (⊙: the compositional whole). It closes the loop that was open in the framework's earlier formulations (⊙ = E = 1 and E = 1 = ∞): there is no separation between "what there is," "what can be known about what there is," "how much of it there is," and "what shape it takes at any scale." All of these reduce to one substrate, viewed from whichever angle the question requires. The ethics chain (GOOD, RIGHT, FAITHFUL, TRUE, AGREEMENT) is the practice chain: how a ⊙ participates in this substrate at its five stations.
 
+#### Three Forms of Oneness: Inclusion, Indivisibility, Integration
+
+The identity chain names one substrate from six positions. It invites an obvious objection: if ∞ and ⊙ are the same 1, why does the framework need both names? Because they are one in different senses, and the senses are not interchangeable.
+
+There are three forms of unity in the architecture, and the octave visits all three.
+
+**∞ is one by inclusion.** Nothing is excluded. At this pole there is no particular thing, because particularity requires distinction and no distinction has been drawn. A blank canvas contains every picture as possibility, and no picture has appeared. Silence permits every melody and is not itself any melody being played. ∞ is full without being formed.
+
+**• is one by indivisibility.** The point cannot be divided, because it has no extension to divide. It does not become one by gathering pieces together; it is one before parts appear. This is unity by absence of interior, not by inclusion of everything.
+
+**⊙ is one by integration.** The circumpunct contains distinctions and is one anyway. Its parts have not disappeared; they have become mutually relevant within a centered unity. It is not one by inclusion, because it excludes (that is what ○ is for). It is not one by indivisibility, because it has structure. It is one because difference has been organized without being erased.
+
+Two poles, three forms. ∞ and ⊙ are the poles that open and close the octave; • is a form of unity that is not a pole, because it is a station inside the walk rather than a boundary of it.
+
+**Why the distinction is load-bearing.** The movement from ∞ to ⊙ is not a movement from many things into featureless sameness. It is the movement from undifferentiated inclusion into differentiated integration. Any reading that collapses the two poles into a single kind of oneness loses the framework's central claim, because "everything is one" is true at ∞ in a sense that is false at ⊙, and "this is one whole" is true at ⊙ in a sense that is false at ∞. The six-name chain is therefore not redundant: ∞ and ⊙ are the same substrate under two different unities, which is exactly why both names are required and why the apophatic and cataphatic readings do not collapse into each other.
+
+**The two Lies are category errors between the forms.** This gives the failure modes an exact statement in the vocabulary of unity:
+
+- **Inflation** (⊙λ = ∞) mistakes one-by-integration for one-by-inclusion. A whole that has achieved coherence at its own scale claims the inclusive oneness of the source, which is to claim that nothing lies outside it and nothing can correct it.
+- **Severance** (⊙λ = •Λ) mistakes one-by-integration for one-by-indivisibility. A whole denies that it has an interior, claiming to be a mere point in someone else's field, with no parts of its own to answer for.
+- **Featureless monism**, the most common external misreading of this framework, mistakes one-by-inclusion for one-by-integration: it takes ∞'s "nothing is excluded" to be the destination when it is the origin. If all distinctions disappear, relationship disappears with them. There is no meeting without difference, no connection without distinct terms, and no agreement without participants.
+
+**Provenance.** This distinction was developed in `Book-What_is_Wholeness/what_is_wholeness_v2.md` (Introduction, Prelude, Chapter One, Coda) while stating the ontology for a general reader without notation, and is imported here because it is prior to the notation rather than a simplification of it. The three statements of unity are Ashman's prose from that draft; the two-poles-three-forms note and the category-error mapping of the Lies are the corpus-side additions (2026-07-29).
+
 ```
 CONSEQUENCES FOR EXISTING EQUATIONS:
 
