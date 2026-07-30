@@ -9,7 +9,7 @@
 ```
 Created: 2026-07-29
 Last updated: 2026-07-30
-Version: 2.6
+Version: 2.7
 ```
 
 ## Introduction: Your Ontology Matters
@@ -1284,6 +1284,36 @@ Agreement is the ethical form of integration.
 
 The circumpunct is its ontological form.
 
+## Synthesis Is How Knowledge Grows
+
+No idea is created from nothing.
+
+Bruce Lee studied many martial traditions. He took techniques, principles, and insights from different schools, tested them against experience, and brought them together in a new way. His originality did not come from refusing everything that existed before him. It came from recognizing connections others had overlooked.
+
+Human knowledge grows through this kind of synthesis. Science combines earlier discoveries. Music transforms familiar notes and rhythms. Philosophy inherits old questions and gives them new forms. Every language, theory, and system of thought is built from materials passed down by others.
+
+The Circumpunct Framework is no exception.
+
+It draws from mathematics, philosophy, science, spirituality, geometry, music, and lived experience. I did not invent the point, the circle, the octave, infinity, or the idea of emergence. What I created is the particular relationship between them.
+
+This framework is Ash. It is my synthesis, my attempt to build a sensible ontology: a foundational model of what exists, how things relate, and how distinct parts become coherent wholes.
+
+That does not place the framework beyond criticism. Its logic may be questioned. Its claims may be tested. Its symbols may be interpreted differently. Its structure may need revision.
+
+But the fact that it uses inherited ideas is not a weakness. That is how creation works. Originality does not require inventing every piece. It can also mean arranging familiar pieces into a pattern that has never existed before.
+
+This is the book's own claim turned on itself.
+
+Synthesis does not dissolve what it draws from. Bruce Lee's sources remain recognizable inside his method. The traditions this framework inherits remain recognizable inside it. What synthesis produces is not a blend in which the parts have disappeared, but an arrangement in which they have become mutually relevant around a center.
+
+That is the definition of wholeness offered in these pages. A framework built by synthesis is an instance of the pattern it describes.
+
+The Circumpunct Framework should therefore be judged by what it actually offers: whether it is coherent, whether it clarifies reality, whether it survives criticism, and whether it helps us understand how difference can become integrated without being erased.
+
+It is not the final word.
+
+It is my attempt to see the whole.
+
 ## A Test for Ontology
 
 How should we compare foundational models of reality?
@@ -1772,6 +1802,7 @@ And every completed whole opens into something greater.
 
 ## Revision history
 
+- 2026-07-30 v2.7: added "Synthesis Is How Knowledge Grows" (Ashman) between The Five Conditions of Wholeness and A Test for Ontology. Placed after the walk rather than in the front matter for three reasons: the claim "I did not invent the point, the circle, the octave, infinity, or the idea of emergence" only lands once the reader has watched those five things do work, the section closes on judging criteria and the Test chapter opens by asking for them, and the front matter already carries two framing sections before Chapter One. One passage is new prose rather than Ashman's, and is the part of this pass to check against intent: the three paragraphs beginning "This is the book's own claim turned on itself," which tie synthesis to the Coda's working definition (integration of differentiated parts around a center, without erasure) so the section performs the book's thesis instead of only defending the author's originality. Remove those three paragraphs and the section still stands as written.
 - 2026-07-30 v2.6: added the first-person walk immediately after the musical ladder: Potential → I am → focusing → committed → choosing → interfaced → becoming → developed → again. This carries the interactive ladder rail's "I am" sequence into the book and makes the experiential reading of the octave explicit.
 - 2026-07-29 v2.5: the two-direction ethics adjudication applied (Ashman, same day; framework §25.11). The five conditions are one path walked in two directions: formation, inside out (TRUE, FAITHFUL, GOOD, RIGHT, AGREEMENT: the order the chapters already walk), and validation, outside in (audit form AGREEMENT, RIGHT, GOOD, FAITHFUL, TRUE; earning form RIGHT, GOOD, FAITHFUL, TRUE, AGREEMENT). A plain-language two-direction passage added to the Five Conditions intro. Summary lists assigned by function: evaluative lists take the earning order (the Introduction dissonance line, the Five Conditions intro and subsection order, the Test for Ontology question pairs, the science-section ontology lines); the Conclusion's aspirational list takes formation order, with its gloss list realigned (reality, continuity, consequence, direction, participation). This replaces v2.4's uniform GOOD, RIGHT, FAITHFUL, TRUE, AGREEMENT, which followed the then-operative sequence, retired the same day as an old-ladder artifact.
 - 2026-07-29 v2.4: five review findings applied. (a) The Coda assembled the whole from center, boundary, and field, omitting the line; it now states that the line is absent from the figure because the figure is one moment, and that drawing the circumpunct again an instant later traces it. (b) The five values appeared in two different non-canonical orders across six locations (T,R,G,F,A in the Introduction, the Test chapter, and the science section; R,G,T,F,A in the Five Conditions and the Conclusion, including its subsection order). All six now use the operative sequence GOOD, RIGHT, FAITHFUL, TRUE, AGREEMENT (§25.18b required sequence), and the Conclusion's gloss list was reordered to match. Ladder order (TRUE, FAITHFUL, GOOD, RIGHT, AGREEMENT) is the alternative if the open ethics-sequence decision resolves that way; the book walks its chapters in ladder order already, so only these summary lists would change. (c) "Or musically" implied the ten-term sequence translated to eight notes; replaced with a line naming the eight interior stations. (d) Revision history reordered newest-first per project convention. (e) "Agreeable" glossed once in the Agreement subsection against its ordinary sense of pleasant, rather than replaced at all five occurrences, which would have cost the parallel list its cadence.
