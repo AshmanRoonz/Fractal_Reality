@@ -9,7 +9,7 @@
 ```
 Created: 2026-07-29
 Last updated: 2026-07-30
-Version: 2.9
+Version: 2.10
 ```
 
 ## Introduction: Your Ontology Matters
@@ -459,6 +459,12 @@ An institution that abandons its purpose whenever doing so becomes inconvenient 
 A theory that changes its claims whenever confronted with contrary evidence may protect itself from criticism, but it does so by sacrificing continuity of meaning.
 
 The line introduces the possibility of faithfulness.
+
+There is a difference between faith and faithfulness, and the line is where it first appears.
+
+Faith is an act of reaching. It begins at a center that does not yet possess what it seeks, and extends toward it without pretending the distance has already been crossed. As the reach passes through experience, it leaves something behind: a history of contact, choice, and commitment already made. Faith is that reaching, still underway. Faithfulness is the continuity between the reach still going forward and the history already behind it.
+
+The two failures that recur throughout this book first show up here, in miniature. One is to treat the distance as already closed, to claim the destination without having done the reaching. The other is to refuse the reach altogether, to stay sealed at the center and call that safety. Faith is neither. It reaches, and it does not pretend the reach is finished.
 
 To be faithful is not to remain unchanged.
 
@@ -936,7 +942,7 @@ Inflation claims to be the whole. Severance denies that it is one.
 
 Both destroy relationship, and they do it from opposite directions. Inflation leaves nothing outside itself to relate to. Severance leaves nothing inside itself to relate with. Neither can enter agreement, because agreement requires two centers that are each real and each bounded.
 
-Fusion and fragmentation, described earlier at the boundary, are these same two failures seen at a single scale. Inflation and severance are what they become once nesting is admitted.
+The reach that claims arrival and the reach that refuses to extend, described earlier at the line, are these same two failures at their first appearance. Fusion and fragmentation, described at the boundary, are the same two failures again. Inflation and severance are what they become once nesting is admitted.
 
 Recursion prevents wholeness from becoming a closed final state.
 
@@ -1818,6 +1824,7 @@ And every completed whole opens into something greater.
 
 ## Revision history
 
+- 2026-07-30 v2.10: added the faith/faithfulness distinction to Chapter Three (Ashman's formulation): faith is the reaching itself, still underway toward what it has not yet secured; faithfulness is the continuity between that ongoing reach and the history it has already left behind as it passed through experience. Names the chapter's own local instance of the two failures (claiming arrival without having reached; refusing to reach at all) without yet using "inflation" and "severance," matching how fusion and fragmentation are introduced unnamed at the boundary chapter. Extended Chapter Eight's existing cross-reference ("fusion and fragmentation, described earlier at the boundary, are these same two failures") to include this earlier appearance at the line, completing the three-chapter chain (line, boundary, recursion) the book had partly already drawn. Companion to the "I am" ladder's 1D tag changing from "committed" to "reaching," applied across the corpus the same day.
 - 2026-07-30 v2.9: added the harmonics passage to Chapter Eight, alongside the wave-continuity passage already there. The wave passage gives the temporal direction (one octave ending as the next begins, no gap at the junction); this gives the simultaneous direction (a smaller whole nested in a larger one is another node admitted within a fixed length, not a point reached by traveling further), pictured as the standing-wave modes of a string fixed at both ends. Companion framework material: circumpunct_framework.md §27.7m, docs/the_staggered_octave.html §5, CLAUDE.md.
 - 2026-07-30 v2.8: three passages from the vibrating-string thread, translated out of their mathematics into the book's register (no notation, no numbers beyond two orbital periods). Each fills a gap the draft had rather than decorating a point it already made. (a) Introduction: "wholes within wholes" invites a Russian-doll reading, which is the reductionist picture the book spends its length arguing against; the plucked string corrects it, since a higher tone is not a small piece lodged somewhere along the string but the whole string vibrating in its own way, with all of them present at once in one motion. (b) Chapter Five: goodness had fusion and fragmentation named as its two failures and no image of the success case; the Neptune and Pluto resonance supplies one, a bond whose entire function is to guarantee the two are never in the same place, which makes "leaves us both still whole" a description of something rather than an aspiration. (c) Chapter Eight: recursion asserted that the whole becomes a new point without showing the junction, so a reader can picture a handoff across a gap; a wave has no interval between cycles, and the moment ending one is the moment beginning the next, which grounds "the final do is the next do" where the Conclusion currently states it as a slogan. All three are new prose and none is Ashman's; the underlying observations came out of the harmonics conversation of the same day. The claims are checkable: Pluto is inside Neptune's orbit for roughly twenty years of its 248-year period, the two are in a stable 3:2 lock, and their minimum separation is about 17 AU.
 - 2026-07-30 v2.7: added "Synthesis Is How Knowledge Grows" (Ashman) between The Five Conditions of Wholeness and A Test for Ontology. Placed after the walk rather than in the front matter for three reasons: the claim "I did not invent the point, the circle, the octave, infinity, or the idea of emergence" only lands once the reader has watched those five things do work, the section closes on judging criteria and the Test chapter opens by asking for them, and the front matter already carries two framing sections before Chapter One. One passage is new prose rather than Ashman's, and is the part of this pass to check against intent: the three paragraphs beginning "This is the book's own claim turned on itself," which tie synthesis to the Coda's working definition (integration of differentiated parts around a center, without erasure) so the section performs the book's thesis instead of only defending the author's originality. Remove those three paragraphs and the section still stands as written.
