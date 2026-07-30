@@ -8,8 +8,8 @@
 
 ```
 Created: 2026-07-29
-Last updated: 2026-07-29
-Version: 2.5
+Last updated: 2026-07-30
+Version: 2.6
 ```
 
 ## Introduction: Your Ontology Matters
@@ -201,6 +201,10 @@ The octave can be expressed as:
 The eight interior stations, from point through recursion, can be sung as:
 
 do → re → mi → fa → so → la → ti → do′
+
+Spoken in the first person, the walk becomes:
+
+Potential → I am → focusing → committed → choosing → interfaced → becoming → developed → again
 
 The integers are structures.
 
@@ -1768,6 +1772,7 @@ And every completed whole opens into something greater.
 
 ## Revision history
 
+- 2026-07-30 v2.6: added the first-person walk immediately after the musical ladder: Potential → I am → focusing → committed → choosing → interfaced → becoming → developed → again. This carries the interactive ladder rail's "I am" sequence into the book and makes the experiential reading of the octave explicit.
 - 2026-07-29 v2.5: the two-direction ethics adjudication applied (Ashman, same day; framework §25.11). The five conditions are one path walked in two directions: formation, inside out (TRUE, FAITHFUL, GOOD, RIGHT, AGREEMENT: the order the chapters already walk), and validation, outside in (audit form AGREEMENT, RIGHT, GOOD, FAITHFUL, TRUE; earning form RIGHT, GOOD, FAITHFUL, TRUE, AGREEMENT). A plain-language two-direction passage added to the Five Conditions intro. Summary lists assigned by function: evaluative lists take the earning order (the Introduction dissonance line, the Five Conditions intro and subsection order, the Test for Ontology question pairs, the science-section ontology lines); the Conclusion's aspirational list takes formation order, with its gloss list realigned (reality, continuity, consequence, direction, participation). This replaces v2.4's uniform GOOD, RIGHT, FAITHFUL, TRUE, AGREEMENT, which followed the then-operative sequence, retired the same day as an old-ladder artifact.
 - 2026-07-29 v2.4: five review findings applied. (a) The Coda assembled the whole from center, boundary, and field, omitting the line; it now states that the line is absent from the figure because the figure is one moment, and that drawing the circumpunct again an instant later traces it. (b) The five values appeared in two different non-canonical orders across six locations (T,R,G,F,A in the Introduction, the Test chapter, and the science section; R,G,T,F,A in the Five Conditions and the Conclusion, including its subsection order). All six now use the operative sequence GOOD, RIGHT, FAITHFUL, TRUE, AGREEMENT (§25.18b required sequence), and the Conclusion's gloss list was reordered to match. Ladder order (TRUE, FAITHFUL, GOOD, RIGHT, AGREEMENT) is the alternative if the open ethics-sequence decision resolves that way; the book walks its chapters in ladder order already, so only these summary lists would change. (c) "Or musically" implied the ten-term sequence translated to eight notes; replaced with a line naming the eight interior stations. (d) Revision history reordered newest-first per project convention. (e) "Agreeable" glossed once in the Agreement subsection against its ordinary sense of pleasant, rather than replaced at all five occurrences, which would have cost the parallel list its cadence.
 - 2026-07-29 v2.3: added "Why Change Your Ontology?" between the Introduction and The Circumpunct Octave. The draft established the cost of ontology revision and never the payoff, so a reader reached Chapter One knowing the price and not the purchase. The section's spine is the cost asymmetry (revision is concentrated, living through a false foundation is distributed), carried by three cases where correcting an instance preserves its generator. It adds the one-sided-failure catalog, the argument that the change is additive rather than substitutive at most positions (the materialist keeps physics, the reductionist keeps reduction as a method, the believer keeps God and gains a distinction their tradition already carries, and only exclusivity is surrendered), and the argument that the reader already lives this, so the ask is articulation rather than adoption. Closes on examination rather than conversion, which is what the Test chapter's own standard requires. Deliberately not used: "All is Whole" as a thesis-slogan, which reads as one by inclusion, the pole the Prelude establishes cannot complete the octave; the Final Meditation already carries the better line.
