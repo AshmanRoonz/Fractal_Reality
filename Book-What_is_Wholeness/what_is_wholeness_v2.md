@@ -9,7 +9,7 @@
 ```
 Created: 2026-07-29
 Last updated: 2026-07-29
-Version: 2.1
+Version: 2.2
 ```
 
 ## Introduction: Your Ontology Matters
@@ -452,29 +452,15 @@ Possibility existed at infinity, but it was undifferentiated. Branching produces
 
 Once there are alternatives, direction becomes morally significant.
 
-Rightness concerns the relationship between action, context, and consequence.
+But the branch cannot settle which direction is right. A fork only presents options. Judging between them requires knowing how the parts stand to one another and to the whole, and that knowledge lives in the field, which the octave has not yet reached. Chapter Seven takes it up.
 
-Branching is where rightness becomes unavoidable, but it is not where rightness lives. A fork only poses the question. Answering it requires knowing how the parts stand to one another and to the whole, and that knowledge belongs to the field, which the octave has not yet reached. Chapter Seven returns to it.
+What the branch demands is something else.
 
-What is right cannot always be reduced to a fixed command detached from circumstance. The same action may preserve a whole in one context and damage it in another.
+A choice made here cannot be unmade. The path not taken is not merely unchosen. It becomes unavailable, and the conditions that would have made it possible are gone. You can abandon a commitment, but you cannot return to the moment before it was made and arrive somewhere else.
 
-A boundary may be right when it protects a vulnerable person and wrong when it is used to exclude someone for the benefit of power.
+This is why the branch is where faithfulness is tested rather than merely described. The line established that continuity is possible. The branch is where continuity begins to cost something, because staying now means declining something real.
 
-Loyalty may be right when it supports a person through difficulty and wrong when it protects them from accountability.
-
-Disagreement may be right when it corrects error and wrong when it is manufactured only to prevent cooperation.
-
-Rightness is not mere obedience.
-
-It is proper orientation within relationship.
-
-A right branch is one that respects the reality of the parts, the needs of the present whole, and the possibility of greater wholes still to come.
-
-This does not mean every decision will satisfy everyone. Genuine choices often involve competing needs and incomplete information.
-
-Wholeness is not maintained by pretending tension does not exist.
-
-It is maintained by addressing tension without reducing any part to nothing.
+To hold to a commitment through the turn, while the alternative is still visible and no longer reachable, is the particular freedom this rung asks for.
 
 Branching also introduces freedom.
 
@@ -716,7 +702,29 @@ Mediation is the way one part becomes relevant to another without ceasing to be 
 
 This is where rightness lives.
 
-To be right is to mediate well: to relate the parts to one another and to the whole so that each is properly placed. Rightness is not obedience, and it is not merely good intention. It is the geometry of relation, and geometry requires an interior in which things can be positioned. The branch asked which way to go. The field is what makes an answer possible, because only here is there room enough to see how the parts actually stand.
+To be right is to mediate well: to relate the parts to one another and to the whole so that each is properly placed. It is the geometry of relation, and geometry requires an interior in which things can be positioned. The branch asked which way to go. The field is what makes an answer possible, because only here is there room enough to see how the parts actually stand.
+
+Rightness concerns the relationship between action, context, and consequence.
+
+What is right cannot always be reduced to a fixed command detached from circumstance. The same action may preserve a whole in one context and damage it in another.
+
+A boundary may be right when it protects a vulnerable person and wrong when it is used to exclude someone for the benefit of power.
+
+Loyalty may be right when it supports a person through difficulty and wrong when it protects them from accountability.
+
+Disagreement may be right when it corrects error and wrong when it is manufactured only to prevent cooperation.
+
+Rightness is not mere obedience.
+
+It is proper orientation within relationship.
+
+A right direction is one that respects the reality of the parts, the needs of the present whole, and the possibility of greater wholes still to come.
+
+This does not mean every decision will satisfy everyone. Genuine choices often involve competing needs and incomplete information.
+
+Wholeness is not maintained by pretending tension does not exist.
+
+It is maintained by addressing tension without reducing any part to nothing.
 
 A healthy field allows information to move.
 
@@ -1677,4 +1685,5 @@ And every completed whole opens into something greater.
 ## Revision history
 
 - 2026-07-29 v2.0: forked from `what_is_wholeness.docx` into markdown. Heading structure made explicit and diffable (the source document carried no named paragraph styles, only direct formatting; soft line breaks preserved as hard breaks). Added the two Lies to Chapter Eight, named as inflation and severance, with a note tying them back to fusion and fragmentation at the boundary. Added a falsification note to "A Test for Ontology," which previously offered reflective questions where a reader would expect kill conditions. Added the header block.
+- 2026-07-29 v2.2: relocated the rightness doctrine from Chapter Four to Chapter Seven. v2.1 had left it in the branching chapter behind a disclaimer, so the chapter denied that rightness lived there and then taught it at length. The definition, the three worked cases (boundary, loyalty, disagreement), "not mere obedience," "proper orientation within relationship," and the competing-needs and tension passages all now sit in the field chapter where rightness lives; "a right branch" became "a right direction" accordingly. Chapter Four gained its own ethical content in their place: the irreversibility of the turn, and faithfulness as what the branch actually tests (per §25.18b, FAITHFUL at 1D launches the 1.5D commitment stroke and the freedom held there is STAYING). That passage is new prose rather than relocated, and is the one part of this pass to check against your intent.
 - 2026-07-29 v2.1: virtue-to-station mapping conformed to framework §25.18b (Ashman's adjudication, same session). The draft placed RIGHT at branching (1.5D), GOOD at emergence (2.5D), and TRUE at the field (3D); §25.18b places them at the field (3D), the boundary (2D), and the aperture (0D), with §25.19 (2026-07-23) supplying the positive rationale for GOOD at 2D. Each virtue's home moved to its corpus station and each chapter's original insight was kept as where that virtue is posed, tested, or made visible: branching poses rightness and the field answers it; the boundary establishes goodness and emergence audits it; the center is where truth enters and the field is where it survives or fails. TRUE is now named at the point (Chapter One) and GOOD at the boundary (Chapter Five), neither of which the draft did. FAITHFUL (1D) and AGREEMENT (⊙) were already correct and are unchanged.
