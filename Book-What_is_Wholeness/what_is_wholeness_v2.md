@@ -76,12 +76,6 @@ A mind is a whole whose thoughts, memories, sensations, and intentions remain di
 
 Reality seems to be organized through wholes within wholes, parts within parts, and relationships across scales.
 
-The word within can mislead here. It suggests smaller objects sitting inside larger ones, like boxes packed into boxes.
-
-Consider a plucked string instead. It sounds one main note and several higher ones at the same time. Those higher tones are not small pieces located somewhere along the string. Each of them is the entire string vibrating in its own way, and all of them are happening at once within a single motion.
-
-A part, in the sense this book will use, is closer to one of those tones than to a box inside a box.
-
 This raises a question more fundamental than any particular scientific, spiritual, political, or moral belief:
 
 What is wholeness?
