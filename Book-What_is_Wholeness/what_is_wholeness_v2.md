@@ -76,12 +76,6 @@ A mind is a whole whose thoughts, memories, sensations, and intentions remain di
 
 Reality seems to be organized through wholes within wholes, parts within parts, and relationships across scales.
 
-The word within can mislead here. It suggests smaller objects sitting inside larger ones, like boxes packed into boxes.
-
-Consider a plucked string instead. It sounds one main note and several higher ones at the same time. Those higher tones are not small pieces located somewhere along the string. Each of them is the entire string vibrating in its own way, and all of them are happening at once within a single motion.
-
-A part, in the sense this book will use, is closer to one of those tones than to a box inside a box.
-
 This raises a question more fundamental than any particular scientific, spiritual, political, or moral belief:
 
 What is wholeness?
@@ -210,7 +204,7 @@ do → re → mi → fa → so → la → ti → do′
 
 Spoken in the first person, the walk becomes:
 
-Potential → I am → focusing → committed → choosing → interfaced → becoming → developed → again
+Potential → I am → focusing → reaching → choosing → interfaced → becoming → developed → again
 
 The integers are structures.
 
@@ -465,6 +459,18 @@ An institution that abandons its purpose whenever doing so becomes inconvenient 
 A theory that changes its claims whenever confronted with contrary evidence may protect itself from criticism, but it does so by sacrificing continuity of meaning.
 
 The line introduces the possibility of faithfulness.
+
+A line, in the strict sense, has no beginning and no end. It runs both directions forever. This line is not that, but its beginning is not the point itself. A point has no extension, and what has no extension is not where extension starts. The beginning is convergence, the movement the last chapter described, the point's latent potential first becoming an actual reach. And a beginning changes everything: there is no further back past it to extend into, only the undifferentiated potential the point was always latent within, which is not more of the same line. It is not further extension at all. It is what extension comes from.
+
+So this line reaches only forward, fixed at one end. But it is not a ray either. A ray already exists complete, however far it runs. Every point on it is already there, whether anything has traveled to it or not; a ray has nowhere left to get to, because it was never going anywhere. This line is not like that. It has no length yet beyond wherever the reaching has actually brought it. Nothing is waiting out there for it to arrive at. What is not yet reached does not yet exist.
+
+The point itself does not stay behind. It is always exactly where the reaching has gotten to, and nowhere else, because there is no further along yet for it to be. This is why the point's report is always I am, and never I was. The point speaking now is the same point that has always been speaking, because it was never anchored to any first moment to begin with. It is only ever wherever the reaching currently is.
+
+The continuing reach, still making itself as it goes, is faith. The segment already crossed and settled behind it is faithfulness.
+
+Faith reaches from a point that does not yet possess what it seeks, extending toward it without pretending the distance has already been closed. As the reach passes through experience, it leaves something behind: a history of contact, choice, and commitment already made, settled and no longer in question. That history is the segment. The reaching that continues past it, still open, still short of what it seeks, is the faith that has not yet arrived.
+
+The two failures that recur throughout this book first show up here, in miniature. One is to treat the distance as already closed, to claim the destination without having done the reaching. The other is to refuse the reach altogether, to stay sealed at the center and call that safety. Faith is neither. It reaches, and it does not pretend the reach is finished.
 
 To be faithful is not to remain unchanged.
 
@@ -908,6 +914,12 @@ But a wave does not finish one cycle, pause, and then start the next. There is n
 
 Recursion is that junction. A completed whole does not hand itself across a gap to a successor. It is the point the next scale begins from.
 
+The examples that follow are simultaneous, not sequential. They are not about one whole leading to the next through time. They are about many scales holding at once, right now.
+
+A string fixed at both ends can only vibrate at certain frequencies. The lowest traces one long arc between the two ends. The next possible frequency sounds exactly one octave higher, and it does something specific to make that possible: a point appears in the exact middle of the string that does not move at all, while the string swings on either side of it in two smaller arcs. The frequency after that adds two more such still points, evenly spaced. The string has not grown. The same fixed length has simply admitted more of these motionless points, arranged differently along it.
+
+Nesting can be pictured the same way. A smaller whole inside a larger one is not reached by traveling further along some line until you arrive somewhere new. It is the same kind of center, appearing at another place within a length that was already whole, both ends already fixed. The larger scale and the smaller scale are not two things joined end to end. They are one field, sounding more than one of its own notes at the same time.
+
 A cell is a whole and a part of an organ.
 
 An organ is a whole and a part of a body.
@@ -936,7 +948,7 @@ Inflation claims to be the whole. Severance denies that it is one.
 
 Both destroy relationship, and they do it from opposite directions. Inflation leaves nothing outside itself to relate to. Severance leaves nothing inside itself to relate with. Neither can enter agreement, because agreement requires two centers that are each real and each bounded.
 
-Fusion and fragmentation, described earlier at the boundary, are these same two failures seen at a single scale. Inflation and severance are what they become once nesting is admitted.
+The reach that claims arrival and the reach that refuses to extend, described earlier at the line, are these same two failures at their first appearance. Fusion and fragmentation, described at the boundary, are the same two failures again. Inflation and severance are what they become once nesting is admitted.
 
 Recursion prevents wholeness from becoming a closed final state.
 
