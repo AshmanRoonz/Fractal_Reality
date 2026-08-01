@@ -7,7 +7,7 @@
 ```
 Created: 2026-08-01
 Last updated: 2026-08-01
-Version: 0.1
+Version: 0.2
 ```
 
 Status: draft in progress. Chapter One written. Spine, division of labor with *What Is Wholeness?*, and open decisions are in `plans/believed_into_existence_plan.md`. The subtitle is provisional.
@@ -58,6 +58,26 @@ Turn the intuition around and the world looks different.
 
 Dissolution is the default. Coming apart is what happens when nothing is being done. Continuing is the achievement, and it is being achieved, everywhere, all the time, at every scale, right now, including in you while you read this sentence.
 
+Everything so far has been said from outside, about flames and languages and countries. But you are one of the things being held, and the view from inside is the one view you have without having to be told anything.
+
+Here is mine.
+
+Always converging toward the future, my focus leads from the center, surrounded by the emerging and recurring wholeness of my bodily and mental and worldly experience.
+
+Read slowly, that says several things at once.
+
+The reaching is forward. Attention goes toward what has not happened yet, and what has not happened yet is not a smaller unknown than the past. It is a larger one. There is more that could be than there is that has been.
+
+It leads from a center, and the center is not behind the reaching, being pushed along. It is at the front of it. Wherever the reaching has arrived is where I am, which is why the report is always I am and never I was.
+
+The reaching also leaves something behind it. A path, as long as the reaching has made it and no longer. Nothing is waiting out ahead to be arrived at, the way a road exists before anyone drives on it. What has not been reached has not been made.
+
+And the reaching is not solitary. It happens inside something. A body being maintained, a mind being maintained, a world being maintained, all of them opening and closing and opening again, continuously, without instruction from me and mostly without my noticing.
+
+One thing is not on that list. I am not surrounded by my own center. Everything else named is either something I am inside of or something that is inside of me. The center is the single item that is neither, because it is where the looking is being done from.
+
+That is what the question feels like from within it. Something is being held, at every one of those scales, at this moment, and almost none of it is being done by me.
+
 So the question is not idle and it is not merely philosophical.
 
 What holds?
@@ -95,5 +115,7 @@ Not what is a whole.
 What holds it there.
 
 ## Revision history
+
+- 2026-08-01 v0.2: Ashman's first-person sentence placed in Chapter One, at the pivot after "including in you while you read this sentence," which the v0.1 draft set up and then walked past. The chapter had argued persistence entirely from outside, with flames and languages and countries, and needed the turn inward before it could ask "What holds?" The sentence carries nine of the ten stations in one line, and the unpacking around it stays in plain language: the reaching is forward, the center is at the front of it rather than being pushed from behind, the reaching leaves a path only as long as it has made, and one item on the list is not something you can be surrounded by. The absent station is branching, and its absence is principled rather than an oversight, since commitment is never present-facing; by the time it is anything it has already been made. The anti-ray paragraph is carried over from the faith and faithfulness section of *What Is Wholeness?* Chapter Three, where the doctrine already exists, so the two books agree on this point rather than each inventing it. Added after a parallel reading of the same sentence noted that the line station was only implicit.
 
 - 2026-08-01 v0.1: Chapter One, "The Question." Establishes the origin/maintenance distinction as the book's ground, since that separation is what keeps this book from being *What Is Wholeness?* retold. Opens with the two questions and pulls them apart using the universe that flares and ceases, which answers the classic question fully and the real one not at all. The persistence argument runs up the scales (flame, body, language, friendship, country) toward the inversion: dissolution is the default and continuing is the achievement, so persistence is what needs explaining and change is the thing we mistakenly treat as the event. Names the thesis without arguing it, and states the sovereignty guard early and explicitly rather than waiting for its own chapter, because the shelf this book will be mistaken for is close by and the disclaimer is worth more in Chapter One than in Chapter Six. Closes by locating the book against the other one.
