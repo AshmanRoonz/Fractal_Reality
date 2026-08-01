@@ -6,6 +6,12 @@
       "runtimeExecutable": "python",
       "runtimeArgs": ["-m", "http.server", "8123"],
       "port": 8123
+    },
+    {
+      "name": "gaming",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "http.server", "8124", "--directory", "C:/Users/ashro/Fractal_Reality/FractalGaming"],
+      "port": 8124
     }
   ]
 }
