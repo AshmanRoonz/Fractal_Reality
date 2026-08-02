@@ -54,6 +54,26 @@ Turn the intuition around and the world looks different.
 
 At many scales, dissolution is what happens when sustaining conditions fail. At others, stability is itself the condition described by the laws. In either case, continuing is not an explanatory blank. It is an achievement of relation, everywhere, all the time, including in you while you read this sentence.
 
+Everything so far has been said from outside, about flames and languages and countries. But you are one of the things being held, and the view from inside is the one view you have without having to be told anything.
+
+Here is mine.
+
+Always converging toward the future, my focus leads from the center, surrounded by the emerging and recurring wholeness of my bodily and mental and worldly experience.
+
+Read slowly, that says several things at once.
+
+The reaching is forward. Attention goes toward what has not happened yet, and what has not happened yet is not a smaller unknown than the past. It is a larger one. There is more that could be than there is that has been.
+
+It leads from a center, and the center is not behind the reaching, being pushed along. It is at the front of it. Wherever the reaching has arrived is where I am, which is why the report is always I am and never I was.
+
+The reaching also leaves something behind it. A path, as long as the reaching has made it and no longer. Nothing is waiting out ahead to be arrived at, the way a road exists before anyone drives on it. What has not been reached has not been made.
+
+And the reaching is not solitary. It happens inside something. A body being maintained, a mind being maintained, a world being maintained, all of them opening and closing and opening again, continuously, without instruction from me and mostly without my noticing.
+
+One thing is not on that list. I am not surrounded by my own center. Everything else named is either something I am inside of or something that is inside of me. The center is the single item that is neither, because it is where the looking is being done from.
+
+That is what the question feels like from within it. Something is being held, at every one of those scales, at this moment, and almost none of it is being done by me.
+
 So the question is not idle and it is not merely philosophical.
 
 What holds?
