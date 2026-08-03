@@ -12,7 +12,7 @@ Last updated: 2026-08-01
 Version: 0.1
 ```
 
-**Audit note (Claude, 2026-08-01, filing pass).** Content unaltered. Six open items found on review are recorded in the Audit findings section at the end of this file rather than corrected in place, since they are the author's to adjudicate. The most consequential are the missing third copula relation (§1.1) and an unreconciled second temporal mapping against framework §4.11 (Part IV).
+**Audit note (Claude, 2026-08-01, filing pass).** Content unaltered. Six open items found on review are recorded in the Audit findings section at the end of this file rather than corrected in place, since they are the author's to adjudicate. The most consequential was an unreconciled second temporal mapping against framework §4.11, now **closed** by §12.1 (Ashman, 2026-08-01). The remaining lead item is the missing third copula relation (§1.1).
 
 ---
 
@@ -39,7 +39,7 @@ The central commitments are:
 - There is no greatest whole.
 - Healthy relation is participation without erasure.
 - The future is met at the center.
-- The present is met at the boundary or interface.
+- The present is the center itself; the interface is where the past arrives. (Corrected 2026-08-01; the earlier commitment read "the present is met at the boundary or interface." See §12.1.)
 - The past is formed as the continuing line of actualized experience.
 
 ---
@@ -610,6 +610,32 @@ Thus:
 Canonical statement:
 
 > The future is met at the center. The present is met at the boundary. The past is formed as the line.
+
+**Superseded 2026-08-01.** The middle clause is wrong, not merely imprecise. See §12.1 for the adjudicated form:
+
+> The center is the present. Infinity is the future. Everything else is past.
+
+---
+
+## 12.1 Adjudication: the center is the present (Ashman, 2026-08-01)
+
+This corrects §0, §11 and §12 above rather than clarifying them.
+
+**The statement.** The center is the present. Infinity is the future. Everything else is past.
+
+**Why this is a correction and not a rephrasing.** §11 says the concrete present occurs at the interface, where boundary meets world. Under the adjudicated statement the interface is where the *past arrives*, not where the present happens. The physiology agrees at no cost to the argument: conscious perception lags stimulus by a couple of hundred milliseconds, light left its source before reaching the eye, and every sensation has already occurred by the time it crosses the boundary. The body is a record. What is genuinely now is the center, and nothing else is.
+
+**Reconciliation with framework §4.11, which the earlier draft left open.** §4.11 assigns convergence to the future (the field not yet gated), the turn i to the present (the gate), and emergence to the past (what has been committed into structure). The adjudicated statement is those same three with station labels where §4.11 used scale labels: ∞ is what convergence brings in, the center is the gate where it turns, and everything already emerged into structure lies behind it. The two were never competitors. §4.11 placed the present at your ⊙; this places it at the center *of* your ⊙, which is more exact and makes "the gate" literal rather than approximate.
+
+**The sharper sentence, which the document should carry:**
+
+> The center is where the future and the past meet, and that meeting is the present.
+
+**A consequence the framework has asserted without justifying.** The center has no extension because a meeting has no width. Not a small thing and not a thin thing: the place two directions arrive at, which is why it can be the only now.
+
+**This also unifies the two orders of Part III.** The radial order is not only a spatial arrangement. Read inward, world to body to mind to soul, it is the route the past takes to reach the center. Read outward from the center it is not the same road, because outward from the center is ∞, and ∞ does not lie further along the radius. So the center carries traffic in two directions that are not opposites: past arriving through the field from the boundary, and future arriving through no channel at all, because the aperture is open to it directly. This is why the aperture's only variable is openness. On the past side there is a field to tune; on the future side there is only a gate.
+
+**Consequent edits still outstanding in this document.** §11's interface-event operator 𝒥 is correctly specified but misnamed as producing the present; it produces the arriving past. §10's title, "The future is met at the center," survives unchanged and is now the only one of the three that was right as written.
 
 ---
 
@@ -1395,7 +1421,7 @@ Content above is unaltered. These are open items for adjudication, ordered by co
 
 **1. §1.1 states only one of the three copula relations.** The document asserts ∞ ≠ ⊙ flatly, and §6 adds the convergence statement in negative form (lim ⊙_n ≠ ⊙_∞). Missing is the third: ⊙ = ∞ under label-drop, which the corpus calls topologically exact rather than metaphor and which carries "Atman is Brahman." The three settled relations are: **≠ as forms** (integration is not inclusion, and conflating them is the featureless-monism error), **→ as convergence** along the nesting chain, never arriving, and **= under label-drop**, immediate and outside the scale axis. A foundations document that carries only the first two loses the apophatic identity the corpus commits to, and makes the six-name chain (Reality = Truth = 1 = E = ∞ = ⊙) look like a contradiction rather than a use of the third relation. See the Wholeness Plane and Nesting Notice in `CLAUDE.md`.
 
-**2. Part IV introduces a second temporal mapping that is not reconciled with framework §4.11.** This document assigns time to stations within one whole: future met at the center, present at the interface, past as the line. §4.11 assigns time to scale positions: the greater whole is the future (the ungated field), your own scale is the present (the gate), the parts are the past (already committed into structure). Both are defensible and they are not the same assignment. This is structurally the same situation as the constitutive and radial orders, which needed an explicit note before they stopped reading as a contradiction. One is needed here too, or a reader who knows §4.11 will think the present has been moved.
+**2. RESOLVED 2026-08-01, see §12.1. Part IV introduced a second temporal mapping that was not reconciled with framework §4.11.** This document assigns time to stations within one whole: future met at the center, present at the interface, past as the line. §4.11 assigns time to scale positions: the greater whole is the future (the ungated field), your own scale is the present (the gate), the parts are the past (already committed into structure). Both are defensible and they are not the same assignment. This is structurally the same situation as the constitutive and radial orders, which needed an explicit note before they stopped reading as a contradiction. One is needed here too, or a reader who knows §4.11 will think the present has been moved.
 
 **3. §4's relation presupposes two relata that A0 may not supply.** ⊙_i := R_i(∞, •_i) treats infinity and the point as two things standing in a relation. But §1.2 of the framework says 0 is not absence but the 1 at maximum convergence, and A0 says there is one energy. On that reading ∞ and • are one substrate at two degrees of constraint, and one does not mediate between a thing and its own substrate. Either the prime duality is a duality of aspect, in which case R relates one thing under two descriptions and the boxed statement needs rewording, or A0 is being amended. Both are available; neither should happen silently.
 
@@ -1411,4 +1437,5 @@ Content above is unaltered. These are open items for adjudication, ordered by co
 
 ## Revision history
 
+- 2026-08-01 v0.1a: §12.1 added, adjudicating the temporal mapping (Ashman). The center is the present, infinity is the future, everything else is past. This corrects §0, §11 and §12 rather than clarifying them, and closes audit item 2 by reconciling with framework §4.11: the same three assignments, with station labels where §4.11 used scale labels.
 - 2026-08-01 v0.1: filed into the repository from the author's draft. Content unaltered; header block added per project convention and audit findings appended.

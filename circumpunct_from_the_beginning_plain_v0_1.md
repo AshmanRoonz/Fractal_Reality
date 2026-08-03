@@ -144,6 +144,12 @@ You see through eyes, hear through ears, touch through skin, act through muscles
 
 So:
 
+> The center is the present.
+> Infinity is the future.
+> Everything else is past.
+
+Corrected 2026-08-01. An earlier version of this section said:
+
 > The future is met at the center.  
 > The present is met at the boundary.  
 > The past is formed as the line.
@@ -710,10 +716,11 @@ Content above is unaltered. Two items, both of which belong to the author.
 
 **1. §19 states the matter claim unhedged, and the formal companion does not.** Here: "Matter may be imagination made durable." In *Circumpunct Foundations* §17: the same claim, followed by "but this remains a metaphysical interpretation unless a testable correspondence is established." The two documents should agree, because this is the sentence that costs the most with a materialist reader and it is the same sentence that keeps *Believed Into Existence* out of *What Is Wholeness?* The plain register is the one that most needs the qualifier, not least, since its readers are least equipped to supply it themselves.
 
-**2. §5 introduces a temporal mapping that is not reconciled with framework §4.11.** Future at the center, present at the boundary, past as the line. §4.11 maps time to scale instead: the greater whole is the future, your own scale is the present, the parts are the past. Both are defensible and they are different assignments. This is the same shape as the constitutive and radial orders, which read as a contradiction until a note said they were different axes. See the audit in the formal companion.
+**2. RESOLVED 2026-08-01 (Ashman).** §5 originally said the present is met at the boundary. The adjudicated form is that the center *is* the present, infinity is the future, and everything else is past. The interface is where the past arrives, which the physiology supports: perception lags, and everything has already happened by the time it crosses the boundary. This also reconciles with framework §4.11 rather than competing with it, since §4.11 assigns convergence to the future, the turn to the present and emergence to the past, and the adjudicated form is those same three with station labels in place of scale labels. Full treatment in *Circumpunct Foundations* §12.1.
 
 **What this document does that the formal one cannot.** §16, on how narcissistic systems spread, is the strongest passage in either file. It is the only place in the corpus where the wholeness plane is put in motion: not four static cells, but a trajectory through them, with each step small enough to accept and the accumulation ending in absorption. It also explains recruitment, which no static account does, by noting that an absorbed member demands the same surrender because the hierarchy has become their safety. That is worth promoting into the formal document as a dynamic claim on the plane, and it is worth its own section in the ethics material.
 
 ## Revision history
 
+- 2026-08-01 v0.1a: §5's temporal statement corrected per Ashman's adjudication; the superseded form is kept visible.
 - 2026-08-01 v0.1: filed into the repository from the author's draft. Content unaltered; header block added per project convention and filing notes appended.
