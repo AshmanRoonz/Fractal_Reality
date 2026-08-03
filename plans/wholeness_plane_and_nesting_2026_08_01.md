@@ -1,6 +1,6 @@
 # The Wholeness Plane and the Composition of Nesting
 
-**Status: ADJUDICATED by Ashman 2026-08-01 and written into `CLAUDE.md`** (Wholeness Plane and Nesting Notice, plus targeted corrections at the ⊂[α] entry, the §25.19 goodness line, and the three-forms passage). Migration into `circumpunct_framework.md` is still pending; see Scope at the end. Four findings from the 2026-08-01 session (Ashman, Claude, and a parallel reading). Two of them correct positions currently committed in `CLAUDE.md` and the framework. Nothing here has been applied to the corpus; this file is the record and the proposal.
+**Status: ADJUDICATED by Ashman 2026-08-01 and written into `CLAUDE.md`** (Wholeness Plane and Nesting Notice, plus targeted corrections at the ⊂[α] entry, the §25.19 goodness line, and the three-forms passage). Migration into `circumpunct_framework.md` is still pending; see Scope at the end. Four findings from the 2026-08-01 session (Ashman, Claude, and a parallel reading). Two of them supersede positions previously committed in `CLAUDE.md` and still standing in the framework file. This document is the full record; the notice is the summary.
 
 ## Finding 1: κ is two quantities, not one. Health is a corner, not a middle.
 
