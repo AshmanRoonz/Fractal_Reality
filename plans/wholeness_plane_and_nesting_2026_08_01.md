@@ -1,6 +1,6 @@
 # The Wholeness Plane and the Composition of Nesting
 
-**Status: pending Ashman's adjudication.** Four findings from the 2026-08-01 session (Ashman, Claude, and a parallel reading). Two of them correct positions currently committed in `CLAUDE.md` and the framework. Nothing here has been applied to the corpus; this file is the record and the proposal.
+**Status: ADJUDICATED by Ashman 2026-08-01 and written into `CLAUDE.md`** (Wholeness Plane and Nesting Notice, plus targeted corrections at the ⊂[α] entry, the §25.19 goodness line, and the three-forms passage). Migration into `circumpunct_framework.md` is still pending; see Scope at the end. Four findings from the 2026-08-01 session (Ashman, Claude, and a parallel reading). Two of them correct positions currently committed in `CLAUDE.md` and the framework. Nothing here has been applied to the corpus; this file is the record and the proposal.
 
 ## Finding 1: κ is two quantities, not one. Health is a corner, not a middle.
 
@@ -76,6 +76,11 @@ A thin object with almost no interior organization can only preserve its identit
 3. Should the Shared-Tonic Principle be named and stated in the corpus, given that the computation supporting it is already graded A?
 4. How is ⊙∞ disambiguated, and does §4.8a's limit case survive Finding 4 as written?
 
+## Scope of what has been applied
+
+Written into `CLAUDE.md` only. Still carrying superseded text: `circumpunct_framework.md` §25.19 and §27.7o (scalar κ), §4.8a (the ⊙∞ ambiguity and the limit case Φ∞ = ⊙∞ = E), and the §25.18b virtues table (TRUE not yet marked as the one virtue that is not a skill). The four open decisions below are unchanged by the write-in, since the notice records the corrections without resolving them.
+
 ## Revision history
 
+- 2026-08-01 v1.1: adjudicated by Ashman and written into `CLAUDE.md` as the Wholeness Plane and Nesting Notice, with targeted corrections at the three sites that carried the scalar κ or the unqualified three-forms passage. Framework-file migration still pending.
 - 2026-08-01 v1.0: initial. Four findings recorded pending adjudication; nothing applied to the corpus.
