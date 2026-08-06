@@ -57,11 +57,30 @@ A thin object with almost no interior organization can only preserve its identit
 
 **Consistency with the corpus.** This is already doctrine and is now stated more sharply. `CLAUDE.md` says the recursion is unbounded in both directions with no top, and that the jump from ⊙Λ to ∞ is categorical rather than vertical: ∞ is not the top of the ladder, it is the ocean the ladder stands in.
 
-**An ambiguity this forces into the open.** The corpus uses ⊙∞ in two different senses. In the genesis sequence (∞ → •∞ → ⊙∞) the subscript means *multiplicity*: the foam, infinitely many circumpuncts. In the §4.8a limit case (Φ∞ = ⊙∞ = E, recovered at λ → ∞) the subscript means *scale*: one circumpunct at infinite scale. Finding 4 says the second object does not exist, since there is no greatest whole. Either the limit statement needs rewriting so that λ → ∞ names a limit that is approached and not occupied, consistent with ⊙ → ∞ as convergence, or ⊙∞ needs two distinct notations. This has not been checked against §4.8a's full text.
+**RESOLVED 2026-08-01 (Ashman). An ambiguity this forced into the open.** The corpus uses ⊙∞ in two different senses. In the genesis sequence (∞ → •∞ → ⊙∞) the subscript means *multiplicity*: the foam, infinitely many circumpuncts. In the §4.8a limit case (Φ∞ = ⊙∞ = E, recovered at λ → ∞) the subscript means *scale*: one circumpunct at infinite scale. Finding 4 says the second object does not exist, since there is no greatest whole. Either the limit statement needs rewriting so that λ → ∞ names a limit that is approached and not occupied, consistent with ⊙ → ∞ as convergence, or ⊙∞ needs two distinct notations. **Resolution.** E is the future and is ∞: undifferentiated, ungated, not yet. λ → ∞ is therefore precisely the state in which nothing has converged, and since a whole is what convergence produces, the limit contains no circumpunct at all. Delete ⊙∞ from the limit statement; write Φ∞ → E, approached and never occupied. ⊙∞ keeps only its genesis-sequence sense, where the subscript means multiplicity rather than scale. The same move supplies the dynamical reading of the temporal adjudication: E is the future, 𝒫 is the present, m is the past, and 𝒫 = E / (i · t) is the only one of the three with time in it. Written into `CLAUDE.md`.
 
 **Theological ancestry, worth citing rather than rediscovering.** "God is infinite, not a supreme individual whole" places the framework with classical theism against theistic personalism. The claim that God is not a being among beings, not the largest item in the inventory, is Tillich's ground of being, and in the contemporary literature it is the standard classical-theist objection (Davies, Hart) to the popular picture of God as a very large person. The framework arrives at it structurally, which is worth something, but the position is not new and should not be presented as such.
 
 **Canonical line (Ashman).** There is no greatest whole. Every whole is also part, while infinity is one without being whole.
+
+## Finding 5 (proposed, not adjudicated): the plane places illnesses differentially
+
+Raised 2026-08-01 while testing whether all illness is a distortion of the organism's relation to Reality.
+
+**The failure to avoid.** "Illness is a distortion of coherence within a living whole" fails the project's own protocol. Ask what would count as an illness that is *not* a distortion of coherence, and if nothing does, the sentence is a definition wearing the clothes of a finding. `plans/pole_gap_boundary.md` was written for exactly this shape: a pattern that appears under any comparison you construct is an artifact of the observer, not an emergence. A broken leg, a virus, a depression and a deficiency all satisfy it, so it sorts nothing.
+
+**The version with content.** The wholeness plane places different illnesses in different cells, which is a claim that can fail.
+
+- **Cancer**: high autonomy, lost connection. A cell that has stopped participating in the organism while remaining vigorously itself. Severance at the cellular scale. The corpus already has a sharper form of this at §18.11.5: aperture locked open (β_• → 1) plus collapsed boundary filter (β_○ → 0), with the explicit claim that neither alone is typically sufficient.
+- **Autoimmunity**: connection intact, boundary misreading self as other. A filter failure at ○, structurally unlike cancer despite both being called disorders of self-regulation.
+- **Fibrosis and pathological fusion**: connection high, autonomy lost. Parts fused, differentiation destroyed. Inflation at tissue scale, and the opposite of cancer rather than a variant of it.
+- **Infection**: not a point on the plane at all. Another whole with its own center, participating in your interior on its own terms. A rival integration rather than a degraded one, which is why the response is expulsion rather than repair.
+
+Four conditions, four distinct structural positions, one of them off the plane entirely. That is the contribution: not the word "distortion" but the ability to say **which relation, at which station**.
+
+**The guard, which is already in the corpus and must travel with this material.** A framework saying illness is a failure of relation invites the reading that healing is correcting your beliefs. That is the health version of manifestation literature and it harms sick people. No disclaimer needs bolting on, because §18.11.6 already says it structurally: medication works from ○ inward by adjusting boundary conditions, contemplative practice works from • outward, and the two meet at Φ. Physical intervention is not a concession to the framework; it is one of the two directions the framework names. Any published version of this must state that early and plainly.
+
+**Status.** Proposed. The four placements are structural readings, not measurements, and only the cancer case has a committed corpus form with a predicted ratio behind it.
 
 ## Related, from the same session
 
@@ -82,5 +101,7 @@ Written into `CLAUDE.md` only. Still carrying superseded text: `circumpunct_fram
 
 ## Revision history
 
+- 2026-08-01 v1.3: Finding 4's ⊙∞ ambiguity resolved (Ashman). E is the future, so λ → ∞ is where nothing has converged and the limit contains no whole; ⊙∞ keeps only its multiplicity sense. Carries the E/𝒫/m temporal reading, which completes the morning's adjudication on the dynamical axis. Both written into `CLAUDE.md`.
+- 2026-08-01 v1.2: Finding 5 added (proposed, not adjudicated): the plane places illnesses differentially, with the tautology test that kills the vague version, four structural placements including infection as a rival integration rather than a degraded one, the §18.11.5 connection for cancer, and the §18.11.6 two-directions guard that has to travel with any published form.
 - 2026-08-01 v1.1: adjudicated by Ashman and written into `CLAUDE.md` as the Wholeness Plane and Nesting Notice, with targeted corrections at the three sites that carried the scalar κ or the unqualified three-forms passage. Framework-file migration still pending.
 - 2026-08-01 v1.0: initial. Four findings recorded pending adjudication; nothing applied to the corpus.
