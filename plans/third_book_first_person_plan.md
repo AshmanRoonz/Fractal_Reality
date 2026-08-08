@@ -6,7 +6,7 @@ Last updated: 2026-08-08
 Version: 0.2
 ```
 
-Status: concept and full chapter structure adjudicated by Ashman 2026-08-08, from his drafted opening ("There is something about each of us that is indivisible"). Title undecided; referred to here as the first-person book. Nothing drafted beyond the opening.
+Status: first full draft exists at `Book-The_Circumpunct/the_circumpunct.md` (v0.1, ~9,900 words, drafted by Claude 2026-08-08 at Ashman's direction), awaiting Ashman's voice and conceptual pass. Concept and chapter structure adjudicated by Ashman 2026-08-08 from his drafted opening ("There is something about each of us that is indivisible"). Working title "The Circumpunct," provisional.
 
 ## Why a third book rather than a prologue
 
@@ -125,5 +125,6 @@ Closed by Ashman's structure: the spine question (constitutive order, chapters 1
 
 ## Revision history
 
+- 2026-08-08 v0.3: first full draft written to `Book-The_Circumpunct/the_circumpunct.md`; status updated; working title recorded as provisional.
 - 2026-08-08 v0.2: Ashman's fourteen-chapter structure and format constraints adopted, replacing the provisional eleven-chapter spine. Adds the circumpunct-shaped reading of the book with its hazard, the placement of the processual stations as chapter-closing transitions rather than chapters, the format rules, and per-chapter source material. Closes the spine and solipsism questions; opens the chapter 8 seam.
 - 2026-08-08 v0.1: initial. Concept, division of labor against the other two books, the inside-check discipline, eleven-chapter spine on the "I am" ladder, fixes to the drafted opening, open decisions, risks.
