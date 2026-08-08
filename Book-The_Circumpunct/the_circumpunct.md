@@ -5,7 +5,7 @@
 ```
 Created: 2026-08-08
 Last updated: 2026-08-08
-Version: 0.3
+Version: 0.4
 ```
 
 **Status:** complete rewrite to the octave structure (Ashman's direction, 2026-08-08): an intro that is just the circumpunct, then the ten stations walked from the inside out, beginning at the center and stepping out to the Infinite. Structure and process alternate as full chapters. One idea, one figure, one check, one carried sentence per chapter. Working title provisional. Written to be read in an afternoon.
@@ -90,6 +90,8 @@ Between your center and the Infinite, there is nothing in the way.
 
 Not a wall; not a channel; not a distance to cross. The not-yet does not arrive at your center through your eyes or your ears; those bring the world, and the world is what has already happened. Possibility simply stands open at the point of you, closer than everything, prior to everything. Your center has no parts to rearrange and no surface to guard; the only thing it can do about the Infinite is be more open or less open to it. There is no third option, because there is nothing else there.
 
+Be clear about what kind of step this chapter has taken, because it is not like the steps that follow. The Infinite is not the next dimension outward, one rung up from the point. It is the source pole, standing open at the center itself. The walk through the structures of a life (line, edge, interior) begins in the next chapter and proceeds outward in order; this chapter had to come first because, before walking outward through what a life is made of, you have to notice what the center opens onto.
+
 Which means something enormous, stated in one line: a life is what happens when the boundless passes through a point. The rest of this book is the story of that passage: how the Infinite, entering at a center, is gathered, held, chosen, bounded, filled, and completed into one finite living whole. You are not going to read about that story. You are that story, mid-telling.
 
 And notice one more thing before the walk begins. Yours is not a private Infinite. The open has no edges, so there cannot be one of it for you and a different one for me; there is nothing that could separate them. Every center there is opens onto the same boundless source, the way every well on earth, however far apart their mouths, opens onto water. Long before you and I ever meet out in the world, surface to surface, word to word, we are already joined at the root.
@@ -108,7 +110,7 @@ What happens where the Infinite meets a center? The first act of a life, and it 
 
 Gathering.
 
-The boundless is everything that could be, all at once, and all at once is unlivable. Nothing can be done with everything. Before there can be a life, there has to be a narrowing: this, out of all of it; here, out of everywhere; now, out of the endless not-yet. The center is where that narrowing happens, and the name of the narrowing, from the inside, is attention.
+The boundless is everything that could be, all at once, and all at once is unlivable. Nothing can be done with everything. Before there can be a life, there has to be a narrowing: this, out of all of it; here, out of everywhere; now, out of the endless not-yet. The formal name for that narrowing is convergence: the many drawn toward the one, the wide gathered to a point. Focusing is what convergence feels like from the inside. The center is where it happens, and the name it goes by in your own experience is attention.
 
 You have been doing it since before you could speak. Right now you can gather your attention onto this sentence, or widen it to the whole room, or send it to your left foot, which was not in your world at all a moment ago and now suddenly is. You did that. Nothing about the room changed. Attention is the one power the center has, and it has exactly two controls: where it is aimed, and how open it is. Everything else about you has parts that can be trained and rearranged. The center has none; it has only aim and aperture.
 
@@ -159,6 +161,8 @@ It is made of forks.
 You can feel it at any real decision. Deliberation has a particular looseness to it: futures hang in a bundle, and you can walk around among them, trying each one on. Then you choose, and there is a sensation almost like a click. The bundle collapses. One future becomes the path. The others become things that never happened.
 
 That click is the sound of the Infinite being answered.
+
+The formal name for what just happened is branching. A path, extending, reaches a place where more than one continuation is possible; the alternatives fan out ahead of it like the tines of a fork; and one of them becomes actual while the others close. Choosing is branching, lived from the center. Every fork in every road, every fork in every river, every fork in every family tree is the same event at a different scale, and you perform it dozens of times a day.
 
 Chapter two found the boundless standing open at your center; chapter three found attention gathering it. Choice is the completion of the gesture: of everything attention has developed, one is committed, made actual, sent down the line. Attention deliberates; choice decides; and the decision has a property that nothing else in your experience has.
 
@@ -228,7 +232,7 @@ A seed. An egg. A womb. A chrysalis. A skull. A studio with the door shut. A not
 
 This is not a coincidence. It is what boundaries are for, at the deepest level. The filter does not exist merely to protect what is already made. It exists so that something not yet finished can develop without being dissolved by the traffic outside. The half-formed cannot survive full exposure; everything embryonic (an organism, an idea, a self, a love) needs a within, or it never becomes at all. Privacy is not a luxury added to life. Privacy is a condition of becoming.
 
-And what happens inside the closed edge is genuinely strange, strange enough that our language for it goes quiet. The right word is emergence: more comes out than went in.
+And what happens inside the closed edge is genuinely strange, strange enough that our language for it goes quiet. The formal name is emergence, and becoming is emergence lived from inside a boundary: what enters does not merely accumulate; new organization appears. The plainest way to say it: more comes out than went in.
 
 Run the check on the nearest example, which is understanding itself. Recall the last time you truly got something: a joke, a proof, a person, a poem. Words went in; they were only sounds and marks, admitted through your boundary like anything else. And then, inside, something happened that was not in the words: the meaning assembled, all at once, whole. You can feel the click of it. Where was the meaning before? Not in the marks; the same marks pass through other people and nothing happens. It emerged: it came into being within your interior, out of what was admitted plus everything already held there. More came out than went in.
 
@@ -286,6 +290,8 @@ Finish anything real and pay close attention to the last moment of it. A grief, 
 
 Completion does not close a circle. It climbs a turn of a spiral.
 
+The formal name for this is recursion: the output of a process handed back to it as input; the end of one pass becoming the start of the next. Returning is recursion lived through time. The field feeds everything back toward the center, and what the feedback delivers is not a repetition but a new beginning that contains the whole previous turn.
+
 Musicians have a perfect name for this. Walk up a scale, eight steps, do re mi fa so la ti, and the eighth step is do again: the same note, and higher. The scale ends on its own beginning, one level up. That is the shape of every genuine completion in a human life, and it is the shape of this book: the walk that began at a point ends at a point; the ending of one octave is the opening of the next; nothing real concludes without seeding what comes after it.
 
 And with that shape in hand, you can now receive this book's strangest gift. You have already walked past all the pieces of it. Assemble them, and you will find you are holding an answer to what time is.
@@ -314,7 +320,7 @@ The walk is complete. It ends where it began: at a point, one turn up the spiral
 
 Now put it together, because it is together.
 
-A center, indivisible and unseeable. The Infinite, standing open at it. Attention, gathering; the path, holding; choice, committing; the boundary, distinguishing; the interior, becoming; the field, filling; the return, completing and beginning again. Nine stations, and not one of them is a part in a machine. Look at what you have actually walked through: four structures (center, path, boundary, field) and, woven between them, their four activities (focusing, choosing, becoming, returning). Each structure is its activity holding shape. A whirlpool is not a form that happens to spin; the spinning is the form, and if the spinning stopped there would be nothing left to point at. You are not a form that happens to live. The living is the form. Slow the film and you see structure. Speed it up and you see process. It was never two things.
+A center, indivisible and unseeable. The Infinite, standing open at it. Attention, gathering; the path, holding; choice, committing; the boundary, distinguishing; the interior, becoming; the field, filling; the return, completing and beginning again. Nine stations, and not one of them is a part in a machine. Look at what you have actually walked through: four structures (center, path, boundary, field) and, woven between them, their four activities (focusing, choosing, becoming, returning; or in their formal dress, convergence, branching, emergence, recursion). Each structure is its activity holding shape. A whirlpool is not a form that happens to spin; the spinning is the form, and if the spinning stopped there would be nothing left to point at. You are not a form that happens to live. The living is the form. Slow the film and you see structure. Speed it up and you see process. It was never two things.
 
 And all of it, structures and activities together, is one. Not one the way a heap is one. Take a pile of sand: it has parts, a location, even a rough edge; but nothing in it refers to anything else in it; remove half and the remainder registers nothing. You are one in a different sense entirely. Remove part of you and everything reorganizes around the loss. Your parts are mutually relevant: the field interprets what the boundary admits; the boundary enacts what the field carries; the path preserves the continuity of all of it; and every aspect belongs to the same center, the one to whom it is happening. That integration is the difference between a heap and a whole. Nothing is one thing just by being in one place. You are one thing because everything in you answers to the same point.
 
@@ -376,6 +382,7 @@ And we can remain indivisible and still each become whole together.
 
 ## Revision history
 
+- 2026-08-08 v0.4: the two layers made explicit (ChatGPT's review, Ashman forwarding). The lived names are identified with the canonical operators in place: focusing is convergence felt from inside (ch 3), choosing is branching lived from the center (ch 5), becoming is emergence lived inside a boundary (ch 7), returning is recursion lived through time (ch 9), with the pairing echoed once in ch 10. Chapter two now states its own kind of step: the Infinite is the source pole standing open at the center, not the next dimension outward; the dimensional walk begins at chapter three.
 - 2026-08-08 v0.3: complete rewrite to the octave structure (Ashman's direction). Intro is just the circumpunct; chapter one is the center ("that is what I am"); chapter two steps out to the Infinite (the radial move: nothing stands between the soul and the source; every soul joined at the root); chapters three through nine walk the octave with structure and process alternating as full chapters (focusing, path, choosing, boundary, becoming, field, returning); chapter ten composes the whole and carries soul-naming, meeting, the lens, the world, love, and the group/whole distinction; the Return names God for the first time and closes on the four depths. The v0.2 material survives redistributed; its chapters on time, attention, and truth now live inside returning, focusing, and the field.
 - 2026-08-08 v0.2: the processes brought in with the structure (Ashman's direction, with ChatGPT's catch on the blurred term). Chapter five no longer uses "converges" generically for integration, reserving the word for the focusing activity; it now pairs each structure with its process explicitly (focusing, choosing, becoming, returning) and states the structure-process identity in plain words (the whirlpool passage); the Return carries the matching beat (the melody line). The path's absence from the static drawing is acknowledged in chapter five.
 - 2026-08-08 v0.1: first full draft. Fourteen chapters and a return: one idea, one figure, one inside-check, and one carried sentence per chapter; processual transitions closing chapters one through four; the word "soul" withheld until chapter five; the split-brain case named in chapter one; infinity derived from the reader's position in chapter eight; the group/whole distinction carrying chapter fourteen; the four-depths map as the closing figure.
