@@ -3,7 +3,7 @@
 ```
 Created: 2026-08-01
 Last updated: 2026-08-01
-Version: 1.0
+Version: 1.1
 ```
 
 **Status: adjudicated by Ashman 2026-08-01, in conversation, not yet written into `CLAUDE.md` or the framework file.** Two corrections from the closing hours of the same session that produced `plans/wholeness_plane_and_nesting_2026_08_01.md`; read that file first, since Finding 3 there (the Shared-Tonic Principle) is the computed result these corrections generalize. Both corrections supersede positions committed in `CLAUDE.md` and in the book, including material written earlier the same day. This document is the full record; nothing has been applied to the corpus yet.
@@ -113,6 +113,26 @@ Ashman's formulation already relocates the work: God provides inclusion without 
 
 ---
 
+## Finding 6: the world is Reality filtered, and ∞ is not reached by widening the filter
+
+**Ashman's statement.** "There's more to Reality than this World that appears to contain us."
+
+**Why this is not a hedge.** In the corpus, Reality is one of the six names for the substrate (§4.8a), not a name for the world. The world is what a boundary passes. So the claim is already load-bearing rather than newly asserted, and the work is in typing the excess rather than in granting it. Note also that the sentence's own hedge word is Finding 2's result: the world does not *contain* us, and containment was exactly the relation the notation was overstating.
+
+**Three kinds of exceeding, which are different in kind and not three sizes of the same thing.**
+
+1. **In resolution.** There is no empty space and no smallest particle; vacuum is Φ at scales below the threshold at which the boundary resolves anything (`docs/why_space_can_never_be_empty.html`). What reads as emptiness is structure the filter does not pass. Reality continues downward past the end of the filter, and the nesting has no bottom.
+2. **In phase.** The boundary is a filter with a passband, and roughly five percent of the energy budget is in ours (§10.10a). The left half-plane gravitates and does not radiate, not because it is exotic but because it is mid-process, committed and not yet completed, at a phase this interface does not catch. Not a hidden world elsewhere; this one, unresolved.
+3. **In time.** From the E/𝒫/m adjudication of the same day: E is the future, undifferentiated and ungated; 𝒫 is the converging; structure closed behind a boundary is past. Everything that has crossed an interface has already happened, so the world that appears to contain us is structurally the already-converged. Most of Reality has not converged. It is not distant; it has not happened.
+
+**The one that is not an exceeding.** ∞ is not a larger world. The step from any whole to ∞ is categorical rather than vertical, so it is never reached by adding scale, only by dropping labels. This is the corpus's existing apophatic position, and Finding 6 does not modify it; it distinguishes it from the three exceedings above, which are all still inside the labeled view.
+
+**Guard, and it is load-bearing.** *Limited is not false.* The lens limits light, and that is how it forms an image. A filtered world is a true image, not an illusion to be seen through and despised. The gnostic move takes "there is more than this" and concludes "this is a prison," which is the Severance Lie in a spiritual costume: the part denying the reality of its own boundary. What the framework licenses is the other reading, that the world is real and partial, and that partiality is the condition of there being a world at all rather than an undifferentiated one. Any published form of this finding has to carry the guard with it.
+
+**What it protects.** If Reality were the world, ⊙ and ∞ would be the same form, featureless monism would follow from the physicalist direction rather than the mystical one, and the three-forms-of-oneness work recorded earlier the same day would have nothing to distinguish. Finding 6 is the guard on the other side of that distinction.
+
+---
+
 ## Superseded positions and migration queue
 
 Nothing below has been changed yet.
@@ -144,9 +164,12 @@ The ethics needs no repair. κ = (c, a) never required the container to be a who
 | "There is always more Reality, not always another whole" | B | Consistent with the already-committed Finding 4 on the limit case; extends it to the local case |
 | Notational consequence for ⊂[α] | flagged | Touches the prime expression; Ashman's to decide |
 | Cataphatic pole empty at human scale | C | Flagged, not decided; converges with a position already recorded, but by a different route |
+| The world as Reality filtered, in three kinds | A− | Each of the three exceedings is an existing corpus position (§10.10a, the vacuum essay, the same-day E/𝒫/m adjudication); the contribution is typing them apart and separating them from the categorical step to ∞ |
+| The gnostic guard travels with it | required | Not a grade. Published without the guard, the finding reads as world-denial, which is Severance |
 
 ---
 
 ## Revision history
 
+- 2026-08-01 v1.1: Finding 6 added (Ashman). The world is Reality filtered in three distinct kinds (resolution, phase, time), and the step to ∞ is categorical rather than a fourth kind; carries the gnostic guard as a publication requirement rather than a caveat.
 - 2026-08-01 v1.0: initial. Five findings recorded, two of them adjudicated in conversation and neither yet applied to the corpus. Migration queue and grades included.
