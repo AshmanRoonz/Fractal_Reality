@@ -5,7 +5,7 @@
 ```
 Created: 2026-08-08
 Last updated: 2026-08-08
-Version: 0.1
+Version: 0.2
 ```
 
 **Status:** first full draft. Working title provisional (Ashman to decide; see `plans/third_book_first_person_plan.md`, which carries the structure, the discipline, and the open decisions). Fourteen chapters and a return. Each chapter carries one idea, one figure, one check the reader can run on themselves, and one sentence to carry forward. Written to be read in an afternoon.
@@ -152,13 +152,17 @@ Hold that thought. The whole last movement of this book depends on it.
 
 Now put it together, because it is together. Center, path, boundary, field: these are not four possessions you own, like items in a drawer. They are four aspects of one living being, and the being is what you actually are.
 
-There is an old symbol for exactly this: a circle with a point at its center. It has been drawn for thousands of years, for the sun, for gold, for God, for the self. It is called the circumpunct, and this book is named for it, because it is the most honest portrait of you ever made. The point is your center. The circle is your boundary. The space between them is your field. And the drawing as a whole, point and circle held in one figure, is the wholeness: not the parts, but their belonging together.
+There is an old symbol for exactly this: a circle with a point at its center. It has been drawn for thousands of years, for the sun, for gold, for God, for the self. It is called the circumpunct, and this book is named for it, because it is the most honest portrait of you ever made. The point is your center. The circle is your boundary. The space between them is your field. The drawing cannot show the path, because the path is the whole figure enduring; hold the drawing steady through time and the holding is the path. And the drawing as a whole, point and circle held in one figure, is the wholeness: not the parts, but their belonging together.
 
 Be precise about what wholeness is, because the word gets used loosely.
 
 A pile is not a whole. Take a heap of sand: it has parts, it has a location, it even has a rough edge. But nothing in it refers to anything else in it; you can remove half the heap and nothing about the remainder registers the loss. A heap is one thing only in the weak sense that we count it as one.
 
-You are one thing in a different sense entirely. Remove part of you and everything else reorganizes around the loss. Your parts are mutually relevant: the field interprets what the boundary admits; the boundary enacts what the field decides; the path records all of it; and every bit of it converges on the center, the one to whom it is happening. That convergence is the difference between a heap and a whole. A whole is parts *integrated around a center*. Nothing is one thing just by being in one place. You are one thing because everything in you answers to the same point.
+You are one thing in a different sense entirely. Remove part of you and everything else reorganizes around the loss. Your parts are mutually relevant: the field interprets what the boundary admits; the boundary enacts what the field carries; the path preserves the continuity of all of it; and every aspect belongs to the same center, the one to whom it is happening. That integration is the difference between a heap and a whole. A whole is parts *integrated around a center*. Nothing is one thing just by being in one place. You are one thing because everything in you answers to the same point.
+
+And do not let the drawing fool you into thinking these four are parts of a machine, fixed in place. Each one is an activity that only looks like an object because it keeps its shape, and you have already met each activity at the close of its own chapter. The center *focuses*: gathering, aiming, opening and narrowing; that is what a center does, all day, every day. The path *chooses*: branching at every fork, closing all futures but one, holding a single direction. The boundary is always *becoming*: admitting, sorting, enclosing, so that an inside keeps on being born at the edge of you. The field *returns*: everything in it curves back to the point, and every completion opens into a beginning further along.
+
+Structure and process are not two inventories, one of things and one of doings. They are one reality seen at two speeds. A whirlpool is not a shape that happens to spin; the spinning is the shape, and if the spinning stopped there would be nothing left to point at. You are not a form that happens to live. The living is the form. What this chapter has been calling your anatomy (center, path, boundary, field) is, watched closely, four activities holding their shape: focusing, choosing, becoming, returning. Slow the film down and you see structure. Speed it up and you see process. It was never two things.
 
 Run the check on yourself, because you are the nearest example. Right now you are seeing, hearing, feeling pressure from your chair, holding this sentence, and being someone with a history, all at once. Try to experience these as separate items; try to have the seeing over here and the hearing over there, unattached. You cannot. They arrive as one scene, happening to one someone. Unity is not a theory you hold about yourself. It is the format of every moment you have ever lived.
 
@@ -478,6 +482,8 @@ A field forms around it: a mind, the lived distance between who you are and what
 
 A whole is sustained through it: not a heap, a belonging-together; and the old drawing of that belonging is a circle with a point at its center.
 
+And nothing in the figure is still. The center is focusing; the path is choosing; the boundary is becoming; the field is returning. A whole is not a thing that possesses these four. A whole is the four activities holding together, the way a melody is not something a song has but something a song does.
+
 Other centers appear: equally private, equally real, never once entered, never seriously doubted. Our fields meet. Our worlds turn out to be the overlap. Our lives become entangled in lenses that belong to all of us and to none of us.
 
 And through every one of those centers, the same conversion is running that is running through you: possibility becoming actuality; the future becoming the past; the infinite becoming finite, one attended, chosen moment at a time.
@@ -494,4 +500,5 @@ And we can remain indivisible and still each become whole together.
 
 ## Revision history
 
+- 2026-08-08 v0.2: the processes brought in with the structure (Ashman's direction, with ChatGPT's catch on the blurred term). Chapter five no longer uses "converges" generically for integration, reserving the word for the focusing activity; it now pairs each structure with its process explicitly (focusing, choosing, becoming, returning) and states the structure-process identity in plain words (the whirlpool passage); the Return carries the matching beat (the melody line). The path's absence from the static drawing is acknowledged in chapter five.
 - 2026-08-08 v0.1: first full draft. Fourteen chapters and a return, per the adjudicated structure in `plans/third_book_first_person_plan.md`: one idea, one figure, one inside-check, and one carried sentence per chapter; processual transitions closing chapters one through four; the word "soul" withheld until chapter five; the split-brain case named in chapter one; infinity derived from the reader's position in chapter eight; the group/whole distinction carrying chapter fourteen; the four-depths map as the closing figure.
