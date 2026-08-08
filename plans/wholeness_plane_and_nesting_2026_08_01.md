@@ -2,6 +2,8 @@
 
 **Status: ADJUDICATED by Ashman 2026-08-01 and written into `CLAUDE.md`** (Wholeness Plane and Nesting Notice, plus targeted corrections at the ⊂[α] entry, the §25.19 goodness line, and the three-forms passage). Migration into `circumpunct_framework.md` is still pending; see Scope at the end. Four findings from the 2026-08-01 session (Ashman, Claude, and a parallel reading). Two of them supersede positions previously committed in `CLAUDE.md` and still standing in the framework file. This document is the full record; the notice is the summary.
 
+**Continued in `plans/shared_wholeness_and_groups_2026_08_01.md`** (later the same day). Finding 3 below, the Shared-Tonic Principle, is the computed result that the continuation generalizes: sharing rather than containment may be how wholes relate in general, which removes the requirement that there be a whole above us, and separates groups (a fuzzy centre) from wholes (one indivisible centre).
+
 ## Finding 1: κ is two quantities, not one. Health is a corner, not a middle.
 
 **Current position.** `CLAUDE.md` parameterizes the nesting bond as a single number with the two Lies at its limits: κ → 0 is Severance, κ → ∞ is Inflation, and health is the interval 0 < κ < κ*.
@@ -101,6 +103,7 @@ Written into `CLAUDE.md` only. Still carrying superseded text: `circumpunct_fram
 
 ## Revision history
 
+- 2026-08-01 v1.4: pointer added to the continuation document, which generalizes Finding 3 from a fact about chains to a candidate account of how wholes relate at all.
 - 2026-08-01 v1.3: Finding 4's ⊙∞ ambiguity resolved (Ashman). E is the future, so λ → ∞ is where nothing has converged and the limit contains no whole; ⊙∞ keeps only its multiplicity sense. Carries the E/𝒫/m temporal reading, which completes the morning's adjudication on the dynamical axis. Both written into `CLAUDE.md`.
 - 2026-08-01 v1.2: Finding 5 added (proposed, not adjudicated): the plane places illnesses differentially, with the tautology test that kills the vague version, four structural placements including infection as a rival integration rather than a degraded one, the §18.11.5 connection for cancer, and the §18.11.6 two-directions guard that has to travel with any published form.
 - 2026-08-01 v1.1: adjudicated by Ashman and written into `CLAUDE.md` as the Wholeness Plane and Nesting Notice, with targeted corrections at the three sites that carried the scalar κ or the unqualified three-forms passage. Framework-file migration still pending.
