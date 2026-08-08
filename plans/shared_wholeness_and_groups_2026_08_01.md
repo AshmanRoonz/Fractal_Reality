@@ -3,7 +3,7 @@
 ```
 Created: 2026-08-01
 Last updated: 2026-08-01
-Version: 1.1
+Version: 1.2
 ```
 
 **Status: adjudicated by Ashman 2026-08-01, in conversation, not yet written into `CLAUDE.md` or the framework file.** Two corrections from the closing hours of the same session that produced `plans/wholeness_plane_and_nesting_2026_08_01.md`; read that file first, since Finding 3 there (the Shared-Tonic Principle) is the computed result these corrections generalize. Both corrections supersede positions committed in `CLAUDE.md` and in the book, including material written earlier the same day. This document is the full record; nothing has been applied to the corpus yet.
@@ -133,6 +133,34 @@ Ashman's formulation already relocates the work: God provides inclusion without 
 
 ---
 
+## Finding 7: the World may be relationally generated rather than containing
+
+**Ashman's statement.** "I'm not sure the world exists inside Reality. Reality flows through us (our souls) and wholeness is made. The world is created through vesica piscis." Developed: *Reality flows through souls. Souls localize Reality. Wholeness forms around each soul. Worlds arise where those wholes overlap.*
+
+**Sequence proposed.** ∞ provides infinite potential; • localizes it; ⊙ is the finite whole formed around that centre; the vesica is the shared field generated when wholes meet; World is the interconnected fabric of those shared fields. So the World does not contain experience. The World is what appears where experiences become mutually related.
+
+**Why the first half is native rather than new.** Reality flowing through souls is 𝒫 = E/(i·t) read ontologically, and the same-day temporal adjudication already fixed the direction: E is the ungated future, the centre is where it converges, closed structure is past. The genesis sequence already runs in the proposed order, ∞ → •∞ → ⊙∞, with apertures before wholes and wholes before foam, because A1 forces multiplicity of apertures directly from self-limitation and needs no world as a stage for it.
+
+**Consistency check, and it passes from an unexpected direction.** A vesica has no centre. It is a lens whose two centres lie outside it. A fabric of such overlaps therefore has no centre either, which by Finding 1 makes the World a group rather than a whole. The largest group. That is the same classification reached for society this afternoon, arrived at along a completely independent route, and it explains without further argument why the universe does not present as a person.
+
+**Condition the proposal must carry, or it is idealism.** As stated, the World is generated where souls meet, which makes the physical dependent on relation among minds. The framework need not pay that, because it already accepted the panpsychist cost of A3 openly: centred wholes go all the way down and an electron has an aperture. The participants in the overlap fabric are therefore every centred whole at every scale, not human minds. The moon is in the world because on the order of 10⁵⁰ atoms are mutually related, not because anyone observes it. Stated that way the proposal is a relational ontology of the physical rather than a Berkeleyan one, and m = structure closed behind ○ survives untouched. **This condition is not optional; without it the finding contradicts the corpus's realism about mass.**
+
+**Type discipline.** The proposal was written with both ⊙_A ∩ ⊙_B and Φ_A ∩ Φ_B. Only the second is well formed: a whole is not a set of points and cannot be intersected, while a field has extent and can be. The caution recorded at Finding 4 applies to ∪ and ⊃ here as well, since set operations re-import the mereology these findings remove. The operation is on fields, always, and should be named for coupling rather than for intersection.
+
+**What the figure buys that the algebra did not.** The vesica is a picture of the (c, a) plane's healthy corner. Two circles overlapping substantially, both still complete, two centres intact, is c high with a high. Slide the centres together until the circles coincide and that is inflation, one circle where there were two, a → 0. Separate them to tangency and that is severance, c → 0. Shrink both while separating and that is anomie. The plane of the companion document and this figure are the same object drawn twice, and the figure is the more teachable.
+
+**Convergence with Finding 6.** Finding 6 says the World is Reality filtered, in resolution, phase and time. Finding 7 says the World is where fields overlap. These are one claim: **the filter is the overlap.** What a whole cannot relate to is not in its world. That gives "different worlds" a structural sense rather than a poetic one, and it places the dark sector and the ordinary human failure to share a world under the same description.
+
+**Structural support from §27.7o.** For two peer fields to overlap, each whole's boundary must pass through the other's field. That is the peer form of the nested identification already in the corpus, where a part's boundary is the containing whole's field restricted to the contact locus. The vesica's two bounding arcs are each a piece of the other whole's boundary, so the shared region's edge is co-constructed rather than owned. Extending §27.7o from the cross-scale case to the peer case is a small step and is probably the cleanest way to make the figure rigorous.
+
+**Notational consequence.** The genesis sequence terminates "∞ → •∞ → ⊙∞ = Reality." Under this finding the foam of mutually related wholes is closer to what the proposal calls World, while Reality is the source-flow. The six-name identity of §4.8a keeps the line technically true, but the sentence now reads as though it were locating Reality at the end of a process rather than naming the substrate throughout, and it should be reworded if Finding 7 is adopted.
+
+**Unclaimed.** The classical vesica piscis is the specific construction where each centre lies on the other's circumference. Nothing here derives that ratio, and the overlap claim does not need it. Per `plans/pole_gap_boundary.md`, a compressed indicator is not the thing indicated; the ratio stays decorative until something forces it.
+
+**Interaction.** This finding is a proposal about what ⊂ should have been, so it does not sit beside Finding 4's three options; it is a fourth, and the most radical, in which containment is not a weakened general relation but the wrong primitive.
+
+---
+
 ## Superseded positions and migration queue
 
 Nothing below has been changed yet.
@@ -171,5 +199,6 @@ The ethics needs no repair. κ = (c, a) never required the container to be a who
 
 ## Revision history
 
+- 2026-08-01 v1.2: Finding 7 added (Ashman). The World as relationally generated rather than containing, with the vesica as the meeting-figure; carries the all-scales condition that keeps it from being idealism, the peer extension of §27.7o, and the convergence with Finding 6 (the filter is the overlap). Confidence is stated in prose here rather than in the grades table, which stops at Finding 6.
 - 2026-08-01 v1.1: Finding 6 added (Ashman). The world is Reality filtered in three distinct kinds (resolution, phase, time), and the step to ∞ is categorical rather than a fourth kind; carries the gnostic guard as a publication requirement rather than a caveat.
 - 2026-08-01 v1.0: initial. Five findings recorded, two of them adjudicated in conversation and neither yet applied to the corpus. Migration queue and grades included.
