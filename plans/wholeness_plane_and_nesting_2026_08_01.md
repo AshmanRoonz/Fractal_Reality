@@ -2,7 +2,7 @@
 
 **Status: ADJUDICATED by Ashman 2026-08-01 and written into `CLAUDE.md`** (Wholeness Plane and Nesting Notice, plus targeted corrections at the ⊂[α] entry, the §25.19 goodness line, and the three-forms passage). Migration into `circumpunct_framework.md` is still pending; see Scope at the end. Four findings from the 2026-08-01 session (Ashman, Claude, and a parallel reading). Two of them supersede positions previously committed in `CLAUDE.md` and still standing in the framework file. This document is the full record; the notice is the summary.
 
-**Continued in `plans/shared_wholeness_and_groups_2026_08_01.md`** (later the same day). Finding 3 below, the Shared-Tonic Principle, is the computed result that the continuation generalizes: sharing rather than containment may be how wholes relate in general, which removes the requirement that there be a whole above us, and separates groups (a fuzzy centre) from wholes (one indivisible centre).
+**Continued in `plans/shared_wholeness_and_groups_2026_08_08.md`** (2026-08-08). Finding 3 below, the Shared-Tonic Principle, is the computed result that the continuation generalizes: sharing rather than containment may be how wholes relate in general, which removes the requirement that there be a whole above us, and separates groups (a fuzzy centre) from wholes (one indivisible centre).
 
 ## Finding 1: κ is two quantities, not one. Health is a corner, not a middle.
 

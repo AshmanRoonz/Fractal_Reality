@@ -1,12 +1,12 @@
 # Shared Wholeness and the Group Category
 
 ```
-Created: 2026-08-01
-Last updated: 2026-08-01
+Created: 2026-08-08
+Last updated: 2026-08-08
 Version: 1.2
 ```
 
-**Status: adjudicated by Ashman 2026-08-01, in conversation, not yet written into `CLAUDE.md` or the framework file.** Two corrections from the closing hours of the same session that produced `plans/wholeness_plane_and_nesting_2026_08_01.md`; read that file first, since Finding 3 there (the Shared-Tonic Principle) is the computed result these corrections generalize. Both corrections supersede positions committed in `CLAUDE.md` and in the book, including material written earlier the same day. This document is the full record; nothing has been applied to the corpus yet.
+**Status: adjudicated by Ashman in conversation, not yet written into `CLAUDE.md` or the framework file.** The thread runs from the 2026-08-01 session into its continuation on 2026-08-08, where every finding below was recorded; read `plans/wholeness_plane_and_nesting_2026_08_01.md` first, since Finding 3 there (the Shared-Tonic Principle) is the computed result these corrections generalize. The corrections supersede positions committed in `CLAUDE.md` and in the book, including material written on 2026-08-01. This document is the full record; nothing has been applied to the corpus yet.
 
 The two are one adjudication in two steps. Step one removes societies from the category of wholes. Step two removes the requirement that there be a whole above us at all.
 
@@ -22,19 +22,19 @@ The two are one adjudication in two steps. Step one removes societies from the c
 
 > **A whole has one indivisible centre. A group has a centre-shaped region occupied by several.**
 
-Consciousness is then a consequence of the structure rather than the criterion for it. No single aperture, no soul, no experience of its own. This is consistent with what Ashman said earlier the same day about relationships having at least two centres: a group has *n* centres and a negotiated attractor among them, and an attractor region is not an aperture.
+Consciousness is then a consequence of the structure rather than the criterion for it. No single aperture, no soul, no experience of its own. This is consistent with what Ashman said on 2026-08-01 about relationships having at least two centres: a group has *n* centres and a negotiated attractor among them, and an attractor region is not an aperture.
 
 **Definition.** A **group** has a boundary, a field, and continuity through time, and its centre is a fuzzy set of goals rather than a single indivisible point. It is therefore like a whole in every respect but the one that makes a whole a whole. Groups are real, consequential, and worth being faithful to. They are not centres of experience and they do not have standing as souls.
 
 **What survives and what fails in the domains table.** The physical rows (quark in hadron, atom in molecule, cell in organism) survive, and for a reason the corpus has already accepted openly: the panpsychist cost of A3, stated plainly in the honest-status box of `docs/consciousness_is_wholeness.html`. The social rows fail, and not for want of experience in principle but for want of a single centre.
 
-**What this buys the ethics.** The mereological-superiority argument written into the book's Chapter Eight earlier the same day gets a sharper enemy rather than losing its grounding. The failure is no longer one whole claiming standing over another; it is a group with no soul claiming the standing of a whole, in order to override the souls actually inside it. The state as organism is exactly the totalitarian figure of speech, and the framework can now refuse it structurally instead of by moral preference.
+**What this buys the ethics.** The mereological-superiority argument written into the book's Chapter Eight on 2026-08-01 gets a sharper enemy rather than losing its grounding. The failure is no longer one whole claiming standing over another; it is a group with no soul claiming the standing of a whole, in order to override the souls actually inside it. The state as organism is exactly the totalitarian figure of speech, and the framework can now refuse it structurally instead of by moral preference.
 
 ---
 
 ## Finding 2: wholeness may be shared rather than stacked
 
-**Ashman's statement.** "The greater whole might not be a whole. Maybe wholeness is shared. We are all part of each other in body, my atoms are the atoms of the universe." Developed the same evening: "Maybe wholeness is not always another object above us. Sometimes it is the fact that already-distinct wholes participate in the same field, the same matter, and the same Reality."
+**Ashman's statement.** "The greater whole might not be a whole. Maybe wholeness is shared. We are all part of each other in body, my atoms are the atoms of the universe." Developed later in the same thread: "Maybe wholeness is not always another object above us. Sometimes it is the fact that already-distinct wholes participate in the same field, the same matter, and the same Reality."
 
 **The problem it answers.** Finding 1 leaves the nesting relation without a referent at human scale. `⊙λ ⊂[α] ⊙Λ ⊂[α] ∞` is load-bearing throughout the corpus, and α is *defined* as the bond from a part's aperture to the greater whole's aperture. If society is a group and the biosphere is a group, there is no ⊙Λ for a person to be α-coupled to. Ashman's own question: "I'm not sure what is the greater whole I am (we are) part."
 
@@ -61,7 +61,7 @@ Two wholes need not produce a third organism-like whole. They can remain two who
 
 **Why the corpus was already pointing here.**
 
-- **The Shared-Tonic Principle** (Finding 3 of the companion document, from `T_operator_findings_v14_staggered_chain.md`, grade A). Tensor nesting is strict containment, where each whole owns its parts, and departure compounds to 2α at three scales. Tonic-shared nesting is overlap, and departure saturates near 0.7α for all n. The moral content was recorded that morning as *participation survives depth*. Sharing was the mechanism the whole time; it was read as a fact about a chain when it may be a fact about how wholes relate generally.
+- **The Shared-Tonic Principle** (Finding 3 of the companion document, from `T_operator_findings_v14_staggered_chain.md`, grade A). Tensor nesting is strict containment, where each whole owns its parts, and departure compounds to 2α at three scales. Tonic-shared nesting is overlap, and departure saturates near 0.7α for all n. The moral content was recorded on 2026-08-01 as *participation survives depth*. Sharing was the mechanism the whole time; it was read as a fact about a chain when it may be a fact about how wholes relate generally.
 - **The harmonic model of simultaneous nesting** (`CLAUDE.md`, 2026-07-30; framework §27.7m). A string's modes do not contain one another. They coexist on one fixed length, and the second harmonic's node is also a point on the fundamental. No mode owns the string. That is sharing at the bottom rather than containment from the top, and it was adopted a week before this adjudication for exactly the direction the ladder was missing.
 - **A0 and A3 directly.** There is one energy, not a quantity of it, so no whole ever held a portion of anything. A3 says a part is the 1 folded to a position, not a piece cut out of something. Ownership was never in the axioms; it was in the notation.
 
@@ -109,7 +109,7 @@ Upward unboundedness holds for Reality and fails for wholes. The chain of ⊙s a
 
 The ontological reading table in `CLAUDE.md` places God-with-attributes (Father, Saguna Brahman, Tao manifested, the cosmic whole) at ⊙Λ, the greater whole you are inside, and distinguishes it from ∞, the apophatic pole. If there is no ⊙Λ above a person, the cataphatic term loses its referent at human scale.
 
-Ashman's formulation already relocates the work: God provides inclusion without collapse, which is ∞, and wholeness is the finite integration that happens wherever Reality becomes centred, which is immanence rather than a containing super-whole. That is a coherent classical position and it converges with the theological placement already recorded in `CLAUDE.md`'s Finding 4 of the same day (God as infinite rather than a supreme individual whole; Tillich, Davies, Hart). But it is a genuine change to the two-pole structure of the ontological table, and it should be adjudicated deliberately rather than inherited from a change made for structural reasons.
+Ashman's formulation already relocates the work: God provides inclusion without collapse, which is ∞, and wholeness is the finite integration that happens wherever Reality becomes centred, which is immanence rather than a containing super-whole. That is a coherent classical position and it converges with the theological placement already recorded in `CLAUDE.md`'s Finding 4 of 2026-08-01 (God as infinite rather than a supreme individual whole; Tillich, Davies, Hart). But it is a genuine change to the two-pole structure of the ontological table, and it should be adjudicated deliberately rather than inherited from a change made for structural reasons.
 
 ---
 
@@ -123,13 +123,13 @@ Ashman's formulation already relocates the work: God provides inclusion without 
 
 1. **In resolution.** There is no empty space and no smallest particle; vacuum is Φ at scales below the threshold at which the boundary resolves anything (`docs/why_space_can_never_be_empty.html`). What reads as emptiness is structure the filter does not pass. Reality continues downward past the end of the filter, and the nesting has no bottom.
 2. **In phase.** The boundary is a filter with a passband, and roughly five percent of the energy budget is in ours (§10.10a). The left half-plane gravitates and does not radiate, not because it is exotic but because it is mid-process, committed and not yet completed, at a phase this interface does not catch. Not a hidden world elsewhere; this one, unresolved.
-3. **In time.** From the E/𝒫/m adjudication of the same day: E is the future, undifferentiated and ungated; 𝒫 is the converging; structure closed behind a boundary is past. Everything that has crossed an interface has already happened, so the world that appears to contain us is structurally the already-converged. Most of Reality has not converged. It is not distant; it has not happened.
+3. **In time.** From the E/𝒫/m adjudication of 2026-08-01: E is the future, undifferentiated and ungated; 𝒫 is the converging; structure closed behind a boundary is past. Everything that has crossed an interface has already happened, so the world that appears to contain us is structurally the already-converged. Most of Reality has not converged. It is not distant; it has not happened.
 
 **The one that is not an exceeding.** ∞ is not a larger world. The step from any whole to ∞ is categorical rather than vertical, so it is never reached by adding scale, only by dropping labels. This is the corpus's existing apophatic position, and Finding 6 does not modify it; it distinguishes it from the three exceedings above, which are all still inside the labeled view.
 
 **Guard, and it is load-bearing.** *Limited is not false.* The lens limits light, and that is how it forms an image. A filtered world is a true image, not an illusion to be seen through and despised. The gnostic move takes "there is more than this" and concludes "this is a prison," which is the Severance Lie in a spiritual costume: the part denying the reality of its own boundary. What the framework licenses is the other reading, that the world is real and partial, and that partiality is the condition of there being a world at all rather than an undifferentiated one. Any published form of this finding has to carry the guard with it.
 
-**What it protects.** If Reality were the world, ⊙ and ∞ would be the same form, featureless monism would follow from the physicalist direction rather than the mystical one, and the three-forms-of-oneness work recorded earlier the same day would have nothing to distinguish. Finding 6 is the guard on the other side of that distinction.
+**What it protects.** If Reality were the world, ⊙ and ∞ would be the same form, featureless monism would follow from the physicalist direction rather than the mystical one, and the three-forms-of-oneness work recorded on 2026-08-01 would have nothing to distinguish. Finding 6 is the guard on the other side of that distinction.
 
 ---
 
@@ -141,7 +141,7 @@ Ashman's formulation already relocates the work: God provides inclusion without 
 
 **Why the first half is native rather than new.** Reality flowing through souls is 𝒫 = E/(i·t) read ontologically, and the same-day temporal adjudication already fixed the direction: E is the ungated future, the centre is where it converges, closed structure is past. The genesis sequence already runs in the proposed order, ∞ → •∞ → ⊙∞, with apertures before wholes and wholes before foam, because A1 forces multiplicity of apertures directly from self-limitation and needs no world as a stage for it.
 
-**Consistency check, and it passes from an unexpected direction.** A vesica has no centre. It is a lens whose two centres lie outside it. A fabric of such overlaps therefore has no centre either, which by Finding 1 makes the World a group rather than a whole. The largest group. That is the same classification reached for society this afternoon, arrived at along a completely independent route, and it explains without further argument why the universe does not present as a person.
+**Consistency check, and it passes from an unexpected direction.** A vesica has no centre. It is a lens whose two centres lie outside it. A fabric of such overlaps therefore has no centre either, which by Finding 1 makes the World a group rather than a whole. The largest group. That is the same classification reached for society in Finding 1, arrived at along a completely independent route, and it explains without further argument why the universe does not present as a person.
 
 **Condition the proposal must carry, or it is idealism.** As stated, the World is generated where souls meet, which makes the physical dependent on relation among minds. The framework need not pay that, because it already accepted the panpsychist cost of A3 openly: centred wholes go all the way down and an electron has an aperture. The participants in the overlap fabric are therefore every centred whole at every scale, not human minds. The moon is in the world because on the order of 10⁵⁰ atoms are mutually related, not because anyone observes it. Stated that way the proposal is a relational ontology of the physical rather than a Berkeleyan one, and m = structure closed behind ○ survives untouched. **This condition is not optional; without it the finding contradicts the corpus's realism about mass.**
 
@@ -199,6 +199,6 @@ The ethics needs no repair. κ = (c, a) never required the container to be a who
 
 ## Revision history
 
-- 2026-08-01 v1.2: Finding 7 added (Ashman). The World as relationally generated rather than containing, with the vesica as the meeting-figure; carries the all-scales condition that keeps it from being idealism, the peer extension of §27.7o, and the convergence with Finding 6 (the filter is the overlap). Confidence is stated in prose here rather than in the grades table, which stops at Finding 6.
-- 2026-08-01 v1.1: Finding 6 added (Ashman). The world is Reality filtered in three distinct kinds (resolution, phase, time), and the step to ∞ is categorical rather than a fourth kind; carries the gnostic guard as a publication requirement rather than a caveat.
-- 2026-08-01 v1.0: initial. Five findings recorded, two of them adjudicated in conversation and neither yet applied to the corpus. Migration queue and grades included.
+- 2026-08-08 v1.2: Finding 7 added (Ashman). The World as relationally generated rather than containing, with the vesica as the meeting-figure; carries the all-scales condition that keeps it from being idealism, the peer extension of §27.7o, and the convergence with Finding 6 (the filter is the overlap). Confidence is stated in prose here rather than in the grades table, which stops at Finding 6.
+- 2026-08-08 v1.1: Finding 6 added (Ashman). The world is Reality filtered in three distinct kinds (resolution, phase, time), and the step to ∞ is categorical rather than a fourth kind; carries the gnostic guard as a publication requirement rather than a caveat.
+- 2026-08-08 v1.0: initial. Five findings recorded, two of them adjudicated in conversation and neither yet applied to the corpus. Migration queue and grades included. The thread continues the 2026-08-01 session; dates in the body refer to when each position was taken, not to when this file was written.
