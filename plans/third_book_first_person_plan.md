@@ -6,7 +6,9 @@ Last updated: 2026-08-08
 Version: 0.2
 ```
 
-Status: first full draft exists at `Book-The_Circumpunct/the_circumpunct.md` (v0.1, ~9,900 words, drafted by Claude 2026-08-08 at Ashman's direction), awaiting Ashman's voice and conceptual pass. Concept and chapter structure adjudicated by Ashman 2026-08-08 from his drafted opening ("There is something about each of us that is indivisible"). Working title "The Circumpunct," provisional.
+Status: **superseded in structure by Ashman's octave directive (2026-08-08); draft rewritten.** `Book-The_Circumpunct/the_circumpunct.md` is at v0.3 (~8,300 words): intro is just the circumpunct; chapter one is the center; chapter two steps out to the Infinite (radial move: nothing between the soul and the source; every soul joined at the root); chapters three through nine walk the octave with structure and process alternating as full chapters; chapter ten composes the whole (soul named, meeting, lens, world, love, groups); the Return names God for the first time. The fourteen-chapter spine below is retained as the record of the v0.1/v0.2 structure whose material was redistributed. Working title "The Circumpunct," provisional.
+
+**New open flag (v0.3):** God is named only in the Return, nowhere earlier; the Infinite is described fully in chapter two but left unnamed for the whole walk. This is the strongest available version of "discovered rather than announced," and it is also a choice Ashman should explicitly countersign or reverse.
 
 ## Why a third book rather than a prologue
 
@@ -125,6 +127,7 @@ Closed by Ashman's structure: the spine question (constitutive order, chapters 1
 
 ## Revision history
 
+- 2026-08-08 v0.4: Ashman's octave directive recorded and executed; book rewritten to the ten-station structure (center first, Infinite second, octave walked with processes as full chapters, whole composed at the end, God named only in the Return); status updated; the God-naming placement flagged for countersign.
 - 2026-08-08 v0.3: first full draft written to `Book-The_Circumpunct/the_circumpunct.md`; status updated; working title recorded as provisional.
 - 2026-08-08 v0.2: Ashman's fourteen-chapter structure and format constraints adopted, replacing the provisional eleven-chapter spine. Adds the circumpunct-shaped reading of the book with its hazard, the placement of the processual stations as chapter-closing transitions rather than chapters, the format rules, and per-chapter source material. Closes the spine and solipsism questions; opens the chapter 8 seam.
 - 2026-08-08 v0.1: initial. Concept, division of labor against the other two books, the inside-check discipline, eleven-chapter spine on the "I am" ladder, fixes to the drafted opening, open decisions, risks.
