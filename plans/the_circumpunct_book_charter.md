@@ -3,7 +3,7 @@
 ```
 Created: 2026-08-08
 Last updated: 2026-08-08
-Version: 1.0
+Version: 1.1
 ```
 
 **Status: charter adjudicated by Ashman 2026-08-08 ("Nailed it").** The problem-naming below was converged on in conversation and confirmed; everything else in this file is planning built on it, open to revision. This is the master plan for the unified book; the small books and drafts remain what they are (see Relation to the Existing Books).
@@ -12,15 +12,21 @@ Version: 1.0
 
 ## The Charter
 
-**The problem.** Humanity does not know what it is. The operating ontology of the modern world is the Severance Lie with institutional power: you are a fragment. Matter is dead parts; consciousness is an accident the parts secrete; souls are folklore; God is either an unbelievable king or nothing; societies are machines, or super-beings whose cells are expendable; love is fusion or contract; truth is whatever wins. One claim under all of it: *there are no wholes.*
+**The problem** (sharpened 2026-08-08, ChatGPT's amendment via Ashman, accepted). Humanity has difficulty holding two truths at once: *we are distinct wholes, and we are inseparably relational.* Lose the first and the person becomes expendable to the group. Lose the second and the person becomes an isolated object in a dead universe. These are the two Lies at civilization scale, and the mechanism is the one the wholeness plane already named: collapsing a two-coordinate truth (connection, autonomy) onto one axis, then sliding to an end of it. The modern West's dominant collapse is the severance side: you are a fragment; matter is dead parts; consciousness is an accident the parts secrete; souls are folklore; God is an unbelievable king or nothing; love is fusion or contract; truth is whatever wins. The collectivist collapse is the inflation side: the group as the real being, persons as its cells. One error under both: mistaking distinction for separation, or relation for merger. Compressed: **distinct is not separate; related is not merged.**
+
+**Error before lie** (terminology rule, from the corpus's own §25.20). Most reductionism is sincere: a method, useful in its domain, promoted honestly into a total ontology. That is the **Fragmentation Error**, and calling it an error keeps the philosophical claim hard to dismiss and the reader out of an ideological fight. *Lie* is reserved for the defended stage, exactly as §25.20 reserves it: when the false model brands correction as the enemy, the Noble Lie machinery has taken over and the error has armed itself. The book leads with the error; it names the lie only where the defense is visible.
 
 **The fallout** (each a corpus wing's target): the meaning crisis (meaning is a part-whole relation; no wholes, no meaning); the loneliness epidemic and anomie (belonging to nothing while being nothing; the corner the old picture could not represent); the war of truth and lies and the society of strawmen (when nothing whole can be damaged, lying is cheaper than truth; peace is the condition where truth is safer); the mental-health catastrophe (no category for a center that suffers); the ecological one (a forest that is not a whole is lumber not yet scheduled); the fragmentation of knowledge itself (disciplines severed because the shared account of what anything is was surrendered). Bateson's sentence stands over all of it: break the pattern which connects and you destroy all quality.
 
-**The counter-claim.** You are not a fragment. You are a whole made of wholes, sharing a world with wholes, drawn from a source that was never divided. Compressed: *we are each a center through which the Infinite becomes finite.*
+**The counter-claim.** You are not a fragment. You are an indivisible center within a permeable, relational whole: made of wholes, meeting other wholes through shared fields, participating in a Reality that exceeds every finite whole. Compressed: *we are each a center through which the Infinite becomes finite.*
 
 **The reader.** One person living inside the fragment-ontology, paying its distributed daily cost, never having been shown the assumption that charges it.
 
 **The goal.** Solve the reader's instance of the problem: hand them the counter-ontology whole, with evidence running from their own experience outward through physics, so that it lands as description, not consolation.
+
+**The entry filter (the five questions).** A piece of the corpus enters the book only when it helps the reader answer: What am I? What are others? What is the world between us? What is Reality? How should I live once I understand those relationships? Nothing enters because the work exists; the repo approached one problem from many directions, and the book solves it once, at the level underneath all of them.
+
+**The sequencing rule (strategic, adjudicated with the amendment).** The book does not open with the diagnosis; telling the reader civilization is infected invites an ideological fight before they have seen the geometry. It opens where the drafts already open: with the indivisible center, discovered in the reader's own experience, and builds outward. The social, psychological, ethical, political, and spiritual fallout of the Fragmentation Error is the book's final movement, arriving when the reader can verify it against everything they have already checked. The book never says "here is my theory of everything." It says: look at yourself carefully; notice what you are; follow the implications.
 
 **The success condition.** They stop believing they are a fragment. Everything in the book serves that; nothing enters as inventory.
 
@@ -56,7 +62,7 @@ The octave is the spine; the domains are registers of it, per the harmonic model
 
 ## Open decisions (Ashman)
 
-1. Direction of travel for the spine: radial (draft 1) or constitutive (draft 2).
+1. ~~Direction of travel for the spine~~ **Resolved (2026-08-08, with the sharpened charter): discovery order.** The radial walk (draft 1's register) carries the book, because a reader who is to stop believing something is served by discovering, not being told; the diagnosis lands last. Draft 2's constitutive walk and identity chapter titles remain the skeleton for the framework-facing edition or the book's appendix architecture.
 2. Title.
 3. The death chapter: the framework's Ch 23 positions (aging, the ethereal tail) need his adjudication of what the book claims and honestly does not claim.
 4. Whether the identity reading (`structure_is_process_2026_08_08.md`) is canon before drafting begins, since the chapter titles would carry it.
@@ -74,4 +80,5 @@ Three findings from the closing conversation, held here until adjudicated or mov
 
 ## Revision history
 
+- 2026-08-08 v1.1: charter sharpened per ChatGPT's review, forwarded by Ashman. The problem restated as the failure to hold two truths at once (distinct wholes, inseparably relational), which is the two Lies at civilization scale and the wholeness plane's one-axis collapse as mechanism; the error/lie terminology rule imported from §25.20 (Fragmentation Error for the sincere case, lie reserved for the defended case); the counter-claim compressed further; the five-question entry filter added; the sequencing rule added (diagnosis last); open decision 1 resolved in favor of discovery order.
 - 2026-08-08 v1.0: initial. Charter (problem, counter-claim, reader, goal, success condition) as adjudicated; domain-contribution table with sources and the two gaps (death, practice); harmonic architecture with the goal-guard; relation to existing books; open decisions; the three path riffs recorded.
