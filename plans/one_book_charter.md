@@ -3,7 +3,7 @@
 ```
 Created: 2026-08-08
 Last updated: 2026-08-08
-Version: 1.5
+Version: 1.6
 ```
 
 **Status: drafted from Ashman's pivot of 2026-08-08** ("the book is kinda boring, and not exactly what I was feeling"; "I think we should start with the point"; "The book should be named 'One'"; "we need to develop a solid definition of Truth"). The title, the truth-definition wording, and the spine choice await his adjudication; the problem, thesis, and engine below are his own statements, recorded. This charter supersedes `the_circumpunct_book_charter.md` as the live book plan; that charter and the drafted `Book-The_Circumpunct/the_circumpunct_book.md` are retained as adjudicated groundwork and quarry, not discarded.
@@ -30,7 +30,7 @@ The circumpunct book executed its charter, and the charter was what lacked the p
 2. That center has access to Reality. *(Opening gloss, corrected v1.1 to stay epistemological before the metaphysics is earned: you cannot experience from nowhere; whatever Reality is, your experience is occurring within it; so your perspective is not outside Reality looking in, it is a limited encounter with Reality from somewhere. The stronger framework reading, direct at the source because the center is Reality converging, is true in the completed picture and arrives later in the book, once earned; it does not open the argument. Two boxed rules fall out at once: partial is not false; perspective is not possession.)*
 3. Other people are also centers with access to Reality.
 4. None of us possesses Reality completely.
-5. Therefore truth requires both centeredness and relationship.
+5. Therefore access to Truth is centered, and truth-seeking among finite centers is relational. *(Reworded v1.6: relationship does not make Truth true; it is how limited centers find and keep truths.)*
 
 **The engine: one thing is never really just one thing.** Oneness comes in kinds, one per station (the Six Types of Oneness, realized as Ashman's poster):
 
@@ -140,21 +140,51 @@ The hierarchy beneath the four lines: Truth = Reality; *true* (the adjective) = 
 
 ---
 
-## The spine (v1.1, adopted from the forwarded review; six movements)
+## The spine and the dramatic architecture (v1.6)
 
-**CENTER.** There is something about each of us that is indivisible. Verified, not asserted; the forgotten category named (a centered whole; the center is not another part but the point from which the whole is lived); the modest access argument (you cannot experience from nowhere); partial is not false; perspective is not possession.
+Spine (adopted v1.1): **CENTER, WHOLE, OTHER, REALITY, TRUTH, ETHICS.** The v1.6 pass turns the spine into a chapter architecture with tension, revelation, stories, reversals, and momentum, per the closing directive of the adjudicating review: the metaphysics is solved; the remaining risk is another technically correct, bloodless book.
 
-**WHOLE.** What a center gathers: the kinds of oneness earned one at a time (continuity, distinction, coherence, wholeness), the circumpunct arriving as the figure of the sixth kind; what abandoning the center does to a person: narcissism as displaced centeredness, entered through the myth.
+**Craft rules (binding on drafting):**
 
-**OTHER.** Every other person is also a center. Never touched, never doubted; the lens; another center as potential access to what I cannot see from mine.
+1. Every chapter carries one story, one reversal, and one check; and the check springs the reversal rather than confirming a claim (the reader runs it expecting one result and gets the other; that is what makes a check dramatic).
+2. No chapter states its conclusion before its tension exists.
+3. The enemy escalates across the book: shadow (felt pointlessness), then named (displacement), then fought (DARVO), then disarmed (amnesty).
+4. Narcissus is the serialized story-spine: opened as a mystery in the prologue, deepened mid-book, resolved at the end. The question the prologue plants and refuses to answer: what exactly killed him?
+5. Every chapter ends on the question the next chapter answers.
+6. The word Truth is withheld until its movement; the reader must feel the withholding.
 
-**REALITY.** No center contains it; the Infinite as inclusion, the kind no whole can be; there is always more Reality; the fragmentation error as the treatment of centered wholes as mere parts.
+**Prologue: The Pond.** Narcissus told fresh, as a mystery rather than a moral. Then the thesis sentence. The promise: by the end you will know what killed him, and why it stalks us.
 
-**TRUTH.** The five layers; the two axes; the derived weapon; truthfulness as practice; the narcissistic culture diagnosed in full, here, where the reader can verify every clause of the diagnosis.
+**Movement I: CENTER**
+1. *The Point You Cannot Find.* Indivisibility; hunt-the-observer; split-brain. Reversal: the center is not missing; it is you. Ends: what does the point face?
+2. *No Point, No Point.* The forgotten category; wholes divide forever; meaning needs a point; the fragment operating-system introduced in shadow, not yet indicted. Ends: does the point actually touch anything real?
+3. *From Somewhere.* The modest access argument; partial is not false; perspective is not possession. Ends: what happens to a person who loses the point?
 
-**ETHICS.** What follows from: I have a center, you have a center, and Reality exceeds us both. Neither submission nor domination, neither isolation nor merger: truthful relationship between distinct wholes. The close on the title: One, holding all of it; one thing is never really just one thing.
+**Movement II: WHOLE**
+4. *The Centered Whole.* Heap versus whole; integration; the circumpunct arrives; the kinds of oneness begin accumulating.
+5. *The Man in the Water.* Narcissus partially resolved: displacement; the image economy (admiration, metrics, brands; the pond now fits in a pocket). Reversal: too little self, not too much. Ends: a displaced center must defend the image; how?
+6. *The Defense.* DARVO at kitchen-table scale, as a scene before it is a theory; the ontological inversion. Ends: the attack move targets someone; who?
 
----
+**Movement III: OTHER**
+7. *The Other Point.* Never touched, never doubted; meeting as wholes. Reversal: another center is not a rival for truth but access to what I cannot see.
+8. *The Lens.* The shared world; what evidence is; agreement's real job. Ends: two centers, neither possessing; possessing what?
+
+**Movement IV: REALITY**
+9. *More.* Inexhaustibility; inclusion versus integration; no biggest whole. Reversal: the Infinite is not far; nothing stands between.
+10. *The Open and the Settled.* Future, present, past; possibility becoming actual; facts. Ends: there is a word this book has been avoiding for ten chapters.
+
+**Movement V: TRUTH**
+11. *The Word.* The reveal: what have you been staying open to this entire time? Truth; and Truth is Reality. The four lines; the three registers seated. Reversal: Truth was never a thing to hold; it is what you stayed open to.
+12. *The Lonely Prophet and the Confident Crowd.* The two axes; the corners of public knowledge. Story slot: Semmelweis (correct about handwashing, destroyed by consensus, dead of the wound; the cost of a culture that revokes epistemic standing), or Ashman's preferred substitute.
+13. *The War.* Lie as defended closure; DARVO revisited, now fully intelligible; the narcissistic culture named in checkable clauses; error before lie as mercy toward the sincere.
+14. *Wrong and Still Here.* The asymmetry (Truth cannot become false; claims can); the center survives correction. Reversal: the strongest self is the most correctable. Story slot: a real, dated correction from the corpus's own history (the ladder correction), or a personal one only Ashman can supply.
+15. **Movement VI: ETHICS**
+15. *The Amnesty.* Neither submission nor domination, neither isolation nor merger; the five-clause companion (I have a center; you have a center; we both have access; neither possesses; no one needs to disappear); stand firmly at your center, keep the connection open.
+16. *One.* The kinds of oneness completed; Truth is one, truths are many; the theological naming arriving as gift, not premise; the title cashed; the thesis sentence re-read with everything it now carries.
+
+**Afterword: How This Book Was Made.** The procedural self-demonstration (the definition developed by the process it defines, across multiple centers, with corrections and no disappearances), placed here and only here: a nice self-demonstration, not evidence for the metaphysics.
+
+**Story slots that only Ashman can fill** (the actual cure for bloodlessness; flagged as drafting dependencies): the personal experiences behind the lie-protection work; the lived corrections; any first-person material for chapters 5, 6, and 14. Public-domain stories (Narcissus, Semmelweis, split-brain) carry the rest.
 
 ## Materials
 
@@ -174,11 +204,12 @@ The hierarchy beneath the four lines: Truth = Reality; *true* (the adjective) = 
 3. ~~The premise-two gloss~~ **Resolved v1.1:** the modest epistemological form opens the book; the framework's stronger direct-at-the-source reading arrives later, once earned.
 4. ~~The spine~~ **Resolved v1.1:** CENTER, WHOLE, OTHER, REALITY, TRUTH, ETHICS, per the forwarded review; the six kinds of oneness unfold within the movements rather than structuring them.
 5. **Fate of the circumpunct book draft:** quarry only, or finish separately later as the companion walk.
-6. **Which face of the definition leads the TRUTH movement:** substrate-first (Truth is Reality, the relational face arriving as its lived form) or connection-first (truth as the open connection between God and Soul, the substrate face arriving at the climax). They coincide at zero obstruction; the order is a drafting decision with theological weight.
+6. ~~Which face of the definition leads the TRUTH movement~~ **Resolved (v1.6): connection-first, restated post-seating as TRUE-first.** The reader first lives the open relation (I am here; Reality reaches me; I can stay open or close against correction; other centers can correct what I cannot see), and the climax reveals what the openness was always toward: Truth; and Truth is Reality. The book's method is discovery from the center outward, and the definition obeys the method.
 7. **Narcissism register:** the word carries clinical and cultural charge; decide how hot to run it (the myth-first introduction above is the cool entry; the diagnosis movement can run hotter).
 
 ## Revision history
 
+- 2026-08-08 v1.6: the two bookkeeping corrections applied (the syllogism's conclusion reworded so relationship finds and keeps truths rather than making Truth true; the face-order decision resolved as connection-first, restated as TRUE-first after the seating). The spine turned into the dramatic architecture: prologue (Narcissus as mystery), sixteen chapters across the six movements, craft rules binding on drafting (story, reversal, and check per chapter with the check springing the reversal; the enemy escalating shadow to named to fought to disarmed; Truth withheld until its movement; every chapter ending on the next one's question), Semmelweis flagged for the lonely-prophet chapter, and the story slots only Ashman can fill flagged as the actual cure for bloodlessness.
 - 2026-08-08 v1.5: the definition adjudicated in final form (the four lines: Truth is Reality; to be true is to correspond with Truth; a truth is a finite expression that so corresponds, resolution rider retained; truthfulness is keeping the connection open enough to be corrected). The v1.4 tension closes by seating: Ashman's God-and-Soul sentence is the definition of TRUE, the middle register, which is why it read as both right and different from Truth = Reality. The asymmetry adopted (Truth cannot become false; claims can) and the loop to the center adopted as the definition's last line. Open decision two closed fully.
 - 2026-08-08 v1.4: the open-connection definition added as the middle term of the truth section (the present is where Truth becomes truths through an open connection), with the invariance guard that keeps Truth = Reality primary (the substrate cannot be diminished by closure; the corpus's flow-being doctrine holds this verbatim) and the coincidence-at-full-openness resolution (no channel between center and Infinite, so an open connection to Reality is Reality unblocked); the three-state gradient adopted (open is truth lived, distorted is error, defended closure is lie, matching canon's "lies persist through closed apertures"); truthful-while-wrong seated in the definition; the teaching adopted: stand firmly at your center; keep the connection open. New open decision: which face of the definition leads.
 - 2026-08-08 v1.3: the DARVO section added (Ashman's earlier lie-protection thesis under the new frame): the three moves typed against the syllogism in order (deny the fact, revoke the other center's access, rewrite the lens); the ontological inversion beneath the identity lies (Reality made to answer to identity: the Inflation Lie stated epistemically; displacement the mechanism, inversion the ideology, grandiosity the symptom); the temporal reading (lie-defense is lens-warfare, never time travel); centeredness as what makes corrigibility possible, with the opening argument doing double duty as therapy (a point has no parts for a fact to break); the cultural form stated checkably without clinical name-calling; Freyd cited as witness for the term and the Noble Lie triple structure noted as the institutional sibling; the major line adopted: the center can survive the truth; the image may not.
