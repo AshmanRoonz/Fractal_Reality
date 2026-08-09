@@ -3,16 +3,20 @@
 ```
 Created: 2026-08-08
 Last updated: 2026-08-08
-Version: 1.1
+Version: 1.2
 ```
 
-**Status: stated by Ashman 2026-08-08 in conversation, in two steps; audited by Claude against the corpus; canon migration not begun.** This continues the same session as `plans/shared_wholeness_and_groups_2026_08_08.md` and the writing of `Book-The_Circumpunct/the_circumpunct2.md` (constitutive order; the octave version is preserved as `the_circumpunct1.md`). It supersedes, if adopted, the glosses on the beat pairings throughout the corpus while leaving the stroke arithmetic untouched.
+**Status: ADJUDICATED as book-canon by Ashman 2026-08-08** (stated directly in conversation, confirmed via the forwarded review: "That is more than a chapter-title preference now. It changes the ontology"). The two open cells below (mediation sentence, interfacing freedom) remain open, and the framework-file migration has not begun; the identities themselves are settled.** This continues the same session as `plans/shared_wholeness_and_groups_2026_08_08.md` and the writing of `Book-The_Circumpunct/the_circumpunct2.md` (constitutive order; the octave version is preserved as `the_circumpunct1.md`). It supersedes, if adopted, the glosses on the beat pairings throughout the corpus while leaving the stroke arithmetic untouched.
 
 ## The two steps
 
 **Step one (the re-assignment).** "Convergence is what souls do. Branching is what converging souls make lines do. Interfacing is what branching lines make bodies do. Emergence is what interfacing bodies make minds do." Each process enacted by the structure it produces, driven by the structure before it; the causative grammar is ⊢ made agentive. New content relative to canon: *interfacing* enters as the body's process (its constraint function, filtering, promoted to the process column), and *emergence* moves from the boundary's beat to the mind's. Completed to the seam: recursion is what emerging minds make wholes do.
 
 **Step two (the identity).** "The mind is emergence. The soul is convergence. The body is interface. Structure is process." Not ownership but identity: the ∘ in each beat read as *is*. A soul is not a thing that converges; converging, sustained, is what "soul" names. A body is not a thing that has an interface; the body is the interfacing, ongoing. A mind is not a container where emergence happens; mind is the emerging, continuous.
+
+## The five identities (adjudicated), and the loop
+
+The sixth line is retired (Ashman, 2026-08-08: the word recursion never sat right, and integration was carrying the within-scale content). The turn is not absorbed into the whole; it closes the list onto its own first line, which is the merge the residue arithmetic supports (• and ⟳ share the one double-natured class mod 3.5; 3.5D = 0D′): **the completed whole converges, as the next soul. Completion is beginning.** The word recursion is retired from book-facing language and retained in the technical corpus (⟳, the operators, the experiments), the way the book keeps α without printing it.
 
 ## The five identities, completed
 
@@ -22,7 +26,7 @@ Version: 1.1
 | Line (—) | Kept rhythm | **Adjudicated wording (Ashman, 2026-08-08: "Path is kept rhythm. I like that").** Lineage: commitment (the 1.5D stroke's existing name; Book 2's thesis, "existence may be an act of faithfulness") refined by the persistence-as-frequency riff: ℏ = 1 gives E = ω, so to persist is to cycle; faithfulness is reliably returning, not never stopping; ◐ = 0.5 as the aperture's duty cycle. Commitment remains the constraint-word (A2); kept rhythm is the identity-word |
 | Body (○) | Interface | **Yes, in the core table**: ○'s constraint function is "Filters (selects what passes; the interface)"; the identity promotes the constraint to the process column |
 | Mind (Φ) | Emergence | **New.** Canon has mind = mediation (Φ mediates) with emergence at 2.5D producing it (D3: boundary emerges into field). This is the one genuinely new identification |
-| Whole (⊙) | Recursion | Implied by the seam: ⟳ lives at 3.5 = 0D′, AGREEMENT lives at the seam, and the whole is "the melody, not a note"; a whole is what returns |
+| Whole (⊙) | Integration | **Adjudicated (Ashman, 2026-08-08: "wholeness as integration"; confirmed in the forwarded review's list).** Individual consciousness is what the integration is from inside |
 
 "Structure is process" itself is already a section title in `CLAUDE.md` ("What looks like a fixed dimension is the pump cycle frozen at that stage"), compared there to E = mc². The two steps are that section finally applied to its own ladder: not structure paired with process, beat by beat, but each station's noun and verb revealed as one word.
 
@@ -46,5 +50,6 @@ Ashman's explicit adjudication of: (a) the five identities as stated; (b) the me
 
 ## Revision history
 
+- 2026-08-08 v1.2: the identity reading adjudicated as book-canon (five identities: convergence, kept rhythm, interface, emergence, integration); the whole's identity corrected from recursion to integration; the sixth line retired in favor of the loop (completion is the next convergence), per the residue-class merge; recursion retired from book-facing language, retained technically. Open cells 2 and 3 and the framework migration remain.
 - 2026-08-08 v1.1: the path identity's wording adjudicated: "the path is kept rhythm" (commitment refined through persistence-as-frequency; see the path riffs in `the_circumpunct_book_charter.md`). First of the five identities to carry an adjudicated final wording.
 - 2026-08-08 v1.0: initial. The two steps recorded with the corpus audit: two of five identities already canon near-verbatim, the line's identity already a book thesis, mind = emergence as the one new identification; gains (verb-column fusion, gate conjugacy, stroke arithmetic untouched), costs (corpus relabel, mediation question, freedoms cell) recorded; adjudication checklist stated.
