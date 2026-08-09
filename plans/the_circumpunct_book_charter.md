@@ -6,7 +6,7 @@ Last updated: 2026-08-08
 Version: 1.2
 ```
 
-**Status: charter adjudicated by Ashman 2026-08-08 ("Nailed it").** The problem-naming below was converged on in conversation and confirmed; everything else in this file is planning built on it, open to revision. This is the master plan for the unified book; the small books and drafts remain what they are (see Relation to the Existing Books).
+**Status: superseded as the live book plan by `plans/one_book_charter.md` (2026-08-08, same day): Ashman judged the drafted book correct but bloodless, and pivoted the center to the point, narcissism, the six kinds of oneness, and the definition of Truth. This charter's analysis stands as adjudicated groundwork.** Original status: charter adjudicated by Ashman 2026-08-08 ("Nailed it"). The problem-naming below was converged on in conversation and confirmed; everything else in this file is planning built on it, open to revision. This is the master plan for the unified book; the small books and drafts remain what they are (see Relation to the Existing Books).
 
 ---
 
