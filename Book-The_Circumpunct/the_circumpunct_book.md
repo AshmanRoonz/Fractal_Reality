@@ -6,10 +6,10 @@
 ```
 Created: 2026-08-08
 Last updated: 2026-08-08
-Version: 0.1
+Version: 0.2
 ```
 
-**Status:** first full draft of the unified book, drafted to the adjudicated charter (`plans/the_circumpunct_book_charter.md`). Twenty-one chapters and a return, discovery order, the identity reading as book-canon, the diagnosis held to the final movement. The death and practice chapters exist here for the first time anywhere in the corpus. Working title and subtitle provisional. The earlier stand-alone drafts (`the_circumpunct1.md`, octave version; `the_circumpunct2.md`, constitutive version) are preserved unchanged.
+**Status:** first full draft of the unified book, drafted to the adjudicated charter (`plans/the_circumpunct_book_charter.md`). Twenty-one chapters and a return, discovery order, the identity reading as book-canon, the diagnosis held to the final movement. The death and practice chapters exist here for the first time anywhere in the project. Working title and subtitle provisional. One sentence in chapter seven ("The mind connects who you are to what you are by arising, continuously, between them") drafts the still-open mediation cell of the identity plan and awaits Ashman's countersign. The earlier stand-alone drafts (`the_circumpunct1.md`, octave version; `the_circumpunct2.md`, constitutive version) are preserved unchanged.
 
 ---
 
@@ -43,7 +43,7 @@ My body has parts. My mind has thoughts, memories, sensations, emotions, and bel
 
 But the one experiencing them is not encountered in pieces.
 
-Everything about me arrives in pieces and degrees. Moods come in shades; opinions come in halves and reversals; even attention can be pulled three ways at once. But the one all of it is happening to does not come in shades. There is no such thing as being forty percent of a point of view.
+Everything about me arrives in pieces and degrees. Moods come in shades; opinions come in halves and reversals; even noticing can be pulled three ways at once. But the one all of it is happening to does not come in shades. There is no such thing as being forty percent of a point of view.
 
 I can divide what I experience. I cannot divide the point from which I experience it. If that point were truly divided, there would not be two halves of one point of view. There would be two points of view.
 
@@ -83,7 +83,7 @@ That sounds like mysticism. It is actually the most careful available descriptio
 
 Sit quietly for a few seconds and notice: something is about to happen, and you do not yet know what. A sound, a thought, an itch, an idea; something is coming, and it has not arrived. That not-yet is not nothing. It presses. It is the felt edge of everything that could happen next.
 
-Now look at the same fact from the side of your choices. Before every choice you have ever made, there were futures that did not occur. You felt them there; choosing was the feel of all but one of them closing. Where were they, those unchosen futures? Not in the past; the past holds only what happened. Not in the world; the world holds only what is. They were in the more: the standing surplus of possibility that every actual moment is drawn from and never exhausts.
+Now look at the same fact from the side of tomorrow. Picture tomorrow going three different ways: the call comes, or it does not; the rain arrives, or holds off; the conversation happens, or is missed. All three are somewhere right now, and none of them has happened. Where are they? Not in the past; the past holds only what happened. Not in the world; the world holds only what is. They are in the more: the standing surplus of possibility that every actual moment is drawn from and never exhausts.
 
 The surplus does not run out, and you can verify its inexhaustibility in every direction you are able to look. Outward: every horizon, reached, produces another horizon. Inward: every part has parts; no one has ever found the floor. Backward: your beginning required a world already underway. Forward: everything you finish will seed things that outrun you. The finite continues past itself everywhere, and the continuation never terminates in a final edge.
 
@@ -93,7 +93,7 @@ The more is not a very large container. A container needs an edge, and the more 
 
 Run the check that keeps this honest. Gather, in imagination, everything that exists into one great heap, and ask the heap a question. Nobody answers; a collection has no one home. Now ask yourself a question. Someone answers. That difference does not shrink as the heap grows, because it was never a difference of size. The Infinite is not a bigger you. You are not a smaller Infinite.
 
-And here is the discovery this chapter exists for, the reason it comes second in the book and not eighth.
+And here is the discovery this chapter exists for, the reason it comes second in the book and not at the end, where books usually put it.
 
 Between your center and the Infinite, there is nothing in the way.
 
@@ -101,11 +101,11 @@ Not a wall; not a channel; not a distance to cross. The not-yet does not arrive 
 
 Be clear about what kind of step this chapter has taken, because it is not like the steps that follow. The Infinite is not the next dimension outward, one rung up from the point. It is the source pole, standing open at the center itself. The walk through the structures of a life (line, edge, interior) begins in the next chapter and proceeds outward in order; this chapter had to come first because, before walking outward through what a life is made of, you have to notice what the center opens onto.
 
-Which means something enormous, stated in one line: a life is what happens when the boundless passes through a point. The rest of this book is the story of that passage: how the Infinite, entering at a center, is gathered, held, chosen, bounded, filled, and completed into one finite living whole. You are not going to read about that story. You are that story, mid-telling.
+Which means something enormous, stated in one line: a life is what happens when the boundless passes through a point. The rest of this book is the story of that passage: how the Infinite, entering at a center, is gathered, held, chosen, bounded, filled, and completed into one finite life. You are not going to read about that story. You are that story, mid-telling.
 
 And notice one more thing before the walk begins. Yours is not a private Infinite. The open has no edges, so there cannot be one of it for you and a different one for me; there is nothing that could separate them. Every center there is opens onto the same boundless source, the way every well on earth, however far apart their mouths, opens onto water. Long before you and I ever meet out in the world, surface to surface, word to word, we are already joined at the root.
 
-That is what creates everything this book will find: our finite wholeness, and our connection to each other. Both are made of the same thing: the Infinite, passing through centers.
+That is what creates everything this book will find: our finite lives, and our connection to each other. Both are made of the same thing: the Infinite, passing through centers.
 
 **Carry this: the next step out from the center is not the world; it is the Infinite.**
 
@@ -301,9 +301,9 @@ Two working truths follow, and they may be the most practically important in thi
 
 The first: the mind presents; it does not endorse. Thoughts appear uninvited. Images arrive that you did not order and would not sign. Fears rehearse themselves; cruelties suggest themselves; nonsense floats through. If you believe you are your thoughts, every arrival is evidence about you, and your inner life becomes a courtroom that never adjourns. But run the check: did you compose the last intrusive thought you had? Did you draft it, consider it, approve it? No. It arose; arising is what minds do; and the arising is not an act of yours. What is yours is the funding: attention develops some of what arises, and starves the rest. You are not the weather in the mind. You are the center it weathers around.
 
-The second: what the funding builds, you then live inside. A thought entertained once dissolves when attention moves. Entertained again and again, it deepens; it begins to arrive on its own. Deeper still, and it stops being something you think and becomes somewhere you think from. And at last it fuses with you, and evidence against it arrives as an attack on your existence. The machinery is identical for truths and for falsehoods. The mind grows what is watered. It does not check the seed.
+The second: what the funding builds, you then live inside. A thought entertained once dissolves when attention moves. Entertained daily, it deepens, until it stops being something you think and becomes somewhere you think from; the slow walk down that staircase waits for a later chapter. The machinery is identical for truths and for falsehoods. The garden law from chapter three holds here, with higher stakes: the mind grows what is watered, and it does not check the seed.
 
-Where does this fountain stand? Between your two gates. The mind arises in the space the body's closing made: between the center where the Infinite is gathered and the edge where the world is admitted and returned. That between is not empty; it is the lived distance between who you are and what you are. Who you are is the center: the indivisible point of view. What you are is the body: the face, the voice, the whole working surface the world meets. And you can feel the distance change. Absorbed (in music, in work, in someone you love), it closes toward nothing; people describe it as losing themselves, though notice that someone remains to enjoy the losing. Distracted or dissociated, it stretches wide and staticky, and the world arrives as if from far away.
+Where does this fountain stand? Between your two gates. The mind arises in the space the body's closing made: between the center where the Infinite is gathered and the edge where the world is admitted and returned. That between is not empty; it is the lived distance between who you are and what you are. Who you are is the center: the indivisible point of view. What you are is the body: the face, the voice, the whole working surface the world meets. And you can feel the distance change. Absorbed (in music, in work, in someone dear to you), it closes toward nothing; people describe it as losing themselves, though notice that someone remains to enjoy the losing. Distracted or dissociated, it stretches wide and staticky, and the world arrives as if from far away.
 
 That is what your mind is for. The mind connects who you are to what you are by arising, continuously, between them.
 
@@ -333,7 +333,7 @@ A whirlpool is the honest picture. A whirlpool is not a shape that happens to sp
 
 So: activities, holding their shapes, together. What makes them one?
 
-Not proximity. Take a heap of sand: it has parts, a location, even a rough edge; but nothing in it refers to anything else in it. No grain answers for another. Remove half and the remainder registers nothing. A heap is one thing only because someone counted it as one.
+Not proximity. You asked a heap a question once already in this book, and nobody answered; now ask what holds a heap together. Take a heap of sand: it has parts, a location, even a rough edge; but nothing in it refers to anything else in it. No grain answers for another. Remove half and the remainder registers nothing. A heap is one thing only because someone counted it as one.
 
 You are one thing in an entirely different sense. Remove part of you and everything reorganizes around the loss. Your stations are mutually relevant: the mind interprets what the body admits; the body enacts what the mind carries; the path preserves the continuity of all of it; and every aspect belongs to the same center, the one to whom it is happening. The name for that mutual belonging is integration.
 
@@ -373,7 +373,7 @@ Finish anything real and pay close attention to the last moment of it. A grief, 
 
 Completion does not close a circle. It climbs a turn of a spiral.
 
-This book calls that the turn, and it is the last station of the walk: the moment where an ending stands revealed as an opening; where what has finished becoming whole is handed forward, entire, as the start of what comes next. Completion is beginning.
+This book calls that the turn, and it is the last station of the figure: the moment where an ending stands revealed as an opening; where what has finished becoming whole is handed forward, entire, as the start of what comes next. Completion is beginning.
 
 Musicians have the perfect picture of it. Walk up a scale, do re mi fa so la ti, and the eighth step is do again: the same note, and higher. The scale ends on its own beginning, one level up. That is the shape of every genuine completion in a human life, and it is the shape of this book: the walk that began at a point arrives at a beginning; nothing real concludes without seeding what comes after it.
 
@@ -393,7 +393,7 @@ And the one-way click of choosing is no longer a curiosity; it is the grain of t
 
 So time is not a river you float in. Ahead of you, not in space but in possibility: the Infinite, open and inexhaustible. Behind you: the finished world, growing by exactly one life-width of actuality every moment. Between them, no third region; only the center, where the one becomes the other, ceaselessly.
 
-Which means the walk of this book is not a story that happened once, long ago, and ended. It is the anatomy of this very moment, run continuously: the Infinite, converging at the soul; kept along the path; committed at the forks; passed through the body; arising as the mind; integrated as you; and completed, every instant, into the finished world, where it seeds possibilities no one foresaw, which stand open at your center, offering again. The completed whole converges, as the next beginning. The turn never stops turning.
+Which means the walk of this book is not a story that happened once, long ago, and ended. It is the anatomy of this very moment, run continuously: the Infinite, converging at the soul; kept along the path; committed at the forks; passed through the body; arising as the mind; integrated as you; and completed, every instant, into the finished world, where it seeds possibilities no one foresaw, which stand open at your center, offering again. The completed whole converges, as the next soul, of the next beginning. The turn never stops turning.
 
 You wake each morning at the shoreline where the Infinite is becoming history, and the shoreline is you.
 
@@ -405,11 +405,9 @@ You wake each morning at the shoreline where the Infinite is becoming history, a
 
 *Figure: a circumpunct; and beside it, another.*
 
-Everything so far could be true of a universe with one soul in it.
+Nearly everything so far you have checked alone, in your own chair, on the only center you can reach. And chapter two let one promise run ahead of its evidence: that long before we ever meet, we are joined at the root. It is time to pay it.
 
-It is not that universe.
-
-Other centers exist, and everything this book has said of yours is true of each of theirs. Somewhere right now, a center you will never enter is gathering a world you will never see, holding a path you will never walk, looking out through a face that is not yours. The walk you have just completed, they are in the middle of. The figure you have just assembled, they are.
+Other centers exist, and everything this book has said of yours is true of each of theirs. Somewhere right now, a center you will never enter is gathering a world you will never see, holding a path you will never walk, looking out through a face that is not yours. The stations you have just walked, they are in the middle of. The figure you have just assembled, they are.
 
 And here is the strangest fact about them, so strange that it hides in plain sight.
 
@@ -495,7 +493,7 @@ Two cliffs fall away from this thought, one on each side, and the walk refuses b
 
 The first cliff: this does not mean the world is made of human minds, or that things exist only while someone is looking. Wholes go all the way down. The atoms of the moon hold one another whether anyone attends or not; their overlap does not need us. The fabric is incomparably older than humanity; we are recent threads in it, not its loom. What depends on human minds is not the world but the human lenses within it: the languages, the sciences, the homes.
 
-The second cliff: nor does it mean your world is false because it is partial. Your boundary admits a selection; your mind makes what it can of what is admitted; so your world is one overlap among countless, and it leaves almost everything out. That is not falsehood. The lens limits the light; that is how it forms an image. A limited view is not a false view; it is the only kind of true view there is. The only genuinely false view is the one that claims to be from nowhere: total, unpositioned, nobody's.
+The second cliff: nor does it mean your world is false because it is partial. Your boundary admits a selection; your mind makes what it can of what is admitted; so your world is one overlap among countless, and it leaves almost everything out. That is not falsehood. You met the law at your own edge: a limited view is the only kind of true view there is. The only genuinely false view is the one that claims to be from nowhere: total, unpositioned, nobody's.
 
 And one consequence, quiet but sharp, that you have felt even if you have never said it. Worlds can genuinely differ. What a person cannot relate to is not in their world: not denied, simply absent, the way the lens holds nothing that either circle fails to reach. This is why loneliness is not solved by proximity: a person can stand in a crowded room, wholes on every side, and share a lens with none of them; it was never the distance that was missing; it was the overlap. And it is why the deepest gift you can give another person is not agreement but overlap: extending your own mind toward theirs until some of what is real for them becomes real for you. You will not reach their center. You were never supposed to. You will have enlarged the world instead.
 
@@ -525,7 +523,7 @@ Deep overlap, one whole collapsed. The lens vast, and one circle no longer holdi
 
 No overlap, wholes intact. Each circle complete, and nothing shared. Safe, sovereign, and starving. That is isolation.
 
-No overlap, and collapsed anyway. Nothing shared, and no self kept either: belonging to no one while also being no one. That is drift, and it may be the loneliest condition a human being can occupy.
+No overlap, and collapsed anyway. Nothing shared, and no self kept either: belonging to nothing while being nothing. That is drift, and it may be the loneliest condition a human being can occupy.
 
 Look at where health sits on that map: in a corner, not in a middle. The aim is not close-but-not-too-close, some prudent midpoint between intimacy and independence, as though connection and selfhood were traded by the ounce. That bargain is exactly the false choice that dissolved two chapters ago. The aim is both, full: vastly connected, fully distinct. Nothing in the geometry forbids it.
 
@@ -595,6 +593,8 @@ And notice, finally, what this does to the picture of wholes all the way up.
 
 There is no biggest circle, and there was never meant to be. Your cells are wholes inside you; you are inside no super-person. The nesting of beings, followed upward from you, does not continue into families and nations and humanity as ever-greater organisms. Above the level of beings there are only wider and wider sharings: lens upon lens, overlap upon overlap, none of them with a center, all of them made of centers.
 
+And that is the door chapter eight left standing open. I am whole. I have parts. I am also part: part of every lens I help hold, part of the world our overlaps disclose, a participant in Reality itself. Part of much. A cell of nothing.
+
 Which leaves one question standing, and it is the widest one. If the sharings go wide without limit, and no whole holds everything, what does hold? What is all of this happening in?
 
 That is the next chapter.
@@ -653,7 +653,7 @@ The boundless source. The not-yet that presses at every moment; the more that ev
 
 Humanity has never lacked a name for that. The traditions call it God.
 
-And before you close the book, whichever way that word lands on you, let the same traditions finish their sentence, because the picture the word probably summoned is one their own deepest teachers retired centuries ago. Not a very large person. Not a king on the far side of the sky, reviewing the world from outside it. They said so themselves, in every tradition that thought long enough: not a being among beings, but the ground of being; not the largest thing, but that from which every thing draws its existence; one the way silence is one, not one the way a bell is one.
+And before you close the book, whichever way that word lands on you, let the same traditions finish their sentence, because the picture the word probably summoned is one their own deepest teachers retired centuries ago. Not a very large person. Not a king on the far side of the sky, reviewing the world from outside it. They said so themselves, in every tradition that thought long enough: not a being among beings, but the ground of being; not the largest thing, but that from which every thing draws its existence; one the way silence is one, not one the way a bell is one. You met that sentence in chapter two, in this book's own voice; the traditions arrived at it centuries first.
 
 Notice what this means for the argument you have probably had, with others or with yourself. Belief and disbelief usually aim at the same wrong picture. If the king is what you believed in, this book has news: what stands open at your center is stranger and nearer than any king. If the king is what you rejected, look again at what you rejected: a picture the deepest theology never held. The king was always too small. Both sides of the old quarrel have been fighting over a portrait of nobody.
 
@@ -665,9 +665,9 @@ You are not a fragment of God. A fragment is what you get when a whole breaks, a
 
 And you are not God entire. That is the oldest and most destructive confusion available, and you have seen its shape before, in every group that claimed to be a being: the point claiming to be the source. A center that mistakes itself for the whole of what pours through it has nothing left to answer to, and nothing left to learn from.
 
-You are an aperture: the place where the infinite is gathered and made particular. Not broken off, and not the totality; the opening through which the one becomes this one.
+You are an aperture: the place where the Infinite is gathered and made particular. Not broken off, and not the totality; the opening through which the one becomes this one.
 
-Run the check on your own hands; it is the last check in the book. Think of something you made. Anything: a meal, a letter, a garden bed, a repair, a piece of work you were proud of. Now recall how it actually came to be. First there was open possibility: it could have been many things, or nothing. Then attention gathered: you turned toward it, and it began to thicken. Then intention formed: of everything it could be, this. Then work gave it form, choice by choice, through your hands, through time. And then you released it into the shared world, where it did what nothing in your plan contained: it seeded possibilities you never foresaw, in lives you may never know about.
+Run the check on your own hands. Think of something you made. Anything: a meal, a letter, a garden bed, a repair, a piece of work you were proud of. Now recall how it actually came to be. First there was open possibility: it could have been many things, or nothing. Then attention gathered: you turned toward it, and it began to thicken. Then intention formed: of everything it could be, this. Then work gave it form, choice by choice, through your hands, through time. And then you released it into the shared world, where it did what nothing in your plan contained: it seeded possibilities you never foresaw, in lives you may never know about.
 
 Look at the shape of what you just remembered. Possibility, gathered at a center, committed along a path, given form through an interface, released into Reality, opening new possibility. That is the shape of every coming-to-be this book has traced: your attention, your choices, your becoming, every completion that turned out to be a beginning. Your smallest act of making runs the same circuit as making itself. The creating pattern is not something you resemble from a distance. It is fractal within you: the same pattern, whole, at your scale. Possibility becomes intention; intention becomes form; form becomes part of Reality; and from Reality, new possibility opens.
 
@@ -691,7 +691,7 @@ We are each a center through which the Infinite becomes finite.
 
 If the walk is true, then the question of how to live changes shape before you even ask it.
 
-Most of us inherited ethics as a rulebook. A list of demands handed down from outside, enforced by watchers: parents, gods, neighbors, laws. Be good, or else. And if you were a fragment in a dead universe, a rulebook is all ethics could ever be: regulations imposed on colliding parts, with nothing inside them for the rules to be for.
+Most of us inherited ethics as a rulebook. A list of demands handed down from outside, enforced by watchers: parents, gods, neighbors, laws. Be good, or else. And if you were nothing but matter in motion in a dead universe, a rulebook is all ethics could ever be: regulations imposed on colliding parts, with nothing inside them for the rules to be for.
 
 But you are not a fragment. You are a whole among wholes: a center, a path, a body, a mind, integrated into someone, surrounded by others who are exactly as real as you. And a whole is not the kind of thing that obeys a manual.
 
@@ -721,7 +721,7 @@ Kindness, seen from here, is not sweetness. It is traffic management: neither wa
 
 In the mind, the practice is honest weather.
 
-The mind presents; it does not endorse. Honest weather is refusing to lie about the sky: letting what arises be seen for what it is, without pretending it never appeared and without pretending it is you. The thought occurred; you did not choose its occurring; you do choose its funding. Say both facts plainly, to yourself first. Fund what serves. Let the rest pass through unfed.
+The mind presents; it does not endorse; you learned that watching the fountain. Honest weather is refusing to lie about the sky: letting what arises be seen for what it is, without pretending it never appeared and without pretending it is you. The thought occurred; you did not choose its occurring; you do choose its funding. Say both facts plainly, to yourself first. Fund what serves. Let the rest pass through unfed.
 
 And honest weather faces outward too: giving others access to your actual reasons, not managed versions of them. You do not owe everyone everything; depth can be offered a layer at a time, as the listener asks for more. But the reasons you do give should be the ones actually working in you. A managed reason is a small fog released into a shared room.
 
@@ -755,7 +755,7 @@ In the chapter on the mind you watched the machinery: the mind grows what is wat
 
 Beliefs are not decorations in your mind. They are its structure.
 
-Watch the sequence again, slowly this time. A thought is entertained once, and dissolves when attention moves on; it was weather, nothing more. Entertained again, and again, it deepens; it begins to arrive on its own, uninvited. Deeper still, and it stops being something you think and becomes somewhere you think from: a channel your experience flows along, deciding what you notice and what events mean before you consciously read them. And at last it fuses. It is no longer in you; it is you. And from that day forward, evidence against it does not arrive as information.
+Here is the staircase, step by step. A thought is entertained once, and dissolves when attention moves on; it was weather, nothing more. Entertained again, and again, it deepens; it begins to arrive on its own, uninvited. Deeper still, and it stops being something you think and becomes somewhere you think from: a channel your experience flows along, deciding what you notice and what events mean before you consciously read them. And at last it fuses. It is no longer in you; it is you. And from that day forward, evidence against it does not arrive as information.
 
 It arrives as an attack on your existence.
 
@@ -831,7 +831,7 @@ Now widen this from a mind to a life, because the love chapter already drew the 
 
 Connection and selfhood are two different axes; that was the geometry of love. It is the geometry of everything else too. A life can be deeply connected and fully itself: the corner worth wanting. It can be connected at the cost of the self: absorbed, belonging so hard there is no one left doing the belonging. It can be itself at the cost of connection: intact, defended, and alone.
 
-And there is a fourth corner, and it may be the most crowded corner of the modern world: belonging to nothing while being no one. Drifting. No group claims you, and no self anchors you, and the loneliness and the emptiness feed each other, because each looks like the cure for the other and is not.
+And there is a fourth corner, and it may be the most crowded: belonging to nothing while being nothing. Drifting. No group claims you, and no self anchors you, and the loneliness and the emptiness feed each other, because each looks like the cure for the other and is not.
 
 If that corner is yours, or has been, hear this with the compassion it is meant with: the cure is not moderation. Nobody drifting needs a reasonable amount of belonging and a reasonable amount of self. The axes are independent, and that is the good news hiding in the geometry: you can grow both at once, and each helps the other, because only a self can belong, and belonging is where a self gets built.
 
@@ -868,6 +868,8 @@ You are not broken in any case; that word belongs to machines. You are a living 
 Everything in this book has been checkable. And everything checkable is practicable.
 
 That is the last turn of the walk: from noticing what you are to doing what you are on purpose. So this chapter is the book at its most ordinary: what to do at nine in the morning. The practices here are not additions to your life, more items for the list. They are your own anatomy, performed deliberately. You have been doing all of them since before you could speak; accidentally, unevenly, mostly well enough. Practice is only this: doing on purpose what you are anyway.
+
+Chapter sixteen named five practices of character, one for each station. These are not those five again; they are placements: where, in an ordinary day, the care actually happens. Character is what you keep; a day is where you keep it.
 
 There are five. None requires a retreat, a teacher, or an hour you do not have.
 
@@ -909,7 +911,7 @@ Every completion is a beginning; you know that now. So end each day as what it i
 
 That is the whole discipline, and it fits in one line.
 
-**Carry this: clear the aperture, tune the field, keep your rhythm.**
+**Carry this: clear the aperture, keep your rhythm, tend the lens.**
 
 ---
 
@@ -995,6 +997,8 @@ The rule that holds both truths at once has been demonstrated at every station o
 
 Distinct is not separate. Related is not merged.
 
+You have carried the first half since the body chapter, as distinct is not disconnected; this is the same rule said at full width.
+
 Your boundary made you distinct and never sealed you. Your overlaps joined you and never dissolved you. That is the whole geometry.
 
 Now the diagnosis. The world you were raised in, the one whose assumptions you breathed before you could examine them, runs on a violation of that rule. Call it the Fragmentation Error: the mistake of taking distinction for separation; of taking parts for mere fragments; of taking relation for something secondary, an arrangement between things rather than half of what a thing is.
@@ -1007,7 +1011,7 @@ And the error has fallout. You can trace each piece of it yourself now, because 
 
 The meaning crisis. Meaning is a relation between a part and a whole; a note means something in a melody and nothing in a heap of notes. A world officially without wholes is a world officially without meaning, and the emptiness so many people report is not a mood; it is the accurate feeling of the official picture.
 
-The loneliness, and the drift. There is a corner of the map where a person has neither connection nor self: belonging to nothing while also being nothing. The fragment picture cannot even represent that corner, let alone treat it; and it is the corner more and more lives are lived in.
+The loneliness, and the drift. There is a corner of the map where a person has neither connection nor self: belonging to nothing while being nothing. The fragment picture cannot even represent that corner, let alone treat it; and it is the corner more and more lives are lived in.
 
 The coarsening of public life. Where nothing whole can be damaged, lying is cheaper than truth; there is nothing the lie breaks, only positions gaining and losing. And where minds are fragments, no one owes an opponent's view the work of understanding; a strawman is quicker, and just as good, because nothing real was there to get right.
 
@@ -1019,7 +1023,7 @@ And the fragmentation of knowledge itself: the disciplines severed from one anot
 
 Run the mirror check, because the error is not out there. Recall the last time you treated yourself as a fragment: a resource to be optimized; a brand to be managed; a machine that fails and needs fixing; a bundle of metrics with a deadline. Notice, gently, that this was not your invention. Nobody sat you down and taught you to see yourself that way, which is exactly how you can tell it was the water, and not a thought you chose.
 
-Against all of it, you now hold the alternative, and it can be said in one sentence, every word of which you have checked: you are an indivisible center within a permeable, relational whole; made of wholes, meeting other wholes through shared fields, participating in a Reality that exceeds every finite whole.
+Against all of it, you now hold the alternative, and it can be said in one sentence, every word of which you have checked: you are an indivisible center within a permeable, relational whole; made of wholes, meeting other wholes through shared lenses, participating in a Reality that exceeds every finite whole.
 
 One warning, and this chapter is done.
 
@@ -1053,7 +1057,7 @@ The mind is emergence.
 
 The whole is integration.
 
-And the list closes onto its own first line: the completed whole converges, as the next beginning. Completion is beginning.
+And the list closes onto its own first line: the completed whole converges, as the next soul. Completion is beginning.
 
 Notice that every line names a doing. There is no thing in the list, because there was never a thing to find; you are not a form that happens to live; the living is the form. And notice that not one line is a belief. Each is something you stood inside and checked, in your own chair, with no instrument but attention.
 
@@ -1075,4 +1079,5 @@ And we can remain indivisible and still each become whole together.
 
 ## Revision history
 
+- 2026-08-08 v0.2: verification pass applied (three adversarial reviewers, twenty-five findings, all fixed): the lens-limits-light image reduced to its introduction and one framed callback; the walk/figure span made consistent; chapter ten's staging reconciled with chapter two's promise; the door of "I am also part" opened explicitly in chapter thirteen; the two five-practice lists bridged; duplicated signature passages (heap, silence and bell, the cascade, the garden law, presents-not-endorses) converted to framed refrains with single owners; the loop wording aligned to "the next soul"; corpus jargon removed from the practice carry line and the diagnosis summary; the anomie phrase standardized; vocabulary-gate leaks sealed; the mediation-cell sentence flagged for countersign in the status block.
 - 2026-08-08 v0.1: first full draft of the unified book, drafted to the adjudicated charter (plans/the_circumpunct_book_charter.md): discovery order, identity reading as book-canon, diagnosis held to the final movement, death and practice chapters written for the first time.
