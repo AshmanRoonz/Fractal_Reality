@@ -3,7 +3,7 @@
 ```
 Created: 2026-08-08
 Last updated: 2026-08-08
-Version: 1.1
+Version: 1.2
 ```
 
 **Status: drafted from Ashman's pivot of 2026-08-08** ("the book is kinda boring, and not exactly what I was feeling"; "I think we should start with the point"; "The book should be named 'One'"; "we need to develop a solid definition of Truth"). The title, the truth-definition wording, and the spine choice await his adjudication; the problem, thesis, and engine below are his own statements, recorded. This charter supersedes `the_circumpunct_book_charter.md` as the live book plan; that charter and the drafted `Book-The_Circumpunct/the_circumpunct_book.md` are retained as adjudicated groundwork and quarry, not discarded.
@@ -47,15 +47,34 @@ The circumpunct is not demoted; it is placed: it is how wholeness (the sixth kin
 
 **Every named pathology is a confusion of kinds.** Featureless monism mistakes inclusion for integration. Fusion-love mistakes relation for merger. The state-as-organism is a group claiming integration it does not have. Dogmatism mistakes a center's access for possession of the whole. Narcissism sits slightly differently (v1.1): its root is not a kind-confusion but the displacement above; the Inflation shape ("the point declaring itself the All") is its late-stage compensation, symptom rather than mechanism. The paired diagnosis, in two lines: **narcissism is what happens when the center is abandoned for its image; fragmentation is what happens when centered wholes are treated as mere parts.** The book's argumentative work is done by naming, in each case, what was lost or confused; and the error dissolves.
 
-**The payoff: Truth, defined** (simplified v1.1; the earlier "Reality under the aspect of its namability" machinery retired as over-built). Five plain layers:
+**The payoff: Truth and truths** (v1.2, Ashman's temporal definition, ChatGPT's development, replacing the v1.1 layers as the section's spine; the correspondence definition survives inside it, demoted to its true rank: the definition of *a truth*).
 
-- *Reality* is what is.
-- *Perspective* is Reality encountered from a center: a limited encounter from somewhere; partial, not false.
-- *A claim* is an attempt to describe what is encountered.
-- *Truth* is correspondence between the claim and Reality, at the claim's stated resolution (higher resolution contains a truth and never contradicts it; this rider is load-bearing and keeps "which description is THE truth" from ever getting started).
-- *Truthfulness* is the practice of keeping the correspondence open to correction: yield to evidence, resist pressure.
+**The definition was already a theorem.** The identity chain has said Truth = Reality = ∞ since its first statement, and the 2026-08-01 temporal adjudication placed ∞ at the future. Substitute, and Ashman's "truth = reality = future" falls out of two already-adjudicated positions. The corpus contained the definition; tonight it was read aloud.
 
-Terminology note: the corpus also uses Truth as a substrate-name in the six-name identity chain; the book uses the claim-property sense above; the Truth/TRUE precedent already covers one word carrying two registers, and the book need not mention the substrate sense before its closing movement.
+**The structure:**
+
+- **Truth is Reality.** Singular, inexhaustible, never possessed by any finite center. Not a statement; statements can be true; Reality simply is.
+- **The future is Truth as open possibility.** Reality still open; what could be.
+- **The present is where Truth becomes particular.** The center; the meeting point; the conversion.
+- **The past holds the truths.** What has actually become: settled, real, consequential, closed.
+
+**The movement, compressed:** *the present is where Truth becomes truths.* This is "we are each a center through which the Infinite becomes finite," spoken in truth-vocabulary; the poster's three columns gain a row: Truth, the soul's actualizing, truths.
+
+**The hierarchy:**
+
+- *Truth*: Reality itself.
+- *A fact*: an actuality that has become settled.
+- *A truth*: a finite claim that faithfully corresponds, at its stated resolution (the resolution rider stays; higher resolution contains a truth and never contradicts it).
+- *Truthfulness*: keeping finite claims faithful and corrigible: yield to evidence, resist pressure.
+
+**The triad completed by the virtue table.** The corpus already distinguished Truth (substrate) from TRUE (the aperture's virtue). The temporal definition seats all three registers at their stations: **Truth is the future; TRUE is the present practice; truths are the past.** The virtue TRUE is precisely how a center lets Truth become truths cleanly; distort the aperture and Truth is unchanged while the truths laid down are bent. One word, three registers, each with a tense; the Truth/TRUE homophony was never an accident, and now it has a clock.
+
+**The strongest compression, and the title's own law obeyed:** **Truth is one. Truths are many.** There is one Truth, inexhaustible Reality; there are indefinitely many truths, finite expressions of what Reality has become through particular centers. Even Truth obeys the book's saying: one thing is never really just one thing.
+
+**Two riders, so the book is not ambushed:**
+
+1. *The open future rider.* If the future is Truth-as-open-possibility, then claims about the genuinely open future are not yet true or false; they become so at actualization. This is a real and respectable position (Aristotle's sea battle, the open future), and the book should own it as a feature rather than hide it: an open future is exactly what attention and choice require. Mutually exclusive possibilities are never both true, because possibilities are not truths; truths are what actualization leaves.
+2. *The timeless-structure rider.* Mathematical and structural claims (that two and three make five; that a boundary distinguishes) do not describe any particular becoming and so are not past-anchored truths; they describe Reality's invariant form, the way the source becomes, and hold at every time for that reason. One sentence in the book suffices; without it, "truths are past" reads as denying arithmetic.
 
 **The two axes** (corrected v1.1; the earlier "truth plane" quietly conflated truth with knowledge-status, and its own lonely-prophet corner refuted it: the prophet is true while unshared, so agreement cannot be constitutive of truth). Correspondence runs on one axis: Reality, encountered by a center, described by a claim; truth lives here and only here. Correction runs on the other: center to center; relationship does not produce truth, it is how limited centers find and keep it, and it is indispensable for exactly the reason premise four gives: Reality exceeds every center, so another center is not a competitor for truth but potential access to what I cannot see from mine. The four corners survive as a map of *public knowledge*, not of truth: both axes strong is shared knowledge; correspondence without correction is the lonely prophet, true and unheard; correction without correspondence is consensus delusion, the Noble Lie's society; neither is noise. Knowledge is a corner, not a middle; splitting the difference between my view and yours remains the moderation error, now correctly located in epistemology's social half.
 
@@ -109,7 +128,7 @@ Terminology note: the corpus also uses Truth as a substrate-name in the six-name
 ## Open decisions (Ashman)
 
 1. **Title countersign:** "One" (stated in conversation; countersign here makes it standing).
-2. **The compressed truth definition:** pick or improve one of the three candidates.
+2. ~~The compressed truth definition~~ **Resolved in form (v1.2, Ashman's temporal definition): "Truth is one. Truths are many," with "the present is where Truth becomes truths" as the movement. Formal countersign of the section pending.**
 3. ~~The premise-two gloss~~ **Resolved v1.1:** the modest epistemological form opens the book; the framework's stronger direct-at-the-source reading arrives later, once earned.
 4. ~~The spine~~ **Resolved v1.1:** CENTER, WHOLE, OTHER, REALITY, TRUTH, ETHICS, per the forwarded review; the six kinds of oneness unfold within the movements rather than structuring them.
 5. **Fate of the circumpunct book draft:** quarry only, or finish separately later as the companion walk.
@@ -117,5 +136,6 @@ Terminology note: the corpus also uses Truth as a substrate-name in the six-name
 
 ## Revision history
 
+- 2026-08-08 v1.2: the truth section replaced with Ashman's temporal definition, developed in the forwarded review: Truth is Reality (the future as Truth open, the present as Truth becoming particular, the past as the truths); shown to be a theorem of two adjudicated positions (the identity chain and the temporal adjudication); the hierarchy Truth / fact / a truth / truthfulness adopted with the resolution rider retained; the Truth/TRUE/truths triad seated temporally (future, present practice, past); the compression "Truth is one; truths are many" adopted, satisfying the title's own law; the open-future and timeless-structure riders added; open decision two resolved in form.
 - 2026-08-08 v1.1: four corrections from ChatGPT's review, forwarded by Ashman, accepted: the root claim stated in its defensible form (whole/part ontology lacks the category, rather than "everyone forgot"); the narcissism mechanism corrected to displaced centeredness, restoring Ashman's own "develops from abandoning the center" over the charter's inflation reading, with the Inflation shape re-filed as late-stage compensation; the opening access argument made modest and epistemological (partial is not false; perspective is not possession), the stronger framework reading deferred until earned; the truth construction simplified to five plain layers with the resolution rider retained, and the "truth plane" corrected to two axes (correspondence carries truth; correction finds and keeps it; the four corners map public knowledge, not truth; the plane's own lonely-prophet corner was the refutation). The stations-of-truth observation demoted to reserve. Spine adopted: CENTER, WHOLE, OTHER, REALITY, TRUTH, ETHICS. Open decisions three and four closed.
 - 2026-08-08 v1.0: initial. Drafted from the same-day pivot: the forgotten point as root, narcissism as the lived diagnosis, the six kinds of oneness as engine, Truth defined in layers with the truth plane and the two derived weapons, the syllogism recorded with its premise-two gloss, candidate spine and open decisions listed.
