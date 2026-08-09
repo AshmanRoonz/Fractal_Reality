@@ -3,7 +3,7 @@
 ```
 Created: 2026-08-08
 Last updated: 2026-08-08
-Version: 1.4
+Version: 1.5
 ```
 
 **Status: drafted from Ashman's pivot of 2026-08-08** ("the book is kinda boring, and not exactly what I was feeling"; "I think we should start with the point"; "The book should be named 'One'"; "we need to develop a solid definition of Truth"). The title, the truth-definition wording, and the spine choice await his adjudication; the problem, thesis, and engine below are his own statements, recorded. This charter supersedes `the_circumpunct_book_charter.md` as the live book plan; that charter and the drafted `Book-The_Circumpunct/the_circumpunct_book.md` are retained as adjudicated groundwork and quarry, not discarded.
@@ -81,6 +81,26 @@ The circumpunct is not demoted; it is placed: it is how wholeness (the sixth kin
 
 **The teaching, adopted as one of the book's central lines:** **stand firmly at your center; keep the connection open.** Truth and humility joined without self-doubt: the stance is not "I might not be here" but "I am here, and I am not finished receiving."
 
+**The definition, final form (v1.5, ADJUDICATED: Ashman's "Yes" on the consolidated hierarchy).** Four lines, canonical:
+
+> **Truth is Reality.**
+> **To be true is to correspond with Truth.**
+> **A truth is a finite expression that corresponds with Truth** (at its stated resolution; the rider stays).
+> **Truthfulness is keeping the connection open enough to be corrected by Truth.**
+
+The hierarchy beneath the four lines: Truth = Reality; *true* (the adjective) = corresponding with Truth; *a truth* = a finite claim that so corresponds; truths are true *because* they correspond with Truth, and what does not correspond is not a lesser truth but not a truth at all: a claim, belief, interpretation, error, or lie, depending on its relation to evidence and correction. Correspondence now does exactly one job: it relates claims to Truth; it never defines Truth. And Truth does not need us to believe it; truthfulness is our effort to remain in correspondence with it.
+
+**The seating that closes the v1.4 tension.** Ashman's sentence ("truth is an open connection between God and Soul") turns out to be, precisely, the definition of **TRUE**: the open, corrigible relation of Soul to Reality. That is why it felt both right and different from Truth = Reality: it was defining the middle register the whole time. The triad completes with all three registers defined and seated:
+
+| | Future | Present | Past |
+|---|---|---|---|
+| **Register** | Truth | TRUE | truths |
+| **Is** | Reality, open | the open, corrigible relation of Soul to Reality | finite claims settled in correspondence |
+
+**The asymmetry, adopted:** Truth cannot become false; our claims can. **And the loop back to the center, adopted as the definition's last line:** the center can survive correction because correction changes the claim, not Truth and not the center.
+
+**Procedural note, worth the book's afterword someday:** this definition was produced by the process it defines. Claims were made at one center, corrected against Reality through other centers, revised without anyone disappearing; correction changed the claims, never Truth, never the centers. The definition is its own first verification.
+
 **The defense of the lie: DARVO under One** (v1.3, Ashman's earlier lie-protection thesis snapped into the new frame via the forwarded review). Ashman's prior position: DARVO (deny, attack, reverse victim and offender; the term is Jennifer Freyd's, cited as witness) is not uniquely narcissistic; it is a general lie-protection mechanism. The narcissistic difference: the protected falsehood is load-bearing for identity, so correction is experienced not as "I was wrong" but as "the self I am protecting is being threatened." Under displaced centeredness this becomes exact: a healthy person has an image without confusing it with the center, so the center survives correction and the representation can change; when centeredness has migrated into the image, correcting the image approximates destroying the self, and the defense system fires.
 
 **The three moves, typed against the syllogism itself** (the sharpest form, and the reason this belongs in the book's TRUTH movement): DARVO is the syllogism attacked in order. *Deny* refuses the fact: the settled past is contested ("that didn't happen"). *Attack* denies premise three directly: the other center's access to Reality is revoked ("you are crazy, biased, malicious; your perception doesn't count"); this is the same move the charter's diagnosis already named at culture scale, performed at kitchen-table scale. *Reverse* rewrites the shared lens so the protected identity stays intact ("I am not the one who harmed you; you harmed me by accusing me"). Beneath the identity lies ("I am always innocent; I do not make mistakes") sits the ontological inversion: **the healthy order is Reality above my representation of myself; the narcissistic order attempts the reverse: Reality must answer to my identity.** The inversion is the Inflation Lie stated epistemically; displacement is the mechanism, inversion is the ideology, grandiosity is the symptom.
@@ -150,7 +170,7 @@ The circumpunct is not demoted; it is placed: it is how wholeness (the sixth kin
 ## Open decisions (Ashman)
 
 1. **Title countersign:** "One" (stated in conversation; countersign here makes it standing).
-2. ~~The compressed truth definition~~ **Resolved in form (v1.2, Ashman's temporal definition): "Truth is one. Truths are many," with "the present is where Truth becomes truths" as the movement. Formal countersign of the section pending.**
+2. ~~The compressed truth definition~~ **ADJUDICATED (v1.5): the four-line canonical form, with "Truth is one; truths are many" and "the present is where Truth becomes truths" as its compressions, and the center-survives-correction line as its close.**
 3. ~~The premise-two gloss~~ **Resolved v1.1:** the modest epistemological form opens the book; the framework's stronger direct-at-the-source reading arrives later, once earned.
 4. ~~The spine~~ **Resolved v1.1:** CENTER, WHOLE, OTHER, REALITY, TRUTH, ETHICS, per the forwarded review; the six kinds of oneness unfold within the movements rather than structuring them.
 5. **Fate of the circumpunct book draft:** quarry only, or finish separately later as the companion walk.
@@ -159,6 +179,7 @@ The circumpunct is not demoted; it is placed: it is how wholeness (the sixth kin
 
 ## Revision history
 
+- 2026-08-08 v1.5: the definition adjudicated in final form (the four lines: Truth is Reality; to be true is to correspond with Truth; a truth is a finite expression that so corresponds, resolution rider retained; truthfulness is keeping the connection open enough to be corrected). The v1.4 tension closes by seating: Ashman's God-and-Soul sentence is the definition of TRUE, the middle register, which is why it read as both right and different from Truth = Reality. The asymmetry adopted (Truth cannot become false; claims can) and the loop to the center adopted as the definition's last line. Open decision two closed fully.
 - 2026-08-08 v1.4: the open-connection definition added as the middle term of the truth section (the present is where Truth becomes truths through an open connection), with the invariance guard that keeps Truth = Reality primary (the substrate cannot be diminished by closure; the corpus's flow-being doctrine holds this verbatim) and the coincidence-at-full-openness resolution (no channel between center and Infinite, so an open connection to Reality is Reality unblocked); the three-state gradient adopted (open is truth lived, distorted is error, defended closure is lie, matching canon's "lies persist through closed apertures"); truthful-while-wrong seated in the definition; the teaching adopted: stand firmly at your center; keep the connection open. New open decision: which face of the definition leads.
 - 2026-08-08 v1.3: the DARVO section added (Ashman's earlier lie-protection thesis under the new frame): the three moves typed against the syllogism in order (deny the fact, revoke the other center's access, rewrite the lens); the ontological inversion beneath the identity lies (Reality made to answer to identity: the Inflation Lie stated epistemically; displacement the mechanism, inversion the ideology, grandiosity the symptom); the temporal reading (lie-defense is lens-warfare, never time travel); centeredness as what makes corrigibility possible, with the opening argument doing double duty as therapy (a point has no parts for a fact to break); the cultural form stated checkably without clinical name-calling; Freyd cited as witness for the term and the Noble Lie triple structure noted as the institutional sibling; the major line adopted: the center can survive the truth; the image may not.
 - 2026-08-08 v1.2: the truth section replaced with Ashman's temporal definition, developed in the forwarded review: Truth is Reality (the future as Truth open, the present as Truth becoming particular, the past as the truths); shown to be a theorem of two adjudicated positions (the identity chain and the temporal adjudication); the hierarchy Truth / fact / a truth / truthfulness adopted with the resolution rider retained; the Truth/TRUE/truths triad seated temporally (future, present practice, past); the compression "Truth is one; truths are many" adopted, satisfying the title's own law; the open-future and timeless-structure riders added; open decision two resolved in form.
