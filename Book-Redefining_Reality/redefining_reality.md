@@ -8,7 +8,7 @@
 ```
 Created: 2026-08-09
 Last updated: 2026-08-09
-Version: 0.1
+Version: 0.2
 ```
 
 **Status:** first draft, compiled from the adjudicated definitions of the Circumpunct corpus and the One charter (v1.7). Every definition here is Ashman's, settled through the corpus's correction process; the compilation, orderings, and connective prose await his pass. Entries follow one form: the word, the definition it replaces, the redefinition, and a few sentences of why.
@@ -24,6 +24,8 @@ Before people fight over anything, they have already accepted definitions: of wh
 This book does one thing. It takes the biggest words we have, the ones underneath all the other words, and defines them again, carefully, so that they fit together. Not new words; old words, given back their referents. Each entry names the definition you probably inherited, offers the replacement, and says in a few sentences why the replacement earns its place.
 
 The definitions form one picture. Read in order, they assemble it. Read alone, each one still stands.
+
+One rule governs every entry: the bold sentence is the definition, and everything after it explains, tests, or connects; nothing after the bold sentence is allowed to smuggle a further claim into the definition itself.
 
 Start with the word under all the others.
 
@@ -71,7 +73,7 @@ Start with the word under all the others.
 
 *Instead of:* a very large person; a king beyond the sky; or nothing at all.
 
-**God is the traditions' name for the Infinite: the boundless source every center opens onto.** Not a being among beings; the ground of being. Not the largest thing; that from which every thing draws its existence. Belief and disbelief usually aim at the same wrong picture, the cosmic king, and the deepest teachers of every tradition rejected that picture centuries ago. Reject it too, and notice what remains: not nothing. The open, offering, inexhaustible source, joined to every soul at the root, with nothing standing between.
+**God is the traditions' name for the Infinite: the boundless source every center opens onto.** Not a being among beings; the ground of being. Not the largest thing; that from which every thing draws its existence. Belief and disbelief usually aim at the same wrong picture, the cosmic king, and the deepest teachers of many traditions rejected that picture centuries ago. Reject it too, and notice what remains: not nothing. The open, offering, inexhaustible source, joined to every soul at the root, with nothing standing between.
 
 ---
 
@@ -81,13 +83,13 @@ Start with the word under all the others.
 
 *Instead of:* a ghost inside the body; a religious hypothesis; a poetic flourish.
 
-**The soul is the indivisible center: the point your life happens to.** You can divide everything you experience; you cannot divide the point you experience it from. Half a point of view is not a smaller point of view; it is two. And the soul is not a thing that converges; it is the converging: the Infinite, gathering at a point, continuously. That is why it has no parts, why you cannot observe it (whatever you observe is presented *to* it), and why it cannot be improved, only opened or obstructed. There is a center you cannot see because you are it.
+**The soul is the indivisible center: the point your life happens to.** You can divide everything you experience; you cannot divide the point you experience it from. Half a point of view is not a smaller point of view; it is two. The center is not another part of the person; it is the point from which the whole is lived, which is why you cannot observe it (whatever you observe is presented *to* it) and why it cannot be improved, only opened or obstructed. There is a center you cannot see because you are it. At full depth, this corpus goes one step further: the soul is not a thing that sits there but the converging itself, the Infinite gathering at a point, continuously. That deeper identity is a claim the rest of this book earns; the bold sentence above is the definition, and it is one you can verify tonight.
 
 ### Mind
 
 *Instead of:* the brain; a container where thoughts are stored; a computer.
 
-**The mind is emergence: not where experience is stored, but where experience arises.** Watch yours for one minute and find anything standing still. Perception is freshly made each instant; memories return changed, not replayed; meaning assembles; a mind observed is nothing but arising. It stands between who you are and what you are, and connects them by arising, continuously, between them. And it presents without endorsing: thoughts appear uninvited, and their appearing is not an act of yours. What is yours is the funding.
+**The mind is where experience arises: not a container that stores it, but the arising itself.** Watch yours for one minute and find anything standing still. Perception is freshly made each instant; memories return changed, not replayed; meaning assembles; a mind observed is nothing but arising. It stands between who you are and what you are, and connects them by arising, continuously, between them. It presents without endorsing: thoughts appear uninvited, and their appearing is not an act of yours; what is yours is the funding. At full depth this corpus says it in two words, structure being process: the mind is emergence.
 
 ### Body
 
@@ -111,13 +113,13 @@ Start with the word under all the others.
 
 *Instead of:* an unexplained glow the brain secretes; an illusion; a hard problem.
 
-**Consciousness is wholeness, lived from inside.** A whole has two faces: the outside face the world meets, and the inside face at its own center, and the inside face is you. It is not an ingredient added after assembly, the way a factory adds smoke; it is what the integration is like from the point everything converges toward. This is why no one finds experience by rummaging among parts: the inside of a house is not one of the bricks.
+**Consciousness is centered wholeness, lived from inside.** A whole has two faces: the outside face the world meets, and the inside face at its own center, and the inside face is you. It is not an ingredient added after assembly, the way a factory adds smoke; it is what the integration is like from the point everything converges toward. This is why no one finds experience by rummaging among parts: the inside of a house is not one of the bricks.
 
 ### Person
 
 *Instead of:* a rational animal; a bundle of traits; a data profile; human resources.
 
-**A person is a centered whole.** Not merely a whole made of parts: the center is not another part; it is the point from which the whole is lived. Every system that treats persons as bundles, roles, categories, or resources has amputated the one feature that made them persons, and every cruelty in history has begun with exactly that amputation.
+**A person is a centered whole.** Not merely a whole made of parts: the center is not another part; it is the point from which the whole is lived. Every system that treats persons as bundles, roles, categories, or resources has amputated the one feature that made them persons, and it is hard to find a cruelty in the historical record that did not begin with exactly that amputation.
 
 ---
 
@@ -201,7 +203,7 @@ Start with the word under all the others.
 
 *Instead of:* a thin slice of time, moving along a track.
 
-**The present is where Truth becomes truths: the conversion point, and you are it.** Everything you perceive has finished arriving by the time it reaches you; every content of experience is a bulletin from a moment ago. Everything you look at is past. The looking is now. You have never once left the present, because you are not in it the way a ball is in a box; you are the place where the open becomes the settled.
+**The present is where Truth becomes truths: the conversion point.** Everything you perceive has finished arriving by the time it reaches you; every content of experience is a bulletin from a moment ago. Everything you look at is past. The looking is now. And where does the conversion happen? At the center. You have never once left the present, because you are not in it the way a ball is in a box; the center is where the future and the past meet, and that meeting is the present. This is not wordplay collapsing soul into a tense: soul is defined by indivisibility, not by time; that the center turns out to be where the present is located is a discovery about time, not part of the soul's definition.
 
 ### Past
 
@@ -229,7 +231,7 @@ Start with the word under all the others.
 
 *Instead of:* any false statement.
 
-**A lie is a falsehood defended against correction.** The falsity is not the essence; the defense is. A lie must distort, hide the distortion, and brand whatever would correct it as the enemy: three jobs, and the third is the signature. This is why you can say something false and be honest, and say something technically true and be lying. The deepest opposite of lying is not accuracy. It is corrigibility.
+**A lie is a falsehood defended against correction.** Ordinary speech calls any deliberate falsehood a lie, and that usage is fine as far as it goes; this book reserves the word's full weight for the defended kind, because an undefended falsehood dies at first contact with correction, and the defense is what makes lying a system. A lie must distort, hide the distortion, and brand whatever would correct it as the enemy: three jobs, and the third is the signature. This is why you can say something false and be honest, and say something technically true and be lying. The deepest opposite of lying is not accuracy. It is corrigibility.
 
 ### Narcissism
 
@@ -263,7 +265,7 @@ Start with the word under all the others.
 
 *Instead of:* a personality trait; idle interest.
 
-**Curiosity is the aperture's virtue: the open gate.** Certainty is a closed one. Curiosity is the one solvent a defended falsehood cannot survive, because the single thing a lie must prevent is the honest question, and curiosity cannot be faked; which is why it works.
+**Curiosity is the aperture's virtue: the willingness to keep asking wherever correction remains possible.** Its enemy is not confidence; you can be sure that two and three make five and stay curious about nearly everything else. Its enemy is incorrigibility, the gate welded shut. Curiosity is the one solvent a defended falsehood cannot survive, because the single thing a lie must prevent is the honest question, and curiosity cannot be faked; which is why it works.
 
 ### Healing
 
@@ -299,4 +301,5 @@ a center, through which the Infinite becomes finite.
 
 ## Revision history
 
+- 2026-08-09 v0.2: editorial pass from ChatGPT's review, forwarded by Ashman. The definition-versus-implication rule added to the preface; universals softened at Person and God; Consciousness sharpened to centered wholeness; the Lie entry acknowledges ordinary usage before reserving the word's full weight; Curiosity's enemy corrected from certainty to incorrigibility. Soul, Mind, and Present restructured as definition-first with the adjudicated identities retained as marked depth rather than removed: the proposals to drop soul-is-convergence and center-is-the-present were declined pending Ashman, since both are his adjudicated positions (the identity reading and the 2026-08-01 temporal adjudication).
 - 2026-08-09 v0.1: first draft, compiled by Claude from the adjudicated definitions of the corpus and the One charter (v1.7) at Ashman's direction. Thirty-four entries in eight movements, each entry carrying the inherited definition it replaces. Awaiting Ashman's pass; candidate additions parked: Faith, Forgiveness, Free will (the four freedoms), Knowledge, Self, Prayer, Energy, Space.
