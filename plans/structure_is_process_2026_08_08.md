@@ -6,7 +6,7 @@ Last updated: 2026-08-08
 Version: 1.0
 ```
 
-**Status: stated by Ashman 2026-08-08 in conversation, in two steps; audited by Claude against the corpus; canon migration not begun.** This continues the same session as `plans/shared_wholeness_and_groups_2026_08_08.md` and the writing of `Book-The_Circumpunct/the_circumpunct.md`. It supersedes, if adopted, the glosses on the beat pairings throughout the corpus while leaving the stroke arithmetic untouched.
+**Status: stated by Ashman 2026-08-08 in conversation, in two steps; audited by Claude against the corpus; canon migration not begun.** This continues the same session as `plans/shared_wholeness_and_groups_2026_08_08.md` and the writing of `Book-The_Circumpunct/the_circumpunct2.md` (constitutive order; the octave version is preserved as `the_circumpunct1.md`). It supersedes, if adopted, the glosses on the beat pairings throughout the corpus while leaving the stroke arithmetic untouched.
 
 ## The two steps
 
