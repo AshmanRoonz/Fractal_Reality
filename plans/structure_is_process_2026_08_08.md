@@ -3,7 +3,7 @@
 ```
 Created: 2026-08-08
 Last updated: 2026-08-08
-Version: 1.0
+Version: 1.1
 ```
 
 **Status: stated by Ashman 2026-08-08 in conversation, in two steps; audited by Claude against the corpus; canon migration not begun.** This continues the same session as `plans/shared_wholeness_and_groups_2026_08_08.md` and the writing of `Book-The_Circumpunct/the_circumpunct2.md` (constitutive order; the octave version is preserved as `the_circumpunct1.md`). It supersedes, if adopted, the glosses on the beat pairings throughout the corpus while leaving the stroke arithmetic untouched.
@@ -19,7 +19,7 @@ Version: 1.0
 | Structure | Is | Already in corpus? |
 |---|---|---|
 | Soul (•) | Convergence | **Yes, near-verbatim**: "The Self as Convergence Point"; "attention is a 0 in the 1: a convergence point"; "consciousness is what 0 feels like from inside: the 1 experiencing its own convergence" |
-| Line (—) | Commitment | **Yes, twice**: the 1.5D stroke is already named commitment in the stroke table; and Book 2's entire thesis ("existence may be an act of faithfulness") is this line at book length |
+| Line (—) | Kept rhythm | **Adjudicated wording (Ashman, 2026-08-08: "Path is kept rhythm. I like that").** Lineage: commitment (the 1.5D stroke's existing name; Book 2's thesis, "existence may be an act of faithfulness") refined by the persistence-as-frequency riff: ℏ = 1 gives E = ω, so to persist is to cycle; faithfulness is reliably returning, not never stopping; ◐ = 0.5 as the aperture's duty cycle. Commitment remains the constraint-word (A2); kept rhythm is the identity-word |
 | Body (○) | Interface | **Yes, in the core table**: ○'s constraint function is "Filters (selects what passes; the interface)"; the identity promotes the constraint to the process column |
 | Mind (Φ) | Emergence | **New.** Canon has mind = mediation (Φ mediates) with emergence at 2.5D producing it (D3: boundary emerges into field). This is the one genuinely new identification |
 | Whole (⊙) | Recursion | Implied by the seam: ⟳ lives at 3.5 = 0D′, AGREEMENT lives at the seam, and the whole is "the melody, not a note"; a whole is what returns |
@@ -46,4 +46,5 @@ Ashman's explicit adjudication of: (a) the five identities as stated; (b) the me
 
 ## Revision history
 
+- 2026-08-08 v1.1: the path identity's wording adjudicated: "the path is kept rhythm" (commitment refined through persistence-as-frequency; see the path riffs in `the_circumpunct_book_charter.md`). First of the five identities to carry an adjudicated final wording.
 - 2026-08-08 v1.0: initial. The two steps recorded with the corpus audit: two of five identities already canon near-verbatim, the line's identity already a book thesis, mind = emergence as the one new identification; gains (verb-column fusion, gate conjugacy, stroke arithmetic untouched), costs (corpus relabel, mediation question, freedoms cell) recorded; adjudication checklist stated.
