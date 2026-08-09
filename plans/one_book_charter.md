@@ -3,7 +3,7 @@
 ```
 Created: 2026-08-08
 Last updated: 2026-08-08
-Version: 1.0
+Version: 1.1
 ```
 
 **Status: drafted from Ashman's pivot of 2026-08-08** ("the book is kinda boring, and not exactly what I was feeling"; "I think we should start with the point"; "The book should be named 'One'"; "we need to develop a solid definition of Truth"). The title, the truth-definition wording, and the spine choice await his adjudication; the problem, thesis, and engine below are his own statements, recorded. This charter supersedes `the_circumpunct_book_charter.md` as the live book plan; that charter and the drafted `Book-The_Circumpunct/the_circumpunct_book.md` are retained as adjudicated groundwork and quarry, not discarded.
@@ -18,16 +18,16 @@ The circumpunct book executed its charter, and the charter was what lacked the p
 
 ## The Charter
 
-**The problem** (Ashman, verbatim core). Society's problem is a narcissistic one: denying self and others of a center, and denying that self and others have access to Reality. Narcissism develops from abandoning the center. The myth already says it: Narcissus does not love himself too much; he mistakes his reflection for himself, abandons the center for the surface, and starves at the boundary staring at an image. A narcissistic culture does the same at scale: it manages images instead of clearing apertures, treats other people as surfaces without anyone inside, and makes truth into power because it has denied that anyone reaches Reality at all.
+**The problem** (Ashman, verbatim core). Society's problem is a narcissistic one: denying self and others of a center, and denying that self and others have access to Reality. Narcissism develops from abandoning the center. The myth already says it: Narcissus does not love himself too much; he mistakes his reflection for himself, abandons the center for the surface, and starves at the boundary staring at an image. **The mechanism, precisely (corrected v1.1): narcissism is displaced centeredness.** The center is abandoned for its image at the surface, and the image must then be maintained by admiration, status, control, comparison. Grandiose inflation is a compensation for lost centeredness, not the center growing too large; which yields the book's counterintuitive gem: **narcissism looks like too much self-centeredness while involving too little genuine centeredness.** (The clinic agrees: the grandiosity sits over an empty core, and the compensatory reading is an established clinical lineage.) A narcissistic culture runs the same displacement at scale: obsessed with surfaces (identities, appearances, metrics, credentials, brands, labels), it manages images instead of clearing apertures, teaches people to doubt their own contact with Reality, and discounts everyone else's.
 
-**The root, underneath the problem.** Philosophy itself, and everyone downstream of it, has thought in wholes and parts and left out the center, the point. Wholes can be divided, infinitely; a mereology without centers has nothing indivisible in it, no for-whom, and therefore, literally, no point to anything. The pun is the argument: meaning needs a point the way a circle does. (Witness, not source: Leibniz's monads, indivisible and each a point of view, filed under "eccentric" while the world went back to arguing about parts. The corpus's own mereology always carried the fix without announcing it: a whole was never just parts; it was parts integrated around a center; the center was always the difference between a whole and a heap.)
+**The root, underneath the problem** (sharpened v1.1, ChatGPT via Ashman: the defensible form). Not "nobody ever discussed centers"; subjectivity, monads, selfhood and perspective all have their literatures. The claim is harder to knock down: **whole/part ontology does not itself contain a category for an indivisible center**, and modern reductionist pictures can describe indefinitely many parts without ever explaining the first-person locus. A person is not merely a whole made of parts; a person is a centered whole, and the center is not another part: it is the point from which the whole is lived. Wholes can be divided, infinitely; a mereology without centers has nothing indivisible in it, no for-whom, and therefore, literally, no point to anything. The pun is the argument: meaning needs a point the way a circle does. (Witness, not source: Leibniz's monads, indivisible and each a point of view, filed under "eccentric" while the world went back to arguing about parts. The corpus's own mereology always carried the fix without announcing it: a whole was never just parts; it was parts integrated around a center; the center was always the difference between a whole and a heap.)
 
 **The thesis.** There is something about each of us that is indivisible.
 
 **The syllogism** (Ashman, with one adjudication-pending gloss at premise two):
 
 1. There is something about each of us that is indivisible.
-2. That center has direct access to Reality. *(Gloss, to close the Kantian flank: direct toward the source; nothing stands between the center and the Infinite; you are Reality converging. Mediated toward the world; everything arrives through the interface, at your resolution. Both are access; neither is a wall.)*
+2. That center has access to Reality. *(Opening gloss, corrected v1.1 to stay epistemological before the metaphysics is earned: you cannot experience from nowhere; whatever Reality is, your experience is occurring within it; so your perspective is not outside Reality looking in, it is a limited encounter with Reality from somewhere. The stronger framework reading, direct at the source because the center is Reality converging, is true in the completed picture and arrives later in the book, once earned; it does not open the argument. Two boxed rules fall out at once: partial is not false; perspective is not possession.)*
 3. Other people are also centers with access to Reality.
 4. None of us possesses Reality completely.
 5. Therefore truth requires both centeredness and relationship.
@@ -45,22 +45,23 @@ The circumpunct book executed its charter, and the charter was what lacked the p
 
 The circumpunct is not demoted; it is placed: it is how wholeness (the sixth kind) is defined, and it remains the framework's own figure. The kinds sit beside the adjudicated identities without conflict (coherence is how the mind is one; emergence is what the mind is).
 
-**Every named pathology is a confusion of kinds.** Featureless monism mistakes inclusion for integration. Fusion-love mistakes relation for merger. The state-as-organism is a group claiming integration it does not have. Dogmatism mistakes a center's access for possession of the whole. And narcissism is indivisibility inflated to inclusion: the point declaring itself the All, then denying every other point. The book's argumentative work is done by this one move, repeated: name the kind of oneness in play, and the error dissolves.
+**Every named pathology is a confusion of kinds.** Featureless monism mistakes inclusion for integration. Fusion-love mistakes relation for merger. The state-as-organism is a group claiming integration it does not have. Dogmatism mistakes a center's access for possession of the whole. Narcissism sits slightly differently (v1.1): its root is not a kind-confusion but the displacement above; the Inflation shape ("the point declaring itself the All") is its late-stage compensation, symptom rather than mechanism. The paired diagnosis, in two lines: **narcissism is what happens when the center is abandoned for its image; fragmentation is what happens when centered wholes are treated as mere parts.** The book's argumentative work is done by naming, in each case, what was lost or confused; and the error dissolves.
 
-**The payoff: Truth, defined.** The reader leaves holding a definition of Truth that survives the culture's cynicism, built in layers:
+**The payoff: Truth, defined** (simplified v1.1; the earlier "Reality under the aspect of its namability" machinery retired as over-built). Five plain layers:
 
-- *Reality* is what is: one, inexhaustible, prior to every naming.
-- *Access* is what every center has: direct at the source, partial toward the world; and partial is not false; limited is how an image forms.
-- *A truth* is a naming through which Reality passes without distortion, at its stated resolution; higher resolution contains it and never contradicts it.
-- *Truth*, whole, is Reality under the aspect of its namability: what all faithful namings converge on and none exhausts. No center possesses it. Every center touches it.
-- *Truthfulness* is the practice: aperture open, namings revisable (yield to evidence, resist pressure), resolution honest, claims about the shared world submitted to the shared lens.
+- *Reality* is what is.
+- *Perspective* is Reality encountered from a center: a limited encounter from somewhere; partial, not false.
+- *A claim* is an attempt to describe what is encountered.
+- *Truth* is correspondence between the claim and Reality, at the claim's stated resolution (higher resolution contains a truth and never contradicts it; this rider is load-bearing and keeps "which description is THE truth" from ever getting started).
+- *Truthfulness* is the practice of keeping the correspondence open to correction: yield to evidence, resist pressure.
 
-**The truth plane.** The syllogism's conclusion is a plane, the same discovery as the wholeness plane and the love corners: fidelity to Reality on one axis, agreement between centers on the other. Both high: knowledge. Fidelity without agreement: the lonely prophet, true and unheard. Agreement without fidelity: consensus delusion, the Noble Lie's society. Neither: noise. Truth is a corner, not a middle; it is never the compromise between my view and yours, but full fidelity fully shared. Splitting the difference is the moderation error smuggled into epistemology.
+Terminology note: the corpus also uses Truth as a substrate-name in the six-name identity chain; the book uses the claim-property sense above; the Truth/TRUE precedent already covers one word carrying two registers, and the book need not mention the substrate sense before its closing movement.
 
-**Two derived weapons** (the book's fangs):
+**The two axes** (corrected v1.1; the earlier "truth plane" quietly conflated truth with knowledge-status, and its own lonely-prophet corner refuted it: the prophet is true while unshared, so agreement cannot be constitutive of truth). Correspondence runs on one axis: Reality, encountered by a center, described by a claim; truth lives here and only here. Correction runs on the other: center to center; relationship does not produce truth, it is how limited centers find and keep it, and it is indispensable for exactly the reason premise four gives: Reality exceeds every center, so another center is not a competitor for truth but potential access to what I cannot see from mine. The four corners survive as a map of *public knowledge*, not of truth: both axes strong is shared knowledge; correspondence without correction is the lonely prophet, true and unheard; correction without correspondence is consensus delusion, the Noble Lie's society; neither is noise. Knowledge is a corner, not a middle; splitting the difference between my view and yours remains the moderation error, now correctly located in epistemology's social half.
 
-1. *The classical theories of truth are stations absolutized.* Disclosure at the aperture; what-holds along the path (pragmatism's grain); correspondence at the interface; coherence in the field; consensus at the lens; and the identity Truth-is-Reality at the source. Each school was right about one station and wrong to claim the octave. One thing is never really just one thing, applied to Truth itself.
-2. *Deny a premise, name a disease.* Deny the center: eliminativism, no one home to know anything. Deny access: relativism, truth collapses into power. Deny others' access: narcissism, gaslighting, paternalism. Deny incompleteness: dogmatism, inflation. The definition doubles as a diagnostic of every way public truth dies.
+**The derived weapon** (one, not two; v1.1): *deny a premise, name a disease.* Deny the center: eliminativism, no one home to know anything. Deny access: relativism, truth collapses into power. Deny others' access: narcissism, gaslighting, paternalism. Deny incompleteness: dogmatism, inflation. The definition doubles as a diagnostic of every way public truth dies.
+
+*(Held in reserve, out of the main line: the observation that the classical theories of truth each absolutize one station: disclosure at the aperture, pragmatism along the path, correspondence at the interface, coherence in the field, consensus at the lens. True and citable, but it is exactly the kind of clever completeness that could make One boring again: another system that explains everything. An endnote or a companion essay, if anywhere.)*
 
 **Compressed definition, candidates for Ashman's adjudication:**
 
@@ -78,15 +79,19 @@ The circumpunct is not demoted; it is placed: it is how wholeness (the sixth kin
 
 ---
 
-## Candidate spine (for adjudication, not yet fixed)
+## The spine (v1.1, adopted from the forwarded review; six movements)
 
-**Part I: The Point.** The thesis; indivisibility verified; the forgotten center (wholes divide forever; no point, no point); the center's two directions of access (direct to the source, mediated to the world); what abandoning the center does to a person (narcissism at individual scale, introduced through the myth, gently).
+**CENTER.** There is something about each of us that is indivisible. Verified, not asserted; the forgotten category named (a centered whole; the center is not another part but the point from which the whole is lived); the modest access argument (you cannot experience from nowhere); partial is not false; perspective is not possession.
 
-**Part II: The Kinds of One.** Continuity, distinction, coherence, wholeness: the walk's material compressed and re-aimed, each station presented as a kind of oneness plus the named confusion that counterfeits it. The circumpunct arrives here, as the figure of the sixth kind. Inclusion (the Infinite) closes the part: one the way silence is one; the kind no whole can be.
+**WHOLE.** What a center gathers: the kinds of oneness earned one at a time (continuity, distinction, coherence, wholeness), the circumpunct arriving as the figure of the sixth kind; what abandoning the center does to a person: narcissism as displaced centeredness, entered through the myth.
 
-**Part III: The Meeting.** Other centers; the lens; why no center possesses Reality; the truth plane's second axis earned. The narcissistic culture named in full: denying centers, denying access; the war of truth and lies as the plane's collapsed corners.
+**OTHER.** Every other person is also a center. Never touched, never doubted; the lens; another center as potential access to what I cannot see from mine.
 
-**Part IV: Truth.** The definition, layer by layer, each layer already verified; the two weapons; the practice of truthfulness; and the close on the identity the title carries: Truth, Reality, the One; one thing is never really just one thing, and the kinds are one Reality's ways of being had.
+**REALITY.** No center contains it; the Infinite as inclusion, the kind no whole can be; there is always more Reality; the fragmentation error as the treatment of centered wholes as mere parts.
+
+**TRUTH.** The five layers; the two axes; the derived weapon; truthfulness as practice; the narcissistic culture diagnosed in full, here, where the reader can verify every clause of the diagnosis.
+
+**ETHICS.** What follows from: I have a center, you have a center, and Reality exceeds us both. Neither submission nor domination, neither isolation nor merger: truthful relationship between distinct wholes. The close on the title: One, holding all of it; one thing is never really just one thing.
 
 ---
 
@@ -105,11 +110,12 @@ The circumpunct is not demoted; it is placed: it is how wholeness (the sixth kin
 
 1. **Title countersign:** "One" (stated in conversation; countersign here makes it standing).
 2. **The compressed truth definition:** pick or improve one of the three candidates.
-3. **The premise-two gloss:** adopt the two-direction reading (direct to source, mediated to world) as the book's official answer to the skeptic, or reword premise two.
-4. **The spine:** the four-part candidate above, or the six kinds as six movements.
+3. ~~The premise-two gloss~~ **Resolved v1.1:** the modest epistemological form opens the book; the framework's stronger direct-at-the-source reading arrives later, once earned.
+4. ~~The spine~~ **Resolved v1.1:** CENTER, WHOLE, OTHER, REALITY, TRUTH, ETHICS, per the forwarded review; the six kinds of oneness unfold within the movements rather than structuring them.
 5. **Fate of the circumpunct book draft:** quarry only, or finish separately later as the companion walk.
-6. **Narcissism register:** the word carries clinical and cultural charge; decide how hot to run it (the myth-first introduction above is the cool entry; the diagnosis chapter can run hotter).
+6. **Narcissism register:** the word carries clinical and cultural charge; decide how hot to run it (the myth-first introduction above is the cool entry; the diagnosis movement can run hotter).
 
 ## Revision history
 
+- 2026-08-08 v1.1: four corrections from ChatGPT's review, forwarded by Ashman, accepted: the root claim stated in its defensible form (whole/part ontology lacks the category, rather than "everyone forgot"); the narcissism mechanism corrected to displaced centeredness, restoring Ashman's own "develops from abandoning the center" over the charter's inflation reading, with the Inflation shape re-filed as late-stage compensation; the opening access argument made modest and epistemological (partial is not false; perspective is not possession), the stronger framework reading deferred until earned; the truth construction simplified to five plain layers with the resolution rider retained, and the "truth plane" corrected to two axes (correspondence carries truth; correction finds and keeps it; the four corners map public knowledge, not truth; the plane's own lonely-prophet corner was the refutation). The stations-of-truth observation demoted to reserve. Spine adopted: CENTER, WHOLE, OTHER, REALITY, TRUTH, ETHICS. Open decisions three and four closed.
 - 2026-08-08 v1.0: initial. Drafted from the same-day pivot: the forgotten point as root, narcissism as the lived diagnosis, the six kinds of oneness as engine, Truth defined in layers with the truth plane and the two derived weapons, the syllogism recorded with its premise-two gloss, candidate spine and open decisions listed.
