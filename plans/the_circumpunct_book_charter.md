@@ -3,7 +3,7 @@
 ```
 Created: 2026-08-08
 Last updated: 2026-08-08
-Version: 1.1
+Version: 1.2
 ```
 
 **Status: charter adjudicated by Ashman 2026-08-08 ("Nailed it").** The problem-naming below was converged on in conversation and confirmed; everything else in this file is planning built on it, open to revision. This is the master plan for the unified book; the small books and drafts remain what they are (see Relation to the Existing Books).
@@ -65,20 +65,35 @@ The octave is the spine; the domains are registers of it, per the harmonic model
 1. ~~Direction of travel for the spine~~ **Resolved (2026-08-08, with the sharpened charter): discovery order.** The radial walk (draft 1's register) carries the book, because a reader who is to stop believing something is served by discovering, not being told; the diagnosis lands last. Draft 2's constitutive walk and identity chapter titles remain the skeleton for the framework-facing edition or the book's appendix architecture.
 2. Title.
 3. The death chapter: the framework's Ch 23 positions (aging, the ethereal tail) need his adjudication of what the book claims and honestly does not claim.
-4. Whether the identity reading (`structure_is_process_2026_08_08.md`) is canon before drafting begins, since the chapter titles would carry it.
+4. ~~Whether the identity reading is canon before drafting begins~~ **Resolved (v1.2, Ontology Adjudication, 2026-08-08): the identity reading is book-canon.** The five identities: the soul is convergence, the path is kept rhythm, the body is interface, the mind is emergence, the whole is integration; the list closes on its own first line (completion is the next convergence; the residue-class merge), and the word recursion is retired from book-facing language. The framework-file migration and the two open cells (mediation sentence, interfacing freedom) remain queued in `structure_is_process_2026_08_08.md`.
 5. Scale: one volume with thick chapters, or the octave as a spine across a short series.
 
 ---
 
-## The path riffs (same evening, recorded, unadjudicated)
+## The master diagram (added v1.2)
+
+The three-column correspondence, already realized as Ashman's poster (The Circumpunct View of Time), enters the charter as a candidate master diagram of the book: it unifies time, theology, and the three forms of oneness in one picture.
+
+| Future | Present | Past |
+|---|---|---|
+| ∞ | • | ⊙ |
+| God | Soul | Whole |
+| one by inclusion | one by indivisibility | one by integration |
+| possibility | actualization | integrated consequence |
+| what could be | the meeting point | what has become |
+
+Beneath it, the poster's line, which is the counter-claim compressed: *we are each a center through which the Infinite becomes finite.*
+
+## The path riffs (same evening; updated v1.2)
 
 Three findings from the closing conversation, held here until adjudicated or moved:
 
-1. **Two become three, not one.** Two wholes never merge into a third, but two wholes can seed a third: beside them, not above them; a new center, not a shared one. Conception is the literal instance (two cells from two boundaries converging into one new cell with its own center and line); the vesica is not a womb metaphor, a womb is a vesica instance. Constructive counterpart of ⊙_A + ⊙_B ⇏ ⊙_C; refines `shared_wholeness_and_groups_2026_08_08.md` Finding 2. Also: a fork read backward is a merge (⎇ and ⊛ are one picture in two time-directions); within a life the path is one line (choice), between lives lines branch (generation); same operator, adjacent scales.
+1. **Two become three, not one.** Two wholes never merge into a third, but two wholes can seed a third: beside them, not above them; a new center, not a shared one. Conception is the literal instance (two cells from two boundaries converging into one new cell with its own center and line); the vesica is not a womb metaphor, a womb is a vesica instance. Constructive counterpart of ⊙_A + ⊙_B ⇏ ⊙_C; refines `shared_wholeness_and_groups_2026_08_08.md` Finding 2. Also, generalized in the v1.2 pass: **convergence and branching are one relation viewed from opposite time-directions** (a fork read backward is a merge), realized as two successive phases of the one rotation. Guard: this unifies them at the level of relation without collapsing the operator count; i¹ and i² are distinct quarter-turns of one i, and the stroke canon's spacing argument is untouched. Within a life the path is one line (choice); between lives, lines branch (generation); same relation, adjacent scales.
 2. **The unbroken line.** Traced backward, the ancestral tree fans out, collapses (pedigree collapse), and merges into the single unbroken thread of life: four billion years in which every ancestor without exception held the line long enough to hand it on. Book 2's thesis at species scale: existence as faithfulness, demonstrated by the longest kept promise there is.
-3. **Persistence is frequency.** The soul has phases (open and closed, and direction of convergence); persistence is not a grip but a rhythm. Physics form: ℏ = 1 gives E = ω; to persist is to cycle. ◐ = 0.5 reads as the aperture's duty cycle (stuck open = the Inflation shape, stuck closed = Severance, health = alternation at balance); breath, sleep/wake, and rhythmic attention sampling are the lived instances; identity is spectral, which grounds the resonance doctrine (souls meet by frequency matching); faithfulness is reliably returning, not never stopping. Refines the path identity in `structure_is_process_2026_08_08.md`.
+3. **Persistence is kept rhythm** (reworded v1.2; the earlier headline "persistence is frequency" put the measure where the thing belongs). The soul has phases (open and closed, and direction of convergence); persistence is not a grip but a rhythm held, and frequency is the measure of the recurrence once duration exists. Physics form: ℏ = 1 gives E = ω; to persist is to cycle. ◐ = 0.5 reads as the aperture's duty cycle (stuck open = the Inflation shape, stuck closed = Severance, health = alternation at balance); breath, sleep/wake, and rhythmic attention sampling are the lived instances; identity is spectral, which grounds the resonance doctrine (souls meet by rhythm matching); faithfulness is reliably returning, not never stopping. Adjudicated into the path identity: "the path is kept rhythm" (`structure_is_process_2026_08_08.md` v1.1).
 
 ## Revision history
 
+- 2026-08-08 v1.2 (Ontology Adjudication): open decision 4 resolved (the identity reading is book-canon; five identities with the loop closure; recursion retired from book language); the master diagram added (the time/theology/oneness three-column, realized as the poster); riff 1 generalized (convergence and branching as one relation in opposite time-directions, with the operator-count guard); riff 3 reworded (persistence is kept rhythm; frequency is the measure).
 - 2026-08-08 v1.1: charter sharpened per ChatGPT's review, forwarded by Ashman. The problem restated as the failure to hold two truths at once (distinct wholes, inseparably relational), which is the two Lies at civilization scale and the wholeness plane's one-axis collapse as mechanism; the error/lie terminology rule imported from §25.20 (Fragmentation Error for the sincere case, lie reserved for the defended case); the counter-claim compressed further; the five-question entry filter added; the sequencing rule added (diagnosis last); open decision 1 resolved in favor of discovery order.
 - 2026-08-08 v1.0: initial. Charter (problem, counter-claim, reader, goal, success condition) as adjudicated; domain-contribution table with sources and the two gaps (death, practice); harmonic architecture with the goal-guard; relation to existing books; open decisions; the three path riffs recorded.
