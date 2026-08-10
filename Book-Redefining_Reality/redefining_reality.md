@@ -8,10 +8,19 @@
 ```
 Created: 2026-08-09
 Last updated: 2026-08-09
-Version: 0.2
+Version: 0.3
 ```
 
-**Status:** first draft, compiled from the adjudicated definitions of the Circumpunct corpus and the One charter (v1.7). Every definition here is Ashman's, settled through the corpus's correction process; the compilation, orderings, and connective prose await his pass. Entries follow one form: the word, the definition it replaces, the redefinition, and a few sentences of why.
+**Status:** draft. Adjudicated by Ashman 2026-08-09: this book opens with his story What Is That? ("The list of definitions we just made goes with this book. It is me saying what these things are"), and every definition is his, settled through the corpus's correction process. The dictionary is the Ossat question grown up: each entry answers, for one of the biggest words, the question he has asked since before he could say it properly. Compilation and connective prose by Claude, awaiting his pass. Entries follow one form: the word, the definition it replaces, the redefinition, and a few sentences of why.
+
+---
+
+## What Is That?
+
+
+My mother said I should write the book.
+
+This is it: the list of what I found when the pointing finally reached the biggest things. What follows is me saying what these things are.
 
 ---
 
@@ -301,5 +310,6 @@ a center, through which the Infinite becomes finite.
 
 ## Revision history
 
+- 2026-08-09 v0.3: adjudicated by Ashman: What Is That? becomes the book's opening (the Ossat story, verbatim from `Book-One/what_is_that.md`), with his own sentence as the bridge into the definitions: what follows is me saying what these things are. The dictionary now begins with the question it answers.
 - 2026-08-09 v0.2: editorial pass from ChatGPT's review, forwarded by Ashman. The definition-versus-implication rule added to the preface; universals softened at Person and God; Consciousness sharpened to centered wholeness; the Lie entry acknowledges ordinary usage before reserving the word's full weight; Curiosity's enemy corrected from certainty to incorrigibility. Soul, Mind, and Present restructured as definition-first with the adjudicated identities retained as marked depth rather than removed: the proposals to drop soul-is-convergence and center-is-the-present were declined pending Ashman, since both are his adjudicated positions (the identity reading and the 2026-08-01 temporal adjudication).
 - 2026-08-09 v0.1: first draft, compiled by Claude from the adjudicated definitions of the corpus and the One charter (v1.7) at Ashman's direction. Thirty-four entries in eight movements, each entry carrying the inherited definition it replaces. Awaiting Ashman's pass; candidate additions parked: Faith, Forgiveness, Free will (the four freedoms), Knowledge, Self, Prayer, Energy, Space.

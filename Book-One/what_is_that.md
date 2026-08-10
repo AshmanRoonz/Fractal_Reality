@@ -8,7 +8,7 @@ Last updated: 2026-08-09
 Version: 1.0
 ```
 
-**Status:** Ashman's story, shared 2026-08-09 and transcribed verbatim from his conversation; the first file in the Book-One directory, because it is the book's opening in his own voice: the blood every charter draft was missing. One wording note for his eventual pass, not corrected here: "Mind mediates that encounter" predates the adjudicated identity wording (mind as emergence, with mediation as what the arising accomplishes); his voice, his call.
+**Status:** Ashman's story, shared 2026-08-09 and transcribed verbatim from his conversation; the first file in the Book-One directory, because it is the book's opening in his own voice: the blood every charter draft was missing. Adjudicated the same day as the opening of `Book-Redefining_Reality/redefining_reality.md` as well: the dictionary is this question grown up, and it begins here. One wording note for his eventual pass, not corrected here: "Mind mediates that encounter" predates the adjudicated identity wording (mind as emergence, with mediation as what the arising accomplishes); his voice, his call.
 
 ---
 
