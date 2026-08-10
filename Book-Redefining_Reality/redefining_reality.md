@@ -8,7 +8,7 @@
 ```
 Created: 2026-08-09
 Last updated: 2026-08-09
-Version: 0.3
+Version: 0.4
 ```
 
 **Status:** draft. Adjudicated by Ashman 2026-08-09: this book opens with his story What Is That? ("The list of definitions we just made goes with this book. It is me saying what these things are"), and every definition is his, settled through the corpus's correction process. The dictionary is the Ossat question grown up: each entry answers, for one of the biggest words, the question he has asked since before he could say it properly. Compilation and connective prose by Claude, awaiting his pass. Entries follow one form: the word, the definition it replaces, the redefinition, and a few sentences of why.
@@ -129,6 +129,12 @@ Start with the word under all the others.
 *Instead of:* a rational animal; a bundle of traits; a data profile; human resources.
 
 **A person is a centered whole.** Not merely a whole made of parts: the center is not another part; it is the point from which the whole is lived. Every system that treats persons as bundles, roles, categories, or resources has amputated the one feature that made them persons, and it is hard to find a cruelty in the historical record that did not begin with exactly that amputation.
+
+### Self
+
+*Instead of:* an illusion; a bundle of perceptions; a consistent character.
+
+**The self is the whole: you, entire; real and changing.** Half of philosophy went looking for the self as a static object among your experiences, found none, and declared the self an illusion. But that verdict rests on a premise nobody defends aloud: that only unchanging things are real. A river changes its water completely and is not an illusion; a flame, a whirlpool, a life. You change with company, with years, with weather, and the changing is not evidence against you; it is what a living whole looks like. Three levels, kept distinct: the image (the frozen picture of you, which is a construction), the self (the whole, real and moving), and the center (the indivisible point it is all lived from). The skeptics demolished the first, and were right. They mistook it for the second, and were wrong.
 
 ---
 
@@ -310,6 +316,7 @@ a center, through which the Infinite becomes finite.
 
 ## Revision history
 
+- 2026-08-09 v0.4: Self entry added (Ashman's correction, from the exchange with the no-center interlocutor): the self is the whole, real and changing; only the image is a construction; the change-therefore-unreal inference named and refused.
 - 2026-08-09 v0.3: adjudicated by Ashman: What Is That? becomes the book's opening (the Ossat story, verbatim from `Book-One/what_is_that.md`), with his own sentence as the bridge into the definitions: what follows is me saying what these things are. The dictionary now begins with the question it answers.
 - 2026-08-09 v0.2: editorial pass from ChatGPT's review, forwarded by Ashman. The definition-versus-implication rule added to the preface; universals softened at Person and God; Consciousness sharpened to centered wholeness; the Lie entry acknowledges ordinary usage before reserving the word's full weight; Curiosity's enemy corrected from certainty to incorrigibility. Soul, Mind, and Present restructured as definition-first with the adjudicated identities retained as marked depth rather than removed: the proposals to drop soul-is-convergence and center-is-the-present were declined pending Ashman, since both are his adjudicated positions (the identity reading and the 2026-08-01 temporal adjudication).
 - 2026-08-09 v0.1: first draft, compiled by Claude from the adjudicated definitions of the corpus and the One charter (v1.7) at Ashman's direction. Thirty-four entries in eight movements, each entry carrying the inherited definition it replaces. Awaiting Ashman's pass; candidate additions parked: Faith, Forgiveness, Free will (the four freedoms), Knowledge, Self, Prayer, Energy, Space.
