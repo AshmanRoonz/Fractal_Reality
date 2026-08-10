@@ -79,16 +79,18 @@
 <div class="meta">
 Created: 2026-08-10<br>
 Last updated: 2026-08-10<br>
-Version: 3.0
+Version: 3.1
 </div>
 
 <p>Three names for one energy at three positions: E when undifferentiated, 𝒫 when flowing through phase and time, m when closed behind a boundary. E is the future; it has not converged yet. 𝒫 = E / (i · t) is the present; it is the only one of the three with time in it, because power is the happening. m is the past; structure already committed. The center is where the future and the past meet, and that meeting is the present.</p>
 
 <p>This page runs that sentence as a machine. A fixed pool of energy drifts as an undifferentiated shimmer: the future. Present points appear at an indeterminate rate and converge the flow through themselves. Each point that gathers enough walks the octave: it commits a line, closes a boundary, fills as a field, and completes as a whole. The total never changes; the shares move. A whole can also dissolve, returning its energy to the future pool, but its trace remains: you can dissolve a fold; you cannot un-fold it into exactly what it was.</p>
 
-<p>The relational layer: when two finished wholes of comparable size draw near, the overlap of their fields renders as a lens: a world, bounded by borrowed arcs, with an inside and no center of its own. Peer bonds settle toward the mutual vesica, the depth at which each boundary passes through the other's center; a small theorem says this reciprocal configuration exists only between equals, because each crossing forces the distance between centers to equal the other's radius. Unequal pairs get the geometry they can have: moderately unequal, a one-way reach without reciprocity; strongly unequal, containment, the smaller carrying on whole inside the larger. And nesting does not count to three. A greater whole closes only around a cluster of bonded wholes that genuinely surrounds a middle: no half-plane through their centroid contains all of them. The number three appears nowhere in that rule; watch how many wholes every closure takes.</p>
+<p>The relational layer: when two finished wholes of comparable size draw near, the overlap of their fields renders as a lens: a world, bounded by borrowed arcs, with an inside and no center of its own. Peer bonds settle toward the mutual vesica, the depth at which each boundary passes through the other's center; a small theorem says this reciprocal configuration exists only between equals, because each crossing forces the distance between centers to equal the other's radius. Unequal pairs get the geometry they can have: moderately unequal, a one-way reach without reciprocity; strongly unequal, containment, the smaller carrying on whole inside the larger. And nesting does not count to three. A greater whole closes only around a cluster of bonded wholes that genuinely surrounds a middle: no half-plane through their centroid contains all of them. The number three appears nowhere in that rule; watch how many wholes every closure takes. And because the rule checks shape rather than count, a chain of bonded wholes, however long, never closes: a line does not surround a middle. Chains travel together as groups, coordinated and centerless; only clusters that stand around a middle become beings. Connected is not centered.</p>
 
 <p>Version 3 makes the wholes sing and lets history draw the branches. Every completed whole vibrates: its boundary carries a standing wave, and its natural frequency is set by its size, one over the radius, exactly as a string's pitch is set by its length. Equal size is therefore matched pitch, which upgrades the peer condition from an analogy to an identity: the wholes that can meet at mutual depth are the wholes tuned to the same note. Bonded wholes pull each other's phases into step, and the lens between them brightens with their coherence: two wholes sharing a frequency make the field between them transparent. Conception requires it: the cusps only ignite when the pair is phase-locked, so a third center is born of resonance, not proximity. A whole taken inside a larger one entrains to its parent's rhythm at the octave, twice the frequency, so a nested figure is a chord: the parent the fundamental, the children its harmonics. And no branching glyph is drawn anywhere. Branching is expressed as it happens, in time: worldlines continue through a whole's life, lineage lines are laid down at each birth (from one parent, or from both parents converging at a cusp), and the tree assembles itself in the past layer over minutes. A fork, read backward, is a merge.</p>
+
+<p>The lines come in three families, one color per meaning, each with its own toggle. Ember is time: worldlines, the paths wholes actually walked, fading from gold to ember and never erased. Violet is ancestry: the line laid down at each birth from parent to child, including the two-line convergence of a cusp conception, plus the faint live thread from a still-converging point back to its origin. Teal is relationship: bonds between peers, with one-way reaches between unequals drawn dashed.</p>
 
 <div class="simbox">
   <canvas id="c"></canvas>
@@ -97,6 +99,9 @@ Version: 3.0
     <label>present points <input type="range" id="spawn" min="0" max="30" value="10"></label>
     <label>flow <input type="range" id="flow" min="0" max="20" value="9"></label>
     <label>coupling range <input type="range" id="bond" min="6" max="26" value="15"></label>
+    <label><input type="checkbox" id="showHistory" checked> history</label>
+    <label><input type="checkbox" id="showAncestry" checked> ancestry</label>
+    <label><input type="checkbox" id="showBonds" checked> bonds</label>
     <button id="pause">pause</button>
     <button id="reset">reset</button>
   </div>
@@ -108,7 +113,8 @@ Version: 3.0
   <tr><td>pale drifting shimmer</td><td><span class="glyph">∞</span> the future; free energy, not yet converged; one by inclusion</td></tr>
   <tr><td>gold spiral pulling the shimmer inward</td><td><span class="glyph">• ∘ ⊛</span> a present point; convergence through the aperture; 𝒫 happening</td></tr>
   <tr><td>the bright trail behind every center, extending for life</td><td><span class="glyph">—</span> the worldline; commitment laid down through time</td></tr>
-  <tr><td>lines connecting each birth to its parent or parents</td><td><span class="glyph">⎇</span> branching, expressed as history: the tree grows in time, not as a glyph; a fork read backward is a merge</td></tr>
+  <tr><td>violet lines connecting each birth to its parent or parents</td><td><span class="glyph">⎇</span> branching, expressed as history: ancestry; the tree grows in time, not as a glyph; a fork read backward is a merge</td></tr>
+  <tr><td>faint dashed threads between unequal wholes</td><td>one-way reach; the larger holds the smaller's center at its skin; no reciprocity</td></tr>
   <tr><td>the circle that closes, and the glow inside</td><td><span class="glyph">○ ∘ ✹, Φ</span> boundary closing; the interior field emerging within it</td></tr>
   <tr><td>the wavering of every boundary</td><td>the whole's note; a standing wave on the skin; frequency = 1/size, so peers are wholes tuned to the same pitch; nested wholes sound the parent's octave</td></tr>
   <tr><td>a circle with a dot, drifting, finished</td><td><span class="glyph">⊙</span> a completed whole; energy bound as structure; the past</td></tr>
@@ -126,7 +132,8 @@ Version: 3.0
 </div>
 
 <h2>Revision history</h2>
-<p class="rev">- 2026-08-10 v3.0: vibration and history. Every whole carries a standing wave on its boundary with frequency 1/radius (peers = matched pitch, exactly); Kuramoto phase-locking over bonds; lens brightness = coherence; conception gated on phase-lock; nested wholes entrain at the parent's octave. The branching glyph is retired: worldlines extend through each whole's life, lineage lines connect every birth to its parent or parents, and the tree assembles in the past layer over time.<br>
+<p class="rev">- 2026-08-10 v3.1: legibility. The three line families separated by color (ember = time, violet = ancestry, teal = relationship, one-way reach dashed) with a toggle for each; prose note added on chains (a line of bonded wholes never closes because it surrounds no middle: groups travel, wholes form).<br>
+- 2026-08-10 v3.0: vibration and history. Every whole carries a standing wave on its boundary with frequency 1/radius (peers = matched pitch, exactly); Kuramoto phase-locking over bonds; lens brightness = coherence; conception gated on phase-lock; nested wholes entrain at the parent's octave. The branching glyph is retired: worldlines extend through each whole's life, lineage lines connect every birth to its parent or parents, and the tree assembles in the past layer over time.<br>
 - 2026-08-10 v2.0: the relational layer. Vesica lenses on peer bonds with the mutual-vesica depth as resting length; cusps as conception sites; the counted-triad nesting rule replaced by the enclosure test; unequal pairs classified into one-way reach and containment.<br>
 - 2026-08-10 v1.0: initial. Built from the temporal adjudication (E, 𝒫, m as future, present, past), the helix correction, and the octave walk. Conservation enforced as live bookkeeping.</p>
 
@@ -178,7 +185,10 @@ function reset(){
 const ui = {
   spawn: document.getElementById('spawn'),
   flow: document.getElementById('flow'),
-  bond: document.getElementById('bond')
+  bond: document.getElementById('bond'),
+  showHistory: document.getElementById('showHistory'),
+  showAncestry: document.getElementById('showAncestry'),
+  showBonds: document.getElementById('showBonds')
 };
 paused = false;
 document.getElementById('pause').addEventListener('click', function(){
@@ -605,56 +615,63 @@ function drawWhole(w){
 function render(){
   ctx.clearRect(0, 0, W, H);
 
-  // past traces: gold fading to ember, never gone
   ctx.lineWidth = 1;
-  for (const tr of traces){
-    const es = emberStyle(t - tr.born);
-    ctx.strokeStyle = es.color + (0.22 + 0.5*es.f) + ')';
-    ctx.beginPath();
-    ctx.moveTo(tr.path[0].x, tr.path[0].y);
-    for (let i = 1; i < tr.path.length; i++) ctx.lineTo(tr.path[i].x, tr.path[i].y);
-    ctx.stroke();
-  }
 
-  // lineage: each birth connected to its parent or parents
-  for (const L of lineageSegs){
-    const es = emberStyle(t - L.born);
-    ctx.strokeStyle = es.color + (0.16 + 0.35*es.f) + ')';
-    ctx.beginPath(); ctx.moveTo(L.x1, L.y1); ctx.lineTo(L.x2, L.y2); ctx.stroke();
-  }
-
-  // living worldlines: each whole's trail, aged per chunk
-  for (const w of wholes){
-    if (!w.trail || w.trail.length < 2) continue;
-    const CH = 7;
-    for (let s = 0; s < w.trail.length - 1; s += CH){
-      const end = Math.min(s + CH, w.trail.length - 1);
-      const es = emberStyle(t - w.trail[(s + end) >> 1].t);
-      ctx.strokeStyle = es.color + (0.15 + 0.45*es.f) + ')';
+  // TIME (ember): worldlines, the paths actually walked, never erased
+  if (ui.showHistory.checked){
+    for (const tr of traces){
+      const es = emberStyle(t - tr.born);
+      ctx.strokeStyle = es.color + (0.22 + 0.5*es.f) + ')';
       ctx.beginPath();
-      ctx.moveTo(w.trail[s].x, w.trail[s].y);
-      for (let i = s+1; i <= end; i++) ctx.lineTo(w.trail[i].x, w.trail[i].y);
+      ctx.moveTo(tr.path[0].x, tr.path[0].y);
+      for (let i = 1; i < tr.path.length; i++) ctx.lineTo(tr.path[i].x, tr.path[i].y);
       ctx.stroke();
     }
-  }
-
-  // live umbilicals: converging apertures still attached to their origins
-  for (const a of apertures){
-    if (!a.lineage) continue;
-    ctx.strokeStyle = 'rgba(255,220,150,0.10)';
-    for (const L of a.lineage){
-      ctx.beginPath(); ctx.moveTo(L.x, L.y); ctx.lineTo(a.x, a.y); ctx.stroke();
+    // living worldlines: each whole's trail, aged per chunk
+    for (const w of wholes){
+      if (!w.trail || w.trail.length < 2) continue;
+      const CH = 7;
+      for (let s = 0; s < w.trail.length - 1; s += CH){
+        const end = Math.min(s + CH, w.trail.length - 1);
+        const es = emberStyle(t - w.trail[(s + end) >> 1].t);
+        ctx.strokeStyle = es.color + (0.15 + 0.45*es.f) + ')';
+        ctx.beginPath();
+        ctx.moveTo(w.trail[s].x, w.trail[s].y);
+        for (let i = s+1; i <= end; i++) ctx.lineTo(w.trail[i].x, w.trail[i].y);
+        ctx.stroke();
+      }
     }
   }
 
-  // bonds
-  for (const [A, B, s] of peerBonds){
-    ctx.strokeStyle = 'rgba(90,220,200,' + (0.10 + 0.25*s) + ')';
-    ctx.beginPath(); ctx.moveTo(A.x, A.y); ctx.lineTo(B.x, B.y); ctx.stroke();
+  // ANCESTRY (violet): each birth connected to its parent or parents
+  if (ui.showAncestry.checked){
+    for (const L of lineageSegs){
+      const f = Math.max(0, 1 - (t - L.born)/40);
+      ctx.strokeStyle = 'rgba(185,150,255,' + (0.14 + 0.32*f) + ')';
+      ctx.beginPath(); ctx.moveTo(L.x1, L.y1); ctx.lineTo(L.x2, L.y2); ctx.stroke();
+    }
+    // live umbilicals: converging apertures still attached to their origins
+    for (const a of apertures){
+      if (!a.lineage) continue;
+      ctx.strokeStyle = 'rgba(185,150,255,0.14)';
+      for (const L of a.lineage){
+        ctx.beginPath(); ctx.moveTo(L.x, L.y); ctx.lineTo(a.x, a.y); ctx.stroke();
+      }
+    }
   }
-  for (const [A, B] of asymBonds){
-    ctx.strokeStyle = 'rgba(150,160,190,0.14)';
-    ctx.beginPath(); ctx.moveTo(A.x, A.y); ctx.lineTo(B.x, B.y); ctx.stroke();
+
+  // RELATIONSHIP (teal): bonds between peers; one-way reaches dashed
+  if (ui.showBonds.checked){
+    for (const [A, B, s] of peerBonds){
+      ctx.strokeStyle = 'rgba(90,220,200,' + (0.10 + 0.25*s) + ')';
+      ctx.beginPath(); ctx.moveTo(A.x, A.y); ctx.lineTo(B.x, B.y); ctx.stroke();
+    }
+    ctx.setLineDash([3, 5]);
+    for (const [A, B] of asymBonds){
+      ctx.strokeStyle = 'rgba(120,180,170,0.18)';
+      ctx.beginPath(); ctx.moveTo(A.x, A.y); ctx.lineTo(B.x, B.y); ctx.stroke();
+    }
+    ctx.setLineDash([]);
   }
 
   // worlds: the lenses two wholes make between them; brightness is coherence
