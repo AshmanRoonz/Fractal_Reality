@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Infinity Through the Present</title>
+<style>
+  :root {
+    --bg: #05060d;
+    --panel: #0c0e1a;
+    --ink: #d8dcea;
+    --dim: #8a90a8;
+    --gold: #ffd27a;
+    --teal: #5adcc8;
+    --ember: #b06438;
+    --line: #232640;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: Georgia, 'Times New Roman', serif;
+    line-height: 1.6;
+    padding: 2rem 1rem 4rem;
+  }
+  .wrap { max-width: 900px; margin: 0 auto; }
+  h1 { font-size: 1.9rem; color: var(--gold); font-weight: normal; letter-spacing: 0.02em; }
+  .subtitle { color: var(--dim); font-style: italic; margin-bottom: 0.8rem; }
+  .meta {
+    font-family: monospace; font-size: 0.78rem; color: var(--dim);
+    border-left: 2px solid var(--line); padding-left: 0.8rem; margin: 0.8rem 0 1.4rem;
+  }
+  p { margin: 0.8rem 0; }
+  .simbox {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 0.8rem;
+    margin: 1.4rem 0;
+  }
+  canvas { width: 100%; height: 560px; display: block; border-radius: 6px; background: #04050b; }
+  .hud {
+    font-family: monospace; font-size: 0.8rem; color: var(--dim);
+    padding: 0.6rem 0.2rem 0.1rem; display: flex; flex-wrap: wrap; gap: 1.2rem;
+  }
+  .hud b { color: var(--ink); font-weight: normal; }
+  .hud .e { color: var(--gold); }
+  .controls {
+    display: flex; flex-wrap: wrap; gap: 1.2rem; align-items: center;
+    padding-top: 0.6rem; font-size: 0.82rem; color: var(--dim); font-family: monospace;
+  }
+  .controls label { display: flex; align-items: center; gap: 0.5rem; }
+  input[type=range] { width: 130px; accent-color: #ffd27a; }
+  button {
+    background: transparent; color: var(--ink); border: 1px solid var(--line);
+    border-radius: 5px; padding: 0.25rem 0.8rem; font-family: monospace; font-size: 0.8rem;
+    cursor: pointer;
+  }
+  button:hover { border-color: var(--gold); color: var(--gold); }
+  table { border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem; width: 100%; }
+  td, th { border: 1px solid var(--line); padding: 0.45rem 0.7rem; text-align: left; vertical-align: top; }
+  th { color: var(--dim); font-weight: normal; font-style: italic; }
+  .glyph { color: var(--gold); font-size: 1.05rem; white-space: nowrap; }
+  .honesty {
+    border: 1px solid var(--line); border-left: 3px solid var(--ember);
+    border-radius: 6px; padding: 0.9rem 1.1rem; margin: 1.6rem 0;
+    font-size: 0.92rem; color: var(--dim);
+  }
+  .honesty b { color: var(--ink); font-weight: normal; }
+  h2 { font-size: 1.2rem; color: var(--ink); font-weight: normal; margin-top: 2rem; border-bottom: 1px solid var(--line); padding-bottom: 0.3rem; }
+  .rev { font-size: 0.85rem; color: var(--dim); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>Infinity Through the Present</h1>
+<div class="subtitle">watching the future become the past</div>
+<div class="meta">
+Created: 2026-08-10<br>
+Last updated: 2026-08-10<br>
+Version: 1.0
+</div>
+
+<p>Three names for one energy at three positions: E when undifferentiated, 𝒫 when flowing through phase and time, m when closed behind a boundary. E is the future; it has not converged yet. 𝒫 = E / (i · t) is the present; it is the only one of the three with time in it, because power is the happening. m is the past; structure already committed. The center is where the future and the past meet, and that meeting is the present.</p>
+
+<p>This page runs that sentence as a machine. A fixed pool of energy drifts as an undifferentiated shimmer: the future. Present points appear at an indeterminate rate and converge the flow through themselves. Each point that gathers enough walks the octave: it commits a line, the line branches, the branches close into a boundary, the interior fills as a field, and the whole completes. Completed wholes bond when they draw near; three bonded wholes can converge again into a greater whole that contains them. Wholeness nests; entanglement accumulates; the past grows more complex while the total never changes. A whole can also dissolve, returning its energy to the future pool, but its trace remains: you can dissolve a fold; you cannot un-fold it into exactly what it was.</p>
+
+<div class="simbox">
+  <canvas id="c"></canvas>
+  <div class="hud" id="hud"></div>
+  <div class="controls">
+    <label>present points <input type="range" id="spawn" min="0" max="30" value="10"></label>
+    <label>flow <input type="range" id="flow" min="0" max="20" value="9"></label>
+    <label>coupling range <input type="range" id="bond" min="6" max="26" value="15"></label>
+    <button id="pause">pause</button>
+    <button id="reset">reset</button>
+  </div>
+</div>
+
+<h2>Legend</h2>
+<table>
+  <tr><th>on screen</th><th>framework</th></tr>
+  <tr><td>pale drifting shimmer</td><td><span class="glyph">∞</span> the future; free energy, not yet converged; one by inclusion</td></tr>
+  <tr><td>gold spiral pulling the shimmer inward</td><td><span class="glyph">• ∘ ⊛</span> a present point; convergence through the aperture; 𝒫 happening</td></tr>
+  <tr><td>the bright trail a point leaves as it moves</td><td><span class="glyph">— ∘ ⎇</span> the worldline committing, then branching</td></tr>
+  <tr><td>the circle that closes around it, and the glow inside</td><td><span class="glyph">○ ∘ ✹, Φ</span> boundary closing; the interior field emerging within it</td></tr>
+  <tr><td>a circle with a dot, drifting, finished</td><td><span class="glyph">⊙</span> a completed whole; energy bound as structure; the past</td></tr>
+  <tr><td>teal threads between finished wholes</td><td><span class="glyph">⊂[α]</span> bonds; shared history holding parts near; entanglement as analogy</td></tr>
+  <tr><td>three bonded wholes converging into a bigger circle</td><td><span class="glyph">⊙λ ⊂ ⊙Λ</span> the triad completing at the next scale; wholes within wholes</td></tr>
+  <tr><td>ember-colored traces that never leave</td><td>the record; commitment is irreversible even when the structure dissolves</td></tr>
+  <tr><td>the conserved total in the readout</td><td>E = 1; the 1 only moves between future, present, and past</td></tr>
+</table>
+
+<div class="honesty">
+<b>What this is and is not.</b> This is the ontology animated, not physics derived. The only physical law in it is bookkeeping: the unit total is genuinely conserved (every quantum is either free, in transit through a present point, or bound in a whole, and the three shares always sum to 1; the readout computes this live, it is not decorative). "Entanglement" here means persistent bonds formed by shared history, a visual analogy, not quantum entanglement. Spawn times are Poisson, so the number of present points is genuinely indeterminate. The triad rule (three bonded wholes may nest) is the observer-triad count T = 3 used as a design choice, not a demonstrated consequence. Old traces beyond a memory cap are culled; that is a limitation of the page, not a claim about the past.
+</div>
+
+<h2>Revision history</h2>
+<p class="rev">- 2026-08-10 v1.0: initial. Built from the temporal adjudication (E, 𝒫, m as future, present, past; 2026-08-01), the helix correction (completed wholes seed next centers), and the octave walk. Conservation enforced as live bookkeeping.</p>
+
+</div>
+
+<script>
+(function(){
+'use strict';
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+const hud = document.getElementById('hud');
+let W = 0, H = 0, dpr = 1;
+
+function resize(){
+  dpr = Math.min(window.devicePixelRatio || 1, 2);
+  W = canvas.clientWidth; H = canvas.clientHeight;
+  canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+window.addEventListener('resize', resize);
+
+// ---------- state ----------
+const NQ = 780;                 // total energy quanta; E = 1 = NQ quanta
+let particles, apertures, wholes, gathers, traces, t, paused, wholeSeq;
+
+const QCLOSE = 12;              // quanta needed to close a whole
+const APERTURE_CAP = 34;
+const TOP_CAP = 46;             // top-level scale-1 wholes before erosion
+const TRACE_CAP = 380;
+
+function reset(){
+  particles = [];
+  for (let i = 0; i < NQ; i++){
+    particles.push({ x: Math.random()*W, y: Math.random()*H,
+                     vx: (Math.random()-0.5)*10, vy: (Math.random()-0.5)*10 });
+  }
+  apertures = []; wholes = []; gathers = []; traces = [];
+  t = 0; wholeSeq = 0;
+}
+
+// ---------- controls ----------
+const ui = {
+  spawn: document.getElementById('spawn'),
+  flow: document.getElementById('flow'),
+  bond: document.getElementById('bond')
+};
+paused = false;
+document.getElementById('pause').addEventListener('click', function(){
+  paused = !paused; this.textContent = paused ? 'resume' : 'pause';
+});
+document.getElementById('reset').addEventListener('click', function(){ reset(); });
+
+// ---------- flow field (the future's drift) ----------
+function flowX(x, y, tt){
+  return Math.sin(y*0.011 + tt*0.35) + 0.6*Math.sin(x*0.007 - tt*0.21);
+}
+function flowY(x, y, tt){
+  return Math.cos(x*0.009 + tt*0.27) + 0.6*Math.cos(y*0.013 + tt*0.18);
+}
+
+// ---------- spawning present points ----------
+function spawnAperture(){
+  let x, y;
+  const tops = wholes.filter(w => !w.nested);
+  if (tops.length > 0 && Math.random() < 0.3){
+    // the helix: completed wholes seed the next centers nearby
+    const w = tops[(Math.random()*tops.length)|0];
+    const a = Math.random()*Math.PI*2, d = w.r + 26 + Math.random()*40;
+    x = w.x + Math.cos(a)*d; y = w.y + Math.sin(a)*d;
+  } else {
+    x = 30 + Math.random()*(W-60); y = 30 + Math.random()*(H-60);
+  }
+  x = Math.max(20, Math.min(W-20, x)); y = Math.max(20, Math.min(H-20, y));
+  apertures.push({ x: x, y: y, stored: 0, age: 0, state: 'converge',
+                   phase: Math.random()*Math.PI*2,
+                   chir: Math.random() < 0.5 ? 1 : -1,
+                   heading: Math.random()*Math.PI*2,
+                   walkT: 0, path: [], forks: null, closeR: 0 });
+}
+
+function releaseQuanta(x, y, n){
+  for (let i = 0; i < n; i++){
+    const a = Math.random()*Math.PI*2, s = 20 + Math.random()*40;
+    particles.push({ x: x, y: y, vx: Math.cos(a)*s, vy: Math.sin(a)*s });
+  }
+}
+
+// ---------- update ----------
+function step(dt){
+  t += dt;
+  const spawnRate = ui.spawn.value / 10;      // per second
+  const flowStr = ui.flow.value * 2.4;
+  const bondR = ui.bond.value * 10;
+
+  if (Math.random() < spawnRate*dt && apertures.length < APERTURE_CAP) spawnAperture();
+
+  // particles: drift + spiral toward converging apertures
+  const conv = apertures.filter(a => a.state === 'converge');
+  for (let i = particles.length - 1; i >= 0; i--){
+    const p = particles[i];
+    p.vx += flowX(p.x, p.y, t) * flowStr * dt;
+    p.vy += flowY(p.x, p.y, t) * flowStr * dt;
+    // nearest converging aperture within reach
+    let best = null, bd = 115;
+    for (let k = 0; k < conv.length; k++){
+      const a = conv[k];
+      const dx = a.x - p.x, dy = a.y - p.y;
+      const d = Math.sqrt(dx*dx + dy*dy);
+      if (d < bd){ bd = d; best = a; }
+    }
+    if (best){
+      const dx = best.x - p.x, dy = best.y - p.y;
+      const d = Math.max(bd, 0.001);
+      const pull = 150 * (1 - d/115);
+      // radial plus perpendicular: the spiral
+      p.vx += (dx/d * 0.75 + best.chir * (-dy/d) * 0.65) * pull * dt;
+      p.vy += (dy/d * 0.75 + best.chir * ( dx/d) * 0.65) * pull * dt;
+      if (d < 5){
+        best.stored++;
+        particles[i] = particles[particles.length-1]; particles.pop();
+        continue;
+      }
+    }
+    p.vx *= 0.985; p.vy *= 0.985;
+    p.x += p.vx * dt; p.y += p.vy * dt;
+    if (p.x < 0) p.x += W; if (p.x > W) p.x -= W;
+    if (p.y < 0) p.y += H; if (p.y > H) p.y -= H;
+  }
+
+  // apertures: converge, then walk the octave
+  for (let i = apertures.length - 1; i >= 0; i--){
+    const a = apertures[i];
+    a.age += dt; a.phase += dt * 3;
+    if (a.state === 'converge'){
+      if (a.stored >= QCLOSE){
+        a.state = 'walk'; a.walkT = 0;
+        a.path = [{x: a.x, y: a.y}];
+      } else if (a.age > 15){
+        releaseQuanta(a.x, a.y, a.stored);       // failed convergence dissolves
+        apertures.splice(i, 1);
+      }
+    } else if (a.state === 'walk'){
+      a.walkT += dt;
+      const T1 = 1.2, T2 = 0.6, T3 = 1.0, T4 = 0.6; // line, branch, close, glow
+      if (a.walkT < T1){
+        // the line: commitment leaves a wake
+        a.heading += (Math.random()-0.5) * 1.6 * dt;
+        a.x += Math.cos(a.heading) * 34 * dt;
+        a.y += Math.sin(a.heading) * 34 * dt;
+        a.x = Math.max(16, Math.min(W-16, a.x));
+        a.y = Math.max(16, Math.min(H-16, a.y));
+        a.path.push({x: a.x, y: a.y});
+      } else if (a.walkT < T1 + T2){
+        if (!a.forks){
+          a.forks = [a.heading - 0.62, a.heading + 0.62];
+        }
+      } else if (a.walkT < T1 + T2 + T3){
+        a.closeR = 10 + Math.sqrt(a.stored) * 2.2;
+      } else if (a.walkT > T1 + T2 + T3 + T4){
+        // completion: a whole joins the past
+        const r = 10 + Math.sqrt(a.stored) * 2.2;
+        wholes.push({ id: wholeSeq++, x: a.x, y: a.y, r: r, energy: a.stored,
+                      scale: 1, born: t, nested: false, children: [],
+                      spin: a.chir, orbA: 0, orbR: 0,
+                      vx: (Math.random()-0.5)*6, vy: (Math.random()-0.5)*6 });
+        traces.push({ path: a.path, forks: a.forks, hx: a.x, hy: a.y, born: t });
+        if (traces.length > TRACE_CAP) traces.shift();
+        apertures.splice(i, 1);
+      }
+    }
+  }
+
+  // wholes: drift, bonds, triadic nesting
+  const tops = wholes.filter(w => !w.nested);
+  for (const w of tops){
+    if (w.gathering) continue;
+    w.vx += flowX(w.x, w.y, t) * 1.1 * dt; w.vy += flowY(w.x, w.y, t) * 1.1 * dt;
+    w.vx *= 0.97; w.vy *= 0.97;
+    w.x += w.vx * dt; w.y += w.vy * dt;
+    if (w.x < w.r) { w.x = w.r; w.vx = Math.abs(w.vx); }
+    if (w.x > W - w.r) { w.x = W - w.r; w.vx = -Math.abs(w.vx); }
+    if (w.y < w.r) { w.y = w.r; w.vy = Math.abs(w.vy); }
+    if (w.y > H - w.r) { w.y = H - w.r; w.vy = -Math.abs(w.vy); }
+  }
+
+  // soft separation: distinct wholes stay distinct
+  for (let i = 0; i < tops.length; i++){
+    for (let j = i+1; j < tops.length; j++){
+      const A = tops[i], B = tops[j];
+      if (A.gathering || B.gathering) continue;
+      const dx = B.x - A.x, dy = B.y - A.y;
+      const d = Math.sqrt(dx*dx + dy*dy) || 0.001;
+      const minD = (A.r + B.r) * 0.9;
+      if (d < minD){
+        const push = (minD - d) * 1.8 * dt;
+        A.vx -= dx/d*push*30; A.vy -= dy/d*push*30;
+        B.vx += dx/d*push*30; B.vy += dy/d*push*30;
+      }
+    }
+  }
+
+  // bonds among same-scale top-level wholes
+  const bonds = [];
+  for (let i = 0; i < tops.length; i++){
+    for (let j = i+1; j < tops.length; j++){
+      const A = tops[i], B = tops[j];
+      if (A.scale !== B.scale || A.gathering || B.gathering) continue;
+      const dx = B.x - A.x, dy = B.y - A.y;
+      const reach = bondR * (A.scale === 1 ? 1 : 1.7);
+      const d = Math.sqrt(dx*dx + dy*dy);
+      if (d < reach){
+        bonds.push([A, B, 1 - d/reach]);
+        // gentle cohesion so bonded wholes linger
+        const f = 3.5 * dt;
+        A.vx += dx/d*f; A.vy += dy/d*f; B.vx -= dx/d*f; B.vy -= dy/d*f;
+      }
+    }
+  }
+  window.__bonds = bonds;
+
+  // triadic nesting: a connected component of >= 3 may converge upward
+  if (Math.random() < 0.5 * dt && gathers.length < 3){
+    const adj = new Map();
+    for (const [A, B] of bonds){
+      if (!adj.has(A)) adj.set(A, []); if (!adj.has(B)) adj.set(B, []);
+      adj.get(A).push(B); adj.get(B).push(A);
+    }
+    const seen = new Set();
+    for (const node of adj.keys()){
+      if (seen.has(node)) continue;
+      const comp = []; const stack = [node];
+      while (stack.length){
+        const n = stack.pop();
+        if (seen.has(n)) continue;
+        seen.add(n); comp.push(n);
+        for (const m of adj.get(n)) if (!seen.has(m)) stack.push(m);
+      }
+      if (comp.length >= 3 && comp[0].scale < 3){
+        const members = comp.slice(0, 3);        // the triad
+        let cx = 0, cy = 0;
+        for (const m of members){ cx += m.x; cy += m.y; m.gathering = true; }
+        gathers.push({ members: members, cx: cx/3, cy: cy/3, phase: 0,
+                       scale: members[0].scale + 1 });
+        break;
+      }
+    }
+  }
+
+  // animate gathers into greater wholes
+  for (let i = gathers.length - 1; i >= 0; i--){
+    const g = gathers[i];
+    g.phase += dt / 2.6;
+    const maxChildR = Math.max.apply(null, g.members.map(m => m.r));
+    const orbR = maxChildR + 14 + g.scale * 4;
+    g.members.forEach(function(m, k){
+      const ang = k * (Math.PI*2/3) + g.phase * 2;
+      const tx = g.cx + Math.cos(ang)*orbR, ty = g.cy + Math.sin(ang)*orbR;
+      const ease = Math.min(1, g.phase * 1.6);
+      m.x += (tx - m.x) * ease * 4 * dt * 2;
+      m.y += (ty - m.y) * ease * 4 * dt * 2;
+      m.orbA = ang; m.orbR = orbR;
+    });
+    if (g.phase >= 1){
+      const energy = g.members.reduce((s, m) => s + m.energy, 0);
+      const R = orbR + maxChildR + 8;
+      const parent = { id: wholeSeq++, x: g.cx, y: g.cy, r: R, energy: energy,
+                       scale: g.scale, born: t, nested: false,
+                       children: g.members, spin: 1, orbA: 0, orbR: 0,
+                       vx: 0, vy: 0 };
+      for (const m of g.members){ m.nested = true; m.gathering = false; m.parent = parent; }
+      wholes.push(parent);
+      gathers.splice(i, 1);
+    }
+  }
+
+  // erosion at the cap: an old unbonded whole relaxes back to the future
+  const free1 = tops.filter(w => w.scale === 1 && !w.gathering);
+  if (free1.length > TOP_CAP){
+    let oldest = free1[0];
+    for (const w of free1) if (w.born < oldest.born) oldest = w;
+    releaseQuanta(oldest.x, oldest.y, oldest.energy);
+    wholes.splice(wholes.indexOf(oldest), 1);
+  }
+
+  // nested children ride their parents
+  for (const w of wholes){
+    if (w.nested && w.parent){
+      w.orbA += dt * 0.35 * (w.spin || 1);
+      w.x = w.parent.x + Math.cos(w.orbA) * w.orbR;
+      w.y = w.parent.y + Math.sin(w.orbA) * w.orbR;
+    }
+  }
+}
+
+// ---------- render ----------
+function drawWhole(w){
+  // interior field
+  ctx.beginPath(); ctx.arc(w.x, w.y, w.r, 0, Math.PI*2);
+  ctx.fillStyle = w.scale === 1 ? 'rgba(130,105,255,0.10)'
+               : w.scale === 2 ? 'rgba(90,140,255,0.08)' : 'rgba(90,220,200,0.06)';
+  ctx.fill();
+  // boundary
+  ctx.beginPath(); ctx.arc(w.x, w.y, w.r, 0, Math.PI*2);
+  ctx.strokeStyle = 'rgba(232,224,200,0.85)'; ctx.lineWidth = w.scale >= 2 ? 1.6 : 1.1;
+  ctx.stroke();
+  // center
+  ctx.beginPath(); ctx.arc(w.x, w.y, w.scale >= 2 ? 2.6 : 2, 0, Math.PI*2);
+  ctx.fillStyle = '#ffd27a'; ctx.fill();
+}
+
+function render(){
+  ctx.clearRect(0, 0, W, H);
+
+  // past traces: gold fading to ember, never gone
+  for (const tr of traces){
+    const age = t - tr.born;
+    const f = Math.max(0, 1 - age/40);
+    const r = Math.round(255*f + 176*(1-f));
+    const g = Math.round(210*f + 100*(1-f));
+    const b = Math.round(122*f + 56*(1-f));
+    const alpha = 0.22 + 0.5*f;
+    ctx.strokeStyle = 'rgba(' + r + ',' + g + ',' + b + ',' + alpha + ')';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(tr.path[0].x, tr.path[0].y);
+    for (let i = 1; i < tr.path.length; i++) ctx.lineTo(tr.path[i].x, tr.path[i].y);
+    ctx.stroke();
+    if (tr.forks){
+      for (const fa of tr.forks){
+        ctx.beginPath();
+        ctx.moveTo(tr.hx, tr.hy);
+        ctx.lineTo(tr.hx + Math.cos(fa)*20, tr.hy + Math.sin(fa)*20);
+        ctx.stroke();
+      }
+    }
+  }
+
+  // bonds
+  const bonds = window.__bonds || [];
+  for (const [A, B, s] of bonds){
+    ctx.strokeStyle = 'rgba(90,220,200,' + (0.12 + 0.3*s) + ')';
+    ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(A.x, A.y); ctx.lineTo(B.x, B.y); ctx.stroke();
+  }
+
+  // the future: shimmer
+  ctx.globalCompositeOperation = 'lighter';
+  ctx.fillStyle = 'rgba(150,180,255,0.55)';
+  for (const p of particles){
+    ctx.fillRect(p.x, p.y, 1.4, 1.4);
+  }
+
+  // present points
+  for (const a of apertures){
+    if (a.state === 'converge'){
+      const pulse = 3.5 + Math.sin(a.phase) * 1.2 + a.stored * 0.25;
+      const grad = ctx.createRadialGradient(a.x, a.y, 0, a.x, a.y, pulse*4);
+      grad.addColorStop(0, 'rgba(255,210,122,0.9)');
+      grad.addColorStop(1, 'rgba(255,210,122,0)');
+      ctx.fillStyle = grad;
+      ctx.beginPath(); ctx.arc(a.x, a.y, pulse*4, 0, Math.PI*2); ctx.fill();
+      ctx.beginPath(); ctx.arc(a.x, a.y, 1.8, 0, Math.PI*2);
+      ctx.fillStyle = '#fff2d0'; ctx.fill();
+    } else {
+      // walking the octave
+      ctx.strokeStyle = 'rgba(255,220,150,0.95)'; ctx.lineWidth = 1.4;
+      ctx.beginPath();
+      ctx.moveTo(a.path[0].x, a.path[0].y);
+      for (let i = 1; i < a.path.length; i++) ctx.lineTo(a.path[i].x, a.path[i].y);
+      ctx.stroke();
+      if (a.forks){
+        const fprog = Math.min(1, (a.walkT - 1.2) / 0.6);
+        for (const fa of a.forks){
+          ctx.beginPath(); ctx.moveTo(a.x, a.y);
+          ctx.lineTo(a.x + Math.cos(fa)*20*fprog, a.y + Math.sin(fa)*20*fprog);
+          ctx.stroke();
+        }
+      }
+      if (a.walkT > 1.8){
+        const cprog = Math.min(1, (a.walkT - 1.8) / 1.0);
+        ctx.beginPath();
+        ctx.arc(a.x, a.y, a.closeR || 12, -Math.PI/2, -Math.PI/2 + Math.PI*2*cprog);
+        ctx.strokeStyle = 'rgba(232,224,200,0.9)'; ctx.stroke();
+        if (cprog >= 1){
+          const gprog = Math.min(1, (a.walkT - 2.8) / 0.6);
+          ctx.beginPath(); ctx.arc(a.x, a.y, a.closeR, 0, Math.PI*2);
+          ctx.fillStyle = 'rgba(130,105,255,' + (0.16 * gprog) + ')'; ctx.fill();
+        }
+      }
+      ctx.beginPath(); ctx.arc(a.x, a.y, 2, 0, Math.PI*2);
+      ctx.fillStyle = '#ffd27a'; ctx.fill();
+    }
+  }
+  ctx.globalCompositeOperation = 'source-over';
+
+  // wholes: parents first, then children on top
+  for (const w of wholes) if (!w.nested) drawWhole(w);
+  for (const w of wholes) if (w.nested) drawWhole(w);
+}
+
+// ---------- HUD ----------
+function updateHUD(){
+  let flow = 0;
+  for (const a of apertures) flow += a.stored;
+  // energy: count scale-1 wholes only (parents hold sums of children; avoid double count)
+  let bound = 0;
+  const counts = {1: 0, 2: 0, 3: 0};
+  for (const w of wholes){
+    counts[w.scale] = (counts[w.scale] || 0) + 1;
+    if (w.scale === 1) bound += w.energy;
+  }
+  const free = particles.length;
+  const total = free + flow + bound;
+  hud.innerHTML =
+    '<span>E = <b class="e">' + (total/NQ).toFixed(3) + '</b> conserved</span>' +
+    '<span>future <b>' + (free/NQ).toFixed(3) + '</b></span>' +
+    '<span>present <b>' + (flow/NQ).toFixed(3) + '</b></span>' +
+    '<span>past <b>' + (bound/NQ).toFixed(3) + '</b></span>' +
+    '<span>wholes <b>' + counts[1] + ' ⊙' +
+      (counts[2] ? ' · ' + counts[2] + ' ⊙²' : '') +
+      (counts[3] ? ' · ' + counts[3] + ' ⊙³' : '') + '</b></span>';
+}
+
+// ---------- loop ----------
+let last = performance.now(), hudT = 0;
+function frame(now){
+  const dt = Math.min(0.05, (now - last)/1000); last = now;
+  if (!paused){
+    step(dt);
+    hudT += dt;
+    if (hudT > 0.25){ updateHUD(); hudT = 0; }
+  }
+  render();
+  requestAnimationFrame(frame);
+}
+
+resize(); reset(); updateHUD();
+requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
