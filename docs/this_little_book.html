@@ -62,29 +62,30 @@
   }
   .trip-title { text-align: center; color: var(--gold); font-size: 1.15rem; margin-bottom: 0.2rem; }
   .trip-sub { text-align: center; color: var(--blue); font-size: 0.85rem; margin-bottom: 1.4rem; }
-  .triptych { display: flex; gap: 0.6rem; justify-content: center; align-items: stretch; flex-wrap: wrap; }
+  .triptych { display: flex; gap: 0.45rem; justify-content: center; align-items: stretch; }
   .card {
-    flex: 1 1 160px; max-width: 200px; border: 1px solid var(--line); border-radius: 10px;
-    padding: 1rem 0.7rem; text-align: center; background: rgba(10,14,32,0.6);
+    flex: 1 1 0; min-width: 0; max-width: 200px; border: 1px solid var(--line); border-radius: 10px;
+    padding: 0.8rem 0.45rem; text-align: center; background: rgba(10,14,32,0.6);
   }
   .card.present { border-color: #3d5a8a; box-shadow: 0 0 18px rgba(100,150,230,0.12); }
-  .card .tense { color: var(--gold-bright); font-size: 1.1rem; }
-  .card .glyph { font-size: 2.6rem; color: var(--gold); margin: 0.6rem 0; line-height: 1; }
+  .card .tense { color: var(--gold-bright); font-size: clamp(0.85rem, 3.2vw, 1.1rem); }
+  .card .glyph { font-size: clamp(1.7rem, 6vw, 2.6rem); color: var(--gold); margin: 0.55rem 0; line-height: 1; }
   .card .glyph .dotring {
-    display: inline-block; width: 46px; height: 46px; border: 2.5px solid var(--gold);
+    display: inline-block; width: clamp(30px, 9vw, 44px); height: clamp(30px, 9vw, 44px);
+    border: 2.5px solid var(--gold);
     border-radius: 50%; position: relative; vertical-align: middle;
   }
   .card .glyph .dotring::after {
-    content: ''; position: absolute; left: 50%; top: 50%; width: 10px; height: 10px;
+    content: ''; position: absolute; left: 50%; top: 50%; width: 22%; height: 22%;
     background: var(--gold); border-radius: 50%; transform: translate(-50%, -50%);
   }
   .card .glyph .dot {
-    display: inline-block; width: 14px; height: 14px; background: var(--gold);
-    border-radius: 50%; vertical-align: middle;
+    display: inline-block; width: clamp(10px, 3vw, 14px); height: clamp(10px, 3vw, 14px);
+    background: var(--gold); border-radius: 50%; vertical-align: middle;
   }
-  .card .name { color: var(--gold); margin-top: 0.4rem; }
-  .card .kind { color: var(--dim); font-size: 0.78rem; line-height: 1.4; margin-top: 0.3rem; }
-  .card .what { color: var(--blue); font-style: italic; font-size: 0.85rem; margin-top: 0.6rem; }
+  .card .name { color: var(--gold); margin-top: 0.4rem; font-size: clamp(0.85rem, 3vw, 1rem); }
+  .card .kind { color: var(--dim); font-size: clamp(0.62rem, 2.3vw, 0.78rem); line-height: 1.4; margin-top: 0.3rem; }
+  .card .what { color: var(--blue); font-style: italic; font-size: clamp(0.66rem, 2.4vw, 0.85rem); margin-top: 0.55rem; }
   .trip-line { text-align: center; color: var(--gold-bright); font-style: italic; margin-top: 1.4rem; font-size: 1.02rem; }
   /* dictionary entries */
   .entry { margin: 1.6rem 0; padding-left: 1rem; border-left: 2px solid var(--line); }
@@ -112,35 +113,15 @@
   <div class="meta">
 Created: 2026-08-11<br>
 Last updated: 2026-08-11<br>
-Version: 0.1
+Version: 0.2
   </div>
 </div>
 
 <div class="rule">⊙ ⊙ ⊙</div>
 
-<h2><span class="num">THE QUESTION</span>Ossat?</h2>
-
-<p>My mother told me that my first persistent question was: <em>"Ossat?"</em></p>
-
-<p><em>What is that?</em></p>
-
-<p>I asked it constantly. I pointed toward particular things and wanted them named. What is that object? That sound? That animal? That person? Each question drew a boundary around something and distinguished it from everything surrounding it.</p>
-
-<p>Eventually, the question expanded. I stopped asking only <em>what is that</em>, and began asking <em>what is this</em>. What is this experience? What is this world? What is consciousness? What is Reality? What is all of this, taken together?</p>
-
-<p>The movement from <em>that</em> to <em>this</em> is the movement from identifying a part to confronting the whole. "That" points away, toward something distinct. "This" includes the one pointing, the thing indicated, and the relation between them. It includes the present moment in which Reality and an experiencer meet.</p>
-
-<p>Perhaps philosophy begins there:</p>
-
-<blockquote>There is Reality, and there are those of us who experience it. And there is what comes of that meeting: a world, a self, a life.</blockquote>
-
-<p>Everything in this little book unpacks that one sentence. It has three clauses, and the three turn out to be the three tenses of a single event.</p>
-
-<h2><span class="num">THE PICTURE</span>The Three</h2>
-
 <div class="triptych-box">
   <div class="trip-title">The Circumpunct View of Time</div>
-  <div class="trip-sub">Past, Present, Future / Whole, Soul, God</div>
+  <div class="trip-sub">Future, Present, Past / God, Soul, Whole</div>
   <div class="triptych">
     <div class="card">
       <div class="tense">Future</div>
@@ -167,7 +148,13 @@ Version: 0.1
   <div class="trip-line">We are each a center through which the Infinite becomes finite.</div>
 </div>
 
-<p>Read the picture left to right and it is a sentence. The future is infinite possibility: everything that could be, before anything in particular is. The present is indivisible actuality: a point of view, the only place anything ever actually happens. The past is reality integrated into a finite whole: what has become, and stays become.</p>
+<h2><span class="num">THE PICTURE</span>The Three</h2>
+
+<p>Read the picture left to right and it is a sentence:</p>
+
+<blockquote>There is Reality, and there are those of us who experience it. And there is what comes of that meeting: a world, a self, a life.</blockquote>
+
+<p>Three clauses, and the three turn out to be the three tenses of a single event. The future is infinite possibility: everything that could be, before anything in particular is. The present is indivisible actuality: a point of view, the only place anything ever actually happens. The past is reality integrated into a finite whole: what has become, and stays become.</p>
 
 <p>Nothing in this book is more complicated than that picture. The rest is what it means for you, and what happens when a person, or a whole civilization, breaks one of the three panels.</p>
 
@@ -255,20 +242,21 @@ Version: 0.1
 
 <p>So: you are real. Reality is real. What you make together is real and remains. The future arrives through you, the only door it has; the present is you, holding it open; the past is everything the two of you have already made, kept safe by the nature of time itself.</p>
 
-<p>I spent my life asking one question, which only grew as I grew: <em>Ossat? What is that? What is this? What is all of this?</em></p>
+<p>All of it, the whole picture, every book behind this one, answers a single question: what is all of this?</p>
 
-<p>Years later, a nonverbal child answered my question about the meaning of life with one word.</p>
+<p>A nonverbal child, asked the meaning of life, once answered with one word.</p>
 
 <div class="closing">This.</div>
 
 <div class="rule">⊙</div>
 
 <div class="honesty">
-<b>Status and sources.</b> Draft compilation, awaiting Ashman's voice pass. Condensed from: <em>What Is That?</em> (the opening and closing story, abridged), the One charter (the center, the three levels, the narcissism sequence, the definition of Truth, the three tenses and their restorations), <em>Redefining Reality</em> (the dictionary entries, quoted in their adjudicated form), <em>What Is Wholeness?</em> (heap and whole, wholes within wholes), the circumpunct books (the meeting, the vesica, two become three), <em>A Criticism of Humanity</em> (the closing line "Act like you know"), and the Circumpunct View of Time poster (the triptych, recreated here rather than embedded). The framework's notation and physics are deliberately absent; this is the plain-language distillation. Nothing here is argued in full; each claim carries its full argument in its home book.
+<b>Status and sources.</b> Draft compilation, awaiting Ashman's voice pass. Condensed from: <em>What Is That?</em> (the closing answer), the One charter (the center, the three levels, the narcissism sequence, the definition of Truth, the three tenses and their restorations), <em>Redefining Reality</em> (the dictionary entries, quoted in their adjudicated form), <em>What Is Wholeness?</em> (heap and whole, wholes within wholes), the circumpunct books (the meeting, the vesica, two become three), <em>A Criticism of Humanity</em> (the closing line "Act like you know"), and the Circumpunct View of Time poster (the triptych, recreated here rather than embedded). The framework's notation and physics are deliberately absent; this is the plain-language distillation. Nothing here is argued in full; each claim carries its full argument in its home book.
 </div>
 
 <p class="rev">Revision history<br>
-- 2026-08-11 v0.1: initial compilation. The poster's three tenses as the spine; the best of each book condensed into its panel; Ossat opens, the child's answer closes.</p>
+- 2026-08-11 v0.2: per Ashman: the book now starts with the image (the Ossat opening removed; the closing keeps only the child's answer); the caption order corrected to read with the diagram, Future, Present, Past (the reversed order was an error inherited from the poster image); the triptych narrowed so all three panels fit across in portrait.<br>
+- 2026-08-11 v0.1: initial compilation. The poster's three tenses as the spine; the best of each book condensed into its panel.</p>
 
 </div>
 </body>
