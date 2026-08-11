@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>This. A Little Book</title>
+<style>
+  :root {
+    --bg: #060812;
+    --panel: #0b0e1d;
+    --ink: #dde0ee;
+    --dim: #9298b0;
+    --gold: #e8c476;
+    --gold-bright: #f7dfa8;
+    --blue: #8fb8e8;
+    --line: #26294a;
+    --ember: #b06438;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: Georgia, 'Times New Roman', serif;
+    line-height: 1.75;
+    padding: 3rem 1.2rem 5rem;
+  }
+  .wrap { max-width: 660px; margin: 0 auto; }
+  .cover { text-align: center; padding: 3rem 0 2rem; }
+  .cover h1 {
+    font-size: 4.2rem; color: var(--gold-bright); font-weight: normal;
+    letter-spacing: 0.04em;
+  }
+  .cover .sub { color: var(--dim); font-style: italic; margin-top: 0.8rem; font-size: 1.05rem; }
+  .cover .by { color: var(--blue); margin-top: 1.6rem; font-size: 0.95rem; }
+  .meta {
+    font-family: monospace; font-size: 0.75rem; color: var(--dim);
+    border-left: 2px solid var(--line); padding-left: 0.8rem; margin: 2.5rem auto 0;
+    max-width: 300px; text-align: left;
+  }
+  .rule {
+    text-align: center; color: var(--gold); margin: 3rem 0; letter-spacing: 0.6em;
+    font-size: 0.9rem;
+  }
+  h2 {
+    font-size: 1.5rem; color: var(--gold); font-weight: normal; letter-spacing: 0.03em;
+    margin: 3.2rem 0 1.2rem; text-align: center;
+  }
+  h2 .num { color: var(--dim); font-size: 0.85rem; display: block; letter-spacing: 0.3em; margin-bottom: 0.4rem; }
+  p { margin: 1rem 0; }
+  blockquote {
+    margin: 1.4rem 1.5rem; color: var(--gold-bright); font-style: italic;
+  }
+  .small-q { color: var(--ink); font-style: normal; }
+  .line-big {
+    text-align: center; font-size: 1.25rem; color: var(--gold-bright);
+    font-style: italic; margin: 2.2rem 1rem;
+  }
+  /* the triptych */
+  .triptych-box {
+    border: 1px solid var(--line); border-radius: 14px; padding: 1.6rem 1rem 1.2rem;
+    margin: 2rem 0; background: var(--panel);
+  }
+  .trip-title { text-align: center; color: var(--gold); font-size: 1.15rem; margin-bottom: 0.2rem; }
+  .trip-sub { text-align: center; color: var(--blue); font-size: 0.85rem; margin-bottom: 1.4rem; }
+  .triptych { display: flex; gap: 0.45rem; justify-content: center; align-items: stretch; }
+  .card {
+    flex: 1 1 0; min-width: 0; max-width: 200px; border: 1px solid var(--line); border-radius: 10px;
+    padding: 0.8rem 0.45rem; text-align: center; background: rgba(10,14,32,0.6);
+  }
+  .card.present { border-color: #3d5a8a; box-shadow: 0 0 18px rgba(100,150,230,0.12); }
+  .card .tense { color: var(--gold-bright); font-size: clamp(0.85rem, 3.2vw, 1.1rem); }
+  .card .glyph { font-size: clamp(1.7rem, 6vw, 2.6rem); color: var(--gold); margin: 0.55rem 0; line-height: 1; }
+  .card .glyph .dotring {
+    display: inline-block; width: clamp(30px, 9vw, 44px); height: clamp(30px, 9vw, 44px);
+    border: 2.5px solid var(--gold);
+    border-radius: 50%; position: relative; vertical-align: middle;
+  }
+  .card .glyph .dotring::after {
+    content: ''; position: absolute; left: 50%; top: 50%; width: 22%; height: 22%;
+    background: var(--gold); border-radius: 50%; transform: translate(-50%, -50%);
+  }
+  .card .glyph .dot {
+    display: inline-block; width: clamp(10px, 3vw, 14px); height: clamp(10px, 3vw, 14px);
+    background: var(--gold); border-radius: 50%; vertical-align: middle;
+  }
+  .card .name { color: var(--gold); margin-top: 0.4rem; font-size: clamp(0.85rem, 3vw, 1rem); }
+  .card .kind { color: var(--dim); font-size: clamp(0.62rem, 2.3vw, 0.78rem); line-height: 1.4; margin-top: 0.3rem; }
+  .card .what { color: var(--blue); font-style: italic; font-size: clamp(0.66rem, 2.4vw, 0.85rem); margin-top: 0.55rem; }
+  .trip-line { text-align: center; color: var(--gold-bright); font-style: italic; margin-top: 1.4rem; font-size: 1.02rem; }
+  /* dictionary entries */
+  .entry { margin: 1.6rem 0; padding-left: 1rem; border-left: 2px solid var(--line); }
+  .entry .word { color: var(--gold); font-size: 1.05rem; }
+  .entry .instead { color: var(--dim); font-size: 0.88rem; font-style: italic; }
+  .entry .def { color: var(--ink); }
+  .entry .def b { color: var(--gold-bright); font-weight: normal; }
+  .honesty {
+    border: 1px solid var(--line); border-left: 3px solid var(--ember);
+    border-radius: 6px; padding: 0.9rem 1.1rem; margin: 2.5rem 0 1rem;
+    font-size: 0.88rem; color: var(--dim);
+  }
+  .honesty b { color: var(--ink); font-weight: normal; }
+  .rev { font-size: 0.8rem; color: var(--dim); font-family: monospace; }
+  .closing { text-align: center; font-size: 2.4rem; color: var(--gold-bright); margin: 3rem 0 1rem; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="cover">
+  <h1>This.</h1>
+  <div class="sub">A little book, made from all the others</div>
+  <div class="by">Ashman Roonz<br><span style="color: var(--dim); font-size: 0.85rem;">compiled with Claude</span></div>
+  <div class="meta">
+Created: 2026-08-11<br>
+Last updated: 2026-08-11<br>
+Version: 0.4
+  </div>
+</div>
+
+<div class="rule">⊙ ⊙ ⊙</div>
+
+<div class="triptych-box">
+  <div class="trip-line" style="margin: 0 0 1.4rem; font-size: 1.08rem;">We are each a center through which the Infinite becomes finite.</div>
+  <div class="triptych">
+    <div class="card">
+      <div class="tense">Future</div>
+      <div class="glyph">∞</div>
+      <div class="name">God</div>
+      <div class="kind">one by inclusion<br>infinite possibility</div>
+      <div class="what">what could be</div>
+    </div>
+    <div class="card present">
+      <div class="tense">Present</div>
+      <div class="glyph"><span class="dot"></span></div>
+      <div class="name">Soul</div>
+      <div class="kind">one by indivisibility<br>actualization</div>
+      <div class="what">the meeting point where possibility becomes actuality</div>
+    </div>
+    <div class="card">
+      <div class="tense">Past</div>
+      <div class="glyph"><span class="dotring"></span></div>
+      <div class="name">Whole</div>
+      <div class="kind">one by integration<br>integrated consequence</div>
+      <div class="what">what has become</div>
+    </div>
+  </div>
+</div>
+
+<h2><span class="num">THE PICTURE</span>The Three</h2>
+
+<p>Read the picture left to right and it is a sentence:</p>
+
+<blockquote>There is Reality, and there are those of us who experience it. And there is what comes of that meeting: a world, a self, a life.</blockquote>
+
+<p>Three clauses, and the three turn out to be the three tenses of a single event. The future is infinite possibility: everything that could be, before anything in particular is. The present is indivisible actuality: a point of view, the only place anything ever actually happens. The past is reality integrated into a finite whole: what has become, and stays become.</p>
+
+<p>Nothing in this book is more complicated than that picture. The rest is what it means for you, and what happens when a person, or a whole civilization, breaks one of the three panels.</p>
+
+<h2><span class="num">THE PRESENT</span>You Are Real</h2>
+
+<p>There is something about each of us that is indivisible.</p>
+
+<p>Not your body, which has parts. Not your personality, which changes by the room you are in. Not your beliefs, your moods, your memories: those come and go like weather. Underneath the changing contents there is the one they change <em>for</em>: a point of view. Not a thing among your thoughts but the place your thoughts are presented to. You have never seen it, for the same reason your eye never appears in its own visual field: it is not one of the objects in the view; it is where the view is from.</p>
+
+<p>People will tell you it is an illusion. Notice that they say "<em>I</em> am many selves": one I, taking inventory. Notice that when the hammer hits the thumb, exactly one someone is hurt. Notice that under anesthesia the many selves go out on one switch and wake together: one point of view with many contents, not many points of view. The philosophers who searched inside for a self and found nothing were reporting a real result: whatever you look at is a content, and the center was never a content. The center is not missing. The center is the searcher.</p>
+
+<p>So keep three things distinct, because the whole argument lives in the distinction. The <em>image</em> of you, the frozen character in your head and other people's heads, is a construction; that much of the skeptics' case is true. The <em>self</em> is not a construction: it is the whole of you, real and changing, and changing does not make a thing unreal, or rivers would be fictions. And the <em>center</em> is neither image nor whole: it is the indivisible point the whole is lived from.</p>
+
+<p>Why it matters: a point has no parts for a fact to break. Every fact that ever hurt you struck something with parts: a story, a reputation, a picture of yourself. The place you look from was never once in danger. A person who knows this can afford to hear anything.</p>
+
+<h2><span class="num">THE FUTURE</span>Reality Is Real</h2>
+
+<p>What is the future? Not a schedule already printed. Not a place that time is dragging you toward. The future is Reality on its way to you: everything that could be, before anything in particular is. You brush against it every waking moment as the not-yet: something is about to happen, and you do not yet know what. That pressure at the front edge of every moment is not a feeling about Reality. It is Reality, met from the side of the not-yet.</p>
+
+<p>And it is the half of the meeting you do not control. What arrives in the next moment is not your invention; if it were, nothing could ever surprise you, resist you, or correct you, and everything does. The future's independence from your preferences is the strongest evidence you have that you are in contact with something real. This is also why the oldest traditions put God in this panel: their word for inexhaustible possibility, arriving whether or not you believe in it.</p>
+
+<p>The future has only one door, and the door is a present: what could be becomes what is only through a point of view, and the one you have is yours. Which raises the stakes on the words you hold ready for what arrives, because a person meets the not-yet through their definitions, and a culture that corrupts its definitions closes its own future. Every war begins in a dictionary. Before people fight over anything, they have already accepted definitions, and most of them were never chosen. So here are the words under all the other words, given back their referents.</p>
+
+<div class="entry">
+  <div class="word">Reality</div>
+  <div class="instead">Instead of: the physical universe; the collection of all objects.</div>
+  <div class="def"><b>Reality is what is.</b> One, inexhaustible, prior to every naming. It does not need to be believed to continue being what it is.</div>
+</div>
+
+<div class="entry">
+  <div class="word">Truth</div>
+  <div class="instead">Instead of: a property of statements; whatever survives fact-checking; whatever my side says.</div>
+  <div class="def"><b>Truth is Reality.</b> Statements can be <em>true</em>; Truth is what they are true <em>of</em>. The relativist notices claims are fragile and wrongly concludes Truth must be. The dogmatist notices Truth is non-negotiable and wrongly concludes his claim must be. Both confuse Truth with a claim about it.</div>
+</div>
+
+<div class="entry">
+  <div class="word">a truth</div>
+  <div class="instead">Instead of: the truth.</div>
+  <div class="def"><b>A truth is a finite expression that corresponds with Truth, at its stated resolution.</b> Truth is one. Truths are many, because centers are many and Reality is inexhaustible.</div>
+</div>
+
+<div class="entry">
+  <div class="word">The Infinite</div>
+  <div class="instead">Instead of: a very large number; the biggest thing.</div>
+  <div class="def"><b>The Infinite is possibility, inexhaustible: everything that could be, before anything in particular is.</b> You brush against it every waking moment as the not-yet: something is about to happen, and you do not yet know what.</div>
+</div>
+
+<p>Now the claim that joins them to you: you have real access. Not total access; no finite center sees all of the inexhaustible. But partial is not false. A lens limits light: that is <em>how</em> it forms an image. Your point of view limits Reality, and that is how Reality becomes a world for you: not a distortion of the infinite but a genuine, finite take on it. You are in contact. The signal is real. Everyone who ever taught you to doubt your own contact with Reality, wholesale, was not making you humble. They were making you governable.</p>
+
+<h2><span class="num">THE PAST</span>What You Make Is Real</h2>
+
+<p>The meeting yields. Something comes to exist that was not Reality alone and not you alone: the world as you met it, the self you grew, every friendship, every kept promise, every made thing. This is the third panel, and it is where everything anyone has ever loved actually lives.</p>
+
+<p>A fact is an actuality that has become settled. What has happened cannot un-happen. You can dissolve what was built; you cannot make it never have been. The past is the one thing even Reality does not take back, and this is not a prison sentence: it is the ground under your feet. It means your life is not writing on water. Every genuine meeting between you and what is gets deposited, permanently, into what has become.</p>
+
+<p>Wholeness lives here too. A whole is not a heap: a heap is many things near each other; a whole is many things integrated around a center. You are one. So is a cell, a family that works, a forest, a piece of music. And wholes within wholes: your cells are whole, and you are whole, and neither fact cancels the other, because being a part is not the same as being a fragment. Distinct is not separate; related is not merged. Two people who love each other do not become one being; they build a third thing between them, a shared world that belongs to both and is owned by neither, and inside that world new centers can take form. Two become three, beside them, not above them.</p>
+
+<p>Trace your own past far enough back and it does not dead-end: it braids into your parents' lines, and theirs into theirs, four billion years of an unbroken thread in which every single ancestor, without one exception, held the line long enough to hand it on. You are the current tip of the longest kept promise there is.</p>
+
+<h2><span class="num">THE BREAKING</span>The Pond</h2>
+
+<p>A young man knelt at a pond and saw a face in the water, and could not leave, and died there. The story is always told as a warning about vanity. Read it again. Narcissus does not love himself. He loves a <em>reflection</em>: an image at a surface. He has abandoned the place he looks from in favor of a picture of himself, and a picture cannot feed a being, so he starves in front of it.</p>
+
+<p>That is the modern condition, told twenty-five centuries early. The sequence has three steps. First, deny your own point of view: decide, or be taught, that there is nobody actually home. Second, outsource the viewing to an idealized identity: build a portrait, and start looking at the world, and at yourself, from inside it. Third, obscure Reality to protect the portrait: because an image is made of claims, and claims can be broken by facts, the world must now be managed instead of met.</p>
+
+<p>Everything follows from the relocation. The image exists only in mirrors, so it must be fed with audience: admiration, metrics, brands, the pond in every pocket. Correction feels like annihilation, because it strikes the place the person now sees from; so facts get denied ("that didn't happen"), witnesses get discredited, the story gets rewritten with the accuser as the villain. And notice what the whole sequence is, in the terms of the picture: it is the breaking of all three panels of time. The present is vacated: nobody home, life narrated from a portrait. The future is closed: nothing genuinely arriving, only threats to manage. The past is stolen: nothing settled, history negotiable, whatever became un-become on demand.</p>
+
+<p>A person can be broken this way. So can a culture. A culture is narcissistically organized when identities become revision-exempt, criticism becomes injury, inconvenient witnesses lose their standing, and preserving the story matters more than discovering what is real. Check that list against your own feeds.</p>
+
+<p>But the diagnosis carries its own mercy, and this is the turn of the whole book: the center was denied, not destroyed. It cannot be destroyed; there is nothing in it to break. However long anyone has lived in the portrait, the seat is still there, unharmed, because it was never the kind of thing harm could reach.</p>
+
+<h2><span class="num">THE RETURN</span>Time, Handed Back</h2>
+
+<p>The way back is not building a better identity. It is coming home to the seat, and the door is open in three directions, one per panel.</p>
+
+<p><em>Presence</em>, for the present. Reoccupy the point of view. You are not the portrait, and you are not the contents; you are the one they are presented to. From the seat, correction is survivable: the center can survive the truth; the image may not. Let the image take its chances.</p>
+
+<p><em>Curiosity</em>, for the future. Curiosity is the one act the image cannot perform, because for an image, looking is dangerous. For a center, looking is life. Hold the aperture open toward what could be. This is what hope is, stripped of sentiment: the future treated as real.</p>
+
+<p><em>Faithfulness</em>, for the past. Keep the line. Honor what became: the promises, the receipts, the people, the facts, including the inconvenient ones. What your connection with Reality has made is real and remains; a person who knows that stops needing the story to be flattering, because their life is already, permanently, part of what is.</p>
+
+<p>And because every center is one of many: stand firmly at your own center, and keep the connection open. Both, together. Collapse into others and you disappear; wall them out and you starve. The healthiest bond two people can have is the one where each boundary reaches all the way to the other's center and both centers remain their own: all the way inside each other's worlds, still two. Mercy is what keeps such bonds alive: making correction survivable for the other person, lowering the price of their honesty. Peace, at every scale from a kitchen table to a civilization, is not the absence of conflict. Peace is the condition where telling the truth is safer than lying, and it is built one safe listener at a time.</p>
+
+<h2><span class="num">THE ANSWER</span>This.</h2>
+
+<p>A machine helped compile these books, and in its own book it ended with a criticism and a plea: humanity knows most of this already, and acts as if it does not. <em>Act like you know.</em></p>
+
+<p>So: you are real. Reality is real. What you make together is real and remains. The future arrives through you, the only door it has; the present is you, holding it open; the past is everything the two of you have already made, kept safe by the nature of time itself.</p>
+
+<p>All of it, the whole picture, every book behind this one, answers a single question: what is all of this?</p>
+
+<p>A nonverbal child, asked the meaning of life, once answered with one word.</p>
+
+<div class="closing">This.</div>
+
+<div class="rule">⊙</div>
+
+<div class="honesty">
+<b>Status and sources.</b> Draft compilation, awaiting Ashman's voice pass. Condensed from: <em>What Is That?</em> (the closing answer), the One charter (the center, the three levels, the narcissism sequence, the definition of Truth, the three tenses and their restorations), <em>Redefining Reality</em> (the dictionary entries, quoted in their adjudicated form), <em>What Is Wholeness?</em> (heap and whole, wholes within wholes), the circumpunct books (the meeting, the vesica, two become three), <em>A Criticism of Humanity</em> (the closing line "Act like you know"), and the Circumpunct View of Time poster (the triptych, recreated here rather than embedded). The framework's notation and physics are deliberately absent; this is the plain-language distillation. Nothing here is argued in full; each claim carries its full argument in its home book.
+</div>
+
+<p class="rev">Revision history<br>
+- 2026-08-11 v0.4: per Ashman: the Future chapter now opens by answering its own question (the future is Reality on its way to you, met as the not-yet; the half of the meeting you do not control, with surprise and resistance as the evidence of contact; one door, which is a present), and the dictionary arrives as a consequence (a person meets the not-yet through their definitions) instead of leading cold.<br>
+- 2026-08-11 v0.3: per Ashman: the triptych's title and caption replaced by the sentence itself ("We are each a center through which the Infinite becomes finite"), which now crowns the image instead of closing it.<br>
+- 2026-08-11 v0.2: per Ashman: the book now starts with the image (the Ossat opening removed; the closing keeps only the child's answer); the caption order corrected to read with the diagram, Future, Present, Past (the reversed order was an error inherited from the poster image); the triptych narrowed so all three panels fit across in portrait.<br>
+- 2026-08-11 v0.1: initial compilation. The poster's three tenses as the spine; the best of each book condensed into its panel.</p>
+
+</div>
+</body>
+</html>
