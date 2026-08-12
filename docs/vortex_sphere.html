@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Vortex Sphere</title>
+<style>
+  :root {
+    --bg: #05060d;
+    --panel: #0c0e1a;
+    --ink: #d8dcea;
+    --dim: #8a90a8;
+    --gold: #ffd27a;
+    --teal: #5adcc8;
+    --ember: #b06438;
+    --line: #232640;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: Georgia, 'Times New Roman', serif;
+    line-height: 1.6;
+    padding: 2rem 1rem 4rem;
+  }
+  .wrap { max-width: 900px; margin: 0 auto; }
+  h1 { font-size: 1.9rem; color: var(--gold); font-weight: normal; letter-spacing: 0.02em; }
+  .subtitle { color: var(--dim); font-style: italic; margin-bottom: 0.8rem; }
+  .meta {
+    font-family: monospace; font-size: 0.78rem; color: var(--dim);
+    border-left: 2px solid var(--line); padding-left: 0.8rem; margin: 0.8rem 0 1.4rem;
+  }
+  p { margin: 0.8rem 0; }
+  .simbox {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 0.8rem;
+    margin: 1.4rem 0;
+  }
+  canvas { width: 100%; height: 600px; display: block; border-radius: 6px; background: #04050b; cursor: grab; touch-action: none; }
+  .hud {
+    font-family: monospace; font-size: 0.8rem; color: var(--dim);
+    padding: 0.6rem 0.2rem 0.1rem; display: flex; flex-wrap: wrap; gap: 1.2rem;
+  }
+  .hud b { color: var(--ink); font-weight: normal; }
+  .hud .e { color: var(--gold); }
+  .controls {
+    display: flex; flex-wrap: wrap; gap: 1.2rem; align-items: center;
+    padding-top: 0.6rem; font-size: 0.82rem; color: var(--dim); font-family: monospace;
+  }
+  .controls label { display: flex; align-items: center; gap: 0.5rem; }
+  input[type=range] { width: 120px; accent-color: #ffd27a; }
+  button {
+    background: transparent; color: var(--ink); border: 1px solid var(--line);
+    border-radius: 5px; padding: 0.25rem 0.8rem; font-family: monospace; font-size: 0.8rem;
+    cursor: pointer;
+  }
+  button:hover { border-color: var(--gold); color: var(--gold); }
+  table { border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem; width: 100%; }
+  td, th { border: 1px solid var(--line); padding: 0.45rem 0.7rem; text-align: left; vertical-align: top; }
+  th { color: var(--dim); font-weight: normal; font-style: italic; }
+  .glyph { color: var(--gold); font-size: 1.05rem; white-space: nowrap; }
+  .honesty {
+    border: 1px solid var(--line); border-left: 3px solid var(--ember);
+    border-radius: 6px; padding: 0.9rem 1.1rem; margin: 1.6rem 0;
+    font-size: 0.92rem; color: var(--dim);
+  }
+  .honesty b { color: var(--ink); font-weight: normal; }
+  h2 { font-size: 1.2rem; color: var(--ink); font-weight: normal; margin-top: 2rem; border-bottom: 1px solid var(--line); padding-bottom: 0.3rem; }
+  .rev { font-size: 0.85rem; color: var(--dim); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>The Vortex Sphere</h1>
+<div class="subtitle">the circumpunct in three dimensions: two cones, one point, one lens at each mouth</div>
+<div class="meta">
+Created: 2026-08-12<br>
+Last updated: 2026-08-12<br>
+Version: 1.0
+</div>
+
+<p>Ashman's figure, stated in one breath: the circumpunct as a vortex sphere; two cones inside with their vertexes meeting at the center; the front cone opening toward infinity, the rear cone emerging to the past; the cones' openings internal to the surface of the sphere, so that each mouth makes a lens.</p>
+
+<p>The lens is not added; it falls out of the geometry. Each cone's mouth is a flat disc whose rim touches the sphere from inside, and the region between that disc and the curved surface ahead of it is exactly a plano-convex lens: flat on the cone side, curved on the world side. The whole has two of them, one facing what could be, one facing what has become. Three older figures live inside this one. In cross-section it is the tattoo: two triangles tip to tip, the front one opening to the Infinite. In profile it is an hourglass, with the present as the waist that everything must pass through, one grain at a time. And in function it is an eye: a front lens gathering the infinite toward a point, a rear lens writing the image into the record. Drag to look around it.</p>
+
+<div class="simbox">
+  <canvas id="c"></canvas>
+  <div class="hud" id="hud"></div>
+  <div class="controls">
+    <label>flow <input type="range" id="flow" min="1" max="20" value="9"></label>
+    <label>swirl <input type="range" id="swirl" min="0" max="20" value="10"></label>
+    <label><input type="checkbox" id="chir" checked> chirality</label>
+    <button id="pause">pause</button>
+    <button id="reset">reset</button>
+  </div>
+</div>
+
+<h2>Legend</h2>
+<table>
+  <tr><th>on screen</th><th>framework</th></tr>
+  <tr><td>the pale shimmer beyond the sphere, ahead</td><td><span class="glyph">∞</span> the future; free energy; what could be, before anything in particular is</td></tr>
+  <tr><td>the front cone, swallowing the shimmer in a tightening spiral</td><td><span class="glyph">⊛</span> convergence; the intake; the swirl accelerates as the radius shrinks, as every vortex does</td></tr>
+  <tr><td>the point where the two vertexes meet, flashing as quanta pass</td><td><span class="glyph">•</span> the present; the center; the only place anything ever actually happens</td></tr>
+  <tr><td>the rear cone, releasing with the opposite handedness</td><td><span class="glyph">✹</span> emergence; the spiral flips sign at the center: the quarter-turn's mirror</td></tr>
+  <tr><td>the faint sphere of dots</td><td><span class="glyph">○</span> the boundary; the body; the interface the world sees</td></tr>
+  <tr><td>the space inside, which everything crosses</td><td><span class="glyph">Φ</span> the field; the interior the boundary holds</td></tr>
+  <tr><td>the glowing cap between each cone mouth and the surface</td><td>the lens; the interface region where filtering happens; one faces the not-yet, one faces the record</td></tr>
+  <tr><td>ember structure accumulating behind</td><td>the past; what has become; deposits of the flow</td></tr>
+  <tr><td>old ember dissolving and reappearing far ahead</td><td><span class="glyph">⟳</span> recycling; the past built upon; the circuit closes, which is the torus hiding in the sphere</td></tr>
+  <tr><td>the conserved total in the readout</td><td>E = 1; the one energy only moves between future, present, and past</td></tr>
+</table>
+
+<div class="honesty">
+<b>What this is and is not.</b> An illustration of the ontology, not a physics simulation. The one law in it is bookkeeping: a fixed count of quanta, each of which is at every moment either free (future), in transit through the sphere (present), or deposited (past), with the total conserved and computed live in the readout. The cone half-angle, mouth placement, flow profile, and deposit distances are design choices. Two touches are physically flavored rather than derived: the swirl accelerates as the radius shrinks (the character of real vortices) and the spiral's handedness flips at the center (the framework's conjugate strokes, drawn); neither is a claim about actual dynamics. The recycling of old deposits back to the shimmer is the design expression of "the past gets built upon"; without it the run would simply end, which would be a different and falser picture.
+</div>
+
+<h2>Revision history</h2>
+<p class="rev">- 2026-08-12 v1.0: initial. Ashman's figure built as stated: vortex sphere, two internal cones vertex to vertex at the center, mouths internal to the surface making a lens at each end; intake from the shimmer, mirrored-handedness emergence, ember deposit, recycling. Drag to orbit; conservation as live bookkeeping.</p>
+
+</div>
+
+<script>
+(function(){
+'use strict';
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+const hud = document.getElementById('hud');
+let W = 0, H = 0, dpr = 1;
+
+function resize(){
+  dpr = Math.min(window.devicePixelRatio || 1, 2);
+  W = canvas.clientWidth; H = canvas.clientHeight;
+  canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+window.addEventListener('resize', resize);
+
+// ---------- geometry ----------
+const R = 1.0;                 // sphere radius
+const CX = 0.55;               // cone mouth plane (|x| = CX)
+const RM = Math.sqrt(R*R - CX*CX);  // mouth radius (rim on the sphere)
+const NQ = 520;                // total quanta; E = 1
+const DEPOSIT_MIN = 1.35, DEPOSIT_SPAN = 1.6;
+const PAST_CAP = 420;
+
+// ---------- state ----------
+let parts, t, paused, recycled;
+function reset(){
+  parts = [];
+  for (let i = 0; i < NQ; i++) parts.push(spawnFuture());
+  t = 0; recycled = 0;
+}
+function spawnFuture(){
+  return { mode: 'future',
+           x: 1.7 + Math.random()*3.6,
+           r: 0.15 + Math.random()*1.25,
+           th: Math.random()*Math.PI*2,
+           settle: 0 };
+}
+
+// ---------- controls ----------
+const ui = {
+  flow: document.getElementById('flow'),
+  swirl: document.getElementById('swirl'),
+  chir: document.getElementById('chir')
+};
+paused = false;
+document.getElementById('pause').addEventListener('click', function(){
+  paused = !paused; this.textContent = paused ? 'resume' : 'pause';
+});
+document.getElementById('reset').addEventListener('click', reset);
+
+// ---------- camera ----------
+let yaw = 0.9, pitch = 0.32, autoSpin = true;
+let dragging = false, lx = 0, ly = 0;
+canvas.addEventListener('pointerdown', e => { dragging = true; autoSpin = false; lx = e.clientX; ly = e.clientY; canvas.setPointerCapture(e.pointerId); });
+canvas.addEventListener('pointermove', e => {
+  if (!dragging) return;
+  yaw += (e.clientX - lx) * 0.006;
+  pitch = Math.max(-1.2, Math.min(1.2, pitch + (e.clientY - ly) * 0.006));
+  lx = e.clientX; ly = e.clientY;
+});
+canvas.addEventListener('pointerup', () => { dragging = false; });
+
+const CAMD = 4.4;
+function project(X, Y, Z){
+  // world axis of the vortex is X; camera orbits with yaw (around world Y) and pitch
+  const cy = Math.cos(yaw), sy = Math.sin(yaw);
+  const cp = Math.cos(pitch), sp = Math.sin(pitch);
+  let x1 = X*cy + Z*sy, z1 = -X*sy + Z*cy;
+  let y2 = Y*cp - z1*sp, z2 = Y*sp + z1*cp;
+  const per = CAMD / (CAMD + z2);
+  const s = Math.min(W, H) * 0.30;
+  return { x: W/2 + x1*s*per, y: H/2 + y2*s*per, d: z2, per: per };
+}
+function cyl(p){ return { X: p.x, Y: p.r*Math.cos(p.th), Z: p.r*Math.sin(p.th) }; }
+
+// ---------- update ----------
+let pulse = 0;
+function step(dt){
+  t += dt;
+  if (autoSpin) yaw += dt*0.12;
+  const flow = ui.flow.value/10, swirlK = ui.swirl.value/10;
+  const chir = ui.chir.checked ? 1 : -1;
+  pulse *= Math.pow(0.02, dt);
+
+  for (let i = 0; i < parts.length; i++){
+    const p = parts[i];
+    if (p.mode === 'past') continue;
+
+    if (p.mode === 'future'){
+      // drift toward the front mouth; the funnel begins before the boundary
+      p.x -= (0.28 + 0.2*flow) * dt * (0.6 + 0.4*Math.random());
+      const rt = RM + Math.max(0, p.x - CX) * 0.75;   // wide far away, mouth-sized at the lens
+      p.r += (rt - p.r) * 1.4 * dt;
+      p.th += chir * swirlK * 0.5 / (p.r + 0.25) * dt;
+      if (p.x <= CX){ p.mode = 'flow'; }
+    } else if (p.mode === 'flow'){
+      // inside: follow the cones; the waist accelerates; handedness flips at the center
+      const ax = Math.abs(p.x);
+      const rt = Math.max(0.02, RM * (ax / CX) * 0.88);
+      p.r += (rt - p.r) * 6 * dt;
+      const speed = (0.35 + 0.5*flow) * (1 + 0.9 / (p.r*p.r*8 + 0.15));
+      const before = p.x;
+      p.x -= speed * dt;
+      const sgn = p.x > 0 ? chir : -chir;
+      p.th += sgn * swirlK * 1.1 / (p.r*p.r + 0.03) * dt * 0.22;
+      if (before > 0 && p.x <= 0) pulse = Math.min(1, pulse + 0.15);
+      if (p.x <= -CX){ p.mode = 'exit'; p.settle = -(DEPOSIT_MIN + Math.random()*DEPOSIT_SPAN); }
+    } else if (p.mode === 'exit'){
+      // released through the rear lens; decelerate and settle as structure
+      const speed = (0.3 + 0.4*flow) * Math.max(0.12, (p.x - p.settle) / (-CX - p.settle + 0.001));
+      p.x -= speed * dt;
+      const rt = RM * (0.8 + (-p.x - CX) * 0.3);
+      p.r += (rt - p.r) * 1.2 * dt;
+      p.th += -chir * swirlK * 0.25 / (p.r + 0.2) * dt;
+      if (p.x <= p.settle){
+        p.mode = 'past'; p.born = t;
+      }
+    }
+  }
+
+  // recycling: the past gets built upon; the circuit closes
+  const past = parts.filter(p => p.mode === 'past');
+  if (past.length > PAST_CAP){
+    let oldest = past[0];
+    for (const p of past) if (p.born < oldest.born) oldest = p;
+    const idx = parts.indexOf(oldest);
+    parts[idx] = spawnFuture();
+    recycled++;
+  }
+}
+
+// ---------- static geometry (precomputed rings) ----------
+function ring(x, r, n){
+  const pts = [];
+  for (let i = 0; i < n; i++){
+    const a = i/n * Math.PI*2;
+    pts.push({ X: x, Y: r*Math.cos(a), Z: r*Math.sin(a) });
+  }
+  return pts;
+}
+const sphereRings = [];
+for (const x of [-0.85, -0.6, -0.3, 0, 0.3, 0.6, 0.85]){
+  sphereRings.push(ring(x, Math.sqrt(Math.max(0, R*R - x*x)), 46));
+}
+const mouthF = ring(CX, RM, 36), mouthR = ring(-CX, RM, 36);
+const lensF = [], lensR = [];
+for (const x of [0.66, 0.76, 0.86, 0.94]){
+  lensF.push(ring(x, Math.sqrt(Math.max(0, R*R - x*x)), 30));
+  lensR.push(ring(-x, Math.sqrt(Math.max(0, R*R - x*x)), 30));
+}
+
+// ---------- render ----------
+function drawRing(pts, style, width){
+  ctx.strokeStyle = style; ctx.lineWidth = width || 1;
+  ctx.beginPath();
+  for (let i = 0; i <= pts.length; i++){
+    const q = project(pts[i % pts.length].X, pts[i % pts.length].Y, pts[i % pts.length].Z);
+    if (i) ctx.lineTo(q.x, q.y); else ctx.moveTo(q.x, q.y);
+  }
+  ctx.stroke();
+}
+
+function render(){
+  ctx.clearRect(0, 0, W, H);
+
+  // sphere: faint ring lines plus the camera-facing silhouette
+  for (const rg of sphereRings){
+    drawRing(rg, 'rgba(216,224,238,0.10)');
+  }
+  {
+    const cy = Math.cos(yaw), sy = Math.sin(yaw);
+    const cp = Math.cos(pitch), sp = Math.sin(pitch);
+    const u = { X: cy, Y: 0, Z: sy };
+    const v = { X: sp*sy, Y: cp, Z: -sp*cy };
+    ctx.strokeStyle = 'rgba(216,224,238,0.30)'; ctx.lineWidth = 1.2;
+    ctx.beginPath();
+    for (let i = 0; i <= 60; i++){
+      const a = i/60 * Math.PI*2;
+      const X = R*(u.X*Math.cos(a) + v.X*Math.sin(a));
+      const Y = R*(u.Y*Math.cos(a) + v.Y*Math.sin(a));
+      const Z = R*(u.Z*Math.cos(a) + v.Z*Math.sin(a));
+      const q = project(X, Y, Z);
+      if (i) ctx.lineTo(q.x, q.y); else ctx.moveTo(q.x, q.y);
+    }
+    ctx.stroke();
+  }
+
+  // lenses: the caps between mouth and surface
+  for (const rg of lensF) drawRing(rg, 'rgba(120,200,255,0.20)');
+  for (const rg of lensR) drawRing(rg, 'rgba(176,100,56,0.26)');
+
+  // cone rims and spokes
+  drawRing(mouthF, 'rgba(232,224,200,0.4)');
+  drawRing(mouthR, 'rgba(232,224,200,0.4)');
+  ctx.strokeStyle = 'rgba(232,224,200,0.16)';
+  for (let i = 0; i < 12; i++){
+    const a = i/12 * Math.PI*2;
+    const f = project(CX, RM*Math.cos(a), RM*Math.sin(a));
+    const r0 = project(0, 0, 0);
+    const b = project(-CX, RM*Math.cos(a), RM*Math.sin(a));
+    ctx.beginPath(); ctx.moveTo(f.x, f.y); ctx.lineTo(r0.x, r0.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+  }
+
+  // particles, depth sorted
+  const drawn = [];
+  for (const p of parts){
+    const v = cyl(p);
+    const q = project(v.X, v.Y, v.Z);
+    drawn.push({ q: q, p: p });
+  }
+  drawn.sort((a, b) => b.q.d - a.q.d);
+  for (const d of drawn){
+    const p = d.p, q = d.q;
+    if (p.mode === 'future'){
+      ctx.fillStyle = 'rgba(150,180,255,0.6)';
+      ctx.fillRect(q.x, q.y, 1.5*q.per, 1.5*q.per);
+    } else if (p.mode === 'past'){
+      const age = t - p.born;
+      const f = Math.max(0, 1 - age/40);
+      ctx.fillStyle = 'rgba(' + Math.round(255*f + 176*(1-f)) + ',' +
+                       Math.round(210*f + 100*(1-f)) + ',' +
+                       Math.round(122*f + 56*(1-f)) + ',' + (0.35 + 0.4*f) + ')';
+      ctx.fillRect(q.x, q.y, 2*q.per, 2*q.per);
+    } else {
+      ctx.fillStyle = 'rgba(255,210,122,0.85)';
+      const s = (p.mode === 'flow' ? 2.2 : 1.8) * q.per;
+      ctx.fillRect(q.x, q.y, s, s);
+    }
+  }
+
+  // the center: the present, flashing as quanta pass
+  const c0 = project(0, 0, 0);
+  const glow = 4 + pulse*10;
+  const grad = ctx.createRadialGradient(c0.x, c0.y, 0, c0.x, c0.y, glow*3);
+  grad.addColorStop(0, 'rgba(255,240,200,' + (0.5 + 0.5*pulse) + ')');
+  grad.addColorStop(1, 'rgba(255,210,122,0)');
+  ctx.fillStyle = grad;
+  ctx.beginPath(); ctx.arc(c0.x, c0.y, glow*3, 0, Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.arc(c0.x, c0.y, 2.2, 0, Math.PI*2);
+  ctx.fillStyle = '#fff2d0'; ctx.fill();
+}
+
+// ---------- HUD ----------
+function updateHUD(){
+  let fut = 0, flo = 0, pas = 0;
+  for (const p of parts){
+    if (p.mode === 'future') fut++;
+    else if (p.mode === 'past') pas++;
+    else flo++;
+  }
+  hud.innerHTML =
+    '<span>E = <b class="e">' + ((fut+flo+pas)/NQ).toFixed(3) + '</b> conserved</span>' +
+    '<span>future <b>' + (fut/NQ).toFixed(3) + '</b></span>' +
+    '<span>present <b>' + (flo/NQ).toFixed(3) + '</b></span>' +
+    '<span>past <b>' + (pas/NQ).toFixed(3) + '</b></span>' +
+    '<span>recycled <b>' + recycled + '</b></span>';
+}
+
+// ---------- loop ----------
+let last = performance.now(), hudT = 0;
+function frame(now){
+  const dt = Math.min(0.05, (now - last)/1000); last = now;
+  if (!paused){
+    step(dt);
+    hudT += dt;
+    if (hudT > 0.25){ updateHUD(); hudT = 0; }
+  }
+  render();
+  requestAnimationFrame(frame);
+}
+
+resize(); reset(); updateHUD();
+requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
