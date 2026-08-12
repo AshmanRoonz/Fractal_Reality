@@ -79,12 +79,14 @@
 <div class="meta">
 Created: 2026-08-12<br>
 Last updated: 2026-08-12<br>
-Version: 1.0
+Version: 1.1
 </div>
 
 <p>Ashman's figure, stated in one breath: the circumpunct as a vortex sphere; two cones inside with their vertexes meeting at the center; the front cone opening toward infinity, the rear cone emerging to the past; the cones' openings internal to the surface of the sphere, so that each mouth makes a lens.</p>
 
 <p>The lens is not added; it falls out of the geometry. Each cone's mouth is a flat disc whose rim touches the sphere from inside, and the region between that disc and the curved surface ahead of it is exactly a plano-convex lens: flat on the cone side, curved on the world side. The whole has two of them, one facing what could be, one facing what has become. Three older figures live inside this one. In cross-section it is the tattoo: two triangles tip to tip, the front one opening to the Infinite. In profile it is an hourglass, with the present as the waist that everything must pass through, one grain at a time. And in function it is an eye: a front lens gathering the infinite toward a point, a rear lens writing the image into the record. Drag to look around it.</p>
+
+<p>Not everything that enters passes through. Some of what crosses the center resonates and is caught: it stays inside, circulating between the cones, and this is the figure's mind: the interior field holding relation, keeping what it keeps as rhythm rather than as storage, and releasing it downstream when its time is done, because holding is not possession. And some of what enters gets stuck: neither passing through nor dancing, it lodges near the walls, dim and almost motionless, held without being alive. Turn the swirl up and watch what happens to the stuck: movement dislodges what is lodged, and the frozen quanta rejoin the flow and finish their journey. That is not a decoration; it is the somatic doctrine drawn: the boundary's stuck content is not released by thinking about it, it is released by the body moving.</p>
 
 <div class="simbox">
   <canvas id="c"></canvas>
@@ -108,17 +110,20 @@ Version: 1.0
   <tr><td>the faint sphere of dots</td><td><span class="glyph">○</span> the boundary; the body; the interface the world sees</td></tr>
   <tr><td>the space inside, which everything crosses</td><td><span class="glyph">Φ</span> the field; the interior the boundary holds</td></tr>
   <tr><td>the glowing cap between each cone mouth and the surface</td><td>the lens; the interface region where filtering happens; one faces the not-yet, one faces the record</td></tr>
+  <tr><td>bright gold quanta circulating inside, between the cones</td><td>resonance; the field holding relation; memory as kept rhythm, released downstream when its time is done</td></tr>
+  <tr><td>dim violet quanta lodged near the walls, barely moving</td><td>the stuck; the frozen braid; held without being alive; raise the swirl to shake them loose</td></tr>
   <tr><td>ember structure accumulating behind</td><td>the past; what has become; deposits of the flow</td></tr>
   <tr><td>old ember dissolving and reappearing far ahead</td><td><span class="glyph">⟳</span> recycling; the past built upon; the circuit closes, which is the torus hiding in the sphere</td></tr>
   <tr><td>the conserved total in the readout</td><td>E = 1; the one energy only moves between future, present, and past</td></tr>
 </table>
 
 <div class="honesty">
-<b>What this is and is not.</b> An illustration of the ontology, not a physics simulation. The one law in it is bookkeeping: a fixed count of quanta, each of which is at every moment either free (future), in transit through the sphere (present), or deposited (past), with the total conserved and computed live in the readout. The cone half-angle, mouth placement, flow profile, and deposit distances are design choices. Two touches are physically flavored rather than derived: the swirl accelerates as the radius shrinks (the character of real vortices) and the spiral's handedness flips at the center (the framework's conjugate strokes, drawn); neither is a claim about actual dynamics. The recycling of old deposits back to the shimmer is the design expression of "the past gets built upon"; without it the run would simply end, which would be a different and falser picture.
+<b>What this is and is not.</b> An illustration of the ontology, not a physics simulation. The one law in it is bookkeeping: a fixed count of quanta, each of which is at every moment either free (future), in transit through the sphere (present), or deposited (past), with the total conserved and computed live in the readout. The cone half-angle, mouth placement, flow profile, and deposit distances are design choices. Two touches are physically flavored rather than derived: the swirl accelerates as the radius shrinks (the character of real vortices) and the spiral's handedness flips at the center (the framework's conjugate strokes, drawn); neither is a claim about actual dynamics. The recycling of old deposits back to the shimmer is the design expression of "the past gets built upon"; without it the run would simply end, which would be a different and falser picture. The retention layer is likewise labeled: the capture probability at the center, the sticking rate near the walls, and the held lifetime are design constants, not derivations; that strong swirl releases the stuck is the somatic-release reading (movement dislodges what is lodged) drawn into the mechanics; and that held quanta always release eventually is the design expression of "kept as rhythm, not as possession."
 </div>
 
 <h2>Revision history</h2>
-<p class="rev">- 2026-08-12 v1.0: initial. Ashman's figure built as stated: vortex sphere, two internal cones vertex to vertex at the center, mouths internal to the surface making a lens at each end; intake from the shimmer, mirrored-handedness emergence, ember deposit, recycling. Drag to orbit; conservation as live bookkeeping.</p>
+<p class="rev">- 2026-08-12 v1.1: per Ashman: not everything passes through. Resonant quanta are caught at the center and circulate between the cones (the field holding relation; memory as kept rhythm; released downstream when their time is done); stuck quanta lodge near the walls, dim and motionless, and strong swirl shakes them loose (the somatic doctrine drawn). HUD gains held and stuck shares.<br>
+- 2026-08-12 v1.0: initial. Ashman's figure built as stated: vortex sphere, two internal cones vertex to vertex at the center, mouths internal to the surface making a lens at each end; intake from the shimmer, mirrored-handedness emergence, ember deposit, recycling. Drag to orbit; conservation as live bookkeeping.</p>
 
 </div>
 
@@ -147,11 +152,11 @@ const DEPOSIT_MIN = 1.35, DEPOSIT_SPAN = 1.6;
 const PAST_CAP = 420;
 
 // ---------- state ----------
-let parts, t, paused, recycled;
+let parts, t, paused, recycled, heldCount;
 function reset(){
   parts = [];
   for (let i = 0; i < NQ; i++) parts.push(spawnFuture());
-  t = 0; recycled = 0;
+  t = 0; recycled = 0; heldCount = 0;
 }
 function spawnFuture(){
   return { mode: 'future',
@@ -228,8 +233,43 @@ function step(dt){
       p.x -= speed * dt;
       const sgn = p.x > 0 ? chir : -chir;
       p.th += sgn * swirlK * 1.1 / (p.r*p.r + 0.03) * dt * 0.22;
-      if (before > 0 && p.x <= 0) pulse = Math.min(1, pulse + 0.15);
+      if (before > 0 && p.x <= 0){
+        pulse = Math.min(1, pulse + 0.15);
+        // resonance: some of what crosses the center is caught and kept, as rhythm
+        if (Math.random() < 0.14 && heldCount < 130){
+          p.mode = 'resonant';
+          p.A = 0.15 + Math.random()*0.32;
+          p.rOrb = 0.15 + Math.random()*0.45;
+          p.w = 1.4 + Math.random()*1.4;
+          p.ph = Math.random()*Math.PI*2;
+          p.capT = t; p.life = 8 + Math.random()*17;
+          heldCount++;
+          continue;
+        }
+      }
+      // sticking: some of what passes lodges near the walls, neither through nor dancing
+      if (Math.abs(p.x) > 0.12 && Math.abs(p.x) < CX*0.95 && Math.random() < 0.05*dt){
+        p.mode = 'stuck';
+        continue;
+      }
       if (p.x <= -CX){ p.mode = 'exit'; p.settle = -(DEPOSIT_MIN + Math.random()*DEPOSIT_SPAN); }
+    } else if (p.mode === 'resonant'){
+      // the field holding relation: circulation between the cones, kept rhythm
+      p.ph += p.w * dt;
+      p.x = p.A * Math.sin(p.ph);
+      p.r = p.rOrb + 0.05*Math.sin(p.ph*0.7);
+      p.th += chir * (0.8/(p.rOrb + 0.2)) * dt * (0.6 + 0.4*swirlK);
+      if (t - p.capT > p.life){
+        // holding is not possession: what was kept is released downstream
+        p.mode = 'exit'; p.settle = -(DEPOSIT_MIN + Math.random()*DEPOSIT_SPAN);
+        heldCount--;
+      }
+    } else if (p.mode === 'stuck'){
+      // lodged: barely moving; strong swirl shakes it loose
+      p.th += 0.02 * dt;
+      if (swirlK > 1.35 && Math.random() < (swirlK - 1.35) * 0.55 * dt){
+        p.mode = 'flow';
+      }
     } else if (p.mode === 'exit'){
       // released through the rear lens; decelerate and settle as structure
       const speed = (0.3 + 0.4*flow) * Math.max(0.12, (p.x - p.settle) / (-CX - p.settle + 0.001));
@@ -339,6 +379,13 @@ function render(){
     if (p.mode === 'future'){
       ctx.fillStyle = 'rgba(150,180,255,0.6)';
       ctx.fillRect(q.x, q.y, 1.5*q.per, 1.5*q.per);
+    } else if (p.mode === 'resonant'){
+      ctx.fillStyle = 'rgba(255,224,150,0.95)';
+      const s = 2.6*q.per;
+      ctx.fillRect(q.x - s/2, q.y - s/2, s, s);
+    } else if (p.mode === 'stuck'){
+      ctx.fillStyle = 'rgba(155,140,185,0.55)';
+      ctx.fillRect(q.x, q.y, 2*q.per, 2*q.per);
     } else if (p.mode === 'past'){
       const age = t - p.born;
       const f = Math.max(0, 1 - age/40);
@@ -367,16 +414,20 @@ function render(){
 
 // ---------- HUD ----------
 function updateHUD(){
-  let fut = 0, flo = 0, pas = 0;
+  let fut = 0, flo = 0, pas = 0, hel = 0, stu = 0;
   for (const p of parts){
     if (p.mode === 'future') fut++;
     else if (p.mode === 'past') pas++;
+    else if (p.mode === 'resonant') hel++;
+    else if (p.mode === 'stuck') stu++;
     else flo++;
   }
   hud.innerHTML =
-    '<span>E = <b class="e">' + ((fut+flo+pas)/NQ).toFixed(3) + '</b> conserved</span>' +
+    '<span>E = <b class="e">' + ((fut+flo+pas+hel+stu)/NQ).toFixed(3) + '</b> conserved</span>' +
     '<span>future <b>' + (fut/NQ).toFixed(3) + '</b></span>' +
     '<span>present <b>' + (flo/NQ).toFixed(3) + '</b></span>' +
+    '<span>held <b>' + (hel/NQ).toFixed(3) + '</b></span>' +
+    '<span>stuck <b>' + (stu/NQ).toFixed(3) + '</b></span>' +
     '<span>past <b>' + (pas/NQ).toFixed(3) + '</b></span>' +
     '<span>recycled <b>' + recycled + '</b></span>';
 }
