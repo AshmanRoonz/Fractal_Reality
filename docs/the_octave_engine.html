@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Octave Engine</title>
+<style>
+  :root {
+    --bg: #05060d;
+    --panel: #0c0e1a;
+    --ink: #d8dcea;
+    --dim: #8a90a8;
+    --gold: #ffd27a;
+    --teal: #5adcc8;
+    --ember: #b06438;
+    --line: #232640;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: Georgia, 'Times New Roman', serif;
+    line-height: 1.6;
+    padding: 2rem 1rem 4rem;
+  }
+  .wrap { max-width: 900px; margin: 0 auto; }
+  h1 { font-size: 1.9rem; color: var(--gold); font-weight: normal; letter-spacing: 0.02em; }
+  .subtitle { color: var(--dim); font-style: italic; margin-bottom: 0.8rem; }
+  .meta {
+    font-family: monospace; font-size: 0.78rem; color: var(--dim);
+    border-left: 2px solid var(--line); padding-left: 0.8rem; margin: 0.8rem 0 1.4rem;
+  }
+  p { margin: 0.8rem 0; }
+  .simbox {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 0.8rem;
+    margin: 1.4rem 0;
+  }
+  canvas { width: 100%; height: 600px; display: block; border-radius: 6px; background: #04050b; }
+  .hud {
+    font-family: monospace; font-size: 0.8rem; color: var(--dim);
+    padding: 0.6rem 0.2rem 0.1rem; display: flex; flex-wrap: wrap; gap: 1.2rem;
+  }
+  .hud b { color: var(--ink); font-weight: normal; }
+  .hud .e { color: var(--gold); }
+  .hud .st { color: var(--teal); }
+  .controls {
+    display: flex; flex-wrap: wrap; gap: 1.2rem; align-items: center;
+    padding-top: 0.6rem; font-size: 0.82rem; color: var(--dim); font-family: monospace;
+  }
+  .controls label { display: flex; align-items: center; gap: 0.5rem; }
+  input[type=range] { width: 130px; accent-color: #ffd27a; }
+  button {
+    background: transparent; color: var(--ink); border: 1px solid var(--line);
+    border-radius: 5px; padding: 0.25rem 0.8rem; font-family: monospace; font-size: 0.8rem;
+    cursor: pointer;
+  }
+  button:hover { border-color: var(--gold); color: var(--gold); }
+  table { border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem; width: 100%; }
+  td, th { border: 1px solid var(--line); padding: 0.45rem 0.7rem; text-align: left; vertical-align: top; }
+  th { color: var(--dim); font-weight: normal; font-style: italic; }
+  .glyph { color: var(--gold); font-size: 1.05rem; white-space: nowrap; }
+  .honesty {
+    border: 1px solid var(--line); border-left: 3px solid var(--ember);
+    border-radius: 6px; padding: 0.9rem 1.1rem; margin: 1.6rem 0;
+    font-size: 0.92rem; color: var(--dim);
+  }
+  .honesty b { color: var(--ink); font-weight: normal; }
+  h2 { font-size: 1.2rem; color: var(--ink); font-weight: normal; margin-top: 2rem; border-bottom: 1px solid var(--line); padding-bottom: 0.3rem; }
+  .rev { font-size: 0.85rem; color: var(--dim); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>The Octave Engine</h1>
+<div class="subtitle">the circumpunct drawing itself: point, line, branch, boundary, field, and around again</div>
+<div class="meta">
+Created: 2026-08-12<br>
+Last updated: 2026-08-12<br>
+Version: 1.0
+</div>
+
+<p>The earlier pages in this series showed energy passing through a finished whole. This one shows the whole being built, station by station, in the constitutive order the framework walks: the octave.</p>
+
+<p>Energy converges toward a point, and the point ignites: that is • fed by ⊛, the aperture and its convergence. What emerges from the center is not a spray but a line, the committed wake of the convergence: —. The line does not become an edge by itself; it branches, and the branches curve around the center, wrapping it: ⎇, the i-turn, where extension becomes enclosure-in-progress. When the wrapping arms meet each other on the far side, the boundary closes: ○, and there is suddenly an inside where before there was only a middle. Then the field builds within the boundary: ✹ into Φ, arriving energy no longer spent on structure but held, circulating, filling the enclosed interior. And when the interior is full, the octave closes the way the framework says it must: the completed whole becomes the aperture of the next scale, 3.5D = 0D′, and a new line grows outward from the finished boundary toward a larger one. Three octaves nest, the whole figure breathes for a moment, and then everything relaxes back into the shimmer it was made from, and the cycle begins again. Nothing is created or destroyed at any point; the readout proves it continuously.</p>
+
+<div class="simbox">
+  <canvas id="c"></canvas>
+  <div class="hud" id="hud"></div>
+  <div class="controls">
+    <label>flow <input type="range" id="flow" min="1" max="20" value="8"></label>
+    <label><input type="checkbox" id="chir" checked> chirality</label>
+    <button id="pause">pause</button>
+    <button id="reset">reset</button>
+  </div>
+</div>
+
+<h2>Legend</h2>
+<table>
+  <tr><th>on screen</th><th>station</th></tr>
+  <tr><td>pale shimmer everywhere</td><td><span class="glyph">∞</span> the substrate; free energy; what everything is built from and returns to</td></tr>
+  <tr><td>gold spirals falling toward the middle</td><td><span class="glyph">• ∘ ⊛</span> 0D and 0.5D, i¹: the aperture and its convergence; the point ignites</td></tr>
+  <tr><td>a single bright line growing outward</td><td><span class="glyph">—</span> 1D: extension; the committed wake of convergence; each segment is one quantum spent into structure</td></tr>
+  <tr><td>the line splitting, arms curving around the center, sprouting twigs</td><td><span class="glyph">⎇</span> 1.5D, i² = −1: branching; line multiplying and curving into edge; irreversible</td></tr>
+  <tr><td>the arms meeting on the far side; the ring flashing whole</td><td><span class="glyph">○</span> 2D: the boundary closes; an inside exists for the first time</td></tr>
+  <tr><td>arriving energy held and circulating inside instead of being spent</td><td><span class="glyph">✹ into Φ</span> 2.5D into 3D, i³: emergence; the interior field builds within the boundary</td></tr>
+  <tr><td>the pulse, and a new line growing from the finished boundary</td><td><span class="glyph">⟳</span> 3.5D = 0D′, i⁰: recursion; the completed whole is the next octave's aperture</td></tr>
+  <tr><td>the finished figure dissolving back to shimmer</td><td>return; constraints relaxing; the 1 released from its folds, ready to fold again</td></tr>
+</table>
+
+<div class="honesty">
+<b>What this is and is not.</b> The ontology animated in its constitutive order, not physics derived. The one law is bookkeeping: a fixed count of quanta, each of which is at every moment free (shimmer), in flight (converging), committed (a structure segment: every segment of line, branch, and boundary is exactly one quantum, frozen), or held (field), and the total is conserved and computed live. The radii of the three octaves, the costs of the stages, the branching rate, and the field capacities are design constants. The walk itself is the framework's corrected ladder, drawn: convergence makes the point and leaves the line as its wake; line branches into boundary; boundary emerges into field; field recurses back to the point at the next scale. The dissolution at the end of each cycle is entropy in the corpus's sense (constraints relaxing, the 1 tending back toward itself) and is what makes the cycle honest: without it the engine would consume its own substrate and stop.
+</div>
+
+<h2>Revision history</h2>
+<p class="rev">- 2026-08-12 v1.0: initial, replacing the pass-through picture at Ashman's direction ("we are missing the branching"): energy converges to the center, a line follows the emergence direction outward, branches wrap around the center until a boundary forms, a field builds within the boundary, and the closed whole seeds the next octave. Three octaves nest, hold, dissolve, repeat; E = 1 throughout.</p>
+
+</div>
+
+<script>
+(function(){
+'use strict';
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+const hud = document.getElementById('hud');
+let W = 0, H = 0, dpr = 1, CXp = 0, CYp = 0;
+
+function resize(){
+  dpr = Math.min(window.devicePixelRatio || 1, 2);
+  W = canvas.clientWidth; H = canvas.clientHeight;
+  canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  CXp = W/2; CYp = H/2;
+}
+window.addEventListener('resize', resize);
+
+// ---------- constants ----------
+const NQ = 900;                       // total quanta; E = 1
+const RADII = [58, 108, 158];         // the three octaves
+const SEG = 7;                        // px per committed segment (1 quantum each)
+const FIELD_CAP = [34, 46, 58];       // interior capacity per octave
+const TWIG_P = 0.05;                  // branch fork probability per step
+
+// ---------- state ----------
+let parts, segs, fieldQ, stored, t, paused;
+let octave, stage, stageT, lineAngle, lineLen, walkers, closedR, pulseR, cycles, releaseIx;
+
+function reset(){
+  parts = [];
+  for (let i = 0; i < NQ; i++){
+    parts.push({ x: Math.random()*W, y: Math.random()*H,
+                 vx: (Math.random()-0.5)*12, vy: (Math.random()-0.5)*12, mode: 'free' });
+  }
+  segs = []; fieldQ = []; stored = 0; t = 0;
+  octave = 0; stage = 'line'; stageT = 0;
+  lineAngle = Math.random()*Math.PI*2; lineLen = 0;
+  walkers = null; closedR = []; pulseR = 0; cycles = 0; releaseIx = 0;
+}
+
+// ---------- controls ----------
+const ui = { flow: document.getElementById('flow'), chir: document.getElementById('chir') };
+paused = false;
+document.getElementById('pause').addEventListener('click', function(){
+  paused = !paused; this.textContent = paused ? 'resume' : 'pause';
+});
+document.getElementById('reset').addEventListener('click', reset);
+
+// ---------- helpers ----------
+function innerR(){ return octave === 0 ? 0 : RADII[octave-1]; }
+function regionCount(){
+  let n = 0;
+  for (const f of fieldQ) if (f.r > innerR()) n++;
+  return n;
+}
+function lineStartR(){ return innerR(); }
+function addSeg(x1, y1, x2, y2, type){
+  segs.push({ x1: x1, y1: y1, x2: x2, y2: y2, born: t, type: type, oct: octave });
+}
+
+// ---------- update ----------
+function step(dt){
+  t += dt; stageT += dt;
+  const flow = ui.flow.value/10;
+  const chir = ui.chir.checked ? 1 : -1;
+  const R = RADII[octave];
+
+  // the shimmer: drift; convergence pulls a portion toward the center
+  const pullActive = (stage !== 'complete' && stage !== 'release');
+  for (let i = 0; i < parts.length; i++){
+    const p = parts[i];
+    if (p.mode !== 'free' && p.mode !== 'conv') continue;
+    // ambient drift
+    p.vx += Math.sin(p.y*0.013 + t*0.4) * 6 * dt;
+    p.vy += Math.cos(p.x*0.011 + t*0.33) * 6 * dt;
+    if (p.mode === 'free' && pullActive && Math.random() < 0.18*flow*dt){
+      p.mode = 'conv';
+    }
+    if (p.mode === 'conv' && !pullActive){ p.mode = 'free'; }
+    if (p.mode === 'conv'){
+      const dx = CXp - p.x, dy = CYp - p.y;
+      const d = Math.max(Math.sqrt(dx*dx + dy*dy), 0.001);
+      const pull = 300 * dt;
+      const tang = 0.55 * Math.min(1, d/80);   // the spiral relaxes near the point: it lands
+      p.vx += (dx/d * 0.85 + chir * (-dy/d) * tang) * pull;
+      p.vy += (dy/d * 0.85 + chir * ( dx/d) * tang) * pull;
+      if (d < 10){
+        // arrival at the aperture
+        if (stage === 'field' && regionCount() < FIELD_CAP[octave]){
+          // held: the interior builds
+          fieldQ.push({ r: innerR() + 12 + Math.random()*(R - innerR() - 22),
+                        th: Math.random()*Math.PI*2, ph: Math.random()*Math.PI*2 });
+        } else {
+          stored++;
+        }
+        parts[i] = parts[parts.length-1]; parts.pop();
+        i--;
+        continue;
+      }
+    }
+    p.vx *= 0.975; p.vy *= 0.975;
+    p.x += p.vx * dt; p.y += p.vy * dt;
+    if (p.x < 0) p.x += W; if (p.x > W) p.x -= W;
+    if (p.y < 0) p.y += H; if (p.y > H) p.y -= H;
+  }
+
+  // field circulation
+  for (const f of fieldQ){
+    f.th += (30/(f.r + 8)) * chir * dt;
+    f.ph += dt*2;
+  }
+
+  // ---------- the walk ----------
+  if (stage === 'line'){
+    // — : the wake of convergence, committed outward, at drawing pace
+    let budget = Math.floor(40*dt + Math.random());
+    while (budget-- > 0 && stored > 0 && lineLen < R - lineStartR()){
+      const r0 = lineStartR() + lineLen, r1 = Math.min(lineStartR() + lineLen + SEG, R);
+      addSeg(CXp + Math.cos(lineAngle)*r0, CYp + Math.sin(lineAngle)*r0,
+             CXp + Math.cos(lineAngle)*r1, CYp + Math.sin(lineAngle)*r1, 'line');
+      lineLen += SEG; stored--;
+    }
+    if (lineLen >= R - lineStartR()){
+      // ⎇ : the tip splits; two arms wrap around the center
+      walkers = [ { th: lineAngle, dir: 1, traveled: 0, twig: 0 },
+                  { th: lineAngle, dir: -1, traveled: 0, twig: 0 } ];
+      stage = 'branch'; stageT = 0;
+    }
+  } else if (stage === 'branch'){
+    const need = Math.PI * R;   // each arm covers half the circumference
+    for (const wk of walkers){
+      let budget = Math.floor(45*dt + Math.random());
+      while (budget-- > 0 && stored > 0 && wk.traveled < need){
+        const dth = SEG / R * wk.dir;
+        const th1 = wk.th, th2 = wk.th + dth;
+        const wob = Math.sin(wk.traveled*0.15) * 2.5;
+        addSeg(CXp + Math.cos(th1)*(R + wob), CYp + Math.sin(th1)*(R + wob),
+               CXp + Math.cos(th2)*(R + wob), CYp + Math.sin(th2)*(R + wob), 'arc');
+        wk.th = th2; wk.traveled += SEG; stored--;
+        // twigs: the fractal habit of the branching station
+        if (Math.random() < TWIG_P && stored > 2){
+          let tr = R, ta = th2;
+          const tdir = Math.random() < 0.5 ? 1 : -1;
+          for (let s = 0; s < 3 && stored > 0; s++){
+            const nr = tr + tdir * SEG * 0.9, na = ta + dth*0.7;
+            addSeg(CXp + Math.cos(ta)*tr, CYp + Math.sin(ta)*tr,
+                   CXp + Math.cos(na)*nr, CYp + Math.sin(na)*nr, 'twig');
+            tr = nr; ta = na; stored--;
+          }
+        }
+        if (stored <= 0) break;
+      }
+    }
+    if (walkers[0].traveled >= need && walkers[1].traveled >= need){
+      // ○ : the arms meet; the boundary closes; an inside exists
+      closedR.push(R);
+      stage = 'field'; stageT = 0; pulseR = 0.001;
+    }
+  } else if (stage === 'field'){
+    // ✹ into Φ : arrivals are held, not spent (handled at arrival above)
+    if (regionCount() >= FIELD_CAP[octave]){
+      stage = 'recurse'; stageT = 0; pulseR = 0.001;
+    }
+  } else if (stage === 'recurse'){
+    // ⟳ : the pulse; the whole becomes the next aperture
+    pulseR += (RADII[Math.min(octave+1,2)] + 40) * dt * 1.4;
+    if (stageT > 1.2){
+      if (octave < 2){
+        octave++;
+        lineAngle = Math.random()*Math.PI*2; lineLen = 0;
+        stage = 'line'; stageT = 0;
+      } else {
+        stage = 'complete'; stageT = 0;
+      }
+    }
+  } else if (stage === 'complete'){
+    if (stageT > 4){ stage = 'release'; stageT = 0; releaseIx = 0; }
+  } else if (stage === 'release'){
+    // return: constraints relax; structure and field breathe back to shimmer
+    let n = Math.floor(140 * dt + Math.random());
+    while (n-- > 0 && segs.length > 0){
+      const s = segs.pop();
+      const a = Math.random()*Math.PI*2;
+      parts.push({ x: s.x2, y: s.y2, vx: Math.cos(a)*40, vy: Math.sin(a)*40, mode: 'free' });
+    }
+    let m = Math.floor(30 * dt + Math.random());
+    while (m-- > 0 && fieldQ.length > 0){
+      const f = fieldQ.pop();
+      const a = Math.random()*Math.PI*2;
+      parts.push({ x: CXp + Math.cos(f.th)*f.r, y: CYp + Math.sin(f.th)*f.r,
+                   vx: Math.cos(a)*40, vy: Math.sin(a)*40, mode: 'free' });
+    }
+    while (stored > 0){
+      const a = Math.random()*Math.PI*2;
+      parts.push({ x: CXp, y: CYp, vx: Math.cos(a)*60, vy: Math.sin(a)*60, mode: 'free' });
+      stored--;
+    }
+    if (segs.length === 0 && fieldQ.length === 0){
+      cycles++;
+      octave = 0; stage = 'line'; stageT = 0;
+      lineAngle = Math.random()*Math.PI*2; lineLen = 0;
+      walkers = null; closedR = []; pulseR = 0;
+    }
+  }
+}
+
+// ---------- render ----------
+function render(){
+  ctx.clearRect(0, 0, W, H);
+  const chir = ui.chir.checked ? 1 : -1;
+
+  // closed boundaries: faint perfect circles under the woven segments
+  for (const r of closedR){
+    ctx.beginPath(); ctx.arc(CXp, CYp, r, 0, Math.PI*2);
+    ctx.strokeStyle = 'rgba(232,224,200,0.25)'; ctx.lineWidth = 1; ctx.stroke();
+  }
+
+  // interior field glow per closed octave
+  if (fieldQ.length > 0 && closedR.length > 0){
+    const rOut = closedR[closedR.length-1];
+    const grad = ctx.createRadialGradient(CXp, CYp, 0, CXp, CYp, rOut);
+    grad.addColorStop(0, 'rgba(130,105,255,' + Math.min(0.14, fieldQ.length*0.001) + ')');
+    grad.addColorStop(1, 'rgba(130,105,255,0)');
+    ctx.fillStyle = grad;
+    ctx.beginPath(); ctx.arc(CXp, CYp, rOut, 0, Math.PI*2); ctx.fill();
+  }
+
+  // committed structure: gold cooling to ember, one quantum per segment
+  for (const s of segs){
+    const age = t - s.born;
+    const f = Math.max(0, 1 - age/30);
+    ctx.strokeStyle = 'rgba(' + Math.round(255*f + 200*(1-f)) + ',' +
+                      Math.round(215*f + 140*(1-f)) + ',' +
+                      Math.round(130*f + 80*(1-f)) + ',' + (0.55 + 0.4*f) + ')';
+    ctx.lineWidth = s.type === 'twig' ? 0.8 : 1.5;
+    ctx.beginPath(); ctx.moveTo(s.x1, s.y1); ctx.lineTo(s.x2, s.y2); ctx.stroke();
+  }
+
+  ctx.globalCompositeOperation = 'lighter';
+
+  // the shimmer and the converging
+  for (const p of parts){
+    if (p.mode === 'conv'){
+      ctx.fillStyle = 'rgba(255,210,122,0.8)';
+      ctx.fillRect(p.x, p.y, 1.8, 1.8);
+    } else {
+      ctx.fillStyle = 'rgba(150,180,255,0.5)';
+      ctx.fillRect(p.x, p.y, 1.4, 1.4);
+    }
+  }
+
+  // the field: held quanta circulating
+  for (const f of fieldQ){
+    const x = CXp + Math.cos(f.th)*f.r, y = CYp + Math.sin(f.th)*f.r;
+    ctx.fillStyle = 'rgba(190,160,255,' + (0.55 + 0.3*Math.sin(f.ph)) + ')';
+    ctx.fillRect(x-1, y-1, 2.4, 2.4);
+  }
+
+  // the recursion pulse
+  if ((stage === 'recurse' || stage === 'field') && pulseR > 0.01){
+    ctx.beginPath(); ctx.arc(CXp, CYp, pulseR, 0, Math.PI*2);
+    ctx.strokeStyle = 'rgba(255,240,200,' + Math.max(0, 0.5 - pulseR/400) + ')';
+    ctx.lineWidth = 2; ctx.stroke();
+    if (stage === 'field') pulseR += 260 * 0.016;
+    if (pulseR > Math.max(W,H)) pulseR = 0;
+  }
+
+  // the center: the aperture
+  const bright = stage === 'release' ? 0.3 : 0.9;
+  const grad = ctx.createRadialGradient(CXp, CYp, 0, CXp, CYp, 14);
+  grad.addColorStop(0, 'rgba(255,240,200,' + bright + ')');
+  grad.addColorStop(1, 'rgba(255,210,122,0)');
+  ctx.fillStyle = grad;
+  ctx.beginPath(); ctx.arc(CXp, CYp, 14, 0, Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.arc(CXp, CYp, 2.2, 0, Math.PI*2);
+  ctx.fillStyle = '#fff2d0'; ctx.fill();
+
+  ctx.globalCompositeOperation = 'source-over';
+}
+
+// ---------- HUD ----------
+const STATION = {
+  line:     '— extension · 1D (fed by ⊛, i¹)',
+  branch:   '⎇ branching · 1.5D · i² = −1',
+  field:    '✹ → Φ emergence into field · 2.5D → 3D · i³',
+  recurse:  '⟳ recursion · 3.5D = 0D′ · i⁰',
+  complete: '⊙ whole · three octaves closed',
+  release:  '∞ return · constraints relaxing'
+};
+function updateHUD(){
+  const free = parts.filter(p => p.mode === 'free').length;
+  const conv = parts.length - free;
+  const total = parts.length + stored + segs.length + fieldQ.length;
+  hud.innerHTML =
+    '<span>E = <b class="e">' + (total/NQ).toFixed(3) + '</b> conserved</span>' +
+    '<span>free <b>' + (free/NQ).toFixed(3) + '</b></span>' +
+    '<span>converging <b>' + ((conv+stored)/NQ).toFixed(3) + '</b></span>' +
+    '<span>structure <b>' + (segs.length/NQ).toFixed(3) + '</b></span>' +
+    '<span>field <b>' + (fieldQ.length/NQ).toFixed(3) + '</b></span>' +
+    '<span>octave <b>' + (stage === 'release' || stage === 'complete' ? 3 : octave+1) + '/3</b></span>' +
+    '<span>cycles <b>' + cycles + '</b></span>' +
+    '<span class="st">station: <b>' + STATION[stage] + '</b></span>';
+}
+
+// ---------- loop ----------
+let last = performance.now(), hudT = 0;
+function frame(now){
+  const dt = Math.min(0.05, (now - last)/1000); last = now;
+  if (!paused){
+    step(dt);
+    hudT += dt;
+    if (hudT > 0.25){ updateHUD(); hudT = 0; }
+  }
+  render();
+  requestAnimationFrame(frame);
+}
+
+resize(); reset(); updateHUD();
+requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
