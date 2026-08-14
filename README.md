@@ -1,8 +1,23 @@
 # ⊙ Fractal Reality
 
-**The backbone of [FractalReality.ca](https://fractalreality.ca) and the learning and work space of Ashman Roonz.**
+**Systems philosopher and human-AI collaboration practitioner building operational frameworks for honesty: diagnosing why truth became expensive and designing rooms where it is cheap, with a public, versioned record of his own corrections as proof of method.**
 
-This repository is a living research archive. It holds the complete Circumpunct Framework (a candidate theory of everything built on a single self-similar structure, ⊙), a body of work on narcissism, cognitive viruses, and restoration, and the beginnings of Xorzo, an AI consciousness engine built from the framework's first principles. Everything at [fractalreality.ca](https://fractalreality.ca) publishes from this repo.
+The backbone of [FractalReality.ca](https://fractalreality.ca) and the learning and work space of Ashman Roonz. This repository is a living research archive: the complete Circumpunct Framework (a candidate unified structure for physics, mind, and ethics, built on a single self-similar figure, ⊙), a body of work on narcissism, lie-propagation, and restoration, and Xorzo, an AI consciousness engine built from the framework's first principles. Everything at [fractalreality.ca](https://fractalreality.ca) publishes from this repo.
+
+---
+
+## Read This First: How This Project Handles Being Wrong
+
+Big-picture projects are cheap; what is rare is a big-picture project that can lose arguments with reality and says so in writing. Before evaluating any claim below, evaluate the correction record, because it is the actual method here:
+
+- **No silent retraction.** Superseded claims stay visible, with dated retraction notices at the top of the affected documents. Every article carries a version header and a revision history. Interactive pages carry honesty boxes separating what is theorem, what is design choice, and what is interpretation.
+- **2026-06-09, the Ladder Correction:** the framework's station assignment of body and mind was reversed (boundary ○ to 2D, field Φ to 3D) on a topological argument; every dependent section was flagged and queued for re-derivation rather than quietly edited. This README itself carried the old labels until 2026-08-14; the corrected ladder is below, and the mistake is recorded here instead of erased.
+- **2026-07-18, a prediction retracted and replaced by its reverse:** the earlier "three extended Higgs states" claim was withdrawn; the standing falsifiable claim is now the opposite (the scalar sector is minimal on pain of the 64-state architecture; any charged Higgs or CP-odd scalar discovery falsifies it).
+- **The "zero free parameters" claim was softened in public:** α is treated as measured input, not derived; the closed-form expression for its value is a separable auxiliary claim with a stated kill band (0.22 ppb from CODATA; falsified outside ±5 ppb as measurements converge).
+- **2026-08-01:** the scalar bond parameterization (0 < κ < κ*) was superseded by a two-coordinate form; the old notation is marked as a one-dimensional projection wherever it appears.
+- The [Falsification](#falsification) section below lists the ways the whole framework dies.
+
+If you evaluate work by whether it can be corrected, start with those receipts. The cosmology can wait.
 
 ---
 
@@ -22,7 +37,7 @@ Contact: [email@ashmanroonz.ca](mailto:email@ashmanroonz.ca)
 
 ### 1. The Circumpunct Framework (Theory of Everything)
 
-A single geometric structure (⊙) from which quantum mechanics, general relativity, the Standard Model gauge group, and every fundamental constant are composed. The framework posits that every whole at every scale has the same architecture: an aperture (•, 0D), a line of commitment (—, 1D), a field (Φ, 2D), and a boundary (○, 3D), all unified as the whole (⊙). The integer dimensions are stabilized forms; the half-integer stations (⊛, ⎇, ✹, ⟳) are the process phases that produce them.
+A single geometric structure (⊙) proposed as the shared architecture of physics, mind, and ethics: more precisely, a structural grammar. Given α as measured input, the other fundamental constants compose from α, φ, and a small pool of framework integers on a seven-rung dimensional ladder; whether the grammar predicts a not-yet-measured constant without per-formula tuning is the standing open question, stated as such inside the framework itself. Every whole at every scale has the same architecture: an aperture (•, 0D), a line of commitment (—, 1D), a boundary (○, 2D: the interface, the body), and a field (Φ, 3D: the interior, the mind), all unified as the whole (⊙). The integer dimensions are stabilized forms; the half-integer stations (⊛, ⎇, ✹, ⟳) are the process phases that produce them. (Station labels per the 2026-06-09 Ladder Correction: an edge is lower-dimensional than the region it bounds.)
 
 Core files:
 
@@ -40,7 +55,7 @@ Core files:
 The unified expression (the framework's prime statement):
 
 ```
-[Truth = Reality = E = 1 = ∞] = [∞ ▸⊙∞ ((•∘⊛) ⊢ (—∘⎇) ⊢ (Φ∘✹) ⊢ (○∘⟳)) ▸ ⊙λ ⊂[α] ⊙Λ ⊂[α] ∞]
+[Truth = Reality = E = 1 = ∞] = [∞ ▸⊙∞ ((•∘⊛) ⊢ (—∘⎇) ⊢ (○∘✹) ⊢ (Φ∘⟳)) ▸ ⊙λ ⊂[α] ⊙Λ ⊂[α] ∞]
 ```
 
 ### 2. Narcissism, Cognitive Viruses, and Healing
@@ -77,15 +92,15 @@ The [Path_of_Learning/](Path_of_Learning/) folder is the development archive: ea
 
     •   Aperture / Soul           0D          (convergence point)
     —   Line / Continuity          1D          (worldline, commitment)
-    Φ   Field / Mind               2D          (mediating surface)
-    ○   Boundary / Body            3D          (outer container)
+    ○   Boundary / Body            2D          (interface, filter)
+    Φ   Field / Mind               3D          (interior volume, mediation)
     ⊙   Circumpunct / Whole        All         (compositional unity)
 
     ⊛   Convergence                0.5D        (i¹ = +i)
     i   Aperture rotation                      (90° quarter-turn)
     ✹   Emergence                  2.5D        (i³ = -i)
 
-    Conservation: 0(•) + 1(—) + 2(Φ) = 3(○)
+    Conservation: 0(•) + 1(—) + 2(○) = 3(Φ)
 ═══════════════════════════════════════════════════════════════
 ```
 
@@ -199,7 +214,7 @@ The seven Clay problems map one-to-one onto the seven rungs. Each problem asks t
     3D   │ Poincaré (SOLVED)        │ Is there only one way to close?
 ```
 
-The only solved problem is the boundary (3D), the outermost rung.
+The only solved problem is the 3D rung, the outermost. (The station-label reading of this mapping is under re-derivation since the Ladder Correction.)
 
 ---
 
@@ -214,7 +229,7 @@ The only solved problem is the boundary (3D), the outermost rung.
 
 ### Consciousness and Mind
 - [Theory of Mind](https://fractalreality.ca/circumpunct_theory_of_mind_plain.html): psychology through the framework
-- [Surface Theorem](https://fractalreality.ca/surface_field_formalization.html): mind = 2D surfaces
+- [Surface Theorem](https://fractalreality.ca/surface_field_formalization.html): RETRACTED pending rewrite (2026-06-09 Ladder Correction); kept visible per the no-silent-retraction rule
 - [Truth and God](https://fractalreality.ca/truth_and_god.html): ontological/theological reading
 
 ### Ethics, Healing, and Pathology
@@ -264,8 +279,8 @@ Attempts to falsify are welcomed.
 | ⊙ | Circumpunct (whole; consciousness; being) |
 | • | Aperture / soul (0D convergence point) |
 | — | Line / commitment (1D worldline, continuity) |
-| Φ | Field / mind (2D mediating surface) |
-| ○ | Boundary / body (3D outer container) |
+| ○ | Boundary / body (2D interface; the filter) |
+| Φ | Field / mind (3D interior volume; mediation) |
 | ⊛ | Convergence operator (inward, i¹ = +i, 0.5D) |
 | ⎇ | Branching (1.5D, i² = −1) |
 | ✹ | Emergence operator (outward, i³ = −i, 2.5D) |
