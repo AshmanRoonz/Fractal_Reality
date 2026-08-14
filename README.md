@@ -214,7 +214,7 @@ The seven Clay problems map one-to-one onto the seven rungs. Each problem asks t
     3D   │ Poincaré (SOLVED)        │ Is there only one way to close?
 ```
 
-The only solved problem is the boundary (3D), the outermost rung.
+The only solved problem is the 3D rung, the outermost. (The station-label reading of this mapping is under re-derivation since the Ladder Correction.)
 
 ---
 
