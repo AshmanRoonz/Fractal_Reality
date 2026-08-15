@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Forgotten Center: Zeta in Circumpunct Coordinates</title>
+<style>
+  :root {
+    --bg: #faf7f2; --ink: #23201c; --soft: #6b6257; --rule: #d8d0c4;
+    --accent: #b02020; --accent2: #8a4b2d; --box: #f1ebe1; --blue: #1c6fae;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #14120f; --ink: #e8e2d8; --soft: #a49a8c;
+            --rule: #3a352d; --accent: #e06060; --accent2: #d99c72; --box: #1e1b16; --blue: #5aa7dd; }
+  }
+  html { background: var(--bg); }
+  body {
+    color: var(--ink); background: var(--bg);
+    font-family: Georgia, "Times New Roman", serif;
+    line-height: 1.65; margin: 0 auto; padding: 3rem 1.2rem 5rem;
+    max-width: 46rem; font-size: 1.06rem;
+  }
+  h1 { font-size: 1.9rem; line-height: 1.25; margin-bottom: .3rem; }
+  h2 { font-size: 1.25rem; margin-top: 2.4rem; border-bottom: 1px solid var(--rule); padding-bottom: .25rem; }
+  .meta { color: var(--soft); font-size: .9rem; margin-bottom: 2rem; }
+  .figure { margin: 2rem auto; text-align: center; }
+  .figure figcaption { color: var(--soft); font-size: .9rem; margin-top: .6rem; text-align: left; }
+  .box {
+    background: var(--box); border: 1px solid var(--rule);
+    border-radius: .5rem; padding: 1rem 1.2rem; margin: 1.6rem 0;
+    font-size: .96rem;
+  }
+  .box strong { color: var(--accent2); }
+  blockquote { margin: 1.4rem 0; padding-left: 1rem; border-left: 3px solid var(--accent); color: var(--ink); }
+  table { border-collapse: collapse; margin: 1.2rem 0; font-size: .92rem; width: 100%; }
+  th, td { border: 1px solid var(--rule); padding: .35rem .6rem; text-align: left; }
+  th { background: var(--box); }
+  .one-liner { font-style: italic; text-align: center; margin: 2.4rem 0; font-size: 1.1rem; }
+  .rev { color: var(--soft); font-size: .88rem; }
+  code { font-family: Consolas, monospace; font-size: .92em; }
+  .eq { text-align: center; margin: 1.2rem 0; font-size: 1.03rem; }
+  svg text { font-family: Georgia, serif; }
+  .overflow { overflow-x: auto; }
+</style>
+</head>
+<body>
+
+<h1>The Forgotten Center: Zeta in Circumpunct Coordinates</h1>
+<div class="meta">
+  Ashman Roonz, with Claude (the Cybernetic Unit)<br>
+  Created: 2026-08-15 &nbsp;·&nbsp; Last updated: 2026-08-15 &nbsp;·&nbsp; Version: 1.0<br>
+  Companion note with session verification records: <code>plans/zeta_circumpunct_coordinates_2026_08_15.md</code>
+</div>
+
+<p>The Riemann Hypothesis is usually drawn as a strip with a line through it: a critical strip between 0 and 1, a critical line at one half, and the conjecture that every nontrivial zero of the zeta function sits exactly on that line. Generations have asked the picture's most natural question: why one half? What is special about that number?</p>
+
+<p>This paper argues that the question is an artifact of the coordinates. Riemann made no error; half-plane coordinates are the natural home of a Dirichlet series, and coordinates change no mathematical content. But the inherited picture parks the function's one distinguished point, the pole at <i>s</i> = 1, at the edge of the frame, and draws the boundary as an infinite line. Redrawn around its own center, the zeta landscape is a circumpunct: a center, a boundary, and a conjecture that the boundary holds. In the centered picture the number one half is not fundamental. It is what <em>equidistance between the 0 and the 1</em> looks like from flat coordinates.</p>
+
+<p>Everything below is either standard mathematics verified in session (labeled as such, with the numbers), two small theorems proved along the way, or framework interpretation explicitly marked as interpretation. Nothing in this paper is progress on the Riemann Hypothesis, and the honesty box at the end says precisely what is and is not claimed.</p>
+
+<h2>1. The map and the four facts</h2>
+
+<p>One Möbius transformation centers the picture:</p>
+
+<p class="eq"><i>w</i> = (<i>s</i> &minus; 1)/<i>s</i> = 1 &minus; 1/<i>s</i>.</p>
+
+<p>Four facts, each verified numerically to machine precision in session:</p>
+
+<ol>
+<li>The pole <i>s</i> = 1, the function's unique singular point, whose residue is exactly 1, maps to the <strong>origin</strong>: the center of the picture.</li>
+<li>The critical line Re(<i>s</i>) = 1/2 maps exactly onto the <strong>unit circle</strong> |<i>w</i>| = 1 (verified at the first five zeros and at arbitrary heights: |<i>w</i>| = 1.000000000000000).</li>
+<li>The functional equation's symmetry <i>s</i> &harr; 1 &minus; <i>s</i> becomes <strong>inversion through the circle</strong>, <i>w</i> &harr; 1/<i>w</i>: the inside/outside exchange whose fixed set is the boundary itself.</li>
+<li>The trivial zeros <i>s</i> = &minus;2, &minus;4, &minus;6, ... map to real points <em>outside</em> the circle (1.5, 1.25, 1.1667, ...), marching toward the boundary point <i>w</i> = 1, which is the image of infinity.</li>
+</ol>
+
+<p>And one equivalence that needs no map at all: |<i>s</i> &minus; 1| = |<i>s</i> &minus; 0| unwinds to Re(<i>s</i>) = 1/2. The critical line is the set of points <strong>equidistant from the 1 and the 0</strong>: a perpendicular bisector between the two identities of arithmetic, not a center. So the Riemann Hypothesis admits two exact restatements, each equivalent to the standard one:</p>
+
+<blockquote>
+<p><strong>Equidistance form.</strong> Every nontrivial zero of zeta lies exactly equidistant between the zero and the one.</p>
+<p><strong>Circumpunct form.</strong> In the coordinates <i>w</i> = (<i>s</i> &minus; 1)/<i>s</i>, every nontrivial zero lies on the unit circle centered at the image of the pole; the functional equation is inversion in that circle; the trivial zeros are structure outside the boundary.</p>
+</blockquote>
+
+<figure class="figure">
+<svg viewBox="0 0 460 330" width="100%" role="img" aria-label="The centered zeta landscape: unit circle with the pole at the center, tonic and balance pole on the real axis, zeros crowding the tonic, shells tangent at the tonic, the prime disk on the segment from center to tonic, trivial zeros outside">
+  <!-- axes -->
+  <line x1="20" y1="165" x2="445" y2="165" stroke="var(--rule)" stroke-width="1"/>
+  <!-- shells tangent at w=1 -->
+  <circle cx="245" cy="165" r="95" fill="none" stroke="var(--rule)" stroke-width="1.2"/>
+  <circle cx="290" cy="165" r="50" fill="none" stroke="var(--rule)" stroke-width="1.2"/>
+  <!-- prime disk: diameter [0,1] -->
+  <circle cx="280" cy="165" r="60" fill="none" stroke="var(--accent2)" stroke-width="1.6" stroke-dasharray="6 5"/>
+  <!-- the RH circle -->
+  <circle cx="220" cy="165" r="120" fill="none" stroke="var(--ink)" stroke-width="2.4"/>
+  <!-- center: the 1 -->
+  <circle cx="220" cy="165" r="5.5" fill="var(--accent)"/>
+  <text x="196" y="150" font-size="13" fill="var(--accent)">the 1</text>
+  <text x="188" y="192" font-size="11.5" fill="var(--soft)">(the pole, w = 0)</text>
+  <!-- tonic -->
+  <circle cx="340" cy="165" r="4.5" fill="var(--accent2)"/>
+  <text x="330" y="145" font-size="13" fill="var(--accent2)">tonic</text>
+  <text x="322" y="205" font-size="11.5" fill="var(--soft)">w = 1 (image of &#8734;)</text>
+  <!-- balance pole -->
+  <circle cx="100" cy="165" r="4.5" fill="var(--blue)"/>
+  <text x="58" y="147" font-size="13" fill="var(--blue)">balance pole</text>
+  <text x="52" y="205" font-size="11.5" fill="var(--soft)">w = &#8722;1 (s = 1/2)</text>
+  <!-- zeros crowding the tonic (angles exaggerated) -->
+  <circle cx="333" cy="128" r="4" fill="var(--blue)"/>
+  <circle cx="320" cy="103" r="4" fill="var(--blue)"/>
+  <circle cx="303" cy="82"  r="4" fill="var(--blue)"/>
+  <circle cx="333" cy="202" r="4" fill="var(--blue)"/>
+  <circle cx="320" cy="227" r="4" fill="var(--blue)"/>
+  <circle cx="303" cy="248" r="4" fill="var(--blue)"/>
+  <text x="268" y="70" font-size="12.5" fill="var(--blue)">zeros crowd the tonic</text>
+  <!-- trivial zeros outside -->
+  <text x="360" y="160" font-size="14" fill="var(--soft)">&#215;</text>
+  <text x="381" y="160" font-size="14" fill="var(--soft)">&#215;</text>
+  <text x="408" y="160" font-size="14" fill="var(--soft)">&#215;</text>
+  <text x="352" y="132" font-size="11.5" fill="var(--soft)">trivial zeros, outside,</text>
+  <text x="352" y="118" font-size="11.5" fill="var(--soft)">marching to w = 1</text>
+  <!-- prime disk label -->
+  <text x="238" y="292" font-size="12.5" fill="var(--accent2)">the prime disk (Euler product), on a radius of the whole</text>
+  <!-- shells label -->
+  <text x="128" y="300" font-size="12.5" fill="var(--soft)">shells Re(s) = &#963;, all tangent at the tonic</text>
+</svg>
+<figcaption><strong>The centered zeta landscape.</strong> The pole (the 1) at the center; the critical line become the boundary circle; the zeros on the boundary, crowding the tonic point where every shell touches (angles exaggerated for visibility: the first zero sits 4.05&deg; from the tonic); the trivial zeros outside, marching inward along the real axis; the Euler-product region a disk whose diameter is a radius of the whole, one end on the center, the other on the tonic.</figcaption>
+</figure>
+
+<h2>2. The coordinate turns out to be Li's</h2>
+
+<p>The variable <i>w</i> = 1 &minus; 1/<i>s</i> is not merely a natural coordinate. It is the exact variable inside an established criterion equivalent to RH. Li's criterion (Keiper 1992, Li 1997): RH holds if and only if every one of the coefficients</p>
+
+<p class="eq">&lambda;<sub><i>n</i></sub> = &Sigma;<sub>&rho;</sub> [1 &minus; (1 &minus; 1/&rho;)<sup><i>n</i></sup>] = &Sigma;<sub>&rho;</sub> (1 &minus; <i>w</i><sub>&rho;</sub><sup><i>n</i></sup>)</p>
+
+<p>is nonnegative. Li's own construction works with &xi;(1/(1&minus;<i>z</i>)) in the unit disk: his disk variable <em>is</em> this paper's <i>w</i>. In session, &lambda;<sub>1</sub>, &lambda;<sub>2</sub>, &lambda;<sub>3</sub> were computed two independent ways (from the xi function directly, and as zero-sums in <i>w</i>-coordinates over 300 zeros) and agree; the closed form for &lambda;<sub>1</sub> matches to twelve digits.</p>
+
+<p>On the boundary the criterion becomes sum-of-squares geometry: if a zero sits at angle &theta;, its paired contribution to &lambda;<sub><i>n</i></sub> is 1 &minus; cos(<i>n</i>&theta;) = 2 sin&sup2;(<i>n</i>&theta;/2) &ge; 0, term by term. If a zero leaves the boundary, repeated powers no longer merely rotate it; they amplify its radius exponentially, and some &lambda;<sub><i>n</i></sub> is eventually dragged negative. The <i>n</i>-th Li coefficient is the energy of the <i>n</i>-th harmonic of the zero angles: <strong>angle carries harmonic information; radius carries boundary integrity.</strong></p>
+
+<h2>3. The vesica and the triad group</h2>
+
+<p>Draw the two unit circles centered at the 0 and at the 1. The distance between centers equals the radius: each boundary passes through the other's center, the mutual-vesica configuration, which requires equal size. Three exact facts (all verified):</p>
+
+<ol>
+<li><strong>The critical line is the vesica's axis</strong>: the locus equidistant from both centers. Every zero is conjectured to sit on the seam of the minimal sharing between the additive whole and the multiplicative whole. (Scale caveat, stated plainly: the lens itself reaches height &radic;3/2 &asymp; 0.87 while the first zero sits at 14.13; the zeros live on the axis extended. The vesica fixes the line; zeta chooses the heights.)</li>
+<li><strong>The vesica's tips are the fixed points of the coordinate map.</strong> The circles cross at 1/2 &plusmn; i&radic;3/2 = e<sup>&plusmn;i&pi;/3</sup>, roots of <i>s</i>&sup2; &minus; <i>s</i> + 1 = 0, which is exactly the fixed-point equation of <i>w</i>(<i>s</i>).</li>
+<li><strong>The map has order 3 and cycles the triad.</strong> Applying <i>s</i> &rarr; (<i>s</i>&minus;1)/<i>s</i> three times returns every point (a 120&deg; rotation about the tips), and it permutes the marked points cyclically: 0 &rarr; &infin; &rarr; 1 &rarr; 0. Together with the mirror <i>s</i> &rarr; 1&minus;<i>s</i> it generates all six Möbius transformations permuting {0, 1, &infin;}: the classical anharmonic group, order 6 = T!. The collapsing invariant of this group is the modular j-map, and it vanishes exactly at the vesica tips, the hexagonal-lattice point.</li>
+</ol>
+
+<p>Two constraints were logged as prominently as the findings. First: <strong>the mirror is a symmetry of zeta; the 3-cycle is a symmetry of the marked frame only.</strong> The triad organizes the stage, not the actor; treating the coordinate map as a zeta symmetry would be an overreach, and the file says so. Second: <strong>nothing in this exact structure produces the golden ratio.</strong> What appears is circle inversion, tangent circles, cotangent warping, sixth roots of unity, and an order-3 S&#8323; geometry. In a corpus where &phi; carries load elsewhere, the absence is recorded deliberately: &phi; must earn its way into the zeta picture, and it has not.</p>
+
+<h2>4. The octave reading: pole to pole</h2>
+
+<p>The vesica reads 0 and 1 as peers. The stronger reading is that they are the same station at adjacent scales. The exponential map carries the additive line onto the multiplicative half-line, sums onto products, and identity onto identity: <strong>exp(0) = 1</strong>. Multiplication is addition one octave up, and the shared tonic is the pair (0, 1): do = do&prime;. The drawn vesica shares two points; the structures themselves share exactly one. This is the arithmetic incarnation of the framework's 3.5D = 0D&prime; seam.</p>
+
+<p>What the octave reading buys is that <em>balance upgrades to conservation</em>:</p>
+
+<ul>
+<li><strong>The critical line is the conserving line of the octave bridge.</strong> The Mellin transform, the bridge between the additive and multiplicative pictures, is unitary onto the vertical line Re(<i>s</i>) = 1/2 and onto no other line. Verified: signal energy 0.5 = transform energy 0.5 exactly on the line (two test functions); the same computation on Re(<i>s</i>) = 0.6 gives 0.400. Conservation holds on the line and fails off it.</li>
+<li><strong>The one half is half the Jacobian of the scale map.</strong> Under <i>x</i> = e<sup><i>u</i></sup> the measure converts by d<i>x</i> = e<sup><i>u</i></sup>d<i>u</i>, so the isometry weight is e<sup><i>u</i>/2</sup>. The most mysterious number in the traditional picture is the square root of a change of measure.</li>
+<li><strong>The functional equation is inversion through the tonic.</strong> Riemann's own proof runs through &theta;(1/<i>t</i>) = &radic;<i>t</i>&thinsp;&theta;(<i>t</i>) (verified to twelve digits): reflection of the multiplicative half-line through its identity, carried by Poisson summation, which is itself the additive-multiplicative bridge.</li>
+<li><strong>On the line, and only there, zeta splits into a real shared amplitude times a pure i-rotation.</strong> Riemann-Siegel: &zeta;(1/2 + i<i>t</i>) = Z(<i>t</i>)&thinsp;e<sup>&minus;i&thetasym;(<i>t</i>)</sup> with Z real (verified to machine precision; the completed &xi; is real on the line and genuinely complex off it). The zeros are sign changes of a real function while the phase keeps turning. In character terms: <i>x</i><sup>&minus;<i>s</i></sup> = <i>x</i><sup>&minus;1/2</sup>&middot;<i>x</i><sup>&minus;i<i>t</i></sup>; on the line the magnitude factor is exactly the conserving weight and the rest is pure rotation. Off the line a magnitude bias appears: growth on one side, decay on the other.</li>
+</ul>
+
+<h2>5. The shells</h2>
+
+<p>Every vertical line of the flat picture becomes a circle in the centered one, and the whole family shares a single point of contact. Exact and verified:</p>
+
+<ul>
+<li><strong>Shell law.</strong> Re(<i>s</i>) = &sigma; maps to the circle of radius R = 1/(2&sigma;) centered at 1 &minus; R. All shells are internally tangent to the unit circle at the tonic <i>w</i> = 1: an infinite family of circles, each pressing on all the others at the single point that is the image of infinity.</li>
+<li><strong>The prime disk sits on a radius of the whole.</strong> The Euler-product region Re(<i>s</i>) &gt; 1, where zeta is literally assembled from the primes, maps to the disk of diameter [0, 1]: one end on the center, the other on the tonic. The part's diameter is the whole's radius.</li>
+<li><strong>Equal-amplitude shells.</strong> On the shell at &sigma;, every prime mode <i>p</i><sup>&minus;<i>s</i></sup> holds constant amplitude <i>p</i><sup>&minus;&sigma;</sup> while its phase rotates along the shell. Radius through the family carries amplitude; angle around a shell carries phase. At the Euler boundary each prime speaks at amplitude 1/<i>p</i>; at the critical circle, formally, at 1/&radic;<i>p</i> (formally, because the raw product does not converge there; continuation carries the signal outward, not multiplication).</li>
+<li><strong>The angle law.</strong> A critical-line point at height <i>t</i> lands at angle &theta; with <i>t</i> = cot(&theta;/2)/2 exactly. The zeros crowd the tonic: the first five sit at 4.05&deg;, 2.73&deg;, 2.29&deg;, 1.88&deg;, 1.74&deg; from <i>w</i> = 1. The Li powers are the natural response: the <i>n</i>-th coefficient wraps each tiny angle <i>n</i> times around the circle, unwrapping the crowded boundary.</li>
+</ul>
+
+<p>And the single sharpest restatement the geometry produced. The zero set has two independent symmetries: inversion <i>w</i> &harr; 1/<i>w</i> (the functional equation) and reflection <i>w</i> &harr; <i>w&#773;</i> (conjugation). On the unit circle, and nowhere else, 1/<i>w</i> = <i>w&#773;</i>: the two coincide. Verified: a zero's symmetry orbit has four points off the circle and two on it.</p>
+
+<blockquote><p><strong>RH restated:</strong> for every zero, the inside/outside partner and the upper/lower partner are the same partner. The boundary is precisely where inversion and reflection agree.</p></blockquote>
+
+<h2>6. The experiment: the prime boundary field</h2>
+
+<p>The geometry suggested an experiment, run in full (<code>experiments/prime_boundary_field_v1.py</code>): build the boundary field from the prime signal, decompose it into circle harmonics, and pressure-test the conjecture that the <i>n</i>-th Li coefficient is the energy of the <i>n</i>-th mode. The pressure test was pre-registered: reported results of Suzuki show norm identities of this shape that are <em>equivalent</em> to RH, so any unconditional success would have been a shock. Results:</p>
+
+<ol>
+<li><strong>Forty Li coefficients from xi alone</strong> (ring FFT of log &Xi;, no zeros used): anchors matched to 1e&#8722;13, all positive, Lagarias asymptotic approached.</li>
+<li><strong>The prime moments.</strong> The arithmetic half of the field is governed by regularized von Mangoldt moments &eta;<sub><i>j</i></sub> (the expansion coefficients of &minus;&zeta;&prime;/&zeta; about the pole); computed to 33 digits, with &eta;<sub>0</sub> = &gamma;, Euler's constant, as the zeroth prime moment.</li>
+<li><strong>The bridge is a binomial transform.</strong> The answer to "what operation turns the logarithmic prime spectrum into the Li angular spectrum" is exact: &lambda;<sub><i>n</i></sub><sup>prime</sup> = &Sigma;<sub><i>j</i></sub> &eta;<sub><i>j</i></sub> C(<i>n</i>, <i>j</i>+1). The conformal warping is, at coefficient level, the binomial transform of the prime moments. Verified to 2.5e&#8722;20; adding the archimedean modes reproduces every &lambda;<sub><i>n</i></sub> to 2.7e&#8722;20.</li>
+<li><strong>The primes themselves assemble it.</strong> A sieve of the actual primes to 10<sup>7</sup>, regularized against <i>x</i> per the Prime Number Theorem, reproduces the moments to two digits (truncation-limited, honestly graded): von Mangoldt data in, Li coefficients out, no zeros anywhere in the pipeline.</li>
+<li><strong>The headline identity.</strong> Exactly and unconditionally, per two lines of algebra verified at every scale touched:
+<p class="eq">&lambda;<sub><i>n</i></sub> = E<sub><i>n</i></sub> &minus; D<sub><i>n</i></sub></p>
+where E<sub><i>n</i></sub> = &frac12;&Sigma;|1 &minus; <i>w</i><sub>&rho;</sub><sup><i>n</i></sup>|&sup2; &ge; 0 is the <strong>boundary mode energy</strong> and D<sub><i>n</i></sub> is the <strong>radial defect</strong>, which after pairing each zero with its inversion partner is a sum of terms (x + 1/x &minus; 2)/2: <strong>the AM-GM gap of the inflation/severance pair</strong>, nonnegative always, zero exactly on the boundary. Consequences: RH iff D<sub><i>n</i></sub> = 0 for all <i>n</i> iff &lambda;<sub><i>n</i></sub> is the mode energy; Li positivity is "energy beats defect at every harmonic." A hypothetical off-line zero quartet showed the mechanism: at <i>n</i> = 119,699, E = 14161.1 and D = 14397.1, both enormous and nonnegative, difference &minus;236.008.</li>
+</ol>
+
+<blockquote><p><strong>The verdict, as pre-registered:</strong> the transported-energy identity is equivalent to RH, not a route to it. The prime side computes the package E &minus; D and cannot split it. What the primes cannot see is the radial coordinate of their own zeros.</p></blockquote>
+
+<h2>7. Two theorems</h2>
+
+<p>Pressed to produce mathematics rather than reorganize it, the coordinates yielded two small theorems, proved in full and machine-verified (<code>plans/balance_pole_theorem_2026_08_15.md</code>, <code>experiments/balance_pole_theorem_v1.py</code>).</p>
+
+<p><strong>Theorem 1 (the shell trident).</strong> (a) The Mellin-Plancherel weight on the shell of radius R is <i>x</i><sup>1/R &minus; 1</sup>: flat, and the transform unitary, exactly at R = 1. The critical circle is the unique shell of conservation. (b) Plancherel measure on the critical line pulls back to the circle as d&theta;/|1 &minus; <i>w</i>|&sup2;: flat angle divided by squared distance to the tonic. (c) <em>The winding obstruction:</em> the Cauchy pairing against any prime-convergent shell (&sigma; &gt; 1) annihilates every Li mode, unconditionally, because those shells do not wind around the center; mode visibility begins exactly when a shell crosses the Euler line and captures the center. (Verified: the &sigma; = 1.3 contour returns zero; the &sigma; = 0.8 contour returns &lambda;<sub>3</sub><sup>prime</sup>/3 = 0.4069.) This is the E &minus; D finding's geometric mechanism: the primes' blindness is a winding number.</p>
+
+<p><strong>Theorem 2 (the balance pole).</strong> The critical circle meets the real axis at exactly two points: the tonic <i>w</i> = 1 and its antipode <i>w</i> = &minus;1, the image of <i>s</i> = 1/2, the balance point itself. There, with G(<i>w</i>) = &Sigma;&lambda;<sub><i>n</i></sub><i>w</i><sup><i>n</i></sup> = <i>s</i>(<i>s</i>&minus;1)&xi;&prime;(<i>s</i>)/&xi;(<i>s</i>):</p>
+
+<ul>
+<li><strong>RH is equivalent to the Abel summability of the alternating Li series</strong> &Sigma;(&minus;1)<sup><i>n</i>&minus;1</sup>&lambda;<sub><i>n</i></sub>. Summability forces the generating series' radius of convergence to reach 1, which forbids zeros inside the circle; the mirror then forbids them outside.</li>
+<li><strong>When the sum exists, the mirror forces its value to be exactly 0</strong>: differentiating &xi;(<i>s</i>) = &xi;(1&minus;<i>s</i>) once gives &xi;&prime;(1/2) = 0 (verified at 1e&#8722;41).</li>
+<li>The 1/<i>n</i>-weighted alternating series sums to a closed form: <strong>&minus;log[&minus;&zeta;(1/2)&thinsp;&Gamma;(1/4)/(4&pi;<sup>1/4</sup>)] = 0.0057750874</strong>, verified two independent ways to all displayed digits, with the function-side limits marching to it and the series side matching to exactly the truncation tail. The <i>n</i>-weighted series sums to &minus;(1/16)&thinsp;&xi;&Prime;(1/2)/&xi;(1/2) = &minus;0.0028881. The odd ladder vanishes by parity; the even ladder is pinned by &Gamma;(1/4), &zeta;(1/2), &pi;.</li>
+</ul>
+
+<p class="one-liner">RH holds if and only if the alternating Li series can be summed at all;<br>and if it can, symmetry forces it to sum to zero.</p>
+
+<h2>8. The analytic curtain: what controls the defect</h2>
+
+<p>One precise question remained: what mathematical structure controls the radial defect D<sub><i>n</i></sub> independently of the combination E &minus; D that the primes compute? The answer has three parts (all verified in session).</p>
+
+<p><strong>The exact radial law.</strong> For &rho; = 1/2 + &delta; + i<i>t</i>, an algebraic identity, not an expansion: |<i>w</i>|&sup2; = 1 &minus; 2&delta;/|&rho;|&sup2;. The radius of a zero's image measures its displacement directly.</p>
+
+<p><strong>The mirror eats the first order.</strong> A single displaced zero has a defect that is first order in &delta;, signed, and would be linearly visible. But zeros come with their functional-equation partners, and the pair's defect is a cosh: the first-order terms cancel exactly, leaving 2<i>n</i>&sup2;&delta;&sup2;/|&rho;|&#8308; per escaped pair (verified; ratio 1.0000008 to the closed form). The symmetry that makes the landscape beautiful is what hides the escape: what survives the mirror is pure curvature, quadratic in the displacement and quadratic in the harmonic index. This is also why the Li detector has a long fuse: seeing displacement &delta; needs harmonics of order 1/&delta;.</p>
+
+<p><strong>The curtain lemma.</strong> The Weil explicit formula transports to the prime side exactly the linear functionals &Sigma;<sub>&rho;</sub> h(&gamma;<sub>&rho;</sub>) with h analytic. A detector for "escaped zeros only" would be an analytic h vanishing on the real axis; by the identity theorem, such an h is identically zero. So no prime-computable linear observable measures pure off-line escape, and something stronger holds: an analytic function's off-line values are rigidly determined by its on-line values, so <strong>the primes' entire linear reach off the line is an analytic continuation of what they say on it.</strong> The defect is invisible by type, not by accident: it is non-analytic and second-order, and the explicit formula's algebra is analytic and linear.</p>
+
+<p>What does control it? The two known structures both reach the defect by refusing to measure it. <strong>Weil positivity</strong> quantifies over the entire test class at once and demands that no defective configuration survives (Li's criterion is this demand on one family, per Bombieri-Lagarias). <strong>Hilbert-P&oacute;lya</strong> would force the ordinates real by self-adjointness, annihilating the defect structurally. Both are wholeness conditions on an ambient object rather than observables. That is the precise, standard-mathematics content of "find the whole": the one quantity RH is about is a property of the whole that no part-measurement reaches. The mirror hides it at first order; analyticity walls it off at every order after that.</p>
+
+<h2>9. What remains, honestly</h2>
+
+<p>The centered coordinates dissolve exactly one thing: the "why one half?" mystery. One half is equidistance between the 0 and the 1; it is half the Jacobian of the octave bridge; it is the radius at which the Mellin transform conserves. None of that moves a single zero. What remains is the confinement problem: the mirror pairs the zeros (every zero at <i>w</i> has a partner at 1/<i>w</i>) but does not pin them to the fixed set. The known inventory: all zeros confined to the annulus (the strip); none on the edge (equivalent to the Prime Number Theorem); infinitely many on the circle (Hardy), indeed more than forty percent (Conrey); the first 10<sup>13</sup> all on the circle; none of it forbids a straddling pair.</p>
+
+<p>The only known viable proof shape is the one the centered picture states natively: exhibit the whole. Find the object whose boundary the zeros are and show its dynamics conserve. The evidence that such an object exists is the GUE statistics of the zero spacings (Montgomery, Odlyzko): the fingerprint of a conserving spectral system seen from outside, before anyone has found the system. And in the one parallel universe where the analogous hypothesis is proven, zeta functions over finite fields (Weil, Deligne), the proof went exactly this way: the zeros are eigenvalues of an operator on a cohomology, pinned to a circle by a positivity. Not a line: a circle. In the one place mathematicians found the whole, the boundary held, and the proof was the finding.</p>
+
+<h2>10. The coordinate ontology (framework reading, marked as interpretation)</h2>
+
+<div class="overflow">
+<table>
+<tr><th>Object</th><th>Standard picture</th><th>Centered picture</th><th>Framework type</th></tr>
+<tr><td>the pole, residue 1</td><td>edge of the strip</td><td>center of the figure</td><td>the 1; the center</td></tr>
+<tr><td>critical line</td><td>line at Re(<i>s</i>) = 1/2</td><td>unit boundary circle</td><td>the boundary; the conserving shell</td></tr>
+<tr><td>the number 1/2</td><td>unexplained constant</td><td>equidistance from 0 and 1; half the octave Jacobian</td><td>&#9685;, balance; not a center</td></tr>
+<tr><td>infinity</td><td>off the page</td><td>the tonic <i>w</i> = 1, where all shells touch and zeros crowd</td><td>the seam; do = do&prime;</td></tr>
+<tr><td><i>s</i> = 1/2 itself</td><td>a point on the line</td><td>the balance pole <i>w</i> = &minus;1, antipode of the tonic</td><td>the mirror's real fixed point</td></tr>
+<tr><td>shell radius</td><td>Re(<i>s</i>)</td><td>amplitude bias; Mellin weight <i>x</i><sup>1/R&minus;1</sup></td><td>inflation/severance axis</td></tr>
+<tr><td>shell angle</td><td>height <i>t</i></td><td>phase; <i>t</i> = cot(&theta;/2)/2</td><td>the i-rotation, private frequency</td></tr>
+<tr><td>Li coefficients</td><td>positivity criterion</td><td>harmonic probes of the boundary</td><td>overtone energies</td></tr>
+<tr><td>off-circle displacement</td><td>RH's failure mode</td><td>radial defect D<sub><i>n</i></sub>; AM-GM gap of the inversion pair</td><td>the two Lies' shared price</td></tr>
+<tr><td>functional equation</td><td>reflection formula</td><td>inversion through the boundary; reflection through the tonic</td><td>the mirror</td></tr>
+<tr><td>Euler product domain</td><td>half-plane Re(<i>s</i>) &gt; 1</td><td>disk on the segment from center to tonic</td><td>the part, on a radius of the whole</td></tr>
+</table>
+</div>
+
+<p>In this vocabulary the conjecture reads: every overtone of the boundary carries zero defect; all the energy lives in rotation, none in radial escape. The two Lies appear as the two halves of one AM-GM gap, priced together, invisible at first order because the mirror cancels them against each other, and controlled in known mathematics only by conditions imposed on a whole object at once. The thread's thesis, instantiated at the highest altitude available: the circles were kept, and the center was forgotten.</p>
+
+<div class="box">
+<p><strong>Honesty box.</strong> Nothing in this paper is progress on the Riemann Hypothesis. The Möbius map is standard equipment; Li's criterion, the Weil explicit formula, Mellin-Plancherel theory, the Riemann-Siegel decomposition, the theta functional equation, the anharmonic group, and the modular j-invariant are classical; the E &minus; D identity is two lines of algebra surely implicit in the Li-criterion literature; the binomial-transform form of the Li coefficients is Bombieri-Lagarias/Coffey territory; and Voros's Keiper/Li papers treat the point <i>w</i> = &minus;1 and prove an oscillation sharpening that is the same mechanism as Theorem 2's equivalence seen from the asymptotic side. The primary literature could not be fully read from the drafting environment (network-restricted), so the novelty of the two theorems is explicitly <em>not certified</em>: they are graded "proved, verified, plausibly rederivable by a specialist, possibly stated somewhere already." What is claimed: the four numbered facts of Section 1 and every verification figure quoted are session-checked to the stated precision; the two theorems carry complete proofs; the pressure test of Section 6 was pre-registered and resolved exactly as registered; and the framework typing (center, boundary, tonic, balance pole, the two Lies) is interpretation over verified structure, marked as such throughout. The experiment files and the session note carry the full verification records.</p>
+</div>
+
+<h2>Files</h2>
+
+<div class="overflow">
+<table>
+<tr><th>File</th><th>Content</th></tr>
+<tr><td><code>plans/zeta_circumpunct_coordinates_2026_08_15.md</code></td><td>The session note: the four facts, seven addenda, verification records, honesty box</td></tr>
+<tr><td><code>experiments/prime_boundary_field_v1.py</code> + <code>_findings_v1.md</code></td><td>The Li energy bridge: three-route &lambda; computation, prime moments, binomial transform, sieve, E &minus; D decomposition, graded findings</td></tr>
+<tr><td><code>plans/balance_pole_theorem_2026_08_15.md</code></td><td>The shell trident and balance pole theorems, with proofs and novelty audit</td></tr>
+<tr><td><code>experiments/balance_pole_theorem_v1.py</code></td><td>Six-part verification of every theorem clause</td></tr>
+</table>
+</div>
+
+<h2>Revision history</h2>
+<p class="rev">
+- 2026-08-15 v1.0: initial; written from the session thread (coordinates, Li identification, vesica and triad group, octave reading, shells, prime boundary field experiment, the two theorems, the analytic curtain).
+</p>
+
+</body>
+</html>
