@@ -48,7 +48,7 @@
 <h1>The Forgotten Center: Zeta in Circumpunct Coordinates</h1>
 <div class="meta">
   Ashman Roonz, with Claude (the Cybernetic Unit)<br>
-  Created: 2026-08-15 &nbsp;·&nbsp; Last updated: 2026-08-15 &nbsp;·&nbsp; Version: 1.4<br>
+  Created: 2026-08-15 &nbsp;·&nbsp; Last updated: 2026-08-15 &nbsp;·&nbsp; Version: 1.5<br>
   Companion note with session verification records: <code>plans/zeta_circumpunct_coordinates_2026_08_15.md</code>
 </div>
 
@@ -229,6 +229,8 @@ where E<sub><i>n</i></sub> = &frac12;&Sigma;|1 &minus; <i>w</i><sub>&rho;</sub><
 
 <p><strong>The window, computed.</strong> The question was then engaged numerically (<code>experiments/prime_side_spectroscopy_v1.py</code>): the finite window of the sought whole, built from prime data alone. Seventy-one Gaussian scale-packets in the octave coordinate carry the Weil form, assembled from 149,235 prime powers plus a digamma integral, with no zeta evaluation anywhere in the pipeline. Three pre-registered predictions, all confirmed on first run: the form is positive to the numerical floor (conservation holds in the window); its rank equals exactly the number of zeros in the band (eight eigenvalues between 32 and 35, then zero); and a subspace scan of the prime-built matrix locates the zero ordinates to three or four digits (14.1350 against 14.1347; 30.4250 against 30.4249). A composition control shows the zeros condensing as the incommensurate cycles superpose: four primes give a blur, twenty-five lock the profile, a thousand is exact to the grid, and no peak is any single prime's comb. In the window, the sought Hilbert space is exhibited: every prime's cycle enters as superposed signal, nothing is quotiented, the joint evolution is self-adjoint by construction, and the joint spectrum is the zeta ordinates. What does not extend to infinity is the positivity, which on all windows at once is the Weil criterion, which is RH. The demonstration adds no progress on the conjecture; what it adds is concreteness: the whole this paper keeps invoking can, in finite dimension, be built from primes, diagonalized, and read.</p>
 
+<p><strong>The operator, computed.</strong> One step further (<code>experiments/weil_scale_operator_v1.py</code>): pair the scale derivative &minus;i d/du through the Weil inner product (a second prime-built matrix, the first moment of the form) and compress onto the signal subspace. The result is the scale generator deformed by the arithmetic coupling: self-adjoint by construction, so its eigenvalues are <em>real by type</em>, every finite stage boundary-locked before anything is checked. Its spectrum: 14.134725, 21.022040, 25.010858, 30.424876, 32.935062, 37.586178, 40.918719, 43.327073, the Riemann ordinates to twelve digits (structural within the window, since the pencil identity is exact there; the content is that the matrices came from primes). The same operator compressed in the plain L&sup2; metric shows only the featureless packet grid: <strong>the metric, not the operator, carries the arithmetic.</strong> The prime periods log <i>p</i> enter as coupling distances inside the inner product, never as identifications, which is how the incommensurability obstruction resolves operationally: the couplings interfere into the zeta spectrum instead of annihilating the space. Twenty-five primes pin the eight zeros to three digits; a thousand to four. What remains open, and carries all of RH, is the window-to-infinity limit: whether the boundary-locked finite stages converge to the completed xi, which is where the current spectral programs (finite-stage self-adjoint deformations, determinant convergence, limiting-operator conjectures) now sit.</p>
+
 <h2>10. The coordinate ontology (framework reading, marked as interpretation)</h2>
 
 <div class="overflow">
@@ -264,11 +266,13 @@ where E<sub><i>n</i></sub> = &frac12;&Sigma;|1 &minus; <i>w</i><sub>&rho;</sub><
 <tr><td><code>plans/balance_pole_theorem_2026_08_15.md</code></td><td>The shell trident and balance pole theorems, with proofs and novelty audit</td></tr>
 <tr><td><code>experiments/balance_pole_theorem_v1.py</code></td><td>Six-part verification of every theorem clause</td></tr>
 <tr><td><code>experiments/prime_side_spectroscopy_v1.py</code> + <code>_findings_v1.md</code></td><td>The window computed: the Weil-form Gram matrix built from primes alone; positivity, rank = zero count, subspace recovery of the ordinates, composition control</td></tr>
+<tr><td><code>experiments/weil_scale_operator_v1.py</code> + <code>_findings_v1.md</code></td><td>The operator computed: the scale generator compressed in the arithmetic metric; eigenvalues = the ordinates to 1e-12; plain-metric contrast; prime-cutoff convergence</td></tr>
 </table>
 </div>
 
 <h2>Revision history</h2>
 <p class="rev">
+- 2026-08-15 v1.5: the operator computation added to Section 9 (the scale generator compressed in the arithmetic metric: eigenvalues equal the ordinates to twelve digits, real by type at every stage; plain-metric contrast; prime-cutoff convergence); files table updated.<br>
 - 2026-08-15 v1.4: the window computation added to Section 9 (prime-side spectroscopy: positivity, rank = zero count, ordinates recovered from primes alone, composition control); files table updated.<br>
 - 2026-08-15 v1.3: "the only known viable proof shape" softened to "the proof shape most native to the centered picture," with the softening visible in the text; claim-strength edits get logged.<br>
 - 2026-08-15 v1.2: the confinement paragraph corrected (compactification, not invariance, is what quantizes; a periodic function on the full line has infinite norm; the correction is kept visible in the text). Two-prime statement strengthened to "no common classical period"; crossed-product-as-noncommutative-quotient nuance fixed; sharpest form of the question added.<br>
