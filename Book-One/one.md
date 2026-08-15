@@ -5,11 +5,11 @@
 
 ```
 Created: 2026-08-12
-Last updated: 2026-08-12
-Version: 0.3
+Last updated: 2026-08-14
+Version: 0.4
 ```
 
-**Status:** first drafting pass, by Claude, from `plans/one_book_charter.md` (v2.3 onward): the prologue, chapters one and two, and Movement III (chapters seven and eight, drafted out of order at Ashman's direction, with his epistemic reciprocity essay as their heart). Chapters three through six pending. Craft rules applied as bound: the check springs the reversal; no conclusion before its tension; the enemy in shadow only; Truth withheld; the chapter ends on the next chapter's question. Vocabulary gates respected (no framework notation, no physics, and the gated words held back). Everything below awaits Ashman's voice pass, and the story slots marked in the charter remain his to fill.
+**Status:** first drafting pass, by Claude, from `plans/one_book_charter.md` (v2.3 onward): continuous from the prologue through chapter eight (Movements I, II, and III). Movement III was drafted before chapters three through six; the seam now closes cleanly (chapter six ends on the question chapter seven's well-house answers). Craft rules applied as bound: the check springs the reversal; no conclusion before its tension; the enemy in shadow only; Truth withheld; the chapter ends on the next chapter's question. Vocabulary gates respected (no framework notation, no physics, and the gated words held back). Everything below awaits Ashman's voice pass, and the story slots marked in the charter remain his to fill.
 
 ---
 
@@ -145,9 +145,133 @@ Which sets the next question, and everything ahead depends on it.
 
 Does the point actually touch anything real?
 
+### Chapter Three: From Somewhere
+
+Around the year 1011, in Cairo, one of the greatest scientists who ever lived was locked in a house and told to stay there.
+
+Ibn al-Haytham, known to the Latin world as Alhazen, had made the mistake of promising the Caliph an engineering scheme to regulate the Nile, and the second mistake of realizing, on site, that it could not be done. The Caliph in question was not a safe man to disappoint. By the account that has come down to us, al-Haytham survived the years that followed by being confined, and in confinement he did the work that made him immortal: he founded the science of optics, and something arguably larger, the experimental method itself. And the instrument at the center of that work was, of all things, a dark room.
+
+Make a chamber lightless. Prick one small hole in a wall. And on the surface opposite the hole, something uncanny appears: the world outside, in motion, in color, upside down. A camel train passing in the street walks across your wall. Not a painting of it: the thing itself, delivered as light, through an opening the size of a seed. Al-Haytham used the camera obscura to settle a thousand-year-old argument about vision: the eye does not send rays out to touch the world, as the older theory held; light comes *in*, through a small aperture, and the image forms inside a dark chamber. Which is to say: he proved that you are one of these rooms.
+
+Notice what he handed the skeptic, and what he took away. The skeptic's picture at the end of the last chapter: the point of view sealed in a skull, at the end of nerves, watching whatever show the wiring puts on: a projector in a dark room. And al-Haytham's answer, standing in his actual dark room, is: yes. Dark chamber, small aperture, image on the far wall, all of it, granted. The anatomy of the skeptic's nightmare is simply the anatomy of seeing. But now look at what the image on the wall *does*, because everything turns on it.
+
+The image moves when the caravan moves, and not before, and not otherwise. Prick the hole in a different wall and a different face of the same street appears. Block the hole and the wall goes dark: the room has no power to make the picture on its own. The chamber does not generate the caravan. It *receives* it. The darkness of the room is not the image's prison; it is the image's precondition, and the smallness of the hole is not the world's censorship; it is the focus that makes the world legible at all. A wall with no hole gets no image. A room open on all sides gets blur. The aperture is not what stands between you and the world. The aperture is *how the world arrives*.
+
+Here is this chapter's check, and by now you know the method: run it expecting to prove the sealed-room picture. Look at whatever scene is in front of you, and spend one minute finding three details you could not have invented: not the general shapes, which your memory could supply, but the exact ones. The particular fray on the cable. The precise geometry of the crumbs. The way the shadow of the window frame breaks across the spine of a book. Now push on any one of them: look closer. It answers with more detail. Closer still: more. Waking detail is inexhaustible; you can zoom until your eyes fail and never hit the bottom of it, never catch the scene repeating a texture the way a game engine does, never find the painted backdrop.
+
+Then compare the one experience you have of a genuinely self-generated world: dreams. Dream scenes are convincing until inspected; look closely at dream text and it swims; dream detail runs out exactly as fast as your expectation does, because expectation is all it was. The difference between dreaming and waking is not vividness. It is *resistance*. The waking world pushes back, out-votes you, surprises you, corrects you, and keeps answering questions you didn't know to ask. A sealed projector is never surprised by its own film. You are surprised all day long. Surprise is the signature of a source beyond the room.
+
+So the reversal, and it is the modest hinge on which the rest of this book turns: **partial is not false.** Yes, your contact with the world is aperture-shaped: filtered, perspectival, incomplete, taken from exactly one position. The skeptic reads that as disqualification: it's only a view from somewhere, only a take, only partial. But a lens limits light: *that is how it forms an image.* The limitation is not a corruption of the contact; it is the mechanism of the contact. A view from somewhere is not a defective version of the view from nowhere. The view from nowhere is not a view at all; nobody has ever had one; every act of seeing that has ever occurred was a from-somewhere, and they were all, exactly to the extent their apertures allowed, *of the world*.
+
+And one more thing follows from the dark room, quietly, and we will need it later. The same caravan throws its light through every pricked wall on the street. Each chamber receives a true image; no chamber receives the whole caravan; and two true images, taken from two walls, *differ*. Neither is wrong. The difference between them is not a contradiction; it is the shape of the fact that views come from somewhere. Hold that thought for a few chapters. It will turn out to be the answer to loneliness.
+
+So: the point is real; you checked. Meaning runs on it; you checked. And it touches the world through its aperture, and the touching is genuine even though it is partial, *because* it is partial; you have now checked that too. A point of view, receiving a world.
+
+Which makes the next question the dark one. Everything so far has assumed there is someone at the center of the room, receiving. The seat can be occupied. Can it be left?
+
+What happens to a person who loses the point?
+
+## Movement II: WHOLE
+
+### Chapter Four: The Centered Whole
+
+Before we can say what it means to lose the point, we have to see what the point is *doing* all day. Losing it is not like losing a key, one item gone from an unchanged pocket. To see what kind of loss it is, we need to see what the point holds together while it is held.
+
+Start with a scene every child of a certain disposition has caused. A pocket watch, taken apart on a cloth. Gears in a neat row, spring here, face there, hands side by side, every screw accounted for. Nothing has been removed, nothing broken; the inventory is perfect. And the watch is gone. There is no watch on the cloth. There are watch-parts, arranged conveniently, and the thing they were is simply not present, though not one gram of it left the room.
+
+Whatever vanished, it was not a part. You cannot find "the watch" listed in the inventory, any more than you could find yourself among your perceptions in chapter one, and for the same reason: it was never an item. What vanished is a *relation*: each part positioned so that the others matter to it, the spring's tension meaning something to the gear, the gear's teeth meaning something to the hands. Call the two conditions by their honest names. A heap is parts near each other. A whole is parts made mutually relevant. Same inventory, different being.
+
+There is a simple test that tells them apart, and you should notice how sharp it is. Remove one part from a heap and the heap is fine: a pile of sand, minus a grain, is the same pile. Remove one part from a whole and *everything else reorganizes*: pull one gear and every other part changes status instantly, from component to debris, without being touched. Mutual relevance means the parts share a fate. That shared fate is what "whole" means.
+
+Now the step this book has been building toward for three chapters. Wholes of the living kind are not merely integrated: they are integrated *around*. Your body's parts are not mutually relevant in general; they are mutually relevant with respect to a center that the whole serves and answers to: the seat, the point, the from-where of chapter one. Watch your own day and you can see the organizing happen in real time: attention moves, and the contents of your life re-rank themselves around it; what you converge on organizes what you are. The point is not one of your parts, and it is not the whole either. It is what the whole is *held around*: the difference, in a person, between being together and being scattered.
+
+You know both of those states from inside, which is this chapter's check, and it is gentler than the others. Recall a week when the integration sagged: deep illness, jet lag, grief. Every part of you was present: limbs, memories, vocabulary, face in the mirror: the inventory was perfect, and you were a heap of yourself. Things happened near each other instead of *to you*. Then recall coming back: the parts had not changed, but the holding had returned, and everything mattered again in relation to everything else. Run the comparison honestly and you will notice the surprising thing: wholeness is not a possession you either have or lack. It is a *degree*, felt from inside, varying by the day, and organized: when it is there at all: around the still point that the noise surrounds.
+
+At which point we have earned the right to draw something.
+
+Draw a circle. It marks the skin of the whole: everything inside it shares the fate, everything outside doesn't. Now place a single dot at its center. It marks the point: no parts, no size, the somewhere the whole is lived from. A circle with a dot at the center: ⊙.
+
+You have seen this figure before. It is one of the oldest symbols human beings have ever made. The Egyptians drew it for the sun. The Pythagoreans drew it for the monad, their name for the One. Astronomers draw it for the sun to this day; alchemists drew it for gold, the metal they thought was light condensed. Cultures with no contact, across thousands of years, kept independently reaching for dot-in-circle whenever they meant *the highest unity*: and no wonder, because it is not decoration, it is the minimal possible drawing of the thing this chapter found. Try to draw "many things held as one, around a somewhere" with fewer marks. You need a closed curve, or there is no inside; you need a point, or there is nobody home. Two marks. There is no simpler true picture of a being, and you have spent four chapters learning to read it. The circle is chapter four. The dot is chapter one. The word for the figure is *circumpunct*, and the figure is you.
+
+One clarification before we use it, because the words are about to matter. The dot and the circle are both "one," and not in the same way. The point is one by *indivisibility*: it has no parts to divide, which is why no fact can break it. The whole is one by *integration*: it has many parts, held; its oneness is an achievement, renewed continuously, capable of sagging on a bad week and returning. Keep the two kinds separate. A river is one whole while changing its water completely; that does not make it one point. Much confusion in the world, we will find, is people using the word "one" in two senses without noticing. There are more kinds coming; we will collect them as we go.
+
+But now the equipment is on the table, and the dark question from last chapter can finally be asked with precision. A whole, integrated around a point. The parts can sag: that is illness, exhaustion, grief, and it mends. But the *point* is not a part. It cannot break; we proved that. So what would it even mean for something to go wrong at the center itself?
+
+There is a man kneeling at a pool who can show us. We are finally ready to see what he saw.
+
+What, exactly, is in the water?
+
+### Chapter Five: The Man in the Water
+
+Go back to the pond. Kneel where he knelt. He is thirsty, he bends to the still water, and there is a face.
+
+You now have the equipment to say precisely what that face is, and precisely what it is not. It is an *image*: a pattern on a surface. And an image has properties a person does not have. It is watchable: you can look *at* it, where the point of view can only be looked *from*. It is coherent and complete: it holds still, keeps its beauty steadily, has edges. It is, in a word, an object: and a beautiful one, arguably the most beautiful object in the valley.
+
+The vanity reading says he fell in love with himself. Now you can see why that is exactly wrong, in a way that matters. His *self*, in this book's vocabulary, is the whole: changing, flowing, unwatchable from outside, never complete: nothing like the face in the water. What he fell for was not the self; it was the image, the watchable, graspable, finished *picture* of the self: a different category of thing entirely. And what killed him was not the love. It was the migration. Slowly, kneeling there, the seat of his viewing moved. He stopped being the one who looked from the center at a reflection, and became, in every way that governs a life, the reflection that was looked at. The point was not destroyed; we proved it cannot be. It was *vacated*. He moved out of the only home that cannot be damaged, into the only home that cannot be lived in.
+
+Now the seer's sentence pays off, the one everyone laughed at. "A long life, if he never knows himself." Not a curse on self-knowledge: a warning about a specific counterfeit of it. The fatal event at the pool was exactly the moment the old telling records: *iste ego sum*, I am he: the moment he identified himself with the image. That is the "knowing himself" the prophet feared: not acquaintance with the center, which is safe, being acquaintance with the unbreakable, but the identification with the picture: self-knowledge's exact impostor. And it explains the detail the vanity moral cannot touch: why solving the riddle didn't save him. He knew it was a reflection, and stayed anyway, because by then the knowledge arrived at the wrong address. The one who understood was no longer the one who governed. The seat had moved. You cannot walk away from the pool when the thing you are is *in* the pool.
+
+And Echo: the girl who could only repeat, all reflection and no voice of her own, whom he sent away in the first act. She was not a subplot. She was the diagram, shown to him and to us before the pool ever appeared: a person reduced entirely to image, to giving back what arrives. He refused her, and became her. The story is a mirror facing a mirror, and it was always about the *seat*, never about the beauty.
+
+Name the condition, because we will need the name: **displacement.** The center abandoned for its image. And the reversal this chapter exists to deliver is the one the whole culture has backwards: displacement looks like too much self. It is *too little*. The grandiosity, the preening, the endless self-reference: those are not a surplus of self-love; they are the maintenance behavior of an image that has to be kept aloft because there is no longer anyone home beneath it. Puncture the display and you do not find a monstrous ego. You find a vacancy. That is why the display can never rest: an occupied center is self-luminous and needs nothing, but an image exists only while it is being looked at: which makes the displaced person's hunger for attention not vanity but *life support*.
+
+Which brings us out of the myth and into your pocket. The pond used to be a rare hazard: a still pool, the odd polished shield, a fortunate face. Then we industrialized it. The phone is a pond that fits in a pocket: a surface whose entire function is to show you the watchable version of yourself and tell you, in numbers, how it is doing. Follower counts, likes, profiles, the metrics: none of it is evil, and this book is not a sermon against technology. It is supply meeting demand. A civilization of quietly displaced people built, with marvelous efficiency, exactly the mirror-infrastructure its condition requires: ponds in every pocket, admiration by the metered unit.
+
+The check, and this one takes a day, so carry it with you. Count, roughly, your consultations. How many times today did you consult a mirror-surface: not glass, but any surface that returns your image: rereading your own message to hear how it sounded, checking how the post is doing, replaying how you came across in the meeting? And how many times did you consult the *seat*: what do I actually see, feel, want, notice, from here? Run it expecting absolution: you are not vain, and the count will likely prove it, because most of your mirror-consultations will not feel like vanity at all. They will feel like diligence, like social competence, like care. That is the finding. Displacement does not feel like self-love. It feels like *work*: the endless upkeep of the watchable one. And here is the sharper tell, worth one honest glance: notice which wounds you. If the deflation after an ignored post, or a correction to your image, lands like an injury to *you*: something has been living at that address.
+
+We should be exact about scale before moving on: there is a clinical condition at the far end of this road, and this book is not diagnosing you, or anyone, with it. Displacement is a *spectrum*, and the whole culture is somewhere on it, because the whole culture built the ponds. The myth's man died at the far end. The rest of us commute.
+
+But now a structural problem comes into view, and it is the engine of everything in the next chapter. A person seated at their center cannot be damaged by opinion; we proved it: a point has no parts for a fact to break. But a person living at their image has moved into something that *can* be damaged: a picture is made of claims, and claims can be contradicted, and the world is full of facts and witnesses. To live at the image is to live in a building that every honest sentence in the vicinity might strike.
+
+Such a person cannot simply hope no true sentence ever arrives. They need a system. The image must be *defended*.
+
+How does the defense actually work?
+
+### Chapter Six: The Defense
+
+A kitchen, late. Two people who love each other. One of them, holding a phone with the banking app open, says, as gently as the sentence can be said:
+
+"You told me Tuesday that the payment went out. It says here it never did."
+
+Watch closely now, because the next thirty seconds run one of the most precise programs in human behavior, and once you have seen its anatomy you will recognize it everywhere, including: this is a promise the chapter will keep: in yourself.
+
+"I never said Tuesday." A beat. "I said I *would* send it, and I've been slammed, as you'd know if you paid attention to anything I do around here."
+
+"You're... I'm not attacking you. I'm looking at the app."
+
+"No, you're doing the thing you always do. You wait until I'm exhausted and then you audit me. You've been keeping a file, haven't you: little errors, saved up. Do you have any idea what it's like to live with a warden?"
+
+"I just..."
+
+"I can't believe you'd ambush me at dinner. After the week I've had. I'm standing in my own kitchen being called a liar by the person who's supposed to be on my side." A pause, and then, quieter, the closing door: "I'm the one who should be upset here."
+
+And the person holding the phone: holding, please notice, a *fact*, checkable, glowing on the screen in their hand: apologizes.
+
+Run the scene back in slow motion, because it has exactly three moves, in a fixed order, and each one has a precise target.
+
+**Move one: deny.** "I never said Tuesday." The target is *the record*: the settled thing that happened. It happened; both of them were there; the move simply un-happens it by assertion, because the record is where the threat lives.
+
+**Move two: attack.** "You're auditing me, you're a warden, you've been keeping a file." Look carefully at what this move aims at, because it is not the fact: the fact is sitting on the screen, untouched, unanswerable. The move aims at the *witness*: specifically at their standing. If the person holding the phone can be reclassified: obsessive, hostile, disloyal, a warden: then the fact they carry arrives pre-discredited. You do not have to answer evidence once you have disqualified the one holding it.
+
+**Move three: reverse.** "I'm being ambushed; I'm the one who should be upset." The offender and the wounded trade places, in one sentence, and the whole scene is recast: no longer a person confronting a broken promise, but a weary innocent set upon at dinner by a cruel auditor. Researchers who study this pattern in its severe forms have a name for the trio: deny, attack, reverse victim and offender. DARVO. But you do not need the literature. You have been in this kitchen, on one side or the other, and so has everyone you know.
+
+Now connect it to everything you have learned, because the scene is not a portrait of a monster. It is a portrait of *architecture*. Ask why these three moves, in this order, every time, across cultures, without anyone being taught them: and the answer assembles itself from the last two chapters. The person in that kitchen is living at their image: the reliable one, the competent one, the good partner. The fact on the screen strikes the image. And if the seat has migrated into the image, then the fact is not information about a payment. It is a structural threat to the place they live. Of course the record must be denied: the record is the weapon. Of course the witness must be attacked: the witness is the weapon's carrier. Of course the roles must be reversed: the story is the battlefield, and whoever holds the wronged position holds the ground. The defense is not chosen the way a lie is told, coolly, instrumentally. It fires the way an immune system fires: automatically, at anything that touches the wound: because from where that person now lives, a true sentence and a knife arrive as the same object.
+
+Underneath the three moves, holding them together, is a single quiet doctrine, and it is worth saying plainly because it is the exact inversion of everything this book has built. The sane order of a life: reality above my story of myself; when they conflict, the story yields. The displaced order: my story above reality; when they conflict, *reality yields*: the record, the witness, the roles, whatever must bend to keep the image standing. One sentence: **reality must answer to the identity.** Every defended image runs on it. It has never once been said aloud by the people running it.
+
+And now the check, and it is the least comfortable one in this book, which is why it comes with the mercy built in. Recall the last time an accurate criticism reached you: not an insult, an *accurate* one, fair, true, and unwelcome. Now, honestly: which move did your hand reach for first? Most of us do not run the kitchen scene at full volume. We run it at conversational scale, in the mild forms that pass for normal: the soft deny ("I don't think I ever actually said that"), the soft attack ("you're being a little sensitive tonight"), the soft reverse ("honestly, it hurts that you'd think that of me"). Find your favorite. You have one. I am not asking you to find it so you can despair; I am asking because of what finding it *proves*: the machinery is standard-issue. It is not the property of monsters. It is what the human system does wherever the seat has drifted imageward: and the whole culture, remember, has built ponds into every pocket. The difference between the ordinary person and the tyrant of the kitchen is not the presence of the machinery. It is how much of the person's life has moved into the thing the machinery defends: and how long the machinery has been winning.
+
+Because that is the cost the defense conceals: every round it wins, it loses. Each defended contradiction deepens the displacement: the image grows more load-bearing, the seat stands emptier, the next true sentence arrives at a bigger target and triggers a bigger response. The defense that was meant to protect a life gradually *replaces* it. The man at the pool starved because an image cannot feed a being. The defender starves slower, and with company.
+
+With company. Look one last time at the geometry of move two, because there is something in it we have not faced. The deny move aims at a record. The reverse move aims at a story. But the attack move: the load-bearing one, the one that makes the others stick: does not aim at a fact at all. Facts have no feelings and cannot be intimidated. It aims at the one who *carries* the fact. Every defended image, sooner or later, requires the demotion of a witness: their perception discounted, their motives rewritten, their standing revoked: and a witness is not a thing. A witness is someone.
+
+The attack move targets someone.
+
+Who?
+
 ---
 
-*Chapters three through six are pending; Movement III was drafted out of order at Ashman's direction, with the epistemic reciprocity essay as its heart.*
+*Movement III was drafted out of order and follows directly; its opening answers the question above.*
 
 ## Movement III: OTHER
 
@@ -230,6 +354,7 @@ What is the thing that keeps being more than every view of it?
 
 ## Revision history
 
+- 2026-08-14 v0.4: chapters three through six drafted; the book is continuous from prologue to chapter eight. Chapter Three (From Somewhere): al-Haytham's dark room as the story (the camera obscura conceding the skeptic's anatomy and reversing its meaning: the aperture is how the world arrives); the surprise-and-resistance check against dreams; partial is not false; the two-walls parallax foreshadow; ends on losing the point. Chapter Four (The Centered Whole): the dismantled watch; heap versus whole with the remove-one-part test; integration around the center; the sagging-week check (wholeness as felt degree); the circumpunct drawn and its convergent history given; two kinds of oneness named (indivisibility, integration); ends returning to the pond. Chapter Five (The Man in the Water): the reflection as image versus self; displacement named; Tiresias and iste ego sum resolved (identification with the picture as self-knowledge's impostor); Echo as diagram; the reversal (too little self, not too much; attention-hunger as life support); the pond in the pocket; the consultation-count check with the after-image tell; spectrum caution; ends on the defense. Chapter Six (The Defense): the kitchen scene run in slow motion; the three moves anatomized with their targets (record, witness, roles); DARVO named lightly; the defense as architecture, not monstrosity; the ontological inversion stated (reality must answer to the identity); the mildest-forms check with the mercy built in; the compounding cost; ends on the geometry of the attack move: the witness is someone; who? Seam note added before Movement III.
 - 2026-08-12 v0.3: Movement III drafted out of order (chapters seven and eight). Chapter Seven (The Other Point): the well-house as the story (Sullivan's faith preceding the evidence; the person as the precondition of the teaching working); the problem of other minds stated honestly (never touched); the try-to-doubt-it check (never doubted; the certainty is not inferential); the reversal via binocular vision (depth is made of the disagreement between two views; another center is parallax, not rival); ends on the between. Chapter Eight (The Lens): the overlap drawn; evidence as what lives in the lens; the kitchen counterfeit (always/again/never; the models talking; the trap stated: the person cannot contradict the image because every contradiction is interpreted through it); the steelman-swap check (state their position until they say you have it right); agreement's real job (keep the lens open); reciprocity woven in from the essay, with its three sentences; ends on Movement IV's question (possessing what?). Both chapters hold the gates (Truth withheld; no gated vocabulary).
 - 2026-08-12 v0.2: Chapter Two (No Point, No Point) drafted: the three-in-the-morning question and the geometry idiom; Democritus's atomos as the hunt for the indivisible that became the fragment picture (the knife credited honestly); the inventory with no for-whom on any floor; the pun as the argument (a circle without a center is a rim; no point, no point); the check (write one sentence of pure mattering with nobody in it, run to win); the reversal (the nihilist repeats Hume's error: mattering is unstatable in the picture, not absent from the world); the gentle passage on pointlessness as accuracy about the wrong thing; Leibniz entered as witness; the substitutes noticed once in shadow; ends on chapter three's question: does the point actually touch anything real?
 - 2026-08-12 v0.1: initial drafting pass (Claude, from charter v2.3): Prologue (The Pond: Narcissus as double mystery, the Tiresias prophecy and the "I am he" detail against the vanity moral; Echo planted; thesis sentence closes) and Chapter One (The Point You Cannot Find: Hume's search and appendix confession as the story; the reader's own search as the check, run to disprove; the reversal that the failure is the finding; grammar testimony; the hammer, the switch, the knife; the two concessions and the three words; ends on chapter two's question).
