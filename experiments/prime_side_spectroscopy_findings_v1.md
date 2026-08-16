@@ -14,7 +14,7 @@ Validation entries computed independently from the first 60 zeros match the prim
 ## F2 (grade A): the three pre-registered predictions, all confirmed
 
 - **P1 (positivity = window conservation).** Minimum eigenvalue -1.1e-7 against maximum 34.7: positive semidefinite to the numerical floor (relative -3e-9). Positivity of the window form is what "the conserving inner product exists here" means; a straddling zero pair inside the band would create indefinite directions, so the window's positivity reflects the computationally verified absence of off-line zeros at these heights, and is not a proof of anything beyond the window.
-- **P2 (rank = zero count).** Eigenvalues above threshold: exactly 8. Zeros in the effective band: exactly 8. The spectrum is razor-sharp: eight eigenvalues between 32.1 and 34.7, then 0.000. Each on-circle zero contributes one rank-one direction; the window form IS the Gram matrix of the zero-evaluation vectors, and the primes know it.
+- **P2 (effective rank = zero count; corrected 2026-08-15, same day).** At the chosen numerical tolerance, B has effective rank 8, exactly matching the eight zeros strongly supported in the window: eight eigenvalues between 32.1 and 34.7, then values at the leakage floor. The original phrasing "rank is EXACTLY the number of zeros in band" was too strong: Gaussian packets have tails, so the form sees every zero with rapidly decreasing weight (the nearest excluded zero at 48.005 enters at roughly 1e-9 before projection), and in exact arithmetic the rank is not literally 8. This is consistent with the analytic curtain (zeta note, Addendum 7): an admissible analytic probe cannot be perfectly confined to a finite spectral interval, because vanishing on an open piece of the real axis would force it to vanish everywhere. Finite windows can be extraordinarily well isolated, never absolutely severed.
 - **P3 (recovery of the ordinates).** MUSIC subspace scan on the prime-built B, peaks at: 14.1350, 21.0200, 25.0100, 30.4250, 32.9350, 37.5850, 40.9200, 43.3250 against true ordinates 14.1347, 21.0220, 25.0109, 30.4249, 32.9351, 37.5862, 40.9187, 43.3271. Deviations 0.0001 to 0.002, at the scan grid's resolution. **The zeta zeros, located to three or four digits, from prime powers and a digamma integral.**
 
 ## F3 (grade A, the composition control): the zeros emerge as the primes compose
@@ -42,4 +42,5 @@ Recovering zeros from primes via the explicit formula is standard mathematics; t
 
 ## Revision history
 
+- 2026-08-15 v1.1: P2 corrected from exact rank to effective rank at tolerance (Gaussian tails see every zero; curtain-consistency note added). Correction from the second model's review, accepted.
 - 2026-08-15 v1.0: initial run; all three pre-registered predictions confirmed on first execution; composition control added same session.

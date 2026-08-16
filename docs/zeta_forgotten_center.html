@@ -48,7 +48,7 @@
 <h1>The Forgotten Center: Zeta in Circumpunct Coordinates</h1>
 <div class="meta">
   Ashman Roonz, with Claude (the Cybernetic Unit)<br>
-  Created: 2026-08-15 &nbsp;·&nbsp; Last updated: 2026-08-15 &nbsp;·&nbsp; Version: 1.5<br>
+  Created: 2026-08-15 &nbsp;·&nbsp; Last updated: 2026-08-15 &nbsp;·&nbsp; Version: 1.7<br>
   Companion note with session verification records: <code>plans/zeta_circumpunct_coordinates_2026_08_15.md</code>
 </div>
 
@@ -231,6 +231,8 @@ where E<sub><i>n</i></sub> = &frac12;&Sigma;|1 &minus; <i>w</i><sub>&rho;</sub><
 
 <p><strong>The operator, computed.</strong> One step further (<code>experiments/weil_scale_operator_v1.py</code>): pair the scale derivative &minus;i d/du through the Weil inner product (a second prime-built matrix, the first moment of the form) and compress onto the signal subspace. The result is the scale generator deformed by the arithmetic coupling: self-adjoint by construction, so its eigenvalues are <em>real by type</em>, every finite stage boundary-locked before anything is checked. Its spectrum: 14.134725, 21.022040, 25.010858, 30.424876, 32.935062, 37.586178, 40.918719, 43.327073, the Riemann ordinates to twelve digits (structural within the window, since the pencil identity is exact there; the content is that the matrices came from primes). The same operator compressed in the plain L&sup2; metric shows only the featureless packet grid: <strong>the metric, not the operator, carries the arithmetic.</strong> The prime periods log <i>p</i> enter as coupling distances inside the inner product, never as identifications, which is how the incommensurability obstruction resolves operationally: the couplings interfere into the zeta spectrum instead of annihilating the space. Twenty-five primes pin the eight zeros to three digits; a thousand to four. What remains open, and carries all of RH, is the window-to-infinity limit: whether the boundary-locked finite stages converge to the completed xi, which is where the current spectral programs (finite-stage self-adjoint deformations, determinant convergence, limiting-operator conjectures) now sit.</p>
 
+<p><strong>And the window is now a theorem, not an observation.</strong> The reconstruction was subsequently proved with explicit error control (<code>plans/finite_window_reconstruction_2026_08_15.md</code>): the pencil skeleton is the classical Prony/matrix-pencil method, with the explicit formula supplying the moment matrices of the hidden spectral measure from prime data alone; leakage is bounded by the formula itself (the form bounds its own tails); prime truncation is bounded by elementary partial summation; and stability follows from standard perturbation theory. Certified, all bounds majorizing their measured quantities, and then sharpened same-day by an improved certificate whose numbers were reproduced exactly on import (a first figure of 1.5&thinsp;&times;&thinsp;10<sup>&minus;4</sup> was retracted because its leakage term used known zeros; the corrected certificate bounds the zero tail by an explicit counting theorem with tail zeros allowed anywhere in the strip, assuming RH nowhere): <strong>primes up to two million certify each of the eight windowed ordinates to within 7&thinsp;&times;&thinsp;10<sup>&minus;4</sup> of its target, with unique matching guaranteed at a margin of about 1,700</strong>, while the observed accuracy runs eight orders better on oscillatory cancellation. A transversality lemma closes the last schematic step: restricting the ideal pair to any transverse subspace preserves the pencil spectrum exactly, so subspace movement contributes no first-order error. At every finite stage, reality of the spectrum is free; the single uncertifiable step, precisely located, is the assembly of the windows into a global positive whole. That step is the Riemann Hypothesis.</p>
+
 <h2>10. The coordinate ontology (framework reading, marked as interpretation)</h2>
 
 <div class="overflow">
@@ -267,11 +269,14 @@ where E<sub><i>n</i></sub> = &frac12;&Sigma;|1 &minus; <i>w</i><sub>&rho;</sub><
 <tr><td><code>experiments/balance_pole_theorem_v1.py</code></td><td>Six-part verification of every theorem clause</td></tr>
 <tr><td><code>experiments/prime_side_spectroscopy_v1.py</code> + <code>_findings_v1.md</code></td><td>The window computed: the Weil-form Gram matrix built from primes alone; positivity, rank = zero count, subspace recovery of the ordinates, composition control</td></tr>
 <tr><td><code>experiments/weil_scale_operator_v1.py</code> + <code>_findings_v1.md</code></td><td>The operator computed: the scale generator compressed in the arithmetic metric; eigenvalues = the ordinates to 1e-12; plain-metric contrast; prime-cutoff convergence</td></tr>
+<tr><td><code>plans/finite_window_reconstruction_2026_08_15.md</code> + <code>experiments/finite_window_bounds_v1.py</code></td><td>The finite-window reconstruction theorem: pencil skeleton (Prony attribution), self-bounding leakage, explicit cutoff bounds, stability; certified radius 7e-4 (v2, fully unconditional) at two million primes, all bounds majorizing; v2 certificate imported and verified</td></tr>
 </table>
 </div>
 
 <h2>Revision history</h2>
 <p class="rev">
+- 2026-08-15 v1.7: the v2 certificate incorporated (transversality lemma; fully unconditional zero-leakage; certified radius 7e-4 with unique matching at 1,700x margin); the 1.5e-4 figure retracted visibly (its leakage term was semi-empirical).<br>
+- 2026-08-15 v1.6: the finite-window reconstruction theorem added (pencil attribution to Prony/matrix-pencil, self-bounding leakage, explicit cutoff bounds, certified 1.5e-4 at two million primes); files table updated.<br>
 - 2026-08-15 v1.5: the operator computation added to Section 9 (the scale generator compressed in the arithmetic metric: eigenvalues equal the ordinates to twelve digits, real by type at every stage; plain-metric contrast; prime-cutoff convergence); files table updated.<br>
 - 2026-08-15 v1.4: the window computation added to Section 9 (prime-side spectroscopy: positivity, rank = zero count, ordinates recovered from primes alone, composition control); files table updated.<br>
 - 2026-08-15 v1.3: "the only known viable proof shape" softened to "the proof shape most native to the centered picture," with the softening visible in the text; claim-strength edits get logged.<br>
