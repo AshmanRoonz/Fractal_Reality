@@ -141,11 +141,12 @@ The hierarchy beneath the four lines: Truth = Reality; *true* (the adjective) = 
 |---|---|---|---|
 | Tense | Future | Present | Past |
 | Theology | God | Soul | Mind, Body, World |
-| Anatomy | Field | Center | Boundary |
 | Form | Infinity | Singularity | Wholeness |
 | Oneness | All-inclusive | Indivisible | Integrated |
 
 Read as one sentence: Reality, flowing through a point of view, becomes a world.
+
+**Anatomy row removed (v2.12, Ashman, same day): "field, center and boundary shouldn't be on there, since those are part of wholeness. Anatomy is past/wholeness."** The anatomical vocabulary (point, line, boundary, field: the four kinds of 1) is the INTERNAL decomposition of column 3 alone, not a distribution across the columns; a whole's anatomy is what building leaves behind, so all of it is past. This also dissolves the field pun the old row created (the infinite field, which is Reality, versus the interior field, which is a part of a built whole; one word, two stations). And it sharpens the seat distinction: the dot drawn in a circumpunct is a part of the built thing, findable on the settled side; the living point of view is not an anatomical part of anything (Hume searched the anatomy and rightly found no viewer; the viewer was never in the parts list). Consequence: the v2.10 aside "the table is one circumpunct" (which leaned on the anatomy row) is retired with the row; the table is the flow triad, and the circumpunct's anatomy lives entirely inside its third column.
 
 **Ordering adjudicated (Ashman, 2026-08-15): Future, Present, Past.** The flow order, matching the poster, and matching the engine exactly: the column order IS E to P to m (energy at the Infinite, power at the present center where the conversion happens, mass as the settled world), the power equation read as a table. The earlier first-person ordering (Present first) is retired as the table's order; the seat remains where the reading happens, but the columns run the way Reality runs.
 
@@ -269,6 +270,7 @@ Spine (adopted v1.1): **CENTER, WHOLE, OTHER, REALITY, TRUTH, ETHICS.** The v1.6
 
 ## Revision history
 
+- 2026-08-15 v2.12: the anatomy row removed from the master table (Ashman): point, line, boundary, field are the internal decomposition of the wholeness column, so anatomy is past; the field pun dissolved (infinite field = Reality vs interior field = part of a whole); the seat distinction sharpened (the drawn dot is a findable part of the built thing; the living point of view is not an anatomical part of anything, which is why Hume's search of the anatomy found no viewer); the "table is one circumpunct" aside retired with the row.
 - 2026-08-15 v2.11: wholeness corrected (Ashman, self-correction filed visibly): not 3-that-is-1 but 4 kinds of 1 unified (0D convergence, 1D continuity, 2D closure, 3D integration composing one circumpunct); the arity shift identified as the T/P structure (the trinity flows in threes, the walk; wholeness builds in fours, the composition; the point a member of the build contributing zero to the walk, per 0+1+2=3); the two listings reconciled as canon's constitutive vs radial orders; the fractal recursion retained in corrected form (3-flow opening into 4-build, alternating); perichoresis narrowed to its actual witness.
 - 2026-08-15 v2.10: the fractal trinity filed (Ashman): column 3 unpacked as canon's radial order (mind, body, world: the result of viewing is a completed circumpunct read from inside); the recursion stated (the table is 3-that-is-1; wholeness is one of the 3 and is itself 3-that-is-1; the third member of every trinity opens into the next: A3 in the theme's vocabulary; the octave wrap in trinitarian dress); perichoresis cited as the classical witness (each person fully God, the whole in each member). Fractal-trinity structure filed as theme canon; the specific Father/Spirit/Son column assignment remains candidate.
 - 2026-08-15 v2.9: the table's ordering adjudicated (Ashman): Future, Present, Past: the flow order, matching the poster and the power equation (the columns are E to P to m); the Present-first ordering retired same day it was filed; the reading sentence updated to "Reality, flowing through a point of view, becomes a world"; trinity candidate columns renumbered accordingly (Father = column 1, Spirit = column 2, Son = column 3).
