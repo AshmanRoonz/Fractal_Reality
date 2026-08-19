@@ -52,13 +52,14 @@ Sources per chapter: the companion record, Finding 3, under the matching sentenc
 | | 15 | The Meeting | time is the direction of the conversion; future, past, and the present where they meet | you remember yesterday now; where does the future ever touch you except at the now (pays Ch 2) |
 | VII. The Two Mistakes (S6) | 16 | The Two Lies | claiming to be the whole; denying that you are one | spot both in one day of your feed; then the third state, belonging to nothing while being nothing, as both at once |
 | | 17 | Connected Without Dissolving | the whole of ethics is the both-and they exclude | one relationship where you disappear, one where you cannot be reached; name the corner you are in |
-| VIII. The Fingerprints (S7) | 18 | In Matter | constants of physics | the honesty is the check: what would kill this claim, stated plainly |
-| | 19 | In Life | the code of life | the codon arithmetic told as a story, graded honestly |
-| | 20 | In Mind | structure of mind | the cascade: a thought entertained, repeated, habituated, fused |
-| | 21 | In a Life | the shape of a good life | the four freedoms found in one week of your own life |
-| Coda | 22 | The Paragraph, Again | all of it, verbatim | the re-read; nothing on the page changed; measure what did |
+| VIII. The Fingerprints (S7) | 18 | One Architecture | because one architecture runs at every scale | push an analogy until it breaks (the heart as a pump); then push a constraint (a bounded field with a center must have natural modes) and watch it refuse to break |
+| | 19 | In Matter | constants of physics | the honesty is the check: what would kill this claim, stated plainly |
+| | 20 | In Life | the code of life | the codon arithmetic told as a story, graded honestly |
+| | 21 | In Mind | structure of mind | the cascade: a thought entertained, repeated, habituated, fused |
+| | 22 | In a Life | the shape of a good life | the four freedoms found in one week of your own life |
+| Coda | 23 | The Paragraph, Again | all of it, verbatim | the re-read; nothing on the page changed; measure what did |
 
-Count note, decoration flag raised on purpose: the map lands at 21 chapters plus prologue and coda, and 21 is A(3). Noted as coincidence, claimed as nothing. The count must stay free to change under editing; if the number ever steers the book, that is the decoration failure mode, caught in advance.
+Count note, decoration flag raised on purpose and vindicated the same day: the first draft landed at 21 chapters (A(3); noted as coincidence, claimed as nothing) and moved to 22 within hours, when the isomorphism consideration (`plans/the_isomorphism_of_the_framework_2026_08_19.md`, Finding 8) showed the clause "one architecture runs at every scale" had no chapter of its own. Chapter 18, One Architecture, now carries it: the clause that makes the four fingerprint chapters one argument instead of four anecdotes (the not-analogy argument of Ch32 and the February isomorphism doc, in plain words; Ch33's traditions as independent witnesses). The count moved for a structural reason; the number does not steer the book.
 
 ## Witnesses (cite, not rediscover)
 
