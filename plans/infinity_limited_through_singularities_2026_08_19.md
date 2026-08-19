@@ -75,6 +75,37 @@ Under the temporal adjudication (∞ is the future, the center is the present, s
 2. **Landing site if countersigned.** The genesis sequence block (CLAUDE.md and Ch1), or §4.8a beside the three forms of oneness, or the prime-duality axiom in `circumpunct_foundations_formal_v0_1.md`, where it would upgrade the duality from a posed pair to a stated operation.
 3. **Whether Finding 4's corollary line enters alongside it** or waits for its own pass.
 
+## Addendum, same session: "Is this how reality actually works? I'm not sure how to prove it."
+
+Ashman confirmed the notation (∞ → •∞ → ⊙∞ is the canonical genesis sequence; the arrows are constitutive order, not temporal history, per the helix correction) and asked whether the ontology is how reality actually works, and how it could be proven. Three findings, continuing the numbering.
+
+### Finding 9: ground-floor unprovability is entailed by the framework, not suffered by it
+
+Proof is a validation operation: receipts on the worldline, checking at closure, countersign at agreement. In the framework's own anatomy, validation presupposes distinction: something held against something else, across a boundary. ∞ precedes all of that; it is the substrate before any boundary exists to check against. The corpus already states the precedent for a different tool: "Dimensional analysis is a boundary-level tool (it presupposes 3D measurement); it cannot reach behind the boundary to critique what exists before measurement." Proof is a tool of the same class. Demanding a proof of A0 asks a boundary-level operation to reach behind the boundary.
+
+Sharper: if A0 were provable from inside, the inside would contain the certification of its own ground, which is the Inflation shape (the part containing the whole). So the unprovability of the ground floor is a prediction of the ontology, and the ontology would be inconsistent if the demand could be met. Every ontology is in the same position at its ground floor (materialism does not prove "there is only matter"; it assumes it and performs); the framework is unusual only in explaining why the position is unavoidable. What an ontology owes instead of a proved ground: forced consequences, exposure to death, and survival under correction.
+
+### Finding 10: the three grades of proof, and which are available
+
+**Grade 1, the conditional (available, partially done).** IF A0 (one substrate) and IF an undifferentiated 1 is impossible (A1's premise), THEN multiplicity, closure, and nesting follow. The conditional is proof-apt: formalize the premises and machine-check the forced steps. The downstream precedent exists (the wrap lemma; seven independent routes forcing T = 3; the T-operator theorems). The ground floor deserves the same treatment: a theorem of the form "a self-limiting unity admits no privileged self-limitation, hence all obtain" would convert the Soul Array from imagery into mathematics. `circumpunct_foundations_formal_v0_1.md` is the start of this program.
+
+**Grade 2, empirical contact (available, the live open question).** The constants grammar's honest current status is fits-given-α over a restricted integer vocabulary, with kill conditions attached. What would upgrade it is one pre-registered prediction of a not-yet-measured (or about-to-be-remeasured) quantity that lands. Even that would not prove the ontology (underdetermination: other foundations could emit the same number); it would make it the best-performing description, which is the strongest state physics ever grants anything.
+
+**Grade 3, proof that reality IS this (unavailable to every ontology, from anywhere, ever).** Not a defect of the circumpunct; the condition of the question. The playing field is level at the ground floor. The game is played entirely on consequences.
+
+### Finding 11: the discriminators, and the behavioral signature
+
+Since Grade 3 is closed to all contenders, ontologies are compared on: internal consistency under audit; forcing versus accommodating (does it predict integers, or absorb any data after the fact?); falsifiability held visibly rather than hidden; and the cost asymmetry of living inside it if it is false (the book's "Why Change Your Ontology?" argument). The book's Test for Ontology chapter already carries the closed-system warning (a system that reads every outcome as confirmation has protected itself from reality) and the vulnerability clause ("an ontology that cannot be wrong anywhere should not be trusted anywhere").
+
+One further discriminator belongs on the record because it is observable in the corpus itself: the framework retracts. The ladder correction, the scalar-sector reversal, the killed candidates, the graded findings, the visible retraction notices: a belief system does not do this. Survival under self-correction is not proof, but it is exactly what §25.20 names as the deeper opposite of lying (corrigibility), applied at corpus scale. The strongest honest sentence available today is not "this is how reality works" but: the ground is held open at the aperture, the consequences are forced and exposed, and the structure has so far survived its own discipline.
+
+### Program (what "how to prove it" becomes)
+
+1. Formalize the ground floor: A0 plus the indistinguishability premise stated in a formal language, the multiplicity and closure steps machine-checked. Converts "I think this is right" into "these are the exact sentences you must grant."
+2. Pre-register one prediction against an unmeasured or soon-to-be-remeasured quantity, chosen before looking. The grammar's live open question, made operational.
+3. Keep the kill conditions in front: scalar-sector minimality (any charged Higgs or CP-odd scalar falsifies S = 64), the 0.22 ppb α band against future CODATA revisions, the Lucas boundary at Pascal m = 5.
+4. The person-level test (the book's closing criterion): does holding the ontology produce corrigibility, responsibility, and boundaries honored? For an ontology whose claims include ethics, this is evidence of the right kind, not a substitute for the other three.
+
 ## Files consulted
 
-`CLAUDE.md` (genesis sequence, Soul Array, §4.8a notices, wholeness plane notice, temporal adjudication, harmonic model); `circumpunct_foundations_formal_v0_1.md` Axiom 3; `circumpunct_from_the_beginning_plain_v0_1.md` §§1-5; `Circumpunct_ToE.md` cross-traditional isomorphism; `plans/wholeness_plane_and_nesting_2026_08_01.md` (no-greatest-whole; format precedent); `consciousness.md`.
+`CLAUDE.md` (genesis sequence, Soul Array, §4.8a notices, wholeness plane notice, temporal adjudication, harmonic model); `circumpunct_foundations_formal_v0_1.md` Axiom 3; `circumpunct_from_the_beginning_plain_v0_1.md` §§1-5; `Circumpunct_ToE.md` cross-traditional isomorphism; `plans/wholeness_plane_and_nesting_2026_08_01.md` (no-greatest-whole; format precedent); `Book-What_is_Wholeness/what_is_wholeness_v2.md` (A Test for Ontology); `consciousness.md`.
