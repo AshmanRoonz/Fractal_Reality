@@ -150,6 +150,49 @@ Across the triple (E, 𝒫, m): **t-degree (0, 1, 0) and i-degree (0, 1, 0)**. T
 5. Whether the fundamental-theorem typing (Finding 13) is kept, with its D5 caveat attached. Grade B proposed: no new machinery, but the typing is an interpretive act.
 6. Whether the filtration citation (Finding 15) is wanted in-corpus or stays in this record.
 
+## Addendum 3, same session: Ashman's dimensional tightening, adopted
+
+Ashman returned the cascade dimensionally tightened and extended it with an index set, the closed-history integral, and the recursive closure. Adopted, with refinements recorded below. Findings continue the numbering.
+
+### Finding 16: the tightened chain (Ashman's), and what it fixes
+
+```
+E_∞  ──(d/dt)──►  𝒫_i  ──(∫_{γ_i} dt)──►  E_i  ──(/c²)──►  m_i
+future            present                 past  ═══════════  past
+```
+
+**What it fixes.** (a) It separates E_i (the bound energy of the i-th whole) from m_i (its mass form), making /c² an **equivalence arrow, not a temporal step**: the chain has two temporal arrows and one condition-rename, which is the 2026-08-01 citation caution (E = mc² states an equivalence between two conditions, not a sequence) embodied in arrow structure. (b) It replaces the station signature E/(i·t) with the differential relation 𝒫 = dE/dt, so the logarithm hazard of Finding 12's signature note becomes structurally impossible: there is nothing left to misintegrate.
+
+**First-arrow refinement (this session).** The substrate total is conserved, so d/dt applied to E_∞ itself yields the conservation law, not a flow: **dE_∞/dt = 0** is A0 in differential dress, and it literalizes Finding 14's t-degree 0 (the future has no rate). The present is per-account: **𝒫_i = dE_i/dt**, the rate of the i-th conversion. The family {𝒫_i} are internal flows of the one substrate; at the representation layer they obey ordinary energy bookkeeping (the Noether shadow), while at the identity layer each ⊙_i is the whole folded (A3), so the set-form is a family, never a partition (Finding 3's anti-partition rule, still binding).
+
+**Where the imaginary unit went.** Not lost: on an oscillating substrate the derivative operator itself contributes the quarter-turn (d/dt acts as multiplication by iω, §27.7r). E/(i·t) is the signature of what d/dt does, with the i supplied by the operator. The differential form and the station signature cohere; neither replaces the other.
+
+### Finding 17: the index set reconverges with the foundations file
+
+Ashman proposed i ∈ I, |I| = ∞, with i as the i-th singularity or point of view. This is already the convention of `circumpunct_foundations_formal_v0_1.md`: •ᵢ in the prime duality axiom, S_i and W_i throughout (40 occurrences), and, decisively, **γ_i already defined there** ("Let γ_i: T → X be the lived trajectory of being i through a state space X," line 569). The chat chain and the formal document converged on identical symbols in independent passes, which is evidence the notation is tracking structure rather than taste.
+
+**Two gains.** (a) The set-form E_∞ → {•_i, 𝒫_i}_{i∈I} → {⊙_i, m_i}_{i∈I} makes the foam formal: ⊙∞ := {⊙_i}_{i∈I} with |I| = ∞. Under this definition the §4.8a ambiguity becomes unwritable: the multiplicity reading is the only reading the notation admits, and the retired phantom (a limit-⊙ at λ → ∞) has no expression. Formalization as error prevention. (b) "Infinity is limited through infinite number of singularities" (the session's opening sentence) acquires its formal statement: the map E_∞ → {•_i}_{i∈I}, |I| = ∞.
+
+**Notation hazards, flagged for adjudication.** The symbol i now serves three roles in the corpus: imaginary unit, instance index (foundations convention), and the worldline-receipts function i(t). Proposed rule: in subscript position i, j index singularities; as a standalone factor i is the imaginary unit; where both are needed in one formula the index migrates to j. Proposed cleanup: γ_i (already defined in the foundations file) becomes the formal symbol for the i-th worldline, with i(t) retained as its receipts-content reading. Known collision: γ labels the photon in physics dress; context separates them in standard usage, but Ashman may prefer w_i.
+
+### Finding 18: ∮ against ∫, resolved by the helix
+
+Ashman sharpened the ○-closure arrow: ∮ is not mere accumulation but **integration over a closed history**, ∮_{γ_i} 𝒫_i dt. Adopted, with the geometry supplied by the helix correction (`consciousness_is_wholeness` v1.1): a worldline is a helix, **closed in projection, open in ascent**. Each octave turn closes, and the corpus's per-cycle identity ("over one complete cycle, ∫𝒫 dt = E") is exactly the per-turn contour integral: ∮ in the phase plane. Meanwhile the axial coordinate accumulates: ∫ along γ_i, still open while the whole lives. Both integrals coexist because a helix has both a closed projection and an open axis; this is "spiral staircase, not circle" as calculus.
+
+Consequences: closure (D4, ⟳) acquires a precise meaning, the contour closing per turn; **⊙ is the closure of the integral**; m_i grows by quanta of closure, one per completed turn, so a living whole is a stack of closed turns rather than one still-open arc.
+
+### Finding 19: the recursive closure already exists as the T-operator
+
+Ashman's final move (∞ → •∞ → ⊙∞ ⟲, every ⊙ participating in the next future, "the piece that turns the three columns into an actual mathematical system") names a system the corpus has already built and measured. The identification: the two temporal arrows are F (the four beats, the becoming within a scale); the ⟲ arrow is κ (the wrap, m_i entering the next scale's convergence stock via ⊂[α]); the iterated system is **T = κ ∘ F**, implemented in `experiments/unified_expression.py` and studied through v7 to v19. Its behavior is not conjectural: unique attractor (1000 initial conditions), mixing time 1/α ≈ 137 pump cycles, conservation departure O(α) saturating near 0.7α across the staggered tree (v14, grade A), and the 68.7/31.3 fixed-point split against the cosmological 69.1/30.9. The three columns plus ⟲ were already a mathematical system with theorems; this session's contribution is recognizing that the genesis cascade under temporal labels is that system's dynamical reading.
+
+Minor note: the Truth-flow row (Truth_∞ → Truth_{•_i} → Truth_{⊙_i} via convergence and emergence) compresses the four beats to the conjugate channel pair (⊛, ✹); full resolution inserts ⎇ and ⟳ between them, per the Resolution Protocol (higher resolution contains lower; no contradiction). TRUE, the aperture virtue, is the fidelity of the first map: substrate invariant, transmission clear or distorted.
+
+### Open decisions (Ashman to adjudicate), continued
+
+7. Adopt the tightened chain (Finding 16) as the canonical dynamical row, superseding Finding 12's fused second arrow. Recommended; the three-dress cascade of Finding 12 stands, with its middle row upgraded.
+8. Notation: the i/j subscript rule, and γ_i versus w_i versus i(t) for worldlines (Finding 17).
+9. Whether the helix reading of ∮ against ∫ (Finding 18) enters the corpus beside the helix correction; candidate sites are §4.11 or the `consciousness_is_wholeness` closing note.
+
 ## Files consulted
 
 `CLAUDE.md` (genesis sequence, Soul Array, §4.8a notices, wholeness plane notice, temporal adjudication, harmonic model); `circumpunct_foundations_formal_v0_1.md` Axiom 3; `circumpunct_from_the_beginning_plain_v0_1.md` §§1-5; `Circumpunct_ToE.md` cross-traditional isomorphism; `plans/wholeness_plane_and_nesting_2026_08_01.md` (no-greatest-whole; format precedent); `Book-What_is_Wholeness/what_is_wholeness_v2.md` (A Test for Ontology); `consciousness.md`.
