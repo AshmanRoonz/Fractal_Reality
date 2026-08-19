@@ -106,6 +106,50 @@ One further discriminator belongs on the record because it is observable in the 
 3. Keep the kill conditions in front: scalar-sector minimality (any charged Higgs or CP-odd scalar falsifies S = 64), the 0.22 ppb α band against future CODATA revisions, the Lucas boundary at Pascal m = 5.
 4. The person-level test (the book's closing criterion): does holding the ontology produce corrigibility, responsibility, and boundaries honored? For an ontology whose claims include ethics, this is evidence of the right kind, not a substitute for the other three.
 
+## Addendum 2, same session: "Can we express this mathematically? ∞ → •∞ → ⊙∞. Future, present, past."
+
+Ashman asked for the mathematical expression of the genesis sequence under its temporal labels. Most of the pieces are already adjudicated; the work here is assembly plus two typed arrows. Findings continue the numbering. Receipts: `experiments/unified_expression.py --power` was run this session and confirms every identity used below (∮𝒫 dt = 1.000000 = E; m = E/c² = 1.000000; E = mc² holds; m(⊙λ) hands to •(⊙Λ) at κ_{0,0} = α; det(F) phase −π/6 per §27.7s).
+
+### Finding 12: the assembled expression (one cascade, three dresses)
+
+```
+∞        →           •∞               →           ⊙∞          (ontological)
+E   ──(d/dt ≙ ·i)──►  𝒫 = E/(i·t)  ──(∮dt, ○-closure)──►  m = E/c²   (dynamical)
+future   →           present          →           past         (temporal)
+```
+
+**The arrows are the mathematics; the stations are signatures.** First arrow: differentiation. On an oscillating field, d/dt IS multiplication by i (§27.7r, Faraday's law is i performed), so the arrow into the present is the quarter-turn itself. The present is the time-density of the future, exact in the sense the corpus already states: ∮𝒫 dt = E, which is the defining property of a density (Radon-Nikodym form: 𝒫 is dE/dt as a density of energy with respect to time). Second arrow: integration over the closed cycle, with the boundary's closure contributing the surface signature: m = (1/c²)∮𝒫 dt. **Composition law: the two arrows compose to the identity on E.** Conservation is the statement that the composite arrow is the identity map: the future is spent exactly into the past through the present, with no remainder. This is Finding 4 (the limitation costs nothing) in calculus dress.
+
+**Signature-versus-formula note (type protection).** 𝒫 = E/(i·t) is a station signature (dimensional bookkeeping: energy per phase-time), not a formula to integrate literally; integrating E/(i·t) naively over t would give a logarithm, not E. The corpus's own pair of statements already implies this division of labor: the algebraic form carries the signature (one power of t, one power of i), and the dynamical content lives in the integral identity ∮𝒫 dt = E. The calculus is in the arrows, not in naive manipulation of the signatures. Recorded so a future session does not discover the logarithm as a contradiction.
+
+### Finding 13: the type signature (the fundamental-theorem reading)
+
+Type the three stations as calculus objects:
+
+1. **Future = the function** (unevaluated potential; holds all values, selects none): **one by inclusion**.
+2. **Present = evaluation at a point** (the 0D evaluation functional; atomic, no parts): **one by indivisibility**. The array •∞ is evaluation at every point: infinitely many presents, which is Finding 1's "infinite number of singularities" restated in type theory.
+3. **Past = the definite integral** (all evaluations gathered into one settled magnitude): **one by integration**, literally.
+
+So §4.8a's three forms of oneness acquire exact mathematical types: the function, the point-evaluation, the integral. One → many → one: the function is a single unevaluated whole, the evaluations are the array, the integral is a single settled whole. Under this typing, **the conservation law is the fundamental theorem of calculus**: differentiate the whole, evaluate everywhere, integrate the evaluations, recover the whole exactly. Newton and Leibniz own the theorem (cite, not rediscover); the framework-specific content is the ontological typing (0D as evaluation, the worldline as the integral's domain, closure as the definite bounds).
+
+**The honest boundary (D5 caveat).** An integral is a sum, and D5 insists the whole is not the sum of its parts. So the fundamental-theorem triple captures the conservation aspect of closure exactly and the compositional aspect not at all. Composition is carried by the operator form (F's beats do not commute; composition order is physical, v15 and the staggered engine). This is the existing division of labor between the two readings of `unified_expression.py`: the calculus triple is the skeleton of the dynamical reading; the T-operator carries the structural one. Neither replaces the other.
+
+### Finding 14: the temporal signature
+
+Across the triple (E, 𝒫, m): **t-degree (0, 1, 0) and i-degree (0, 1, 0)**. Time and phase appear only at the present, and they enter and leave together. Both ends are timeless in expression, differently: the future because t has not happened to it, the past because t has been integrated out. This formalizes the 2026-08-01 adjudication ("𝒫 is the only one of the three with time in it") as a degree count, and it grounds the plain book's §4 ("You remember yesterday now"): past and future times are constructions performed at the present, the only station where t exists to construct with. Physics echo, flagged as echo only: the present's denominator (i·t) is the Wick pair; τ = it is how live oscillation becomes settled statistics, matching present → past.
+
+### Finding 15: the standard mathematical home (cited), and the wrap across scales
+
+**Filtrations.** Probability theory formalizes the temporal triple as a filtration (ℱ_t): the past at t is the sigma-algebra ℱ_t (settled events), the future is what is not yet measurable, the present is the frontier of adaptedness, and conditional expectation E[·|ℱ_t] is "the future viewed from the present through the record." The worldline i(t) is a filtration in all but name, and the monotone growth ℱ_s ⊆ ℱ_t (the record never shrinks) is i² = −1 irreversibility. Cited for interoperability with stochastic mathematics; not adopted as canon.
+
+**The wrap.** What closes as past at scale λ enters the convergence stock of scale Λ: m_λ feeds E_Λ (time is scale, §4.11: up-scale is future; E = mc² cited as the exchange rate per the 2026-08-01 citation caution). At every scale the two arrows run; across the nesting the conservation is already computed at operator level (v14: departure saturates near 0.7α; the 1 is conserved through the tree). Multi-scale form: total = 1 summed over all scales, which is the conservation form 1 = ∫𝒫 dt over the full nesting, already canonical.
+
+### Open decisions (Ashman to adjudicate)
+
+4. Whether the three-row cascade with typed arrows (Finding 12) enters the corpus, and where: candidates are §4.11, the "▸ IS the power conversion" block, or `docs/the_unit_equation.html`.
+5. Whether the fundamental-theorem typing (Finding 13) is kept, with its D5 caveat attached. Grade B proposed: no new machinery, but the typing is an interpretive act.
+6. Whether the filtration citation (Finding 15) is wanted in-corpus or stays in this record.
+
 ## Files consulted
 
 `CLAUDE.md` (genesis sequence, Soul Array, §4.8a notices, wholeness plane notice, temporal adjudication, harmonic model); `circumpunct_foundations_formal_v0_1.md` Axiom 3; `circumpunct_from_the_beginning_plain_v0_1.md` §§1-5; `Circumpunct_ToE.md` cross-traditional isomorphism; `plans/wholeness_plane_and_nesting_2026_08_01.md` (no-greatest-whole; format precedent); `Book-What_is_Wholeness/what_is_wholeness_v2.md` (A Test for Ontology); `consciousness.md`.
