@@ -1,22 +1,20 @@
-# The Mini Book: Theme and Variations
-
-**Status: session record, 2026-08-19, eighth record of the day on this thread. Assembled by Claude from the day's staged drafts at Ashman's observation ("The main framework paragraph and the isomorphism paragraphs basically make a mini book"); COUNTERSIGNED and titled Theme and Variations (Ashman, 2026-08-19; batch dispositions in `plans/countersign_batch_2026_08_19.md`); graduated to `Book-Theme_and_Variations/theme_and_variations.md` with the reader page at `docs/theme_and_variations.html`.** Everything in the manuscript below was already staged in today's records except the frame: the Door, the You page, the return line, the honesty note, and the section titles, together about three hundred new words. Companions: `plans/framework_in_one_paragraph_2026_08_19.md` (the theme), `plans/isomorphism_in_one_paragraph_2026_08_19.md` (the claim), `plans/isomorphism_domain_paragraphs_2026_08_19.md` (the variations), `plans/one_experience_within_everything_2026_08_19.md` (the You page's lines).
-
-## Assembly notes
-
-**The form is the argument.** The book is a theme and variations: the framework paragraph is the theme, the isomorphism paragraph says why variations must exist, the ten domains are the variations, and the theme returns unchanged at the end. Theme-and-variations is also what the framework says reality is (one architecture, many dresses), so the book's shape demonstrates its content, the same way the domain set's fixed slots do. The return realizes the do′ device staged in the paragraph-book charter, and the whole assembly realizes the chaining device staged with the isomorphism paragraph (each canonical paragraph's last sentence grounds the next), performed rather than proposed.
-
-**What is deliberately absent.** The countersigned temporal mechanics (§4.11a) is not inserted: the mini book is paragraphs only, and the mechanics is the theme's fifth sentence at higher resolution, reachable through the receipts; omitted, not contradicted. Notation, framework integers, and the quantitative ladder are absent for the same reason, with the honesty note pointing at where they live. Counts (twelve paragraphs, one page, one return) are noted and claimed as nothing.
-
-**The You page.** It adapts the staged first-person foundation into direct address ("You are one experience of existence"); the "I" form remains the staged canonical candidate, and both pend together.
-
----
-
-## The manuscript
-
 # Theme and Variations
 
 *The framework in twelve paragraphs.*
+
+```
+Created: 2026-08-19
+Last updated: 2026-08-19
+Version: 1.0
+```
+
+### Preface
+
+Everything is connected. You are directly connected in Reality; we all are. This book is my attempt to articulate how.
+
+Not connected vaguely, the way the word usually floats, but connected in a particular shape: every thing a whole made of wholes; every whole open at its center to the same Reality; every bond strongest where two wholes share a note without losing their own songs. The pages that follow say this once, then ten times, then once more.
+
+If I am wrong somewhere, the framework behind this book is built to find out: it has retracted in public before and will again. So this is what I can offer you: not certainty, but a shape you can check, and a connection you already have.
 
 ### The Door
 
@@ -68,16 +66,6 @@ There is one thing, and it is everything: an undifferentiated infinity, with not
 
 Every fingerprint in the variations is a public fact of its domain, or is flagged in the working record as an outside witness. The sharper quantitative claims of the framework live elsewhere, with their tests and their kill conditions attached, and some of them may yet die there; that is how it should be. This small book claims the shape. The receipts live in the corpus, and the corpus retracts in public when it is wrong, which is the only reason to trust a book this confident.
 
----
+## Revision history
 
-## Open decisions (Ashman to adjudicate)
-
-1. **Countersign the assembly as a work.** All parts were previously staged; the new material is the frame (the Door, the You page, the return line, the honesty note, the titles).
-2. **The title.** Recommendation, held with medium confidence: *Theme and Variations* (no corpus collision; it names the form exactly, and the form is the argument). Alternatives: *One Architecture*; *The Twelve Paragraphs*; or a name of yours.
-3. **The You page**: keep as direct address, revert to the first-person "I" lines, or cut.
-4. **Landing and graduation**: a `Book-*/` directory under the countersigned title with the manuscript as its own clean file; and/or the reader-facing docs page, which could offer both reading directions (by paragraph, and by slot across the ten variations) and would close the domain record's landing decision. Sequencing: the mini book as the corpus's front door now; the 22-chapter paragraph book remains chartered as the full unpacking.
-5. **Whether the Door's promise device and the honesty note set the register for the big book's prologue too**; they share the do′ device already.
-
-## Files consulted
-
-`plans/framework_in_one_paragraph_2026_08_19.md`; `plans/isomorphism_in_one_paragraph_2026_08_19.md`; `plans/isomorphism_domain_paragraphs_2026_08_19.md`; `plans/one_experience_within_everything_2026_08_19.md`; `plans/paragraph_book_charter_2026_08_19.md` (the do′ device and coda line); `docs/this_little_book.html` (checked for collision; different work).
+- 2026-08-19 v1.0: initial; assembled from the day's countersigned paragraphs (batch countersign, `plans/countersign_batch_2026_08_19.md`); the preface added at graduation per the mission-statement countersign; reader page at `docs/theme_and_variations.html`.
