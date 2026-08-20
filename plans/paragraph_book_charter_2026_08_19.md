@@ -59,6 +59,8 @@ Sources per chapter: the companion record, Finding 3, under the matching sentenc
 | | 22 | In a Life | the shape of a good life | the four freedoms found in one week of your own life |
 | Coda | 23 | The Paragraph, Again | all of it, verbatim | the re-read; nothing on the page changed; measure what did |
 
+Chapter 15's thesis is countersigned (Ashman, 2026-08-19, "Signed."): the four-sentence temporal mechanics (we use the past to predict the future; the future supplies possibility; the past supplies constraint; the present is where possibility moves through inherited constraint and becomes actuality; record and receipts in `plans/possibility_through_constraint_2026_08_19.md`). It pays chapter 2's planted question exactly: change is conversion, and conversion needs both suppliers.
+
 Count note, decoration flag raised on purpose and vindicated the same day: the first draft landed at 21 chapters (A(3); noted as coincidence, claimed as nothing) and moved to 22 within hours, when the isomorphism consideration (`plans/the_isomorphism_of_the_framework_2026_08_19.md`, Finding 8) showed the clause "one architecture runs at every scale" had no chapter of its own. Chapter 18, One Architecture, now carries it: the clause that makes the four fingerprint chapters one argument instead of four anecdotes (the not-analogy argument of Ch32 and the February isomorphism doc, in plain words; Ch33's traditions as independent witnesses). The count moved for a structural reason; the number does not steer the book.
 
 ## Witnesses (cite, not rediscover)

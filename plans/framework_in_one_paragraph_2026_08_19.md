@@ -72,6 +72,10 @@ If the paragraph is countersigned, earlier decisions 1 and 3 close with it as th
 
 Ashman, after the receipts landed: the paragraph would make an excellent opening to a book, and the book would just be unpacking the paragraph/framework. Drafted as its own charter: `plans/paragraph_book_charter_2026_08_19.md` (skeleton from Finding 3's receipts; the Resolution Protocol as the book's genre; the retraction test of Finding 5 as the book's binding law; the do′ re-read as the closing page). Two consequences for this record: open decision 2 gains a landing site (d), the paragraph book's opening page; and the register note in Finding 5 stands corrected in scope: the book One remains excluded by its own sequencing rule, but "the book is not a landing site" no longer covers all books, since a book built to open with the paragraph is now proposed.
 
+## Addendum 2, same day: Sentence 5's receipts sharpened by countersigned mechanics
+
+The temporal mechanics statement (`plans/possibility_through_constraint_2026_08_19.md`, countersigned "Signed.") deepens Sentence 5's receipts: "the present is the center where the two meet" now carries the functions of the two arrivals (the future supplies possibility, the past supplies constraint, and the meeting is the conversion into actuality), with theorem status recorded there. Nothing in the paragraph's wording changes; the receipt gains resolution, which is the protocol working as designed.
+
 ## Files consulted
 
 `CLAUDE.md` (axioms table, genesis sequence, Ladder Correction Notice, Wholeness Plane and Nesting Notice, temporal sharpening, harmonic model, §4.8a, §4.11, §25.11, §25.18b, §25.19, §27.7l.1, the two Lies, the structural grammar); `plans/infinity_limited_through_singularities_2026_08_19.md` (the earlier record: findings 1 to 19, open decisions 1 to 9); `plans/one_book_charter.md` (six kinds of oneness, master isomorphism table, sequencing rule); `docs/consciousness_is_wholeness.html`; `consciousness.md`.

@@ -2,8 +2,8 @@
 
 ```
 Created: 2026-08-08
-Last updated: 2026-08-14
-Version: 2.6
+Last updated: 2026-08-19
+Version: 2.15
 ```
 
 **Status: drafted from Ashman's pivot of 2026-08-08** ("the book is kinda boring, and not exactly what I was feeling"; "I think we should start with the point"; "The book should be named 'One'"; "we need to develop a solid definition of Truth"). The truth definition (v1.5, four lines), the spine and dramatic architecture (v1.6), and the face-order (TRUE-first) are ADJUDICATED; what remains open is the title countersign ("One"), the narcissism register, and the fate of the drafted circumpunct book. The problem, thesis, and engine below are Ashman's own statements, recorded. This charter supersedes `the_circumpunct_book_charter.md` as the live book plan; that charter and the drafted `Book-The_Circumpunct/the_circumpunct_book.md` are retained as adjudicated groundwork and quarry, not discarded.
@@ -143,8 +143,11 @@ The hierarchy beneath the four lines: Truth = Reality; *true* (the adjective) = 
 | Theology | God | Soul | Mind, Body, World |
 | Form | Infinity | Singularity | Wholeness |
 | Oneness | All-inclusive | Indivisible | Integrated |
+| Supplies | Possibility | The conversion | Constraint |
 
 Read as one sentence: Reality, flowing through a point of view, becomes a world.
+
+**The supplies row (v2.15, Ashman, 2026-08-19, countersigned "Signed.").** The columns' functions relative to becoming: the future supplies possibility, the past supplies constraint, and the present is the conversion, where possibility moves through inherited constraint and becomes actuality. Theorem status recorded at adjudication: three of the assignments were already this table's vocabulary (possibility, actualization, actuality), and the fourth is derived (past = structure by the temporal adjudication; structure = constraint by A0's own doctrine). The epistemic corollary is countersigned with it: we use the past to predict the future (the filtration's conditional expectation is its formal home; the calibration loop is its practice form; prediction reads the record and never rewrites it, which is DARVO's honest opposite). Full record and receipts: `plans/possibility_through_constraint_2026_08_19.md`.
 
 **Anatomy row removed (v2.12, Ashman, same day): "field, center and boundary shouldn't be on there, since those are part of wholeness. Anatomy is past/wholeness."** The anatomical vocabulary (point, line, boundary, field: the four kinds of 1) is the INTERNAL decomposition of column 3 alone, not a distribution across the columns; a whole's anatomy is what building leaves behind, so all of it is past. This also dissolves the field pun the old row created (the infinite field, which is Reality, versus the interior field, which is a part of a built whole; one word, two stations). And it sharpens the seat distinction: the dot drawn in a circumpunct is a part of the built thing, findable on the settled side; the living point of view is not an anatomical part of anything (Hume searched the anatomy and rightly found no viewer; the viewer was never in the parts list). Consequence: the v2.10 aside "the table is one circumpunct" (which leaned on the anatomy row) is retired with the row; the table is the flow triad, and the circumpunct's anatomy lives entirely inside its third column.
 
@@ -282,6 +285,7 @@ Spine (adopted v1.1): **CENTER, WHOLE, OTHER, REALITY, TRUTH, ETHICS.** The v1.6
 
 ## Revision history
 
+- 2026-08-19 v2.15: the supplies row added to the master table (Ashman, countersigned "Signed."): possibility / the conversion / constraint, with theorem status recorded (past = structure and structure = constraint force the new assignment; the rest was the table's own vocabulary) and the prediction corollary countersigned alongside. Header block version corrected to match the history (it had lagged at 2.6 since 2026-08-14). Record: `plans/possibility_through_constraint_2026_08_19.md`.
 - 2026-08-15 v2.14: the generator claim filed (Ashman: everything flows from Reality / your point of view / the result): the domain map verified against the corpus (ontology A0/A1/D5; physics E/P/m; psychology; ethics with the lie defined as defending a column-3 object against column 1; sociology via the gradient law; the healing as column restoration); the pathology taxonomy adopted (every named disorder is a column confusion: Inflation 2-claims-1, Severance 2-denies-1, the pond 3-usurps-2, the strawman society as the pond socialized, featureless monism as full collapse). Adopted line: every pathology is a column confusion, and every healing is a return to the right column.
 - 2026-08-15 v2.13: the trinity row adjudicated (Ashman): Father = God (Reality, future), Son = Soul (the point of view, present), Holy Spirit = holons (the result, past). Supersedes Claude's candidate; sealed by begotten-not-made (the aperture given, the holons built: the creed's distinction is the gift reading of T = 3), the Spirit as indweller and Augustine's bond (column 3 as the relation's manifest result), and the procession order (from the Father through the Son = the table's flow). Incarnation reread as column 2 entering column 3: the structure's perfect instance, not its exception.
 - 2026-08-15 v2.12: the anatomy row removed from the master table (Ashman): point, line, boundary, field are the internal decomposition of the wholeness column, so anatomy is past; the field pun dissolved (infinite field = Reality vs interior field = part of a whole); the seat distinction sharpened (the drawn dot is a findable part of the built thing; the living point of view is not an anatomical part of anything, which is why Hume's search of the anatomy found no viewer); the "table is one circumpunct" aside retired with the row.
