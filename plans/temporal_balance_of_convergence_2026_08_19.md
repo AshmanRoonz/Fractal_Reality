@@ -1,6 +1,6 @@
 # The Temporal Balance of Convergence
 
-**Status: session record, 2026-08-19, seventeenth record of the day on this thread. Claude drafted, pending Ashman's countersign.** The statement is Ashman's: *convergence maybe should balance between future and past.* It completes the direction-of-convergence arc and lands on ◐'s own definition. Companions: `plans/direction_of_convergence_2026_08_19.md` (whose capacity claim this governs at the allocation layer), `plans/the_half_is_the_balance_2026_08_19.md`, `plans/future_converges_past_emerges_2026_08_19.md`, `plans/one_book_charter.md`.
+**Status: session record, 2026-08-19, seventeenth record of the day on this thread. COUNTERSIGNED with the direction record as a pair (Ashman, same day: "Sounds good."); closures executed as recommended, disposition under Open decisions.** The statement is Ashman's: *convergence maybe should balance between future and past.* It completes the direction-of-convergence arc and lands on ◐'s own definition. Companions: `plans/direction_of_convergence_2026_08_19.md` (whose capacity claim this governs at the allocation layer), `plans/the_half_is_the_balance_2026_08_19.md`, `plans/future_converges_past_emerges_2026_08_19.md`, `plans/one_book_charter.md`.
 
 ## Finding 1: the statement is ◐'s definition, made temporal by the countersigned kinematics
 
@@ -30,12 +30,12 @@ Splits get middles; capacities get corners: the corpus's own rule for when 0.5 i
 3. *Pure future is drift with nothing to correct; pure past is the pond; the living center breathes between them.*
 4. One clarifying sentence for the direction record, so its grade-A half is never over-read: *corrigibility names the forward capacity, not a command never to look back.*
 
-## Open decisions (Ashman to adjudicate)
+## Open decisions (closed at countersign, Ashman, 2026-08-19: "Sounds good.")
 
-1. **Countersign the balance claim** at the allocation layer, with the capacity-corner kept (Finding 3's two-layer rule attached). Grade A- proposed: a composition of the ◐ definition, the countersigned kinematics, and the charter's three-tenses doctrine, with both pole-refutations already in canon.
-2. **The lines**, especially 1 (the breath, already the citable plain form of the kinematics, now carrying the balance too) and 4 (the guard on the direction record).
-3. **Landing**: appended to the direction record as its completion, and the two-layer rule (splits get middles, capacities get corners) stated once wherever ◐ and the plane are taught together.
-4. **The precision-weighting citation**: in-corpus beside the calibration loop, or held in this record.
+1. ~~The balance claim~~ **CLOSED: canonical at the allocation layer, grade A-, with the capacity-corner kept and the two-layer rule attached.**
+2. ~~The lines~~ **CLOSED: the breath line is the canonical plain form (now carrying kinematics and balance together); the guard line is appended to the direction record.**
+3. ~~Landing~~ **CLOSED at the plans level: completion cross-links placed in the direction record and the charter (v2.17); the two-layer rule's one-line canon statement (splits get middles, capacities get corners) is queued for the next integration pass, since its home (§5 and the plane notice) sits outside the standing §4.11a authorization.**
+4. ~~Precision weighting~~ **CLOSED as held in this record, promotable to sit beside the calibration loop by a word.**
 
 ## Files consulted
 

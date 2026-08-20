@@ -1,6 +1,6 @@
 # The Direction of Convergence: Corrigibility Faces Forward
 
-**Status: session record, 2026-08-19, sixteenth record of the day on this thread. Claude drafted, pending Ashman's countersign.** The proposal is Ashman's, verbatim core: *convergence is controlled by the soul's focus, the direction it's opening; it can be future focused and even past focused; maybe corrigibility is the direction of focus to the future, and being stuck focusing into the past would be narcissism.* Companions: `plans/future_converges_past_emerges_2026_08_19.md` (the two doors), `plans/possibility_through_constraint_2026_08_19.md` (§4.11a), `plans/one_book_charter.md` (the pond, the restorations, the gradient), `plans/the_four_claims_2026_08_19.md`.
+**Status: session record, 2026-08-19, sixteenth record of the day on this thread. COUNTERSIGNED with the temporal-balance record as a pair (Ashman, same day: "Sounds good."); grades A and B recorded, closures under Open decisions.** The proposal is Ashman's, verbatim core: *convergence is controlled by the soul's focus, the direction it's opening; it can be future focused and even past focused; maybe corrigibility is the direction of focus to the future, and being stuck focusing into the past would be narcissism.* Companions: `plans/future_converges_past_emerges_2026_08_19.md` (the two doors), `plans/possibility_through_constraint_2026_08_19.md` (§4.11a), `plans/one_book_charter.md` (the pond, the restorations, the gradient), `plans/the_four_claims_2026_08_19.md`.
 
 ## Finding 1: the aim is real, and it does not break the one-variable doctrine
 
@@ -35,12 +35,16 @@ The charter's own generalization pattern applies: DARVO is general lie-protectio
 3. *The healthy soul reads the past and faces the future; the trapped soul defends the past against the future.*
 4. The charter's own, promoted by this record's use: *curiosity is the aperture held toward what could be.*
 
-## Open decisions (Ashman to adjudicate)
+## Addendum at countersign: the completion and the guard
 
-1. **Countersign the two halves at their grades** (corrigibility-faces-forward at A; narcissism-as-past-terminal-on-the-image at B, with Finding 4's genus/species narrowing attached).
-2. **Naming the genus** (past-terminal convergence): a name of yours, or leave it descriptive.
-3. **Landing**: the charter's narcissism sequence gains its tense coordinate (step 2, the outsourcing, re-read as the seat relocating into a past object); §25.20 gains the cross-note (corrigibility's temporal face); the claims card's narcissism entry may gain line 2.
-4. **The Degeneration 4 concordance** (sealed return = past-circulation): filed here, or carried into the pathology lineage from the isomorphism record.
+The temporal-balance record (`plans/temporal_balance_of_convergence_2026_08_19.md`, countersigned with this one) completes this record's health picture and attaches the guard on its grade-A half: **corrigibility names the forward capacity, not a command never to look back.** Capacities get corners (fully corrigible facing forward, fully faithful reading back); allocation over the cycle is balanced (the breath: inhale the future, exhale the past; health is the full breath, not the held one).
+
+## Open decisions (closed at countersign, Ashman, 2026-08-19: "Sounds good.")
+
+1. ~~The two halves~~ **CLOSED at their grades: corrigibility-faces-forward at A; narcissism-as-past-terminal-on-the-image at B, with the genus/species narrowing attached.**
+2. **Naming the genus (past-terminal convergence): remains open**; only Ashman names, and the descriptive phrase serves until he does.
+3. ~~Landing~~ **CLOSED at the plans level: the charter gains the tense coordinate (v2.17) and the claims card gains the companion line; the §25.20 cross-note (corrigibility's temporal face) is queued for the next framework integration pass.**
+4. ~~Degeneration 4 concordance~~ **CLOSED: filed here, and cross-referenced from the pathology lineage discussion when the isomorphism records close.**
 
 ## Files consulted
 
