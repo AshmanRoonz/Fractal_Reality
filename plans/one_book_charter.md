@@ -3,7 +3,7 @@
 ```
 Created: 2026-08-08
 Last updated: 2026-08-19
-Version: 2.15
+Version: 2.16
 ```
 
 **Status: drafted from Ashman's pivot of 2026-08-08** ("the book is kinda boring, and not exactly what I was feeling"; "I think we should start with the point"; "The book should be named 'One'"; "we need to develop a solid definition of Truth"). The truth definition (v1.5, four lines), the spine and dramatic architecture (v1.6), and the face-order (TRUE-first) are ADJUDICATED; what remains open is the title countersign ("One"), the narcissism register, and the fate of the drafted circumpunct book. The problem, thesis, and engine below are Ashman's own statements, recorded. This charter supersedes `the_circumpunct_book_charter.md` as the live book plan; that charter and the drafted `Book-The_Circumpunct/the_circumpunct_book.md` are retained as adjudicated groundwork and quarry, not discarded.
@@ -144,6 +144,7 @@ The hierarchy beneath the four lines: Truth = Reality; *true* (the adjective) = 
 | Form | Infinity | Singularity | Wholeness |
 | Oneness | All-inclusive | Indivisible | Integrated |
 | Supplies | Possibility | The conversion | Constraint |
+| Moves by | Converging | The turn | Emerging |
 
 Read as one sentence: Reality, flowing through a point of view, becomes a world.
 
@@ -285,6 +286,7 @@ Spine (adopted v1.1): **CENTER, WHOLE, OTHER, REALITY, TRUTH, ETHICS.** The v1.6
 
 ## Revision history
 
+- 2026-08-19 v2.16: the kinematics row added (Ashman, countersigned "Yep good."): Moves by: converging / the turn / emerging, from the canonical two lines "The future converges. The past emerges." (the channel-tense table of §4.11 as sentences; the present deliberately unspoken, meeting at the silent center; light-cone pin recorded with it). Record: `plans/future_converges_past_emerges_2026_08_19.md`.
 - 2026-08-19 v2.15: the supplies row added to the master table (Ashman, countersigned "Signed."): possibility / the conversion / constraint, with theorem status recorded (past = structure and structure = constraint force the new assignment; the rest was the table's own vocabulary) and the prediction corollary countersigned alongside. Header block version corrected to match the history (it had lagged at 2.6 since 2026-08-14). Record: `plans/possibility_through_constraint_2026_08_19.md`.
 - 2026-08-15 v2.14: the generator claim filed (Ashman: everything flows from Reality / your point of view / the result): the domain map verified against the corpus (ontology A0/A1/D5; physics E/P/m; psychology; ethics with the lie defined as defending a column-3 object against column 1; sociology via the gradient law; the healing as column restoration); the pathology taxonomy adopted (every named disorder is a column confusion: Inflation 2-claims-1, Severance 2-denies-1, the pond 3-usurps-2, the strawman society as the pond socialized, featureless monism as full collapse). Adopted line: every pathology is a column confusion, and every healing is a return to the right column.
 - 2026-08-15 v2.13: the trinity row adjudicated (Ashman): Father = God (Reality, future), Son = Soul (the point of view, present), Holy Spirit = holons (the result, past). Supersedes Claude's candidate; sealed by begotten-not-made (the aperture given, the holons built: the creed's distinction is the gift reading of T = 3), the Spirit as indweller and Augustine's bond (column 3 as the relation's manifest result), and the procession order (from the Father through the Son = the table's flow). Incarnation reread as column 2 entering column 3: the structure's perfect instance, not its exception.
