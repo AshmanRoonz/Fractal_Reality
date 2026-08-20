@@ -38,9 +38,40 @@ Precedent, verbatim shape: the Ladder Correction's interim glyph-integer rule sp
 6. **Candidate canonical line**, for grading: *Infinity converges to a point; from the point, the world emerges.* (The four words as a sentence; the glyph in prose; the breath: inhale from infinity, exhale a world.)
 7. **Open naming question, deliberately deferred**: whether ⊛ names the whole convergence arc with the 0.5-address stroke as its wake, or the stroke names split; the stroke-to-arc distribution (the quadrant reading: the tonic neighborhood as the ∞-facing arc, the interior strokes as the deposit-making arc) goes to the formal pass already staged with the balance record, not asserted here.
 
+## Refinement, same session: singularity named, emergence unpacked
+
+Ashman, before this record was committed: *"Infinity, convergence, singularity, emergence (1D, 2D, 3D) as wholeness."* The refined sequence:
+
+```
+∞    infinity       all extension; one by inclusion
+ ↓   CONVERGING     ∞D collapses toward 0D
+•    singularity    zero extension; one by indivisibility; where 0 meets ∞
+ ↓   EMERGING       extension unfolds: 1D line, 2D boundary, 3D field
+⊙    wholeness      the singularity composed with its three; one by integration
+ ↺   every whole converges again, as the next singularity
+```
+
+### Finding 6: the refinement is a composition of two adjudicated structures, which makes it theorem-grade
+
+1. **It is the master table's Form row with the Moves-by row between its columns.** Form: Infinity / Singularity / Wholeness (adjudicated); Moves by: converging / the turn / emerging (countersigned v2.16). The primary sequence is those two rows read together. And the provenance is already on file: the June 27, 2025 post's triad (Singularity, Wholeness, Oneness) is recorded in the charter as the anchor document, thirteen months early; the sequence closes a loop the corpus opened before its notation existed.
+2. **It is the three forms of oneness joined by the two motions.** §4.8a, adjudicated: ∞ one by inclusion, • one by indivisibility, ⊙ one by integration. The sequence walks the three forms in order with converging and emerging between them: the entire ontology as three kinds of one and two motions.
+3. **The parenthesis is the gift reading verbatim.** Emergence carries exactly the three walked dimensions (1D commitment, 2D filtration, 3D mediation): "T = 3 is the number of constraints you have to walk," and the singularity contributes zero to the traversal. The refined sequence states the gift reading as kinematics: the walk IS the emergence arc.
+4. **The dimensional geometry is canon's own line.** "0D = •. Zero extension. ∞D = E. All extension. They meet at the aperture... where dimension has not yet been assigned." Convergence is the ∞D-to-0D passage through that meeting; emergence is extension unfolding 1, 2, 3 in the corrected order (line, then boundary, then field).
+5. **The day closes its own arc.** It opened with "infinity is limited through infinite number of singularities at infinite scales" (the morning record) and closes with the same singularities completed through emergence into wholeness. One day, one sentence grown into one cycle.
+
+### Finding 7: one precision pin (against the hollow-shell misread)
+
+"Emergence (1D, 2D, 3D) as wholeness" must keep the v2.11 adjudication: wholeness is FOUR kinds of one composed (0D, 1D, 2D, 3D), with the point a member of the built whole while contributing zero to the walk ("the trinity flows in threes; wholeness builds in fours"). So the emerged three do not compose wholeness alone; they compose it WITH the singularity they emerged from. A 1-2-3 without its 0 is a heap around a vacancy, not a whole. The sequence reads: the singularity, clothed in its emerged three, is the whole. Pinned so the parenthesis is never read as replacing the center it proceeds from.
+
+### Finding 8: candidate citable forms (superseding Finding 5.6's line)
+
+1. The five bare words: *Infinity, convergence, singularity, emergence, wholeness.*
+2. The sentence: *Infinity converges to a singularity; the singularity emerges as line, boundary, and field; composed, they are a whole; and every whole converges again.*
+3. The compact: *Three kinds of one, joined by two motions.*
+
 ## Open decisions (Ashman to adjudicate)
 
-1. **Countersign the primary sequence** as the framework's canonical minimal cycle (the meaning layer), with convergence before the point.
+1. **Countersign the primary sequence in its refined form** (Infinity, convergence, singularity, emergence unpacking as 1D, 2D, 3D, composing wholeness with its center; the wrap as every whole converging again) as the framework's canonical minimal cycle at the meaning layer, with convergence before the singularity and the Finding 7 pin attached.
 2. **Countersign the two-layer rule** (Finding 4): addresses retained for arithmetic, definitions retired; the glyph-integer precedent extended to the half-steps.
 3. **The re-seating** (Finding 3): the ladder as emergence's fine structure per v2.12; presentation order changed accordingly.
 4. **The candidate line** (Finding 5.6), and whether the four bare words themselves are kept as a citable form.
