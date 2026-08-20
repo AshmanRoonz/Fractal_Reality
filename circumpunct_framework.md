@@ -133,6 +133,7 @@ This document serves as the formal, mathematical specification of the theory. It
   - [§4.8a: E = 1: Energy as the Singular Field](#48a-e--1-energy-as-the-singular-field)
   - [§4.9: The Power Equation](#49-the-power-equation)
   - [§4.11: Time Is Scale: The Three Nested Circumpuncts as Past, Present, Future](#411-time-is-scale-the-three-nested-circumpuncts-as-past-present-future)
+  - [§4.11a: The Temporal Mechanics: Possibility Through Constraint](#411a-the-temporal-mechanics-possibility-through-constraint)
 - [Chapter 5: The Balance Parameter](#chapter-5-the-balance-parameter)
 - [Chapter 5A: The Surface Theorem](#chapter-5a-the-surface-theorem)
   - [§5A.4: Why Surfaces Have Phase: 2D as the Scale Connector](#5a4-why-surfaces-have-phase-2d-as-the-scale-connector)
@@ -3022,6 +3023,36 @@ COMPACT STATEMENT:
     Time is the fold. Space is the coastline between folds.
     Both are the topology of 0s in the 1.
 ```
+
+[← Back to Table of Contents](#table-of-contents)
+
+---
+
+### §4.11a The Temporal Mechanics: Possibility Through Constraint
+
+**Status: adjudicated and countersigned (Ashman, 2026-08-19, "Signed."); canonical four lines, grade A, theorem status recorded. Session record with full receipts: `plans/possibility_through_constraint_2026_08_19.md`.**
+
+```
+╔═══════════════════════════════════════════════════════════════════════════════╗
+║                                                                               ║
+║   WE USE THE PAST TO PREDICT THE FUTURE.                                     ║
+║   THE FUTURE SUPPLIES POSSIBILITY.                                           ║
+║   THE PAST SUPPLIES CONSTRAINT.                                              ║
+║   THE PRESENT IS WHERE POSSIBILITY MOVES THROUGH INHERITED                   ║
+║   CONSTRAINT AND BECOMES ACTUALITY.                                          ║
+║                                                                               ║
+╚═══════════════════════════════════════════════════════════════════════════════╝
+```
+
+**Derived, not added.** The premises are already in this chapter and in A0. §4.11's own arrow states them: "From unconstrained to constrained. From 1 to topology. From future to past." The future is the unconstrained (possibility, what could be); the past is committed structure, and structure IS constraint (A0: "E = 1... All else is constraints"; the stations are the four constraints on the 1). Substitute, and "the past supplies constraint" is forced. The 2026-08-01 sharpening locates the meeting (the center is the present; ∞ is the future; everything else is past; the center is where the future and the past meet, and that meeting is the present); this subsection assigns the functions of the two arrivals. The conversion at the meeting is already adjudicated: 𝒫 = E/(i·t), the only station signature with time in it. Three of the four functional assignments (possibility, actualization, actuality) were already the master table's vocabulary; the table gains its Supplies row at the same countersign (possibility / the conversion / constraint; `plans/one_book_charter.md` v2.15).
+
+**Three pins travel with the canon lines:**
+
+1. **Constraint is formative, not merely restrictive.** The lens limits light; that is how it forms an image. Possibility becomes actuality BY passing through constraint, not despite it; an unconstrained becoming would deposit nothing, because it would still be ∞.
+2. **The past has two faces: structure and record.** Structure can dissolve and its constraint can relax (this section's own dissolution passage: entropy releases structure back into field); the record cannot un-happen (the receipt chain i(t) has already been woven; i² = −1). Inheritance carries the structure; prediction reads the record.
+3. **Prediction reads, never rewrites.** The first canon line is the honest use of the closed past; its dishonest counterpart is record-war (the DARVO analysis: lie-defense is lens-warfare, never time travel). Formal home, cited not adopted: the filtration, where conditional expectation is the future viewed from the present through the record. Practice form: the calibration loop (the box arrives before the thing, and the boxes are made of past). Engine form: Xorzo2's wake, next-byte prediction from a spine that retains the past.
+
+**Retained reading, not canon (promotable by adjudication):** the conjugate pair. Becoming runs future → present → past (possibility through constraint into actuality; the E → 𝒫 → m conversion). Predicting runs past → present → future (constraint projected onto possibility). Both pass only through the present; expectation leads while perception lags; the four freedoms (§25.18b: NOT-YET, STAYING, LETTING, CHECKING) are held exactly at the crossing, where possibility passes constraint.
 
 [← Back to Table of Contents](#table-of-contents)
 
