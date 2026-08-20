@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Everything Is Connected</title>
+<style>
+  :root{
+    --bg:#06070d; --ink:#e8e6df; --dim:#9a978c; --faint:#55534b;
+    --gold:#d9b45b; --cyan:#6fd3d6; --magenta:#d67fb8; --green:#8fd18a;
+    --card:#0d0f18cc; --line:#2a2d3a;
+  }
+  *{box-sizing:border-box; margin:0; padding:0}
+  html,body{height:100%}
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:Georgia,'Times New Roman',serif;
+    overflow:hidden;
+  }
+  #sky{position:fixed; inset:0; display:block; cursor:crosshair}
+  /* text card */
+  #card{
+    position:fixed; left:1.1rem; bottom:3.4rem; max-width:440px; z-index:5;
+    background:var(--card); border:1px solid var(--line); border-radius:10px;
+    padding:1rem 1.15rem 0.9rem; backdrop-filter:blur(6px);
+    transition:opacity .5s ease;
+  }
+  #card h2{
+    font-size:0.8rem; letter-spacing:0.18em; text-transform:uppercase;
+    color:var(--gold); font-family:'Segoe UI',system-ui,sans-serif; font-weight:600;
+    margin-bottom:0.45rem;
+  }
+  #card p{font-size:1.02rem; line-height:1.5; color:var(--ink)}
+  #card p em{color:var(--cyan); font-style:normal}
+  #card .hint{margin-top:0.5rem; font-size:0.8rem; color:var(--dim); font-family:'Segoe UI',system-ui,sans-serif}
+  #card .nav{margin-top:0.7rem; display:flex; gap:0.5rem}
+  button{
+    font-family:'Segoe UI',system-ui,sans-serif; font-size:0.82rem;
+    background:#141726; color:var(--ink); border:1px solid var(--line);
+    border-radius:7px; padding:0.34rem 0.85rem; cursor:pointer;
+  }
+  button:hover{border-color:var(--gold); color:var(--gold)}
+  /* progress dots */
+  #dots{position:fixed; left:50%; bottom:1.1rem; transform:translateX(-50%); display:flex; gap:0.55rem; z-index:5}
+  #dots span{width:9px;height:9px;border-radius:50%;background:var(--faint);cursor:pointer;transition:background .3s}
+  #dots span.on{background:var(--gold)}
+  /* top-right controls */
+  #ctrl{position:fixed; top:0.9rem; right:1rem; display:flex; gap:0.5rem; z-index:5}
+  /* the wholeness plane pad */
+  #pad{
+    position:fixed; right:1rem; bottom:3.4rem; z-index:5; display:none;
+    background:var(--card); border:1px solid var(--line); border-radius:10px; padding:0.7rem;
+    font-family:'Segoe UI',system-ui,sans-serif;
+  }
+  #pad .sq{position:relative; width:170px; height:170px; border:1px solid var(--line); border-radius:6px;
+    background:linear-gradient(45deg,#101321,#171a2a); touch-action:none; cursor:pointer}
+  #pad .dot{position:absolute; width:14px; height:14px; border-radius:50%; background:var(--gold);
+    transform:translate(-50%,-50%); box-shadow:0 0 10px var(--gold)}
+  #pad .lb{position:absolute; font-size:0.6rem; color:var(--dim); letter-spacing:0.05em}
+  #pad .tr{top:4px; right:6px; color:var(--green)} #pad .br{bottom:4px; right:6px}
+  #pad .tl{top:4px; left:6px} #pad .bl{bottom:4px; left:6px}
+  #pad .cap{margin-top:0.4rem; font-size:0.68rem; color:var(--dim); width:170px; text-align:center}
+  /* title splash */
+  #splash{
+    position:fixed; inset:0; display:flex; flex-direction:column; justify-content:center; align-items:center;
+    z-index:4; pointer-events:none; text-align:center; transition:opacity 1.2s ease;
+  }
+  #splash h1{font-size:clamp(1.9rem,5vw,3.4rem); font-weight:normal; letter-spacing:0.04em;
+    text-shadow:0 0 30px #d9b45b44}
+  #splash .sub{margin-top:0.6rem; color:var(--dim); font-size:0.95rem}
+  #meta{margin-top:1.1rem; color:var(--faint); font-size:0.7rem; font-family:'Segoe UI',system-ui,sans-serif}
+  /* honesty box */
+  details{
+    position:fixed; right:1rem; top:3.2rem; z-index:6; max-width:330px;
+    background:var(--card); border:1px solid var(--line); border-radius:9px;
+    font-family:'Segoe UI',system-ui,sans-serif; font-size:0.76rem; color:var(--dim);
+  }
+  details summary{padding:0.4rem 0.7rem; cursor:pointer; color:var(--dim)}
+  details div{padding:0 0.8rem 0.7rem; line-height:1.45}
+  @media (max-width:640px){
+    #card{left:0.6rem; right:0.6rem; max-width:none; bottom:3.2rem}
+    #pad{right:0.6rem; bottom:14.5rem}
+    details{display:none}
+  }
+</style>
+</head>
+<body>
+<canvas id="sky"></canvas>
+
+<div id="splash">
+  <h1>Everything Is Connected</h1>
+  <div class="sub">a walk from infinity to you, in one living picture</div>
+  <div id="meta">Fractal Reality &middot; Created 2026-08-19 &middot; v1.0 &middot; press &rarr; or Next</div>
+</div>
+
+<div id="card">
+  <h2 id="c-title"></h2>
+  <p id="c-text"></p>
+  <div class="hint" id="c-hint"></div>
+  <div class="nav">
+    <button id="back">&larr; Back</button>
+    <button id="next">Next &rarr;</button>
+    <button id="snd">sound: off</button>
+    <button id="re">&#8634; restart</button>
+  </div>
+</div>
+
+<div id="pad">
+  <div class="sq" id="padsq">
+    <span class="lb tr">INTEGRATION</span>
+    <span class="lb br">INFLATION</span>
+    <span class="lb tl">SEVERANCE</span>
+    <span class="lb bl">ANOMIE</span>
+    <div class="dot" id="paddot"></div>
+  </div>
+  <div class="cap">across: connection &middot; up: autonomy</div>
+</div>
+
+<details>
+  <summary>what is computed, what is styled</summary>
+  <div>
+    This simulation is an illustration built from simple attraction and orbits; it is not the
+    framework's operator mathematics, which lives in the experiments. The two-axis pad is the
+    adjudicated wholeness plane drawn qualitatively: connection and autonomy, health at the corner.
+    The notes are real frequency ratios, and each completed scale sounds one octave higher.
+    The bonds are drawn center to shared center, because that is the claim: connected through
+    Reality, not by wires between surfaces. Faithful to the framework's shape; not a measurement.
+    <br><br>Revision history: 2026-08-19 v1.0 initial.
+  </div>
+</details>
+
+<div id="dots"></div>
+
+<script>
+"use strict";
+/* ---------- canvas ---------- */
+const cv = document.getElementById('sky');
+const cx = cv.getContext('2d');
+let W=0, H=0, DPR=1;
+function resize(){
+  DPR = Math.min(window.devicePixelRatio||1, 2);
+  W = window.innerWidth; H = window.innerHeight;
+  cv.width = W*DPR; cv.height = H*DPR;
+  cv.style.width = W+'px'; cv.style.height = H+'px';
+  cx.setTransform(DPR,0,0,DPR,0,0);
+}
+window.addEventListener('resize', resize); resize();
+
+const REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const SPEED = REDUCED ? 0.4 : 1;
+
+/* ---------- state ---------- */
+const PAL = ['#d9b45b','#6fd3d6','#d67fb8','#8fd18a','#e8a06a','#9d8fe0','#e0708a'];
+const N_MOTES = 240;
+const motes = [];
+const wholes = [];
+let superW = null;
+let mode = 0, modeT = 0, lastT = 0;
+let C = 1, A = 1;            // the wholeness plane coordinates (connection, autonomy)
+let tC = 1, tA = 1;          // targets, eased
+let youIdx = -1;
+let seeded = false;
+
+function rnd(a,b){ return a + Math.random()*(b-a); }
+
+function initMotes(){
+  motes.length = 0;
+  for(let i=0;i<N_MOTES;i++){
+    motes.push({x:rnd(0,W), y:rnd(0,H), vx:rnd(-0.2,0.2), vy:rnd(-0.2,0.2),
+      w:-1, band:i%3, ang:rnd(0,Math.PI*2), spin:rnd(0.004,0.011)*(Math.random()<0.5?-1:1), r:0});
+  }
+}
+initMotes();
+
+function addWhole(x,y){
+  if(wholes.length>=7) return null;
+  const wh = {x:x, y:y, vx:rnd(-0.08,0.08), vy:rnd(-0.08,0.08), n:0, R:46,
+    col:PAL[wholes.length%PAL.length], trail:[], born:performance.now(),
+    oAng:rnd(0,Math.PI*2), oR:0, sang:false};
+  wholes.push(wh);
+  if(mode>=2) noteFor(wholes.length-1, 1);
+  return wh;
+}
+function seedWholes(){
+  if(seeded) return; seeded = true;
+  const cxm=W/2, cym=H/2, R=Math.min(W,H)*0.26;
+  for(let i=0;i<3;i++){
+    const a = -Math.PI/2 + i*2*Math.PI/3;
+    addWhole(cxm+R*Math.cos(a), cym+R*Math.sin(a));
+  }
+}
+
+/* ---------- audio ---------- */
+let AC=null, droneNodes=null, sndOn=false;
+const RATIOS=[1, 9/8, 5/4, 3/2, 5/3, 15/8, 2];
+function audioInit(){ if(!AC){ AC = new (window.AudioContext||window.webkitAudioContext)(); } if(AC.state==='suspended') AC.resume(); }
+function noteFor(i, oct){
+  if(!sndOn||!AC) return;
+  const f = 220 * RATIOS[i%RATIOS.length] * oct;
+  const o = AC.createOscillator(), g = AC.createGain();
+  o.type='sine'; o.frequency.value=f;
+  g.gain.setValueAtTime(0.0001, AC.currentTime);
+  g.gain.exponentialRampToValueAtTime(0.1, AC.currentTime+0.05);
+  g.gain.exponentialRampToValueAtTime(0.0001, AC.currentTime+1.4);
+  o.connect(g); g.connect(AC.destination);
+  o.start(); o.stop(AC.currentTime+1.5);
+}
+function droneOn(){
+  if(!AC||droneNodes) return;
+  const g = AC.createGain(); g.gain.value=0.0; g.connect(AC.destination);
+  const lp = AC.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=1200; lp.connect(g);
+  const o1=AC.createOscillator(), o2=AC.createOscillator();
+  o1.type='sine'; o1.frequency.value=110;
+  o2.type='sine'; o2.frequency.value=165;
+  o1.connect(lp); o2.connect(lp); o1.start(); o2.start();
+  droneNodes={g,lp,o1,o2};
+}
+function droneOff(){ if(!droneNodes) return;
+  droneNodes.g.gain.linearRampToValueAtTime(0.0, AC.currentTime+0.4);
+  const d=droneNodes; setTimeout(()=>{try{d.o1.stop();d.o2.stop();}catch(e){}},600);
+  droneNodes=null;
+}
+function droneUpdate(){
+  if(!droneNodes) return;
+  const health = Math.min(C,A);
+  droneNodes.g.gain.setTargetAtTime(sndOn?0.045:0, AC.currentTime, 0.2);
+  droneNodes.o2.detune.setTargetAtTime((1-health)*38, AC.currentTime, 0.2);
+  droneNodes.lp.frequency.setTargetAtTime(300+2600*Math.max(C,A), AC.currentTime, 0.2);
+}
+
+/* ---------- scenes ---------- */
+const SCENES = [
+ {t:'One',
+  p:'There is one thing, and it is everything: an undifferentiated infinity, with nothing outside it and no rate of change.',
+  h:'press Next, or the right arrow key'},
+ {t:'Convergence',
+  p:'Infinity converges. <em>Tap anywhere</em>: a center forms where the gathering happens. The point is what convergence leaves behind.',
+  h:'add up to seven centers; three will form on their own if you wait'},
+ {t:'Emergence',
+  p:'From each singularity a whole emerges: a <em>line</em> that holds (watch each center leave its path), a <em>boundary</em> that filters (the ring), an <em>interior</em> that relates (the glow within).',
+  h:'the walk is 1D, 2D, 3D; the singularity itself contributes zero'},
+ {t:'Wholes within wholes',
+  p:'Every completed whole becomes a center at the next scale. The small wholes are now the parts of a greater one: no bottom, no top, no final whole.',
+  h:'with sound on, each completion rings; the greater whole rings one octave higher'},
+ {t:'Connected without dissolving',
+  p:'There are exactly two ways to get it wrong, and a third that is both at once. <em>Drag the dot.</em> Health is the corner, not the middle: full connection, full autonomy.',
+  h:'right: more connection &middot; up: more autonomy &middot; corners are labeled'},
+ {t:'You',
+  p:'One of these is you. Experience is within existence; existence contains many experiences; you are <em>one experience within everything</em>: whole at your scale, part of something greater.',
+  h:'the bright one, near the middle'},
+ {t:'Everything is connected',
+  p:'You are directly connected in Reality; we all are. The bonds in this picture run center to shared center, because that is the claim: connected through Reality, not by wires between surfaces. This page is one attempt to show how.',
+  h:'explore: the pattern that connects &middot; the isomorphism &middot; fractalreality.ca'}
+];
+
+const cardT = document.getElementById('c-title');
+const cardP = document.getElementById('c-text');
+const cardH = document.getElementById('c-hint');
+const dotsEl = document.getElementById('dots');
+SCENES.forEach((s,i)=>{
+  const d=document.createElement('span');
+  d.addEventListener('click',()=>setMode(i));
+  dotsEl.appendChild(d);
+});
+function refreshDots(){ [...dotsEl.children].forEach((d,i)=>d.classList.toggle('on', i===mode)); }
+
+function setMode(m){
+  mode = Math.max(0, Math.min(SCENES.length-1, m));
+  modeT = 0;
+  const s = SCENES[mode];
+  cardT.textContent = (mode+1)+' · '+s.t;
+  cardP.innerHTML = s.p;
+  cardH.innerHTML = s.h;
+  document.getElementById('splash').style.opacity = (mode===0)?1:0;
+  document.getElementById('pad').style.display = (mode===4)?'block':'none';
+  if(mode>=1) seedWholes();
+  if(mode===4){ if(sndOn){ audioInit(); droneOn(); } }
+  else { droneOff(); }
+  if(mode<4){ tC=1; tA=1; }
+  if(mode>=5){ tC=1; tA=1; }
+  if(mode===5){
+    let best=-1,bd=1e9;
+    wholes.forEach((w,i)=>{const d=(w.x-W/2)**2+(w.y-H/2)**2; if(d<bd){bd=d;best=i;}});
+    youIdx=best;
+  }
+  refreshDots();
+}
+
+/* ---------- interaction ---------- */
+document.getElementById('next').addEventListener('click',()=>setMode(mode+1));
+document.getElementById('back').addEventListener('click',()=>setMode(mode-1));
+document.getElementById('re').addEventListener('click',()=>{
+  wholes.length=0; superW=null; seeded=false; youIdx=-1; C=A=tC=tA=1; initMotes(); setMode(0);
+});
+document.getElementById('snd').addEventListener('click',(e)=>{
+  sndOn=!sndOn; e.target.textContent='sound: '+(sndOn?'on':'off');
+  if(sndOn){ audioInit(); if(mode===4) droneOn(); } else { droneOff(); }
+});
+window.addEventListener('keydown',(e)=>{
+  if(e.key==='ArrowRight'||e.key===' '){ setMode(mode+1); e.preventDefault(); }
+  if(e.key==='ArrowLeft'){ setMode(mode-1); e.preventDefault(); }
+});
+cv.addEventListener('pointerdown',(e)=>{
+  if(mode===1||mode===2){ addWhole(e.clientX, e.clientY); }
+});
+
+/* pad */
+const padsq=document.getElementById('padsq'), paddot=document.getElementById('paddot');
+function padSet(clientX, clientY){
+  const r = padsq.getBoundingClientRect();
+  const x = Math.max(0, Math.min(1, (clientX-r.left)/r.width));
+  const y = Math.max(0, Math.min(1, (clientY-r.top)/r.height));
+  tC = x; tA = 1-y;
+  paddot.style.left=(x*100)+'%'; paddot.style.top=(y*100)+'%';
+}
+let padDrag=false;
+padsq.addEventListener('pointerdown',(e)=>{padDrag=true; padsq.setPointerCapture(e.pointerId); padSet(e.clientX,e.clientY);});
+padsq.addEventListener('pointermove',(e)=>{ if(padDrag) padSet(e.clientX,e.clientY); });
+padsq.addEventListener('pointerup',()=>{padDrag=false;});
+paddot.style.left='100%'; paddot.style.top='0%';
+
+/* ---------- simulation ---------- */
+function flowAngle(x,y,t){
+  return Math.sin(x*0.0021 + t*0.00018) + Math.cos(y*0.0019 - t*0.00013)
+       + Math.sin((x+y)*0.0009 + t*0.00007);
+}
+function step(dt, now){
+  modeT += dt;
+  C += (tC-C)*0.04; A += (tA-A)*0.04;
+  droneUpdate();
+
+  // auto-seed shortly after entering convergence
+  if(mode>=1 && !seeded && modeT>1800) seedWholes();
+
+  // super whole
+  if(mode>=3 && wholes.length && !superW){
+    let sx=0,sy=0; wholes.forEach(w=>{sx+=w.x;sy+=w.y;});
+    superW={x:sx/wholes.length, y:sy/wholes.length, R:0};
+    noteFor(0,2);
+  }
+  if(superW){
+    let maxd=0; wholes.forEach(w=>{ maxd=Math.max(maxd, Math.hypot(w.x-superW.x,w.y-superW.y)+w.R); });
+    superW.R += ((maxd+55)-superW.R)*0.03;
+  }
+
+  const anomie = (1-C)*(1-A);
+
+  // wholes drift / orbit
+  wholes.forEach((w,i)=>{
+    if(superW && mode>=3){
+      if(!w.oR){ w.oR = Math.hypot(w.x-superW.x, w.y-superW.y)||1; w.oAng=Math.atan2(w.y-superW.y,w.x-superW.x); if(mode>=3&&!w.sang){w.sang=true;} }
+      // connection pulls orbits inward when autonomy is lost; severance pushes out
+      let targetR = w.oR;
+      if(mode>=4){
+        const merge = C*(1-A);                   // inflation: spiral to the shared center
+        const iso   = (1-C)*A;                   // severance: drift beyond the rim
+        targetR = w.oR*(1-merge*0.92) + iso*Math.min(W,H)*0.18 + w.oR*0;
+      }
+      w.oAng += 0.00012*dt*SPEED*(i%2?1:-1);
+      const rNow = Math.hypot(w.x-superW.x,w.y-superW.y);
+      const rNext = rNow + (targetR-rNow)*0.02;
+      w.x = superW.x + rNext*Math.cos(w.oAng);
+      w.y = superW.y + rNext*Math.sin(w.oAng);
+    } else {
+      w.x += w.vx*dt*0.03*SPEED; w.y += w.vy*dt*0.03*SPEED;
+      if(w.x<80||w.x>W-80) w.vx*=-1;
+      if(w.y<80||w.y>H-80) w.vy*=-1;
+    }
+    if(mode>=2){
+      if(!w.lastTrail || now-w.lastTrail>120){ w.trail.push({x:w.x,y:w.y}); w.lastTrail=now; if(w.trail.length>70) w.trail.shift(); }
+    }
+    w.R = 40 + Math.min(50, w.n*0.5);
+  });
+
+  // motes
+  motes.forEach(m=>{
+    if(m.w<0){
+      const a = flowAngle(m.x,m.y,now);
+      m.vx += Math.cos(a)*0.012*SPEED; m.vy += Math.sin(a)*0.012*SPEED;
+      m.vx*=0.985; m.vy*=0.985;
+      m.x+=m.vx*dt*0.06*SPEED; m.y+=m.vy*dt*0.06*SPEED;
+      if(m.x<-10)m.x=W+10; if(m.x>W+10)m.x=-10;
+      if(m.y<-10)m.y=H+10; if(m.y>H+10)m.y=-10;
+      if(mode>=1 && wholes.length){
+        let bi=-1, bd=1e12;
+        wholes.forEach((w,i)=>{const d=(w.x-m.x)**2+(w.y-m.y)**2; if(d<bd){bd=d;bi=i;}});
+        const reach = 90 + modeT*0.12;
+        if(bd < reach*reach){ m.w=bi; wholes[bi].n++; }
+      }
+    } else {
+      const w = wholes[m.w];
+      if(anomie>0.45 && Math.random()<0.004){ m.w=-1; w.n--; return; }  // anomie: unbinding
+      const bandR = w.R*(0.42+m.band*0.27);
+      const jitter = (1-A)*w.R*0.35;                                    // low autonomy: bands blur
+      m.ang += m.spin*dt*0.06*SPEED;
+      const rr = bandR + Math.sin(m.ang*2.3)*2 + (Math.random()-0.5)*jitter;
+      const txp = w.x + rr*Math.cos(m.ang);
+      const typ = w.y + rr*Math.sin(m.ang);
+      const k = (mode>=2)?0.09:0.035;
+      m.x += (txp-m.x)*k; m.y += (typ-m.y)*k;
+    }
+  });
+}
+
+/* ---------- draw ---------- */
+function draw(now){
+  cx.clearRect(0,0,W,H);
+  cx.fillStyle='#06070d'; cx.fillRect(0,0,W,H);
+  const sat = 0.25 + 0.75*Math.max(C,A);
+  const anomie = (1-C)*(1-A);
+
+  // bonds: center to shared center to center
+  if(superW && mode>=4 && wholes.length>1){
+    cx.lineWidth=1;
+    wholes.forEach(w=>{
+      const g=cx.createLinearGradient(w.x,w.y,superW.x,superW.y);
+      g.addColorStop(0,w.col); g.addColorStop(1,'#d9b45b');
+      cx.strokeStyle=g; cx.globalAlpha=0.28*C;
+      cx.beginPath(); cx.moveTo(w.x,w.y); cx.lineTo(superW.x,superW.y); cx.stroke();
+    });
+    cx.globalAlpha=1;
+  }
+
+  // super whole ring and center
+  if(superW && mode>=3){
+    cx.strokeStyle='#d9b45b'; cx.globalAlpha=0.4*Math.min(1,(modeT/1500))* (mode>=4? (0.25+0.75*A):1);
+    cx.lineWidth=1.2; cx.beginPath(); cx.arc(superW.x,superW.y,superW.R,0,Math.PI*2); cx.stroke();
+    cx.globalAlpha=0.9; cx.fillStyle='#d9b45b';
+    cx.beginPath(); cx.arc(superW.x,superW.y,2.6,0,Math.PI*2); cx.fill();
+    cx.globalAlpha=1;
+  }
+
+  // wholes
+  wholes.forEach((w,i)=>{
+    const you = (mode===5 && i===youIdx);
+    const dimOther = (mode===5 && i!==youIdx)?0.4:1;
+    // 1D: the trail
+    if(mode>=2 && w.trail.length>1){
+      cx.beginPath();
+      w.trail.forEach((p,j)=>{ if(j===0) cx.moveTo(p.x,p.y); else cx.lineTo(p.x,p.y); });
+      cx.strokeStyle=w.col; cx.globalAlpha=0.22*dimOther; cx.lineWidth=1; cx.stroke(); cx.globalAlpha=1;
+    }
+    // 3D: interior glow
+    if(mode>=2){
+      const g=cx.createRadialGradient(w.x,w.y,2,w.x,w.y,w.R);
+      g.addColorStop(0,w.col+'55'); g.addColorStop(1,'#00000000');
+      cx.fillStyle=g; cx.globalAlpha=(0.5+0.5*sat)*dimOther;
+      cx.beginPath(); cx.arc(w.x,w.y,w.R,0,Math.PI*2); cx.fill(); cx.globalAlpha=1;
+    }
+    // 2D: the boundary
+    if(mode>=2){
+      cx.strokeStyle=w.col; cx.lineWidth= you?1.8:1.1;
+      cx.globalAlpha=(0.25+0.65*A)*dimOther;
+      cx.beginPath(); cx.arc(w.x,w.y,w.R,0,Math.PI*2); cx.stroke(); cx.globalAlpha=1;
+    }
+    // 0D: the singularity
+    cx.fillStyle= you ? '#ffffff' : w.col;
+    cx.globalAlpha=dimOther;
+    cx.beginPath(); cx.arc(w.x,w.y, you?3.4:2.4, 0, Math.PI*2); cx.fill();
+    cx.globalAlpha=1;
+    if(you){
+      cx.fillStyle='#e8e6df'; cx.font='13px Georgia'; cx.textAlign='center';
+      cx.fillText('you', w.x, w.y - w.R - 10);
+    }
+  });
+
+  // motes
+  motes.forEach(m=>{
+    let col='#8b8fa3', al=0.5;
+    if(m.w>=0){ col=wholes[m.w].col; al=0.75; if(mode===5&&m.w!==youIdx) al=0.3; }
+    if(anomie>0.3 && m.w<0){ col='#5a5a5a'; }
+    cx.fillStyle=col; cx.globalAlpha=al*(0.5+0.5*sat);
+    cx.beginPath(); cx.arc(m.x,m.y,1.4,0,Math.PI*2); cx.fill();
+  });
+  cx.globalAlpha=1;
+}
+
+/* ---------- loop ---------- */
+function frame(now){
+  const dt = Math.min(48, now-(lastT||now)); lastT=now;
+  step(dt, now);
+  draw(now);
+  requestAnimationFrame(frame);
+}
+setMode(0);
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>
