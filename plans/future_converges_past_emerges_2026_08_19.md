@@ -1,6 +1,6 @@
 # The Future Converges. The Past Emerges.
 
-**Status: session record, 2026-08-19, tenth record of the day on this thread. Claude drafted, pending Ashman's countersign.** The statement is Ashman's, arrived as this session's prompt: *The future converges. The past emerges.* Companions: `plans/possibility_through_constraint_2026_08_19.md` (§4.11a and the conjugate pair), `plans/half_integer_stations_audit_2026_08_19.md` (the phase-address framing this must stay consistent with).
+**Status: session record, 2026-08-19, tenth record of the day on this thread. COUNTERSIGNED (Ashman, same day: "Yep good."); closures executed as recommended, disposition under Open decisions.** The statement is Ashman's, arrived as this session's prompt: *The future converges. The past emerges.* Companions: `plans/possibility_through_constraint_2026_08_19.md` (§4.11a and the conjugate pair), `plans/half_integer_stations_audit_2026_08_19.md` (the phase-address framing this must stay consistent with).
 
 ## Finding 1: six words that read §4.11 aloud
 
@@ -27,13 +27,13 @@ The half-integer audit said ⊛ "departs the tonic" (the first stroke of the cyc
 2. **Breathing performs it.** ⊛ inhale, ✹ exhale: the body inhales the future and exhales the past, and the turn between them is the now. Offered as a plain-register line for the general-reader surfaces.
 3. **Grid candidate row.** The master table could gain a kinematics row beneath Supplies: Moves by: converging / the turn / emerging. Staged, not added.
 
-## Open decisions (Ashman to adjudicate)
+## Open decisions (all closed at countersign, Ashman, 2026-08-19: "Yep good.")
 
-1. **Countersign the two sentences** as canonical lines (grade A restatement of §4.11's channel-tense table, with the conjugate phases carrying the tenses).
-2. **Form**: the two-sentence form with the silent center (recommended), the explicit triple as teaching form, or both with roles stated.
-3. **The light-cone pin's landing**: beside §4.11a at the next canon integration (recommended; it is the objection the line will meet first in the wild).
-4. **The grid's kinematics row** (Finding 5.3).
-5. **The breathing line** as citable plain register.
+1. ~~Countersign~~ **CLOSED: the two sentences are canonical lines, grade A** (restatement of §4.11's channel-tense table, conjugate phases carrying the tenses).
+2. ~~Form~~ **CLOSED as recommended: the two-sentence form is canonical with the silent center intentional; the explicit triple ("The future converges. The present turns. The past emerges.") is the teaching form.**
+3. ~~Landing~~ **CLOSED and executed: the kinematics and the light-cone pin integrated beside §4.11a** in `circumpunct_framework.md` and in `CLAUDE.md`'s Time Is Scale block, same day (the §4.11a neighborhood carries Ashman's standing integration authorization from the mechanics landing).
+4. ~~Grid row~~ **CLOSED: the kinematics row added to the master table** (`plans/one_book_charter.md` v2.16: Moves by: Converging / The turn / Emerging).
+5. ~~Breathing line~~ **CLOSED: citable plain register** (inhale the future, exhale the past; the turn between them is the now).
 
 ## Files consulted
 
