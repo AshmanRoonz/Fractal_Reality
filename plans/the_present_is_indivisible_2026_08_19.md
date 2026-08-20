@@ -1,6 +1,6 @@
 # The Present Is Indivisible
 
-**Status: session record, 2026-08-19, thirteenth record of the day on this thread. Claude drafted, pending Ashman's countersign.** The statement is Ashman's, arrived as this session's prompt. Companions: `plans/the_primary_sequence_2026_08_19.md` (this is its middle station's temporal identity), `plans/one_book_charter.md` (v2.8's tense-seating, which already filed the content), `plans/future_converges_past_emerges_2026_08_19.md`.
+**Status: session record, 2026-08-19, thirteenth record of the day on this thread. Claude drafted, COUNTERSIGNED (Ashman, 2026-08-19; batch dispositions in `plans/countersign_batch_2026_08_19.md`).** The statement is Ashman's, arrived as this session's prompt. Companions: `plans/the_primary_sequence_2026_08_19.md` (this is its middle station's temporal identity), `plans/one_book_charter.md` (v2.8's tense-seating, which already filed the content), `plans/future_converges_past_emerges_2026_08_19.md`.
 
 ## Finding 1: a theorem of two adjudicated rows, already filed once, now compressed
 

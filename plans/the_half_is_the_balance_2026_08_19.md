@@ -1,6 +1,6 @@
 # The Half Is the Balance: ◐ as the Lattice Constant
 
-**Status: session record, 2026-08-19, eleventh record of the day on this thread. Claude drafted, pending Ashman's countersign.** The proposal is Ashman's, arrived as this session's prompt: maybe 0.5 is the center's balance, or the I/O (convergence/emergence) balance, or openness; then imbalance shifts the number all through the circumpunct, so at 0.4 the next station sits at 1.4. Companions: `plans/half_integer_stations_audit_2026_08_19.md` (which defended the half-step addresses; this record proposes their derivation), CLAUDE.md's Balance Parameter section, framework §5.1 and the Ch29 amendment.
+**Status: session record, 2026-08-19, eleventh record of the day on this thread. Claude drafted, COUNTERSIGNED (Ashman, 2026-08-19; batch dispositions in `plans/countersign_batch_2026_08_19.md`).** The proposal is Ashman's, arrived as this session's prompt: maybe 0.5 is the center's balance, or the I/O (convergence/emergence) balance, or openness; then imbalance shifts the number all through the circumpunct, so at 0.4 the next station sits at 1.4. Companions: `plans/half_integer_stations_audit_2026_08_19.md` (which defended the half-step addresses; this record proposes their derivation), CLAUDE.md's Balance Parameter section, framework §5.1 and the Ch29 amendment.
 
 ## The proposal (Ashman, verbatim core)
 

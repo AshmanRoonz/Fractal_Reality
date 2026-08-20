@@ -1,6 +1,6 @@
 # The Isomorphism in Every Domain: Ten Paragraphs
 
-**Status: session record, 2026-08-19, seventh record of the day on this thread. Claude composed at Ashman's direction ("The isomorphism can be simplified for general understanding. Not changing the html. Designing a new paragraph for each domain of knowledge."); drafts offered for edit and countersign.** `docs/circumpunct_isomorphism.html` is untouched, per the instruction; a reader-facing page is staged as a decision only. Companions: `plans/isomorphism_in_one_paragraph_2026_08_19.md` (the parent claim; these are its demonstrations), `plans/the_isomorphism_of_the_framework_2026_08_19.md` (the apparatus and typing).
+**Status: session record, 2026-08-19, seventh record of the day on this thread. Claude composed at Ashman's direction ("The isomorphism can be simplified for general understanding. Not changing the html. Designing a new paragraph for each domain of knowledge."); COUNTERSIGNED as a set (Ashman, 2026-08-19; batch dispositions in `plans/countersign_batch_2026_08_19.md`).** `docs/circumpunct_isomorphism.html` is untouched, per the instruction; a reader-facing page is staged as a decision only. Companions: `plans/isomorphism_in_one_paragraph_2026_08_19.md` (the parent claim; these are its demonstrations), `plans/the_isomorphism_of_the_framework_2026_08_19.md` (the apparatus and typing).
 
 ## The design: six slots, so the set performs the claim
 

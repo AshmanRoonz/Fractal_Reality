@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Theme and Variations</title>
+<style>
+  :root{ --bg:#08090f; --ink:#e9e7e0; --dim:#a09d92; --faint:#5a5850;
+         --gold:#d9b45b; --cyan:#7ad0d3; --line:#262a38; --card:#0e1019; }
+  *{box-sizing:border-box; margin:0; padding:0}
+  body{background:var(--bg); color:var(--ink); font-family:Georgia,'Times New Roman',serif; line-height:1.62}
+  header{max-width:720px; margin:0 auto; padding:3.2rem 1.2rem 1.4rem; text-align:center}
+  h1{font-weight:normal; font-size:clamp(1.8rem,4.5vw,2.6rem); letter-spacing:0.03em}
+  .sub{color:var(--dim); margin-top:0.4rem; font-size:1rem}
+  .meta{color:var(--faint); font-size:0.72rem; margin-top:0.8rem; font-family:'Segoe UI',system-ui,sans-serif}
+  nav{display:flex; justify-content:center; gap:0.6rem; margin:1.4rem auto 0.4rem; flex-wrap:wrap}
+  button{font-family:'Segoe UI',system-ui,sans-serif; font-size:0.85rem; background:#141726; color:var(--ink);
+         border:1px solid var(--line); border-radius:8px; padding:0.45rem 1rem; cursor:pointer}
+  button:hover{border-color:var(--gold); color:var(--gold)}
+  button.on{background:var(--gold); color:#14100a; border-color:var(--gold)}
+  #slots{display:none; justify-content:center; gap:0.4rem; margin:0.7rem auto 0; flex-wrap:wrap; max-width:760px}
+  #slots button{font-size:0.74rem; padding:0.3rem 0.7rem; border-radius:999px}
+  main{max-width:680px; margin:0 auto; padding:1.2rem 1.2rem 4rem}
+  h2{font-family:'Segoe UI',system-ui,sans-serif; font-size:0.8rem; letter-spacing:0.2em; text-transform:uppercase;
+     color:var(--gold); font-weight:600; margin:2.4rem 0 0.8rem; text-align:center}
+  p{margin:0 0 1.1rem}
+  .quiet{color:var(--dim); font-style:italic; text-align:center}
+  .dom{color:var(--cyan); font-family:'Segoe UI',system-ui,sans-serif; font-size:0.72rem;
+       letter-spacing:0.14em; text-transform:uppercase; display:block; margin-bottom:0.2rem}
+  .vrow{border-left:2px solid var(--line); padding:0.15rem 0 0.15rem 1rem; margin-bottom:1.25rem}
+  .slotname{color:var(--ink); text-align:center; font-size:1.15rem; margin-bottom:1.6rem}
+  .honesty{border:1px solid var(--line); border-radius:10px; background:var(--card);
+           padding:1rem 1.2rem; font-size:0.92rem; color:var(--dim); margin-top:2.5rem}
+  footer{max-width:680px; margin:0 auto; padding:0 1.2rem 3rem; color:var(--faint);
+         font-size:0.75rem; font-family:'Segoe UI',system-ui,sans-serif; text-align:center}
+  footer a{color:var(--dim)}
+</style>
+</head>
+<body>
+<header>
+  <h1>Theme and Variations</h1>
+  <div class="sub">The framework in twelve paragraphs.</div>
+  <div class="meta">Fractal Reality &middot; Created 2026-08-19 &middot; v1.0 &middot; also as a living picture: <a href="everything_is_connected.html" style="color:var(--dim)">Everything Is Connected</a></div>
+  <nav>
+    <button id="bDown" class="on">Read down: the book</button>
+    <button id="bAcross">Read across: one claim, ten voices</button>
+  </nav>
+  <div id="slots"></div>
+</header>
+<main id="main"></main>
+<footer>
+  Manuscript: <code>Book-Theme_and_Variations/theme_and_variations.md</code> &middot; receipts in the corpus &middot; revision: 2026-08-19 v1.0 initial
+</footer>
+
+<script>
+"use strict";
+const SLOTNAMES = [
+  "The whole, and its anatomy",
+  "The becoming",
+  "The completion that begins the next",
+  "The nesting",
+  "The two failures",
+  "The fingerprint"
+];
+const V = [
+["Matter",
+ "An atom is a whole: a nucleus that gathers, an identity that persists through time, an outer shell that decides what touches it, and an interior cloud where everything relates.",
+ "Matter forms the same way everywhere: energy converges toward a point, holds, closes a surface, and fills an inside.",
+ "Every finished whole becomes a building block: particles close into atoms, and the closed atom is the unit the next structure begins from.",
+ "Quarks sit inside nucleons, nucleons inside nuclei, atoms inside molecules, planets inside systems, galaxies inside the universe, and physics has found no floor below and no ceiling above.",
+ "Matter fails in two directions: bound so hard the parts lose all identity, or so loosely that nothing holds, and everything that lasts sits between.",
+ "The fingerprint is wherever physics looks: any bounded field with a center rings with its own natural notes, in a drumhead, a star, an atom, and the hum of the sky itself, the same law wearing different numbers."],
+["Molecules",
+ "A molecule is atoms made mutually relevant: gathered into shared centers of charge, held by bonds, wearing one electron surface that decides what can react, keeping one interior arrangement.",
+ "Chemistry is the same walk at the bench: attraction converges, a bond commits, a stable shape closes, and a shared cloud fills the inside.",
+ "Every finished molecule is a part in waiting: amino acids complete, and proteins begin from them.",
+ "Atoms nest in molecules, molecules in polymers, polymers in the machinery of cells, and the chain climbs without a break.",
+ "Reactions fail the two ways: fused until the parts lose their character, or inert so that nothing joins, and every working chemistry lives between.",
+ "The shapes repeat because the constraints do: the same few bond angles and the same shell counts appear in every laboratory and every star, on the far side of the universe as surely as here."],
+["Life",
+ "A cell is the textbook whole: a nucleus that gathers, a lineage that holds (every cell from a cell), a membrane that filters, and a cytoplasm where everything relates.",
+ "Life builds by the same walk: molecules converge, a lineage commits, a membrane closes, and an inside comes alive.",
+ "Every completed whole opens the next: a finished cell is the beginning of a body, not the end of a story.",
+ "Organelles nest in cells, cells in organs, organs in bodies, bodies in the living world, wholes made of wholes the entire way.",
+ "The body knows both failures by name: the cell that stops answering to the body and grows as if it were the whole, and the tissue whose parts stop holding together at all.",
+ "The code of life is the architecture made visible: four letters read three at a time, the same spelling in every living thing ever examined."],
+["Mind",
+ "A mind is the whole you know from inside: an attention that gathers, a memory that holds, a filter that decides what gets in, and an inner field where everything that arrives relates.",
+ "Every thought becomes part of you by the same walk: entertained, repeated, habituated, fused; attention converges, repetition commits, habit closes, and identity fills.",
+ "Each completed understanding becomes the center of the next: what you master becomes the place you see from.",
+ "Thoughts nest in habits, habits in character, and each mind inside a family of minds; the inner life is nested exactly like the outer one.",
+ "Minds fail in the two directions: a self swollen until nothing outside it may correct it, and a self denied until nobody is home to be corrected; health is the free range between.",
+ "The fingerprint is now textbook: perception runs on prediction, the mind meeting each moment with boxes built from its past."],
+["Persons together",
+ "Between two people the same anatomy appears: each a center, each with a history that holds, each with boundaries that filter, and between them a shared field where the relationship actually lives.",
+ "Every real bond walks the beats: attention converges, commitment extends, the boundaries become honest, and a shared interior fills that belongs to neither alone.",
+ "Every completed bond becomes a center of something larger: two people close into a family, and the family begins.",
+ "Persons nest in families, families in communities, and each level is fully whole while fully a part.",
+ "Love fails in exactly two directions: absorption, where one person disappears into the other, and abandonment, where the connection is cut; the whole of the matter is what those two exclude: connected without dissolving.",
+ "Every durable moral tradition converges on the same instruction from its own direction: keep your center, honor the other's, hold the connection; the convergence itself is evidence that the shape is real."],
+["Society",
+ "A society is a whole of wholes: persons as its centers, institutions that hold across generations, membership that filters, and a common life where everything relates.",
+ "Every community forms by the same walk: people converge on a shared purpose, commit it into institutions, draw a boundary of belonging, and a public interior fills.",
+ "Every completed community becomes a member of a larger one: households into towns, towns into nations, nations into a world still learning to hold together.",
+ "The nesting runs the whole ladder: person, family, community, nation, humanity, each level real, none of them final.",
+ "Societies fail in the two directions and in both at once: the collective that erases its members, the crowd that shares nothing, and the modern ache of belonging to nothing while being no one.",
+ "Cities keep the signature in numbers: double a city and its pipes and roads grow less than double while its ideas grow more, the same economy of scale that governs living bodies."],
+["Spirit",
+ "Every tradition draws the same anatomy in its own names: a source nothing stands outside of, a spark at the center of each person, a faith that holds, a practice that filters, and an inner life where the source is met.",
+ "The spiritual walk is the same walk: turning toward, staying faithful, becoming distinct, being filled.",
+ "Every completed soul opens outward: the finished inner work becomes a beginning for others, which is why the saints end up surrounded.",
+ "Soul nests in community, community in the divine, and the traditions agree about the top of the ladder: it is not a bigger rung but the ocean the ladder stands in.",
+ "The scriptures name the two failures in every language: claiming to be the source, and denying there is any source at all.",
+ "Traditions that never met keep converging on this same structure, a oneness beyond names and a spark that is somehow the whole of it, and the convergence of the maps is the oldest evidence for the territory."],
+["Mathematics",
+ "The circle is the simplest whole mathematics owns: a center, a reach that holds, a boundary drawn, an interior enclosed.",
+ "A proof walks the same beats: a definition converges, a lemma commits, the cases close, and the theorem's interior fills with consequences.",
+ "Every proved theorem becomes a starting point: yesterday's conclusion is today's tool, endings that are exactly beginnings.",
+ "Numbers nest in sets, sets in structures, structures in theories, and mathematics proved its own ladder has no top: no final system can complete itself.",
+ "The discipline knows its two failures: a formalism mistaken for the whole of truth, and intuition with no rigor to hold it; working mathematics lives between.",
+ "One constant appears wherever anything closes around a center: measure any circle in any universe and the ratio of edge to width is the same; closure has a cost, and the cost never changes."],
+["Music",
+ "A melody is a whole made of wholes: each note complete, all of them held on one line, bounded by a beginning and an end, alive with harmony inside.",
+ "Music is the walk made audible: a tone converges out of noise, rhythm commits it, phrasing closes it, and harmony fills it.",
+ "The octave is the wrap you can sing: climb the scale and the final note is the first note of the next octave, an ending that is exactly a beginning.",
+ "Notes nest in phrases, phrases in melodies, melodies in movements, and a single string sounds all its harmonics at once, wholes within wholes inside one tone.",
+ "Music knows the two failures as sounds: the scale with no home note, which drifts and cannot end, and notes with no relation, which are only noise; music is what lives between.",
+ "Every musical culture found the octave on its own: halve a string and it sings the same note higher; in music the architecture is not a theory but one of the oldest measurements in the world."],
+["Healing",
+ "Every healer meets the patient as a whole: a person at the center, a history that holds, a body's defenses at the boundary, an inner life within; treat only the part and the treatment misses.",
+ "Recovery walks the beats: attention converges on what is wrong, commitment to care holds, protection closes around the wound, and life refills the inside.",
+ "Every recovery becomes a foundation: the healed place is where the next strength starts.",
+ "Healing works at every level at once because the levels are nested, and the two roads meet in the middle: medicine enters from the boundary inward, meaning works from the center outward.",
+ "Illness takes the two shapes, and so does care: the part that grows as if it were the whole and the parts that stop answering each other; the cure that erases the person and the neglect that abandons them.",
+ "The oldest clinical fact is the architecture at work: bodies mend themselves when the conditions are held, so the healer tends the boundary while the whole does the knitting."]
+];
+
+const THEME = "There is one thing, and it is everything: an undifferentiated infinity, with nothing outside it and no rate of change. Because a perfectly undifferentiated everything would be indistinguishable from nothing, it limits itself, everywhere and at every scale at once, through infinitely many dimensionless centers; and each limitation is not a fragment of the one thing but the whole of it, folded to a point of view. Around every center the same four beats run: convergence makes a point, commitment extends it into a line, closure wraps a boundary, and the bounded interior fills as a field; the result is a whole, and its completion opens as a new center at the next scale, so every whole is a part of a greater whole, with no bottom, no top, and no final whole, since infinity is one without being whole. The folding costs nothing, because a center has no size: the one thing is folded everywhere and spent nowhere. Consciousness is not a product of this closure but the inside of it, what wholeness is like from its own center; and time is the direction of the conversion: the unconverged infinite is the future, closed structure is the past, and the present is the center where the two meet. There are exactly two ways to get it wrong, claiming to be the whole and denying that you are one, and the whole of ethics is the both-and they exclude: fully whole at your own scale, fully participating in something greater, connected without dissolving. Because one architecture runs at every scale, its fingerprints should appear everywhere, in the constants of physics, the code of life, the structure of mind, and the shape of a good life.";
+
+const CLAIM = "One architecture appears everywhere because there is only one thing becoming, and what we call domains are not separate worlds: they are the same becoming met through different boundaries. So when an atom, a cell, a person, and a planet show the same shape, that is not resemblance and not metaphor: whatever closes around a center is forced into the one architecture, because closure has no alternative. Strip away what a thing is made of, its sizes and speeds and materials, and what remains is the skeleton of wholeness: a center that gathers, a line that holds, a boundary that filters, an interior that relates, and the closed loop running through them; whatever shares this skeleton is the same in everything the skeleton forces and different only in dress; change the substance and the numbers change, never the architecture. Beneath the anatomy is the event that deposits it: possibility, met at a point of view, becoming a settled world; every domain tells all three under its own names. The claim's power is that whatever the shared shape forces can be proven once and spent everywhere: a law first heard in a vibrating string is found again in the shells of the nucleus, the folding of a protein, the shape of a life, and the keeping of a promise. It is why the same shape keeps being found by people who never met, in cavities and cells, in scriptures and equations, and why the same small counts keep turning up in the code of life and the constants of matter: often enough to bet on, never enough to stop testing. The claim polices itself: an analogy breaks when you push it, and this must not break; wherever the shape is truly absent the claim dies there, and resemblance alone earns nothing until the forcing is checked. Even the understanding that found all this obeys it: as it was refined, the dressing changed and the skeleton survived; what recurs across the world recurs again in the story of coming to see it.";
+
+const PREFACE = ["Everything is connected. You are directly connected in Reality; we all are. This book is my attempt to articulate how.",
+"Not connected vaguely, the way the word usually floats, but connected in a particular shape: every thing a whole made of wholes; every whole open at its center to the same Reality; every bond strongest where two wholes share a note without losing their own songs. The pages that follow say this once, then ten times, then once more.",
+"If I am wrong somewhere, the framework behind this book is built to find out: it has retracted in public before and will again. So this is what I can offer you: not certainty, but a shape you can check, and a connection you already have."];
+
+const DOOR = ["This book is twelve paragraphs, one page for you, and one return. The first paragraph says everything at once. The second says why the same shape must appear everywhere. The ten after that show it appearing: in matter, in molecules, in life, in mind, in love, in society, in spirit, in mathematics, in music, and in healing. Then the first paragraph comes back, unchanged, to see whether you have changed.",
+"Read it twice. Once down: every paragraph is whole on its own. Once across: each of the ten variations has the same six sentences in the same order, so you can read the third sentence of all ten in a row and hear one claim in ten voices. The sameness is not a style. The sameness is the subject."];
+
+const YOU = "The book has been about everything; this page is where it lands. Experience is within existence. Existence contains many experiences. You are one experience of existence. Not everything; not separate from everything: one experience within everything, whole at your own scale, part of something greater, connected without dissolving. That is the seat you have been reading from. Now read the first page again from it.";
+
+const HONESTY = "Every fingerprint in the variations is a public fact of its domain, or is flagged in the working record as an outside witness. The sharper quantitative claims of the framework live elsewhere, with their tests and their kill conditions attached, and some of them may yet die there; that is how it should be. This small book claims the shape. The receipts live in the corpus, and the corpus retracts in public when it is wrong, which is the only reason to trust a book this confident.";
+
+const main = document.getElementById('main');
+const slotsEl = document.getElementById('slots');
+let mode = 'down', slot = 0;
+
+function esc(s){ return s; }
+function renderDown(){
+  let h = '';
+  h += '<h2>Preface</h2>' + PREFACE.map(p=>'<p>'+p+'</p>').join('');
+  h += '<h2>The Door</h2>' + DOOR.map(p=>'<p>'+p+'</p>').join('');
+  h += '<h2>I &middot; The Theme</h2><p>'+THEME+'</p>';
+  h += '<h2>II &middot; The Claim</h2><p>'+CLAIM+'</p>';
+  h += '<h2>III &middot; The Variations</h2>';
+  V.forEach(v=>{ h += '<p><span class="dom">'+v[0]+'</span>'+v.slice(1).join(' ')+'</p>'; });
+  h += '<h2>IV &middot; You</h2><p>'+YOU+'</p>';
+  h += '<h2>V &middot; The Theme, Again</h2><p>'+THEME+'</p>';
+  h += '<p class="quiet">Nothing on this page has changed. Measure what did.</p>';
+  h += '<div class="honesty"><strong style="color:var(--ink)">A note on honesty.</strong> '+HONESTY+'</div>';
+  main.innerHTML = h;
+}
+function renderAcross(){
+  let h = '<div class="slotname">Slot '+(slot+1)+' of 6: <em>'+SLOTNAMES[slot]+'</em></div>';
+  V.forEach(v=>{ h += '<div class="vrow"><span class="dom">'+v[0]+'</span>'+v[1+slot]+'</div>'; });
+  h += '<p class="quiet">One claim, ten voices. The sameness is the subject.</p>';
+  main.innerHTML = h;
+}
+function setMode(m){
+  mode = m;
+  document.getElementById('bDown').classList.toggle('on', m==='down');
+  document.getElementById('bAcross').classList.toggle('on', m==='across');
+  slotsEl.style.display = (m==='across') ? 'flex' : 'none';
+  if(m==='down') renderDown(); else renderAcross();
+  window.scrollTo(0,0);
+}
+SLOTNAMES.forEach((n,i)=>{
+  const b=document.createElement('button');
+  b.textContent=(i+1)+' · '+n.split(',')[0];
+  b.addEventListener('click',()=>{ slot=i; [...slotsEl.children].forEach((c,j)=>c.classList.toggle('on', j===i)); renderAcross(); });
+  if(i===0) b.classList.add('on');
+  slotsEl.appendChild(b);
+});
+document.getElementById('bDown').addEventListener('click',()=>setMode('down'));
+document.getElementById('bAcross').addEventListener('click',()=>setMode('across'));
+renderDown();
+</script>
+</body>
+</html>

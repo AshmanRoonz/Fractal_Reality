@@ -1,6 +1,6 @@
 # One Experience Within Everything: the First-Person Foundation
 
-**Status: session record, 2026-08-19, fifth record of the day on this thread. Claude drafted, pending Ashman's countersign.** The material arrived relayed by Ashman from a parallel exchange (the boxed formalization is the exchange's; the underlying move is his; the relay is the request to process it). Nothing outside this file is touched. Companions: `plans/framework_in_one_paragraph_2026_08_19.md`, `plans/infinity_limited_through_singularities_2026_08_19.md` (cited as "the singularities record"), `plans/one_book_charter.md` (the syllogism), `plans/the_isomorphism_of_the_framework_2026_08_19.md` (the diachronic rule).
+**Status: session record, 2026-08-19, fifth record of the day on this thread. Claude drafted, COUNTERSIGNED (Ashman, 2026-08-19; batch dispositions in `plans/countersign_batch_2026_08_19.md`).** The material arrived relayed by Ashman from a parallel exchange (the boxed formalization is the exchange's; the underlying move is his; the relay is the request to process it). Nothing outside this file is touched. Companions: `plans/framework_in_one_paragraph_2026_08_19.md`, `plans/infinity_limited_through_singularities_2026_08_19.md` (cited as "the singularities record"), `plans/one_book_charter.md` (the syllogism), `plans/the_isomorphism_of_the_framework_2026_08_19.md` (the diachronic rule).
 
 ## The material (verbatim core)
 
