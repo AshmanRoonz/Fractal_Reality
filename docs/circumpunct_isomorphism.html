@@ -350,10 +350,10 @@
     }
 
     .inv-preserved h4 { color: var(--boundary); }
-    .inv-preserved li::before { content: "â– "; color: var(--boundary); }
+    .inv-preserved li::before { content: "■"; color: var(--boundary); }
 
     .inv-variant h4 { color: var(--text-dim); }
-    .inv-variant li::before { content: "â–¡"; color: var(--text-faint); }
+    .inv-variant li::before { content: "□"; color: var(--text-faint); }
 
     /* ── SEPARATOR ── */
     .sep {
@@ -402,7 +402,7 @@
   <h1>The Isomorphism of the Circumpunct</h1>
   <div class="title-sub">Formal Axiomatization · Structural Invariance</div>
   <p class="title-meta">
-    Ashman Roonz; Circumpunct Framework v7.2<br>
+    Ashman Roonz · Circumpunct Framework v7.2<br>
     February 2026 · <a href="https://fractalreality.ca" style="color: var(--gold); text-decoration: none;">fractalreality.ca</a>
   </p>
 </div>
@@ -517,19 +517,19 @@
     <strong>Why this formulation matters:</strong> By collapsing center–field–boundary dynamics into a single composite operator 𝓛, we gain access to the full machinery of operator theory; spectra, eigenvalues, fixed points, stability classification. Everything that follows is derived from 𝓛.
   </div>
 
-  <h3>3.2; The Skeleton Abstraction</h3>
+  <h3>3.2: The Skeleton Abstraction</h3>
 
   <p>The strongest way to formalize "same structure, different stuff" is to separate <em>realizations</em> from an abstract <em>skeleton</em>. This prevents the overclaim that all circumpunct systems are literally isomorphic; an EM cavity and a neural oscillator have very different state spaces; while preserving the real claim: that anything derivable from the closure loop applies to both.</p>
 
   <div class="definition">
-    <div class="label">Definition 3.3; The Circumpunct Skeleton (Skel)</div>
+    <div class="label">Definition 3.3: The Circumpunct Skeleton (Skel)</div>
     <p>The <strong>skeleton</strong> of a realization 𝒞 is the abstract data of roles plus loop:</p>
     <div class="eq eq-sm">Skel(𝒞) := (<span class="sym-dot">•</span>, <span class="sym-phi">Φ̂</span>, <span class="sym-ring">○</span>, <span class="sym-loop">𝓛̂</span>)</div>
     <p style="margin-bottom:0;">where Φ̂ is "the space the loop acts on" and 𝓛̂ is the closure loop up to structure. The skeleton <em>forgets</em> medium-specific details; material constants, propagation speed, physical dimensions; and retains only the loop architecture and role relations. Any theorem proved from skeleton data alone is valid for every realization whose skeleton satisfies the axioms.</p>
   </div>
 
   <div class="definition">
-    <div class="label">Definition 3.4; Effective Closure Length</div>
+    <div class="label">Definition 3.4: Effective Closure Length</div>
     <p>Let <strong>L<sub>eff</sub></strong> be the effective traversal length of a closed loop; the total path a signal travels from center through field to boundary and back. This is geometry-dependent:</p>
     <div class="eq eq-sm">
       1D cavity: L<sub>eff</sub> ≈ 2L &nbsp;&nbsp;|&nbsp;&nbsp; Spherical cavity: L<sub>eff</sub> ≈ 2πR (with corrections) &nbsp;&nbsp;|&nbsp;&nbsp; General: L<sub>eff</sub> = ∮ ds
@@ -551,18 +551,18 @@
   <p>The central insight of this formalization: <strong>coherence is not a property you add to a system; it is what happens when the closure loop has a nontrivial fixed point.</strong></p>
 
   <div class="definition">
-    <div class="label">Definition 4.1; Circumpunct Coherence</div>
+    <div class="label">Definition 4.1: Circumpunct Coherence</div>
     <p>A circumpunct system 𝒞 is <strong>coherent</strong> if and only if the closure loop 𝓛 admits a nontrivial invariant state:</p>
     <div class="eq">∃ φ* ∈ Φ, &nbsp; φ* ≠ 0 &nbsp; such that &nbsp; <span class="sym-loop">𝓛</span>(φ*) = φ*</div>
     <p style="margin-bottom:0;">A coherent state is one that <em>survives its own traversal</em>. It passes through gating, propagation, and reflection and returns unchanged. The fixed point may be a standing wave, a stable equilibrium, a steady distribution, or a consistent interpretation; the theorem is agnostic about the medium.</p>
   </div>
 
-  <h3>4.2; The General Fixed-Point Theorem</h3>
+  <h3>4.2: The General Fixed-Point Theorem</h3>
 
   <p>Closure alone does not force fixed points. A rotation on a circle by an irrational angle is a closed loop dynamic with no invariant point. What forces fixed points is closure <em>together with topological constraints on the state space</em>. The following theorem makes the required assumptions explicit.</p>
 
   <div class="theorem">
-    <div class="label">Theorem 4.2; Coherence from Closure (General Form)</div>
+    <div class="label">Theorem 4.2: Coherence from Closure (General Form)</div>
     <p>Let 𝒞 be a circumpunct system satisfying Axioms 1–3, with closure loop 𝓛 := G ∘ R ∘ U<sub>T</sub> acting on a state space X ⊆ Φ. Assume:</p>
     <p style="margin-left: 1.2rem;">(i) X is a nonempty, compact, convex subset of a normed vector space.</p>
     <p style="margin-left: 1.2rem;">(ii) 𝓛 : X → X is continuous (the loop maps the state space into itself without discontinuity).</p>
@@ -583,12 +583,12 @@
     <strong>What the hypotheses mean physically.</strong> Compactness says the state space is bounded; there are finite resources, finite attentional capacity, finite energy. Convexity says mixtures of states are still states; weighted superpositions, blended interpretations, intermediate configurations. Continuity says small changes in input produce small changes in output; the loop doesn't teleport. These are empirical claims about the domain, not mathematical freebies. A system whose state space fails compactness (truly unbounded dynamics) is not guaranteed coherence; and that failure is itself a prediction of the framework.
   </div>
 
-  <h3>4.3; Convergence: Why Repeated Traversal Selects Coherence</h3>
+  <h3>4.3: Convergence: Why Repeated Traversal Selects Coherence</h3>
 
   <p>Theorem 4.2 guarantees existence of a fixed point. The following theorem addresses the stronger claim: that repeated application of the loop <em>converges</em> to coherence from any starting state.</p>
 
   <div class="theorem">
-    <div class="label">Theorem 4.3; Self-Organization via Contraction</div>
+    <div class="label">Theorem 4.3: Self-Organization via Contraction</div>
     <p>Let (X, d) be a complete metric space and 𝓛 : X → X a <strong>contraction</strong>:</p>
     <div class="eq">d(𝓛(x), 𝓛(y)) ≤ c · d(x, y) &nbsp;&nbsp; for all x, y ∈ X, &nbsp; 0 &lt; c &lt; 1</div>
     <p style="margin-bottom:0;">Then 𝓛 has a <strong>unique</strong> fixed point φ*, and the sequence 𝓛<sup>n</sup>(x) converges to φ* from any initial state x ∈ X. The rate of convergence is geometric: d(𝓛<sup>n</sup>(x), φ*) ≤ c<sup>n</sup> · d(x, φ*).</p>
@@ -604,12 +604,12 @@
     <strong>What contraction means physically.</strong> The loop is lossy; each traversal dissipates a fraction of the distance from equilibrium. Boundary absorption, field attenuation, gating selectivity: these are the mechanisms by which c &lt; 1 is achieved. A system with no loss (c = 1) may have fixed points (Theorem 4.2) but won't necessarily converge to them. A system with total loss (c = 0) converges in one step but to a trivial state. The interesting regime is 0 &lt; c &lt; 1: enough loss to select, not enough to extinguish. This is the formal content of "repeated traversals select coherence."
   </div>
 
-  <h3>4.4; Spectral Specialization: Wave Systems</h3>
+  <h3>4.4: Spectral Specialization: Wave Systems</h3>
 
   <p>In physical systems where the field supports wave-like propagation; electromagnetic cavities, acoustic resonators, quantum wells; the general fixed-point result specializes to a richer structure: discrete standing modes determined by closure geometry.</p>
 
   <div class="theorem">
-    <div class="label">Theorem 4.4; Spectral Modes from Wave Closure</div>
+    <div class="label">Theorem 4.4: Spectral Modes from Wave Closure</div>
     <p>Let 𝒞 be a circumpunct system satisfying Axioms 1–3, where the field Φ supports wave propagation with speed v and the operators G, U<sub>T</sub>, R are linear. Then the fixed points of 𝓛 form a discrete spectrum indexed by mode number n:</p>
     <div class="eq">f<sub>n</sub> = n · v / L<sub>eff</sub> &nbsp;&nbsp; (n = 1, 2, 3, …)</div>
     <p style="margin-bottom:0;">The spectral structure is determined entirely by the closure geometry (L<sub>eff</sub>) and propagation speed (v), not by the medium composition.</p>
@@ -629,12 +629,12 @@
   </div>
 
   <div class="corollary">
-    <div class="label">Corollary 4.5; Spectral Structure (Wave Systems)</div>
+    <div class="label">Corollary 4.5: Spectral Structure (Wave Systems)</div>
     <p style="margin-bottom:0;">In wave systems, the fixed points of 𝓛 form a discrete spectrum {φ*<sub>n</sub>} indexed by mode number n. The spectral structure; the <em>set of mode relationships</em>; is determined entirely by the geometry of the closure loop, not by the medium. Two wave systems with different media but the same loop geometry have conjugate spectra.</p>
   </div>
 
   <div class="corollary">
-    <div class="label">Corollary 4.6; Coherence Without Complexity</div>
+    <div class="label">Corollary 4.6: Coherence Without Complexity</div>
     <p style="margin-bottom:0;">Neither Theorem 4.2 nor Theorem 4.4 requires life, consciousness, intention, or complexity. An empty electromagnetic cavity is as valid a circumpunct system as a living brain, and a probability simplex of interpretations is as valid a state space as a Hilbert space of wavefunctions. Coherence is topological, not biological.</p>
   </div>
 
@@ -654,12 +654,12 @@
   <p>Every conservation law names what does not change under transformation. The Conservation of Traversal (Axiom 5) conserves a dimensional sum. But the deeper invariant is the closure condition itself.</p>
 
   <div class="definition">
-    <div class="label">Definition 5.1; Closure</div>
+    <div class="label">Definition 5.1: Closure</div>
     <p style="margin-bottom:0;"><strong>Closure</strong> is the condition in which the loop operator 𝓛 = G ∘ R ∘ U<sub>T</sub> is well-defined and admits nontrivial fixed points. It is not a substance. It is a <em>relational condition</em>; the fact that the loop closes and coherent states exist.</p>
   </div>
 
   <div class="theorem">
-    <div class="label">Theorem 5.2; Closure is the Conserved Quantity</div>
+    <div class="label">Theorem 5.2: Closure is the Conserved Quantity</div>
     <p>What is conserved across all circumpunct isomorphisms is not energy, not frequency, not information, and not substance. What is conserved is <strong>center–field–boundary closure itself</strong>; the existence of the loop and its fixed-point structure.</p>
   </div>
 
@@ -681,12 +681,12 @@
 <div class="section">
   <h2><span class="section-num">§6</span> The Isomorphism</h2>
 
-  <h3>6.1; Morphisms in Circ</h3>
+  <h3>6.1: Morphisms in Circ</h3>
 
   <p>The isomorphism operates at the level of <em>skeletons</em>, not raw realizations. We do not claim that an EM cavity and a neural oscillator have literally bijectable state spaces; they obviously don't. We claim their skeletons are isomorphic: the loop architecture, role relations, and closure conditions are structurally equivalent. This is the precise distinction between overclaiming and the real claim.</p>
 
   <div class="definition">
-    <div class="label">Definition 6.1; Circumpunct Morphism</div>
+    <div class="label">Definition 6.1: Circumpunct Morphism</div>
     <p>Let Skel(𝒞₁) and Skel(𝒞₂) be circumpunct skeletons with loops 𝓛̂₁ and 𝓛̂₂. A <strong>morphism</strong> is a map f<sub>Φ</sub>: Φ̂₁ → Φ̂₂ satisfying the <strong>intertwining condition</strong>:</p>
     <div class="eq">f<sub>Φ</sub> ∘ <span class="sym-loop">𝓛̂₁</span> = <span class="sym-loop">𝓛̂₂</span> ∘ f<sub>Φ</sub></div>
     <p style="margin-bottom:0;">This single equation says: it doesn't matter whether you first loop in system 1 and then map across, or first map across and then loop in system 2. The result is the same. The loop structure is preserved.</p>
@@ -697,21 +697,21 @@
   </div>
 
   <div class="definition">
-    <div class="label">Definition 6.2; Circumpunct Isomorphism (Skeleton Level)</div>
+    <div class="label">Definition 6.2: Circumpunct Isomorphism (Skeleton Level)</div>
     <p>A morphism f<sub>Φ</sub> is an <strong>isomorphism</strong> if it is invertible; there exists g<sub>Φ</sub>: Φ̂₂ → Φ̂₁ such that g<sub>Φ</sub> ∘ f<sub>Φ</sub> = id₁ and f<sub>Φ</sub> ∘ g<sub>Φ</sub> = id₂, with g<sub>Φ</sub> also satisfying the intertwining condition. This is a structure-preserving bijection <em>on skeletons</em>: same loop architecture, different medium.</p>
     <p>In dynamical systems language: two circumpunct skeletons are isomorphic when their loops are <strong>conjugate</strong>; the same operator up to change of coordinates. Every circumpunct system reduces to a single endomorphism 𝓛 ∈ End(Φ̂), and "isomorphism" means "same 𝓛 up to a coordinate transform f." This is a standard and well-understood mathematical relationship.</p>
     <p style="margin-bottom:0;">A weaker notion; <strong>homomorphism</strong>; requires only that f<sub>Φ</sub> satisfy the intertwining condition without being invertible. This is appropriate when one circumpunct system is embedded in or projected from another (as in Axiom 4, where a sub-circumpunct maps into its parent), or when cross-domain maps are approximate rather than exact.</p>
   </div>
 
   <div class="definition">
-    <div class="label">Definition 6.3; The Category Circ</div>
+    <div class="label">Definition 6.3: The Category Circ</div>
     <p style="margin-bottom:0;">The <strong>category Circ</strong> has circumpunct skeletons as objects and circumpunct morphisms as arrows. Composition is function composition of the f<sub>Φ</sub> maps. Identity morphisms are identity maps on each skeleton field space. Two realizations are <strong>structurally equivalent</strong>; their loops are <strong>conjugate</strong>; if and only if Skel(𝒞₁) ≅ Skel(𝒞₂).</p>
   </div>
 
-  <h3>6.2; The Structural Invariance Theorem</h3>
+  <h3>6.2: The Structural Invariance Theorem</h3>
 
   <div class="theorem">
-    <div class="label">Theorem 6.4; Circumpunct Structural Invariance (Conjugacy Theorem)</div>
+    <div class="label">Theorem 6.4: Circumpunct Structural Invariance (Conjugacy Theorem)</div>
     <p>Let 𝒞₁ and 𝒞₂ be circumpunct realizations satisfying Axioms 1–3. If their skeletons are isomorphic; there exists an invertible f<sub>Φ</sub> such that f<sub>Φ</sub> ∘ 𝓛̂₁ = 𝓛̂₂ ∘ f<sub>Φ</sub>; then:</p>
     <p style="padding-left: 1.2rem;">
       <strong>(i) Fixed points correspond:</strong> 𝓛̂₁(φ*) = φ* &nbsp;⟺&nbsp; 𝓛̂₂(f<sub>Φ</sub>(φ*)) = f<sub>Φ</sub>(φ*)<br>
@@ -729,7 +729,7 @@
     <p class="qed">∎</p>
   </div>
 
-  <h3>6.3; What Changes vs What Doesn't</h3>
+  <h3>6.3: What Changes vs What Doesn't</h3>
 
   <div class="inv-table">
     <div class="inv-col inv-preserved">
@@ -858,7 +858,7 @@
 
   <p>The sum is <em>more stable</em> than the individual terms (σ = 0.04 vs 0.032, 0.018). This is the signature of a conservation law; the parts fluctuate, but the whole is constrained.</p>
 
-  <h3>Worked Conjugacy; Organ Pipe ↔ Laser Cavity</h3>
+  <h3>Worked Conjugacy: Organ Pipe ↔ Laser Cavity</h3>
 
   <p>The instantiations table above claims structural equivalence. Here we <em>compute</em> it for one concrete pair: an organ pipe and a laser cavity. Both are 1D cavities, so we expect strict conjugacy.</p>
 
@@ -888,12 +888,12 @@
     <p style="margin-bottom:0;"><strong>What this proves:</strong> The organ pipe and laser cavity are not merely similar; they are <em>isomorphic objects in Circ</em>. The conjugacy is not the identity pretending to be deep; it is the specific coordinate transformation that factors out medium (air vs. light), speed (v<sub>sound</sub> vs. c), and scale (L<sub>pipe</sub> vs. L<sub>laser</sub>) to reveal the shared loop architecture beneath. Everything the loop determines, both systems share. Everything the loop does not determine (frequency in Hz, amplitude in physical units), they need not.</p>
   </div>
 
-  <h3>Scope; What Transfers at Each Level</h3>
+  <h3>Scope: What Transfers at Each Level</h3>
 
   <p>The worked conjugacy above holds because both systems share the same <em>geometry class</em> (1D cavity). But the Schumann resonance is a spherical cavity; its modes go as f<sub>ℓ</sub> ∝ √(ℓ(ℓ+1)), giving ratios 1 : 1.73 : 2.45 …, not the integer harmonics 1 : 2 : 3 of a pipe. No conjugacy map can turn one spacing pattern into the other. This is not a failure of the framework; it is a <em>classification result</em>. The framework distinguishes three tiers of structural transfer:</p>
 
   <div class="theorem">
-    <div class="label">Scope Theorem; Three Tiers of Transfer</div>
+    <div class="label">Scope Theorem: Three Tiers of Transfer</div>
 
     <p><strong>Tier 1; Universal (all circumpunct systems).</strong> Any system satisfying Axioms 1–3 inherits: loop existence, fixed-point existence (Theorem 4.2), convergent self-organization (Theorem 4.3), closure as conserved quantity (Theorem 5.2), the five failure-mode degenerations, and dimensional conservation D<sub>•</sub> + D<sub>Φ</sub> = D<sub>○</sub> (Axiom 5). These hold regardless of geometry, medium, or scale. This is what crosses domains.</p>
 
@@ -916,7 +916,7 @@
   <p>The isomorphism holds only when all axioms are satisfied and all three operators function. A circumpunct system always contains all three components; center, field, and boundary; by definition (Axiom 1). Degenerations occur not when components are <em>absent</em> but when their operators <em>degrade</em>: gating fails to select, propagation fails to carry, reflection fails to return, or passage fails to open. Each degradation produces a characteristic failure signature. These are not speculative; they correspond to known phenomena across every domain, and they are <em>derived</em> from the loop structure.</p>
 
   <div class="failure">
-    <div class="label">Degeneration 1; Non-Selective Boundary (G ≈ Id; U<sub>T</sub> and R intact)</div>
+    <div class="label">Degeneration 1: Non-Selective Boundary (G ≈ Id; U<sub>T</sub> and R intact)</div>
     <p>The boundary exists but its gating operator passes everything indiscriminately; G reduces to the identity. All frequencies propagate and converge equally. The loop operates, but with no selectivity: every state survives traversal or none does. 𝓛 has eigenvalues uniformly near 1, producing no mode separation. The result is not silence but <em>undifferentiated saturation</em>.</p>
     <p><strong>Physical:</strong> Thermal equilibrium. A cavity at temperature T excites all modes equally; blackbody radiation. The cavity is intact, the center receives, but no frequency is selected over any other. All modes at once, no coherence.</p>
     <p><strong>Psychological:</strong> Dissociation. The boundary exists but does not discriminate. Sensation floods the field without selective gating; experience without processing. Everything arrives; nothing is organized. The boundary is <em>wide open</em> rather than tuned.</p>
@@ -924,7 +924,7 @@
   </div>
 
   <div class="failure">
-    <div class="label">Degeneration 2; Non-Propagating Field (U<sub>T</sub> ≈ 0; G and R intact)</div>
+    <div class="label">Degeneration 2: Non-Propagating Field (U<sub>T</sub> ≈ 0; G and R intact)</div>
     <p>The field exists but its transport operator fails; U<sub>T</sub> attenuates to zero. Center gates and boundary reflects, but nothing traverses between them. G and R compose to no effect because there is no signal to act on. The loop collapses: 𝓛 = G ∘ R ∘ 0 = 0. Center and boundary are both present but <em>disconnected</em>.</p>
     <p><strong>Physical:</strong> A cavity with intact walls and excitation source, but the medium has been degraded; extreme attenuation, destructive scattering, or loss of the propagation substrate. The geometry is complete; the carrier is broken.</p>
     <p><strong>Psychological:</strong> Depersonalization. Awareness exists (center), body exists (boundary), but the felt connection between them is absent. The field; mind; is the medium. Without propagation, soul and body are present but isolated from each other. The person reports feeling "unreal" or "watching myself from outside."</p>
@@ -932,7 +932,7 @@
   </div>
 
   <div class="failure">
-    <div class="label">Degeneration 3; Non-Receiving Center (R ≈ 0; G and U<sub>T</sub> intact)</div>
+    <div class="label">Degeneration 3: Non-Receiving Center (R ≈ 0; G and U<sub>T</sub> intact)</div>
     <p>The center exists but does not receive or return; R ≈ 0. The boundary gates, the field propagates, but nothing converges. 𝓛 becomes a one-way operator with no invariant states. Energy leaves the system at every traversal. No fixed point, no standing mode, no coherence.</p>
     <p><strong>Physical:</strong> Free-space radiation. An antenna with functioning boundary and propagation medium, but no convergence point. Energy radiates outward without return. The center is present as structure but absent as receiver.</p>
     <p><strong>Psychological:</strong> Mania. Unbounded expression. The boundary gates, the field carries, but nothing converges at the center; no reception, no return. Experience pours outward with no return. No standing pattern forms; only escalating output.</p>
@@ -940,7 +940,7 @@
   </div>
 
   <div class="failure">
-    <div class="label">Degeneration 4; Sealed Boundary Return (G blocks return; R and U<sub>T</sub> intact)</div>
+    <div class="label">Degeneration 4: Sealed Boundary Return (G blocks return; R and U<sub>T</sub> intact)</div>
     <p>All three operators nominally function; but G blocks on the <em>return</em> pass. The boundary gates inbound signal normally; the field propagates; the center receives. But when the return signal passes back through ○, the gate refuses re-entry. The full loop 𝓛 = G ∘ R ∘ U<sub>T</sub> fails at its final step. However, a <strong>sub-loop</strong> R ∘ U<sub>T</sub> still operates: signal bounces between field and center without ever completing the boundary's outbound gating. This produces <em>reverberation without coherence</em>; echo modes in Φ at approximately doubled frequency, because the sub-loop traversal path (center → field → center) is roughly half the full closure path (boundary → field → center → field → boundary).</p>
     <p>Formally: 𝓛 is blocked, but the partial operator 𝓛<sub>sub</sub> = R ∘ U<sub>T</sub> has its own spectral structure; modes selected by center reception alone, without boundary-gating on return. These are <em>echo modes</em>, not coherent modes. They persist (R receives, so 𝓛<sub>sub</sub><sup>n</sup> ≠ 0) but never stabilize into fully-gated standing waves. The system is active but incoherent: busy without purpose.</p>
     <p><strong>Physical:</strong> A cavity with functioning propagation medium and convergence point, but the boundary is blocked on return. Energy enters, converges at center, but cannot couple back through the boundary. The cavity rings with echo modes that persist but never lock to the gated frequency.</p>
@@ -949,7 +949,7 @@
   </div>
 
   <div class="failure">
-    <div class="label">Degeneration 5; Absorptive Center (R absorbs; G and U<sub>T</sub> intact)</div>
+    <div class="label">Degeneration 5: Absorptive Center (R absorbs; G and U<sub>T</sub> intact)</div>
     <p>The center exists and receives signal, but absorbs rather than returns; R damps rather than returns. The boundary gates, the field propagates, but the center converts signal to heat (or equivalent dissipation) instead of sending it back. The system runs down exponentially: 𝓛<sup>n</sup> → 0 as n → ∞. Unlike Degeneration 3 (non-receiving center, signal dissipates) and Degeneration 4 (signal reverberates in sub-loop), here the field goes <em>quiet</em>. No echo, no radiation; just extinction.</p>
     <p><strong>Physical:</strong> An anechoic chamber. The center absorbs all signal that arrives. No echo, no standing mode, no resonance. Energy enters and disappears at the convergence point.</p>
     <p><strong>Psychological:</strong> Emotional numbing. Burnout. Flat affect. The boundary gates (signal enters), expression occurs (field propagation), but the center absorbs everything and returns nothing; no echo, no feedback, no felt response. Unlike the busy brain of Degeneration 4, there is <em>no rumination</em>. The field goes silent. The person receives into a void.</p>
@@ -990,27 +990,27 @@
   <p>The isomorphism is a testable claim. It fails if any of the following can be demonstrated:</p>
 
   <div class="failure">
-    <div class="label">Falsification Criterion 1; Dyadic Coherence</div>
+    <div class="label">Falsification Criterion 1: Dyadic Coherence</div>
     <p style="margin-bottom:0;">A coherent system is exhibited that achieves stable fixed points of a loop operator constructed from only <em>two</em> of the three components. If coherence can arise from a dyad (e.g., center + boundary with no field), Axiom 1 falls.</p>
   </div>
 
   <div class="failure">
-    <div class="label">Falsification Criterion 2; Non-Geometric Modes</div>
+    <div class="label">Falsification Criterion 2: Non-Geometric Modes</div>
     <p style="margin-bottom:0;">A closed triadic system with wave-like transport is exhibited whose coherent modes are <em>not</em> determined by effective closure length L<sub>eff</sub>. If standing modes arise from something other than the closure geometry, Theorem 4.4 is falsified. Separately: a circumpunct system satisfying hypotheses (i)–(ii) of Theorem 4.2 is exhibited that admits no fixed point of 𝓛. Either outcome falsifies the corresponding theorem.</p>
   </div>
 
   <div class="failure">
-    <div class="label">Falsification Criterion 3; Skeleton Theorem Failure</div>
+    <div class="label">Falsification Criterion 3: Skeleton Theorem Failure</div>
     <p style="margin-bottom:0;">A skeleton-derived theorem is shown to fail in a realization that provably satisfies the skeleton axioms. Equivalently: two systems with isomorphic skeletons are shown to have non-conjugate spectral structures. Either outcome falsifies Theorem 6.4.</p>
   </div>
 
   <div class="failure">
-    <div class="label">Falsification Criterion 4; Unclassifiable Failure</div>
+    <div class="label">Falsification Criterion 4: Unclassifiable Failure</div>
     <p style="margin-bottom:0;">A failure of coherence is exhibited that does <em>not</em> correspond to a degraded or blocked G, U, or R operator. If coherence can break in a way not classifiable as one of the five degenerations, the framework's diagnostic completeness is falsified.</p>
   </div>
 
   <div class="failure">
-    <div class="label">Falsification Criterion 5; Conservation Divergence</div>
+    <div class="label">Falsification Criterion 5: Conservation Divergence</div>
     <p style="margin-bottom:0;">The Conservation of Traversal (D<sub>center</sub> + D<sub>field</sub> = 3) is shown to diverge from 3.0 under improved measurement. Current experiments show convergence (2.77 ± 0.04 → 3.0 with better estimators). Reversal of this trend would falsify Axiom 5.</p>
   </div>
 
