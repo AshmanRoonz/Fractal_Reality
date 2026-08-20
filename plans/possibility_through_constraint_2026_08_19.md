@@ -1,6 +1,6 @@
 # Possibility Through Constraint: the Temporal Mechanics
 
-**Status: session record, 2026-08-19, sixth record of the day on this thread. Claude drafted, pending Ashman's countersign.** The statement is Ashman's, arrived as this session's prompt. Nothing outside this file is touched. Companions: `plans/infinity_limited_through_singularities_2026_08_19.md` (Findings 7, 12-16), `plans/framework_in_one_paragraph_2026_08_19.md` (S5), `plans/one_book_charter.md` (the grid), `plans/one_experience_within_everything_2026_08_19.md`.
+**Status: session record, 2026-08-19, sixth record of the day on this thread. COUNTERSIGNED (Ashman, same day: "Signed."); closures executed same session, disposition of each under Open decisions.** The statement is Ashman's, arrived as this session's prompt. Nothing outside this file is touched. Companions: `plans/infinity_limited_through_singularities_2026_08_19.md` (Findings 7, 12-16), `plans/framework_in_one_paragraph_2026_08_19.md` (S5), `plans/one_book_charter.md` (the grid), `plans/one_experience_within_everything_2026_08_19.md`.
 
 ## The statement (Ashman, verbatim)
 
@@ -48,12 +48,12 @@ The pole-gap program already measures this statement's limit case. The prequenti
 3. **The grid, candidate row.** Supplies: possibility (future column), the conversion (present column), constraint (past column). One row, completing the grid's dynamics; candidate pending countersign.
 4. **§4.11 and the temporal adjudication block**, as the mechanics note beneath "the center is where the future and the past meet."
 
-## Open decisions (Ashman to adjudicate)
+## Open decisions (all closed at countersign, Ashman, 2026-08-19: "Signed.")
 
-1. **Countersign the four sentences** as canonical lines, with the theorem status of Finding 1 recorded beside them (three assignments were the grid's vocabulary; the constraint assignment is derived).
-2. **The grid's "supplies" row** (Finding 5.3).
-3. **The conjugate pair** (becoming and predicting as the two directions through the present): canon or retained reading.
-4. **Landing sites** per Finding 5.
+1. ~~Countersign the four sentences~~ **CLOSED: the four sentences are canonical lines, grade A, with the theorem status of Finding 1 recorded beside them** (three assignments were the grid's vocabulary; the constraint assignment is derived).
+2. ~~The grid's supplies row~~ **CLOSED: added to the master table** (`plans/one_book_charter.md` v2.15: Supplies: Possibility / The conversion / Constraint).
+3. ~~The conjugate pair~~ **CLOSED as retained reading** (the record staged it as a reading and the signature adopts the record as staged; promotable to canon later by a word).
+4. ~~Landing sites~~ **CLOSED at the plans level**: the paragraph book's chapter 15 carries the thesis note (charter updated); the framework paragraph's S5 receipts carry the sharpening (Addendum 2 there); the grid carries the row. The §4.11 and temporal-block landing inside `circumpunct_framework.md` and `CLAUDE.md` is queued for the migration pass, per the day's discipline of leaving those files untouched from session records.
 
 ## Files consulted
 
