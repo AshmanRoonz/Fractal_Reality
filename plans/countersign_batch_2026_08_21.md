@@ -40,8 +40,13 @@ Canon-file integration of dispositions 7 and 8 joins the queued integration pass
 
 13. **Fractal Reality With the Information Layer** (`plans/fractal_reality_with_information_layer_2026_08_21.md`): COUNTERSIGNED (Ashman, "Yes to both"). The synthesis document is canon with the §3 repair applied (the Ethics section in corner-and-middle form: flows balance in the middle, capacities are corners held in full, isolation and absorption the excluded failures); everything else verbatim as posted. Landing executed: published as `docs/fractal_reality_with_the_information_layer.html` (house style, honesty box, IIT disambiguation, revision history), the canonical synthesis statement and companion to the 285-word framework paragraph, not its replacement; pointed to from the formal note.
 
+## The corrigibility statement (eighth countersign, same day)
+
+14. **The corrigibility statement's placement** (`plans/the_corrigibility_statement_2026_08_21.md`): COUNTERSIGNED BY PLACEMENT DIRECTIVE (Ashman, "That should go in the main readme" and "And on docs/index.html"). The full form ("How to read the confidence... full conviction in the writing, full corrigibility in the practice, and receipts for both") is countersigned verbatim as drafted and placed at the head of `README.md`'s "Read This First: How This Project Handles Being Wrong" section and as a card in `docs/index.html`'s framework section. The method-disclosure line stays venue-dependent and was not included (both surfaces already disclose the AI collaboration). Executed in the same pass under disposition 4's "wherever it appears" mandate: the README's α kill-band line conformed from "±5 ppb" to the graded 3σ/5σ semantics. Still staged: the §3 principle as canon; the remaining placements (other public pages, forum lead).
+
 ## Revision history
 
+- 2026-08-21 v1.7: disposition 14 (the corrigibility statement placed in README.md and docs/index.html), "That should go in the main readme" + "And on docs/index.html".
 - 2026-08-21 v1.6: disposition 13 (the synthesis document, with the ethics repair; docs page published), "Yes to both".
 - 2026-08-21 v1.5: disposition 12 (the layer's first amendment), "Ok".
 - 2026-08-21 v1.4: disposition 11 (the information layer), "Yes".
