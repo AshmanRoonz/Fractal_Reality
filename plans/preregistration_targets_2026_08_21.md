@@ -113,6 +113,10 @@ The Class A header above says "no corpus formula exists." A deeper corpus search
 
 The pick stands: both picked targets are clean for the primary families, and the computation record (`plans/preregistration_juno_computation_2026_08_21.md`) carries the full disclosures.
 
+## Addendum 2 (2026-08-21, same day): B2's premise corrected by the commissioned audit
+
+B2 above says the corpus's Λ reading "implies an equation of state w = −1, constant." The commissioned audit (`plans/lambda_constancy_audit_2026_08_21.md`) found that sentence describes one voice of a two-voiced corpus: §12.2/§27.7g and the Ladder Correction Notice carry constancy, while §12.1, the public predictions page, and the unique-predictions essay carry a dated evolution prediction (w(z) ≈ −1.033 + 0.017/(1+z), "falsified cleanly if w converges to exactly −1 ± 0.005"). B2's move is therefore not "state the commitment or find the freedom" but "adjudicate between two dated strata," and the audit stages that adjudication with a pre-assigned futures table. The original B2 text stands above per the no-silent-revision discipline; the audit record is the current state.
+
 ## Sources (verified by web search, 2026-08-21)
 
 - JUNO first results: [Phys.org](https://phys.org/news/2025-11-juno-physics-results-months.html), [EurekAlert](https://www.eurekalert.org/news-releases/1106885), [JINR](https://www.jinr.ru/posts/juno-experiment-first-physics-results-obtained/), [JUNO physics program (arXiv:2104.02565)](https://arxiv.org/pdf/2104.02565)
