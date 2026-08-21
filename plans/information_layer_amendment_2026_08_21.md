@@ -1,6 +1,8 @@
 # The Information Layer: First Amendment (Staged)
 
-**Status: amendment record, 2026-08-21, staged for countersign. The parallel session reviewed the countersigned layer (disposition 11) and returned three technical corrections and two wording revisions; this record verifies them and stages the amendment. The countersigned v1.0 positions stand until Ashman signs; nothing is silently revised.** The correction flow itself is worth one line: the audit caught two errors in the proposal, and the proposal's author then caught a third error in the audit's repair. That loop running in both directions is the metacognitive culture working.
+**Status: amendment record, 2026-08-21. COUNTERSIGNED (Ashman, "Ok"; disposition 12 in `plans/countersign_batch_2026_08_21.md`); all consequential edits of §3 executed the same date.** Original staging language follows.
+
+**Originally staged for countersign. The parallel session reviewed the countersigned layer (disposition 11) and returned three technical corrections and two wording revisions; this record verifies them and stages the amendment. The countersigned v1.0 positions stand until Ashman signs; nothing is silently revised.** The correction flow itself is worth one line: the audit caught two errors in the proposal, and the proposal's author then caught a third error in the audit's repair. That loop running in both directions is the metacognitive culture working.
 
 ## 1. The three corrections, verified
 

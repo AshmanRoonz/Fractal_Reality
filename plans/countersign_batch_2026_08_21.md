@@ -32,8 +32,18 @@ Canon-file integration of dispositions 7 and 8 joins the queued integration pass
 
 11. **The information layer** (`plans/information_layer_2026_08_21.md`): COUNTERSIGNED (Ashman, "Yes"), all four staged decisions as recommended. (a) The quadruple is canon: **energy is potential distinction, information is realized distinction, structure is retained distinction, dynamics is distinction flowing**, with the temporal-triple identification (actuality = realized distinction) and the boundary principle as A3's Shannon form (no partition, no information: H = log₂1 = 0). (b) Precision 1 adjudicated as proposed: the partition belongs to the observing whole's ○, making the information cycle the validation channel, not genesis; and the four-channel accounting (Ṁ = C_I − E_I + G_I − L_I, Landauer pricing the erasure channel) is the layer's standing form. (c) The dictionary landed: the master table's Information row (charter v2.19) and the eleventh variation of Theme and Variations (v1.1, placed after Mathematics, Healing keeping the close; reader page updated). (d) The formal note written (`plans/information_layer_formal_2026_08_21.md`, atlas-registered) with the pole-gap cross-connection executed in `plans/pole_gap_boundary.md`. CLAUDE.md integration joins the queued pass.
 
+## The information layer's first amendment (sixth countersign, same day)
+
+12. **The amendment** (`plans/information_layer_amendment_2026_08_21.md` v1.1): COUNTERSIGNED (Ashman, "Ok"). The boundary principle in accessibility-relative form; the matter sentence as capacity claim; the measure-declaration rule for information ledgers (copying creates correlation, not entropy); the formal spine with five theorems (theorem 4 in its exact about-Y scope); the **Boundary-Record Loss Theorem** (H(X) − I(X;R) = H(X|Y) + H(Y|R): what the whole cannot know decomposes into what its boundary could not distinguish and what its memory could not retain: the pole gap's exact form); and the free-energy identity F − F_eq = k_B·T·D(p‖p_eq) as the layer's primary physical anchor with Landauer as erasure corollary. Executed: formal note v1.1 (originals retained visibly), book and reader page fingerprint clause relativized (v1.2), pole-gap decomposition line, atlas line.
+
+## The synthesis document (seventh countersign, same day)
+
+13. **Fractal Reality With the Information Layer** (`plans/fractal_reality_with_information_layer_2026_08_21.md`): COUNTERSIGNED (Ashman, "Yes to both"). The synthesis document is canon with the §3 repair applied (the Ethics section in corner-and-middle form: flows balance in the middle, capacities are corners held in full, isolation and absorption the excluded failures); everything else verbatim as posted. Landing executed: published as `docs/fractal_reality_with_the_information_layer.html` (house style, honesty box, IIT disambiguation, revision history), the canonical synthesis statement and companion to the 285-word framework paragraph, not its replacement; pointed to from the formal note.
+
 ## Revision history
 
+- 2026-08-21 v1.6: disposition 13 (the synthesis document, with the ethics repair; docs page published), "Yes to both".
+- 2026-08-21 v1.5: disposition 12 (the layer's first amendment), "Ok".
 - 2026-08-21 v1.4: disposition 11 (the information layer), "Yes".
 - 2026-08-21 v1.3: disposition 10 (protocol amendment + Run 2 commissioned), "Let's do it".
 - 2026-08-21 v1.2: disposition 9 (empirical protocol) countersigned and Run 1 commissioned, "Do it. Signed".

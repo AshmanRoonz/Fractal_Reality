@@ -235,9 +235,10 @@ Assessed against this document as it stands: the distinctions are in §2a and §
 
 ## Cross-connection: the information layer (2026-08-21)
 
-The countersigned information layer (`plans/information_layer_formal_2026_08_21.md`, disposition 11) identifies this program as its experimental face: the inclusion-pole and integration-pole are the layer's ∞ and ⊙ rows (undifferentiated possibility space versus an integrated whole pricing bits through its own partition), and the program's observer-class relativity is the layer's "the partition belongs to the observer's ○" adjudication, already carried here with receipts. Nothing in this program's boundary, protocol, or claims changes; the connection gives its results a second, canonical vocabulary, and gives the layer a laboratory that predates it.
+The countersigned information layer (`plans/information_layer_formal_2026_08_21.md`, disposition 11) identifies this program as its experimental face: the inclusion-pole and integration-pole are the layer's ∞ and ⊙ rows (undifferentiated possibility space versus an integrated whole pricing bits through its own partition), and the program's observer-class relativity is the layer's "the partition belongs to the observer's ○" adjudication, already carried here with receipts. Nothing in this program's boundary, protocol, or claims changes; the connection gives its results a second, canonical vocabulary, and gives the layer a laboratory that predates it. The countersigned amendment (disposition 12) adds the gap's exact form: with the observer class as the partition π and the predictor state as the record R, the class-relative gap decomposes as H(X) − I(X;R) = H(X|Y) + H(Y|R), boundary loss plus retention loss (the Boundary-Record Loss Theorem, `plans/information_layer_formal_2026_08_21.md` §1b).
 
 ## Revision history
 
+- 2026-08-21 v1.2: the loss-decomposition line added (amendment disposition 12); program content unchanged.
 - 2026-08-21 v1.1: cross-connection to the countersigned information layer recorded; program content unchanged.
 - 2026-07-27 v1.0: initial. Written at the close of the originating session, opening with Ashman's principle, and recording the five instrument failures that generated the protocol.
