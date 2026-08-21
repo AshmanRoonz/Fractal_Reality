@@ -1,0 +1,6 @@
+Balance empirical analyzer self-test
+stable centered control:     half_attractor_candidate_under_repeated_trials
+stable biased control:       restoring_but_not_to_half
+repelling control:           evidence_against_a_half_attractor
+neutral oscillator control:  possible_hidden_state_or_oscillator
+maximum balance identity error: 0.000e+00
