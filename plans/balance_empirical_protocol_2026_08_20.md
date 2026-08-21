@@ -1,6 +1,6 @@
 # Balance-Attractor Empirical Protocol
 
-**Status:** executable pre-registration scaffold, 2026-08-20, v1.0. No natural-system data have yet been collected. Passing synthetic controls validates the analyzer, not the framework's physical claim. Framework integration awaits Ashman's countersign.
+**Status:** executable pre-registration scaffold, 2026-08-20, v1.1. No natural-system data have yet been collected. Passing synthetic controls validates the analyzer, not the framework's physical claim. **Framework integration COUNTERSIGNED (Ashman, 2026-08-21, "Do it. Signed"; disposition 9 in `plans/countersign_batch_2026_08_21.md`). Run 1 (the Xorzo2 spine, instrument validation): `plans/balance_xorzo2_run_2026_08_21.md`.**
 
 ## 0. Purpose
 
@@ -332,4 +332,5 @@ Across all four controls, the finite-window balance identity holds to machine pr
 
 ## Revision History
 
+- 2026-08-21 v1.1: countersigned (batch disposition 9); Run 1 commissioned; status updated, content unchanged.
 - 2026-08-20 v1.0: data contract, exact finite-window audit, perturbation protocol, free-equilibrium comparison, lag identifiability safeguard, cycle test, falsifiers, and synthetic controls.

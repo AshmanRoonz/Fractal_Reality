@@ -20,7 +20,12 @@ Ashman countersigned ("Yes. Signed") the two-item balance package as presented:
 
 Canon-file integration of dispositions 7 and 8 joins the queued integration pass alongside disposition 1's formal-pass results. The empirical commission (the conditional-drift test on a named system) remains open by Ashman's choice.
 
+## The empirical instrument (third countersign, same day)
+
+9. **The balance empirical protocol's framework integration** (`plans/balance_empirical_protocol_2026_08_20.md`): COUNTERSIGNED (Ashman, "Do it. Signed"). The three-claim separation (accounting closure; complete-cycle balance; restoring attraction), the error-budget-first tolerance rule, the half-versus-free equilibrium comparison, the oscillator-trap lag sweep, and the §12 novelty bar are the framework's standing empirical method for balance claims. The same signature commissioned **Run 1: the Xorzo2 spine** as instrument validation (`plans/balance_xorzo2_run_2026_08_21.md`, Stage A declaration committed before the run per the protocol's own discipline).
+
 ## Revision history
 
+- 2026-08-21 v1.2: disposition 9 (empirical protocol) countersigned and Run 1 commissioned, "Do it. Signed".
 - 2026-08-21 v1.1: the balance package (dispositions 7 and 8) countersigned, "Yes. Signed".
 - 2026-08-21 v1.0: initial; six dispositions from Ashman's "Yes to all".
