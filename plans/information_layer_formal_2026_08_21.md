@@ -62,7 +62,10 @@ Shannon (entropy, surprisal, the data-processing inequality: imported unmodified
 
 Imports (Shannon, Landauer): S at P4. Boundary principle: I at P2 (one-line derivation from the card's A3). Dictionary: X, with the temporal-triple identification, the A3-Shannon form, and the filter-partition formalization as its three firm anchors. Balance transfer: I, conditional on the four-channel form. The closing formulation of §3: countersigned canonical wording. Empirical standing: none yet beyond the pole-gap program's existing receipts; any new empirical claim goes through the amended protocol.
 
+**Public synthesis page:** `docs/fractal_reality_with_the_information_layer.html` (disposition 13): the full framework restated with this layer woven in, ethics in corner-and-middle form, honesty box carried.
+
 ## Revision history
 
+- 2026-08-21 v1.2: pointer to the published synthesis page added (disposition 13).
 - 2026-08-21 v1.1: first amendment executed (disposition 12): accessibility rewording, matter-capacity rewording, measure-declaration rule, the formal spine with five theorems, the Boundary-Record Loss Theorem, the free-energy identity as primary bridge with Landauer as corollary; originals retained visibly at each superseded clause.
 - 2026-08-21 v1.0: initial; the countersigned layer stated with precisions, witnesses, grades, and the pole-gap face.

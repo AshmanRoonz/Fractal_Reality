@@ -1,6 +1,6 @@
 # Theorem Atlas and Dependency Audit
 
-**Status:** working research index, 2026-08-20, landed and extended 2026-08-21, v1.10. This atlas inventories theorem-like claims across the active repository, separates proved mathematics from internal consequences, computation, conjecture, and interpretation, and records a first new derivation pass. It does not itself change canon. **Its staged judgments are COUNTERSIGNED (Ashman, 2026-08-21; disposition 2 in `plans/countersign_batch_2026_08_21.md`): the claim taxonomy, the quarantine register, the authority order, and the section 12 maintenance protocol are now editorial law for theorem-like claims.**
+**Status:** working research index, 2026-08-20, landed and extended 2026-08-21, v1.11. This atlas inventories theorem-like claims across the active repository, separates proved mathematics from internal consequences, computation, conjecture, and interpretation, and records a first new derivation pass. It does not itself change canon. **Its staged judgments are COUNTERSIGNED (Ashman, 2026-08-21; disposition 2 in `plans/countersign_batch_2026_08_21.md`): the claim taxonomy, the quarantine register, the authority order, and the section 12 maintenance protocol are now editorial law for theorem-like claims.**
 
 ## 1. Executive result
 
@@ -333,6 +333,7 @@ This atlas, the raw inventory, the half-balance formal pass, and the harvester (
 
 ## Revision history
 
+- 2026-08-21 v1.11: the synthesis document countersigned with the ethics corner-and-middle repair and published (`docs/fractal_reality_with_the_information_layer.html`, disposition 13); conformance audit in `plans/fractal_reality_with_information_layer_2026_08_21.md`.
 - 2026-08-21 v1.10: the layer's first amendment countersigned (disposition 12): the formal spine's five theorems and the Boundary-Record Loss Theorem (S at P4 imports; boundary-loss/retention-loss reading I/X at P2) registered; the free-energy identity F − F_eq = k_B·T·D(p‖p_eq) as primary bridge; measure-declaration rule standing.
 - 2026-08-21 v1.9: the information layer countersigned and registered (`plans/information_layer_formal_2026_08_21.md`): the quadruple and boundary principle (A3's Shannon form, I/P2) canon; dictionary class X with three firm anchors; four-channel balance accounting standing; Landauer bridge S/P4 with scope; IIT disambiguation mandatory; pole-gap program identified as the layer's experimental face; master-table Information row (charter v2.19) and the eleventh Theme-and-Variations variation landed.
 - 2026-08-21 v1.8: protocol amended to v1.2 (clamp check; constraint verdict; disposition 10) and Run 2 executed (breath, `plans/balance_breath_run_2026_08_21.md`): instrument validated on a natural oscillatory system (monotone 8/8-bin restoring profile, textbook weakens-with-lag, oscillator guard satisfied not tricked); breathing measured cycle-balanced to 0.1% with equilibrium 0.4915 (primary diagnostic detects the −0.9% offset, BIC discounts it); passive-data ceiling respected; class E evidence awaits a perturbed consented study.

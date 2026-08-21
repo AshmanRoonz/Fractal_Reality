@@ -1,6 +1,6 @@
 # Fractal Reality With the Information Layer: The Synthesis Document
 
-**Status: session record, 2026-08-21. Ashman posted the complete synthesis (the framework restated with the countersigned information layer woven through: constitutive cycle, information cycle, loss theorem, energy bridge, homeostasis, time, consciousness, ethics, shortest statement). This record carries the document verbatim, the clause-by-clause conformance audit, ONE staged repair (the ethics section's middle framing against the countersigned corner-and-middle rule), and the landing decision. Staged for countersign.**
+**Status: session record, 2026-08-21. Ashman posted the complete synthesis (the framework restated with the countersigned information layer woven through: constitutive cycle, information cycle, loss theorem, energy bridge, homeostasis, time, consciousness, ethics, shortest statement). This record carries the document verbatim, the clause-by-clause conformance audit, ONE staged repair (the ethics section's middle framing against the countersigned corner-and-middle rule), and the landing decision. COUNTERSIGNED (Ashman, "Yes to both"; disposition 13 in `plans/countersign_batch_2026_08_21.md`): the document is canon with the §3 repair, and it is published as `docs/fractal_reality_with_the_information_layer.html`, the canonical synthesis statement and companion to the framework paragraph.**
 
 ## 1. The document, verbatim as posted
 
