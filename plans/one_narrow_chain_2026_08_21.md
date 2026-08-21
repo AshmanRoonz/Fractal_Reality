@@ -109,7 +109,21 @@ A Stage A kill at the declared ledger kills: the one-loop integral-feedback read
 
 ## Part II: Stage 0 results
 
-*(appended after the committed declarations above; nothing in Part I may be edited in response to what follows)*
+*(appended after the committed declarations above; nothing in Part I was edited in response to what follows; full receipt: `experiments/narrow_chain_response_theorem_v1_output.txt`, run this date at commit acec88b3)*
+
+**Theorem verification: all four parts PASS.** V1: proportional-only never crosses, area A/k_p and load offset d/k_p to 1e-3. V2: PI crosses in underdamped, critical, and overdamped regimes with total area zero to machine precision (1e-15) and load rejected. V3: post-release area equals −A·T_h at all four hold durations, linear-fit slope −1.0000. V4: conditional means of the noisy system match the deterministic propagator across 36 state bins, worst deviation 1.49 crude standard errors.
+
+**Stage 0 against the pre-declared expectations:**
+
+- **E1 CONFIRMED.** All four nulls pass accounting and balance within tolerance.
+- **E2 CONFIRMED, with force.** All three feedback-free nulls are classified restoring at the shortest lag with confident negative slopes (N1 −0.278, N1s −0.337, N2 −0.268; every CI below zero), AND all show the monotone weakens-with-lag pattern (ratios 0.067 to 0.090) that Run 2's §7 guard treated as the dissipative-relaxer signature. Run 2's real numbers (slope −0.322, ratio 0.080) sit inside the null range. The declared consequence executes: Run 2's claim-3 evidence downgrades from "restoring signature detected" to "signature reproduced by feedback-free mechanical cyclicity through this instrument"; addendum recorded in `plans/balance_breath_run_2026_08_21.md`.
+- **E3 FAILED (the run's one surprise, and a finding).** The duty-asymmetric N1 fits equilibrium CI (0.4911, 0.5022), CONTAINING one half; the symmetric N1s also contains it. Duty-duration asymmetry at ratio 1.5 does not reproduce the Run 2 sub-half equilibrium. The candidate mechanism named in Run 2's Part II (duty-cycle sampling bias, duration form) is disconfirmed at the instrument level; the 0.4915 anomaly stands. Sharpening: of the five datasets now run through this instrument (three feedback-free nulls, one PI breather, one real), ONLY the real breathing triggered the sub-half detection. Remaining untested instrument-level candidate: within-phase flow-shape asymmetry (real inspiratory flow is shaped differently from expiratory); a declared variant could test it, and Stage A's own data will bear on it either way.
+- **E4 CONFIRMED.** N2, whose stock random-walks with no restoration at all, is classified restoring after the pipeline's detrend. The passive pipeline cannot certify boundedness; detrending manufactures local closure. This binds all passive runs, Run 2 included.
+- **E5 CONFIRMED.** N3 (PI feedback) and N2 (none) return identical verdict strings and overlapping slope CIs; the analyzer's own verdict for both is "observationally_restoring; perturbation_test_needed". Feedback presence or absence is invisible to the passive instrument at these lags. The chain's central methodological claim is established from below: **Stage A's perturbation protocol is the only decisive discriminator, and every kill condition of this chain lives there.**
+
+**V6 rehearsal (rehearsal, not calibration).** The Stage A estimator suite works end-to-end on ground truth: rest-only identification recovers the gains (k̂_p 0.253 vs 0.30, k̂_i 0.0212 vs 0.03); crossing fraction 1.00; repayment ρ̂ = +1.09 ± 0.19 (end-inhale) and +1.08 ± 0.13 (end-exhale) against true 1, a small positive bias from noise and the finite 90 s integration, well inside the K2 band scale; se(ρ) with 9 end-inhale trials ≈ 0.065, so the K2 bands separate full repayment from zero by an order of magnitude if breath resembles the model at all; K3 crossing-time ratios 1.36 and 1.40, inside the declared [1/2, 2] band.
+
+**Net position of the chain after Stage 0.** The theorem is verified; the instrument is characterized; the passive ceiling is now demonstrated rather than assumed (E2, E4, E5); the one standing empirical anomaly (0.4915) survived its leading deflationary explanation (E3) and waits on Stage A data. The chain is complete on paper and armed: what remains is a recording session and the four kills.
 
 ## Open decisions (Ashman to adjudicate)
 

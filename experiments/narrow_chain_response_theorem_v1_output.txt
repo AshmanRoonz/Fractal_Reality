@@ -1,0 +1,56 @@
+Narrow chain: Response Theorem verification + Stage 0
+plan: plans/one_narrow_chain_2026_08_21.md (Part I committed before this run)
+
+V1  proportional-only (ki = 0): no crossing, area A/kp, offset under load
+    kp= 0.3  crossed=False  area=+3.3323 (A/kp=3.3333)  load offset=+1.6667 (d/kp=1.6667)  PASS
+    kp= 1.0  crossed=False  area=+0.9990 (A/kp=1.0000)  load offset=+0.5000 (d/kp=0.5000)  PASS
+    kp= 3.0  crossed=False  area=+0.3323 (A/kp=0.3333)  load offset=+0.1667 (d/kp=0.1667)  PASS
+
+V2  PI (ki > 0): crossing, total area = 0, load rejected
+    underdamped kp=0.4 ki=1.0  crossed=True   total area=-1.80e-15  load x_inf=+1.39e-16  PASS
+    critical    kp=2.0 ki=1.0  crossed=True   total area=+1.02e-17  load x_inf=+1.09e-14  PASS
+    overdamped  kp=4.0 ki=1.0  crossed=True   total area=+2.86e-16  load x_inf=+2.43e-14  PASS
+
+V3  held debt: post-release area = -A*Th, linear in Th
+    Th=  5.0  post-release area=  -5.0000  target=  -5.0000  PASS
+    Th= 10.0  post-release area= -10.0000  target= -10.0000  PASS
+    Th= 20.0  post-release area= -20.0000  target= -20.0000  PASS
+    Th= 40.0  post-release area= -40.0000  target= -40.0000  PASS
+    linear-fit slope vs Th = -1.0000  (theorem: -A = -1.0)  PASS
+
+V4  regression: conditional means of the noisy system follow the noise-free flow
+    bins used=36  worst |obs - predicted| / se = 1.49  (threshold 4)  PASS
+
+V5  Stage 0: four synthetic breathers through the exact Run 2 pipeline + analyzer
+    (expectations E1-E5 pre-declared in plans/one_narrow_chain_2026_08_21.md 4a)
+  N1   verdict=half_attractor_candidate_under_repeated_trials accounting=within_tolerance/within_tolerance
+       lag1 slope=-0.278 CI(-0.299,-0.252)  eq=0.4948 CI(0.4911,0.5022)  BICdiff=-4.2
+       lag pattern=weakens_with_lag ratio=0.082  throughput-weighted b=0.4980
+  N1s  verdict=half_attractor_candidate_under_repeated_trials accounting=within_tolerance/within_tolerance
+       lag1 slope=-0.337 CI(-0.355,-0.324)  eq=0.4984 CI(0.4961,0.5032)  BICdiff=-5.0
+       lag pattern=weakens_with_lag ratio=0.067  throughput-weighted b=0.4986
+  N2   verdict=observationally_restoring; perturbation_test_needed accounting=within_tolerance/within_tolerance
+       lag1 slope=-0.268 CI(-0.279,-0.243)  eq=0.4967 CI(0.4905,0.5017)  BICdiff=-4.8
+       lag pattern=weakens_with_lag ratio=0.082  throughput-weighted b=0.5004
+  N3   verdict=observationally_restoring; perturbation_test_needed accounting=within_tolerance/within_tolerance
+       lag1 slope=-0.263 CI(-0.278,-0.238)  eq=0.4967 CI(0.4918,0.5029)  BICdiff=-4.8
+       lag pattern=weakens_with_lag ratio=0.090  throughput-weighted b=0.5002
+
+    E-flag readout:
+    E1 (all pass accounting+balance): True
+    E2 (feedback-free nulls classified restoring at lag 1): True  [verdicts: half_attractor_candidate_under_repeated_trials, half_attractor_candidate_under_repeated_trials, observationally_restoring; perturbation_test_needed]
+    E3 (duty mechanism): N1 eq CI (0.4911,0.5022) below half: False; N1s eq CI (0.4961,0.5032) contains half: True
+    E4 (random-walk stock still classified restoring after detrend): True
+    E5 (N3 vs N2 indistinguishable): slope CIs overlap: True; verdict N2=observationally_restoring; perturbation_test_needed, N3=observationally_restoring; perturbation_test_needed
+
+V6  Stage A rehearsal on the reduced model (rehearsal, not calibration)
+    identified from rest: kp_hat=0.253 (true 0.3), ki_hat=0.0212 (true 0.03)
+    crossing fraction: 1.00  (theorem with ki>0: should approach 1)
+    end-inhale rho mean=+1.090 sd=0.194  n=9  (full repayment: +1)
+    end-exhale rho mean=+1.077 sd=0.127  n=6  (full repayment: +1)
+    power note: se(rho) with 9 end-inhale trials ~ 0.065; K2 bands in the plan were set against this scale
+    Th=10: predicted crossing time from rest fit 3.0 s vs true model 2.2 s (ratio 1.36; K3 band [0.5, 2])
+    Th=30: predicted crossing time from rest fit 1.4 s vs true model 1.0 s (ratio 1.40; K3 band [0.5, 2])
+
+theorem checks: V1=PASS V2=PASS V3=PASS V4=PASS  rehearsal K3 band: PASS
+Stage 0 E-flags are findings, not pass/fail; see the plan's Part II.
