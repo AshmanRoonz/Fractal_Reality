@@ -1,6 +1,6 @@
 # Pre-Registration Targets for the Blind-Prediction Test
 
-**Status: staging record, 2026-08-21. Scouted and drafted by Claude on Ashman's commission ("Do it," 2026-08-21), executing the offers card's Tier 2 item 1 and its open decision 2 (`plans/what_it_offers_math_and_physics_2026_08_21.md`). The pick is Ashman's. Nothing in this record is a prediction; the grammar's value for any blind target is computed only after the pick, in a separate dated record.** Experimental facts below were verified by web search on 2026-08-21; sources are listed at the bottom; timeline claims are the experiments' own and inherit their slippage.
+**Status: staging record, 2026-08-21. Scouted and drafted by Claude on Ashman's commission ("Do it," 2026-08-21), executing the offers card's Tier 2 item 1 and its open decision 2 (`plans/what_it_offers_math_and_physics_2026_08_21.md`). The pick is Ashman's. Nothing in this record is a prediction; the grammar's value for any blind target is computed only after the pick, in a separate dated record. UPDATE, same date: the pick was made (the JUNO pair), the computation ran under the frozen protocol, and the outcomes were countersigned; see `plans/preregistration_juno_computation_2026_08_21.md` and `plans/countersign_batch_2026_08_21.md`.** Experimental facts below were verified by web search on 2026-08-21; sources are listed at the bottom; timeline claims are the experiments' own and inherit their slippage.
 
 ## What this record is
 

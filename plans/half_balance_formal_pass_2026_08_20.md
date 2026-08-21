@@ -1,6 +1,6 @@
 # The Half-Balance Formal Pass
 
-**Status:** derived formal note, 2026-08-20. This executes four items commissioned by the countersigned ontology package in `plans/countersign_batch_2026_08_19.md`: the group-only-at-balance proof, the deformed wrap arithmetic, the fractional-Brownian-motion sign convention, and the three-beta question. It also closes the stroke-to-arc distribution at the internal typing layer. No physical instantiation is claimed. Ashman's countersign is required before this becomes canon.
+**Status:** derived formal note, 2026-08-20. This executes four items commissioned by the countersigned ontology package in `plans/countersign_batch_2026_08_19.md`: the group-only-at-balance proof, the deformed wrap arithmetic, the fractional-Brownian-motion sign convention, and the three-beta question. It also closes the stroke-to-arc distribution at the internal typing layer. No physical instantiation is claimed. **COUNTERSIGNED (Ashman, 2026-08-21, "Yes to all"; disposition 1 in `plans/countersign_batch_2026_08_21.md`). All eight results stand at their stated scope; canon-file integration joins the queued integration pass.**
 
 ## 0. Definitions
 
@@ -366,4 +366,5 @@ Current canon supplies these typings:
 
 ## Revision history
 
+- 2026-08-21 v1.1: countersigned (batch disposition 1); status updated, content unchanged.
 - 2026-08-20 v1.0: initial formal pass; eight results, the early/late closure correction, and the local-versus-global balance distinction.

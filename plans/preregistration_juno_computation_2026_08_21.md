@@ -1,6 +1,6 @@
 # Pre-Registered Computation: The JUNO Pair
 
-**Status: computation record under the binding protocol of `plans/preregistration_targets_2026_08_21.md`. Part I (this commit) freezes the rules, the targets, the candidate space, and the decision procedure BEFORE any search runs; Part II (a separate later commit) carries the search and its outcome. The git history is the timestamp separating the two. Drafted by Claude, executing Ashman's pick of 2026-08-21; the outcome, whatever it is, will be reported under clauses 5 through 7 (no revision, no silent drops, null is an outcome).**
+**Status: computation record under the binding protocol of `plans/preregistration_targets_2026_08_21.md`. Part I (this commit) freezes the rules, the targets, the candidate space, and the decision procedure BEFORE any search runs; Part II (a separate later commit) carries the search and its outcome. The git history is the timestamp separating the two. Drafted by Claude, executing Ashman's pick of 2026-08-21; the outcome, whatever it is, will be reported under clauses 5 through 7 (no revision, no silent drops, null is an outcome). COUNTERSIGNED (Ashman, 2026-08-21, "Yes to all"): the Part II outcome (disposition 3) and the §7 α thresholds (disposition 4) are signed; see `plans/countersign_batch_2026_08_21.md`. Scoreboard row P5 added the same date.**
 
 ---
 

@@ -1,6 +1,6 @@
 # Theorem Atlas and Dependency Audit
 
-**Status:** working research index, 2026-08-20, landed in-repo and extended 2026-08-21, v1.1. This atlas inventories theorem-like claims across the active repository, separates proved mathematics from internal consequences, computation, conjecture, and interpretation, and records a first new derivation pass. It does not itself change canon. Any internal result marked "awaiting countersign" remains staged until Ashman signs it.
+**Status:** working research index, 2026-08-20, landed and extended 2026-08-21, v1.2. This atlas inventories theorem-like claims across the active repository, separates proved mathematics from internal consequences, computation, conjecture, and interpretation, and records a first new derivation pass. It does not itself change canon. **Its staged judgments are COUNTERSIGNED (Ashman, 2026-08-21; disposition 2 in `plans/countersign_batch_2026_08_21.md`): the claim taxonomy, the quarantine register, the authority order, and the section 12 maintenance protocol are now editorial law for theorem-like claims.**
 
 ## 1. Executive result
 
@@ -318,5 +318,6 @@ This atlas, the raw inventory, the half-balance formal pass, and the harvester (
 
 ## Revision history
 
+- 2026-08-21 v1.2: staged judgments countersigned (batch disposition 2); the section 12 protocol becomes editorial law.
 - 2026-08-21 v1.1: landed in-repo; addendum with the landing receipt, the bit-identical harvest check, the executed section 11 item 6 (JUNO pre-registration), and the Λ two-voice cross-reference.
 - 2026-08-20 v1.0: initial active-corpus harvest, claim taxonomy, dependency audit, quarantine register, and integration of the half-balance formal pass.

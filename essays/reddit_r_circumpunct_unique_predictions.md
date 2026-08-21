@@ -7,6 +7,8 @@ Below are the eight bolts the framework stakes that are not shared with the Stan
 Full page with formulas, accuracy tables, derivations, and the complete falsification section:
 **fractalreality.ca/circumpunct_predictions.html**
 
+> **Revision notice (2026-08-21).** Four dated corrections appear below (items 3, 4, 5, 8), applied under `plans/countersign_batch_2026_08_21.md`; original wording is retained visibly per the no-silent-revision rule. A ninth stake now also stands: the pre-registered neutrino mass-square ratio Δm²₂₁/Δm²₃₁ = 5/169 (scoreboard P5, `plans/preregistration_juno_computation_2026_08_21.md`).
+
 ---
 
 ## Already measured, lands at sub-percent
@@ -20,8 +22,12 @@ A particle is a ⊙ (whole-with-parts), and it is ⊙s all the way down. Dark ma
 **3. Dark energy equation of state w(z) ≠ −1.**
 The pump cycle is dynamic; Λ as pure vacuum energy is the static limit. DESI's 2024 data already shows hints of w(z) deviation from −1. The framework predicts the deviation persists and tightens as surveys improve. Falsified cleanly if w converges to exactly −1 ± 0.005.
 
+> **Status note (2026-08-21, adjudicated).** This item is the corpus's evolution voice, now held under a rival-strata futures table beside the constant-Λ stratum (framework §12.2/§27.7g): neither promoted nor retracted before the data, with pre-assigned verdicts for every branch in `plans/lambda_constancy_audit_2026_08_21.md`. The kill band above is unchanged. As of this date DESI DR2 prefers evolution at 3.1σ to 4.2σ, directionally toward this item but at roughly fifty times the amplitude of the framework's specific form w(z) ≈ −1.033 + 0.017/(1+z), so the present data leans away from both strata's exact shapes.
+
 **4. Extended Higgs spectrum: three additional states beyond the minimal one.**
 The 64-state architecture decomposes as 6 binary degrees of freedom (3 ⊙s × 2 channels each). The minimal Standard Model occupies one slot; three additional scalar states sit at specific framework integers. Detectable at HL-LHC or a future Higgs factory if they fall in the right mass windows; absent at any sensitivity would falsify.
+
+> **Correction (2026-08-21), superseding this item.** The extended-scalar claim was retracted on 2026-07-18: states 60-62 are the eaten Goldstone components (masses m_W, m_W, m_Z, already in the grammar), and 48 + 12 + 4 = 64 = P³ leaves no slots for a second doublet. The standing falsifiable claim is the REVERSE of the one above: **the scalar sector is minimal on pain of S = 64; discovery of any charged Higgs or CP-odd scalar falsifies the architecture** (framework §27.7t.7(g)).
 
 ---
 
@@ -32,6 +38,8 @@ These four are where the framework stakes itself most sharply: specific numbers,
 **5. 1/α = 137.035999147 ± 5 ppb.**
 Closed form: 1/α = 360/φ² − 2/φ³ + α/(59/3), with the 2D rung assembly 360 = P! · T · (Φ+○) pinned by the octave-wrap lemma, the sign of the φ³ correction balance-forced to −Φ, and 59/3 forced by the algebraic identity P·V + R + Φ + T = (T+1)³ = P³ holding exactly when T = 3. Current measurements disagree at 5σ: Berkeley-Cs (2018) gives 137.035999046(27), LKB-Rb (2020) gives 137.035999206(11). The framework lands at the midpoint, 137.035999147, inside 1 ppb. Pre-registered: the converged value will be inside ± 5 ppb of 137.035999147.
 
+> **Band refinement (2026-08-21, countersigned).** The adjudication band is now stated against CODATA 2026 (data cutoff 2026-12-31): the closed form survives within 3σ of the recommended value, sits in critical tension between 3σ and 5σ (with the interferometry discrepancy's weighting examined before any verdict), and is dead beyond 5σ. This supersedes the ±5 ppb phrasing above.
+
 **6. Main-group X≡X / X−X bond-length ratio = 7/9 ≈ 0.778 ± 1%.**
 Carbon already measures 0.779 (120 / 154 pm), matching R/T² to 0.19%. The 1.5D rung (spectral splitting at the i-turn) says this is universal across main-group homonuclear triple bonds, not a carbon fact. Pre-registered: silicon, germanium, phosphorus, and arsenic triple bonds, measured to sub-percent length precision, will all fall at 0.778 ± 1%. A clean 0.82 for Si or a clean 0.74 for P falsifies.
 
@@ -40,6 +48,8 @@ Murray's Law conserves r^n where n is the effective transport dimension. Animal 
 
 **8. Five-virtue sequence, Cohen's d ≥ 0.5 on twelve-month durability.**
 The claim is that GOOD → RIGHT → FAITHFUL → TRUE → AGREEMENT must be walked in order; skipping any pillar collapses the resolution. Pre-registered: in a controlled longitudinal study of conflict resolution (workplace disputes, partnership mediation, or negotiated policy settlements), groups trained in the explicit five-virtue sequence will show at least medium effect size (d ≥ 0.5) on twelve-month agreement durability versus unsequenced controls matched for initial signed-agreement rate. If d < 0.3, the ethical architecture is decorative rather than structural.
+
+> **Correction (2026-08-21).** The single sequence named above was retired on 2026-07-29 as an old-ladder artifact. The adjudicated structure runs in two directions: formation TRUE → FAITHFUL → GOOD → RIGHT → AGREEMENT (inside out, becoming whole), and validation in its earning form RIGHT → GOOD → FAITHFUL → TRUE → AGREEMENT (outside in, agreement granted last as verdict). The pre-registered study design and its effect-size band survive restated over the adjudicated sequences (sequenced training versus unsequenced controls); the ordering trained must be the corrected one.
 
 ---
 

@@ -1,6 +1,6 @@
 # The Λ-Constancy Audit: Does the Framework Commit to w = −1?
 
-**Status: audit record, 2026-08-21, commissioned by Ashman's structured answer of the same day ("Audit, then sign": a focused pass to determine whether the framework forces w = −1 exactly, verdict dated before Euclid DR1 in October). Drafted by Claude; the verdict itself is staged in the options below and is Ashman's to sign.** Companion to `plans/preregistration_targets_2026_08_21.md` (whose B2 wording this audit corrects by addendum) and `plans/preregistration_juno_computation_2026_08_21.md`.
+**Status: audit record, 2026-08-21, commissioned by Ashman's structured answer of the same day ("Audit, then sign": a focused pass to determine whether the framework forces w = −1 exactly, verdict dated before Euclid DR1 in October). Drafted by Claude; the verdict itself is staged in the options below and is Ashman's to sign.** Companion to `plans/preregistration_targets_2026_08_21.md` (whose B2 wording this audit corrects by addendum) and `plans/preregistration_juno_computation_2026_08_21.md`. **ADJUDICATED (Ashman, 2026-08-21, "Yes to all"): Option C, as recommended (disposition 5 in `plans/countersign_batch_2026_08_21.md`). The futures table below is in force with its pre-assigned verdicts; the authorized edits (the CLAUDE.md notice caveat, the §12.1/§12.2 cross-notes) were executed the same date; the dating verification is recorded in the addendum at the bottom of this file.**
 
 ## The commission, and what the audit actually found
 
@@ -50,6 +50,16 @@ DESI DR2 (March 2025) reports a 3.1σ preference for evolving dark energy over �
 2. **Commission the public-page revision pass** (essay + predictions page: w item per this adjudication; Higgs items per the 2026-07-18 reversal; essay item 8 per the 2026-07-29 ethics adjudication).
 3. **Whether future 2's reframing language is drafted now** (pre-assigned wording, strongest against hindsight) **or at the branch** (less work if the branch never opens).
 
+## Addendum (2026-08-21, same day): dating verification executed; a correction to this record
+
+The full history was fetched (4,219 commits; the working clone had truncated at 2026-08-02). Verified dates, by pickaxe:
+
+- **w(z) ≈ −1.033 + 0.017/(1+z) first enters the record on 2025-10-18** (`Path_of_Learning/papers/paper2_cosmological_constant.md`, with companion uploads through 2025-10-19). It enters `THEORY_OF_EVERYTHING.md` at that file's creation on **2025-11-27** and rides the 2026-03-02 rename into `circumpunct_framework.md` §12.1. The public predictions page carries the form from its creation on **2026-04-08**; the essay from **2026-04-21**.
+- Against the survey timeline: DESI DR1's evolving-dark-energy hints became public in **April 2024**; DESI DR2's 3.1σ to 4.2σ preference in **March 2025**.
+- **Correction to this record's "Dating" paragraph (original retained above, per the no-silent-revision rule):** the internal-evidence guess that the form predates DESI DR2 is wrong. The form postdates DR1 by about eighteen months and DR2 by about seven. The corpus's evolution stake was made with the public hints in hand, and the essay says so explicitly ("DESI's 2024 data already shows hints"), to its credit.
+- **Consequent reweighting of futures branch 2:** a small-deviation confirmation would vindicate the corpus's *specific amplitude and shape* (which go beyond the public hints and sit roughly fifty times below DESI's central fit, hence remain a genuine independent stake), not a blind direction call. "Spectacularly vindicated" in branch 2 is downgraded to "vindicated in form and amplitude." The branch structure and all four verdicts are otherwise unchanged; the table never depended on precedence.
+- The §12.1 sentence "DESI 2026 (6σ signal expected)," written 2025-10/11 after DR2's 3-4σ, reads as trend extrapolation rather than blind prediction, and is graded accordingly.
+
 ## Files consulted
 
-`circumpunct_framework.md` §12.1, §12.2, §27.7g, §27.7p/q; `docs/circumpunct_predictions.html` (w and Higgs entries); `essays/reddit_r_circumpunct_unique_predictions.md`; `Path_of_Learning/papers/paper2_cosmological_constant.md` and `cosmological_constant/` (ancestry only); CLAUDE.md (Ladder Correction Notice, §10.10a); web sources on DESI DR2 and Euclid DR1 as listed in `plans/preregistration_targets_2026_08_21.md`.
+`circumpunct_framework.md` §12.1, §12.2, §27.7g, §27.7p/q; `docs/circumpunct_predictions.html` (w and Higgs entries); `essays/reddit_r_circumpunct_unique_predictions.md`; `Path_of_Learning/papers/paper2_cosmological_constant.md` and `cosmological_constant/` (ancestry only); CLAUDE.md (Ladder Correction Notice, §10.10a); web sources on DESI DR2 and Euclid DR1 as listed in `plans/preregistration_targets_2026_08_21.md`; full git history (post-unshallow) for the addendum's dates.
