@@ -14,7 +14,13 @@
 4. I(Y;R) ≤ H(Y). (Mutual information is bounded by the marginal entropy.)
 5. Perfect retention gives I(Y;R) = H(Y). (R determining Y saturates the bound.)
 
-The rigorous cycle p(X) → π → Y → y → R → p(X′) is the framework walk in exact dress: possibility → boundary → distinction → centered actuality → retained structure → new possibility. Retention I(Y;R) gives the — and m stations a theorem-grade observable (how much of what was realized the record actually holds), and theorem 4 is the exact statement that memory cannot exceed what the boundary made accessible.
+The rigorous cycle p(X) → π → Y → y → R → p(X′) is the framework walk in exact dress: possibility → boundary → distinction → centered actuality → retained structure → new possibility. Retention I(Y;R) gives the — and m stations a theorem-grade observable (how much of what was realized the record actually holds), and theorem 4 states precisely that **a record cannot retain more information about Y than the boundary made accessible through Y; the record may contain information about other variables** (the bound governs I(Y;R), not R's total capacity or content; micro-edit of 2026-08-21 replacing an earlier overstatement).
+
+**C4. The Boundary-Record Loss Theorem (verified; the review's addition).** With Y = π(X) deterministic and the record generated from Y (so X → Y → R is a Markov chain), the data-processing chain gives I(X;R) ≤ I(X;Y) = H(Y) ≤ H(X), and the unavailable information decomposes exactly:
+
+    H(X) − I(X;R) = H(X|Y) + H(Y|R).
+
+Proof, two lines: I(X;R) = H(X) − H(X|R); by the chain rule H(X|R) = H(Y|R) + H(X|Y,R) (determinism removes H(Y|X,R)); Markov makes H(X|Y,R) = H(X|Y). Equality conditions: H(X|Y) = 0 when the boundary loses nothing; H(Y|R) = 0 when the record keeps everything the boundary passed; I(X;R) = H(X) only when both vanish. Framework reading: **what the whole cannot know decomposes into what its boundary could not distinguish (boundary loss) and what its memory could not retain (retention loss).** This is the information-theoretic form of the pole gap: the program's observer class is π, its predictor state is R, and the class-relative randomness gap it measures is exactly this two-term decomposition with receipts. Imported identities class S at P4; the boundary-loss and retention-loss reading class I/X at P2.
 
 **C3. The stronger bridge (verified; import, class S at P4).** For a system at temperature T with distribution p and equilibrium p_eq, the nonequilibrium free energy satisfies F(p) − F(p_eq) = k_B·T·D(p‖p_eq) exactly (one-line derivation from F = ⟨E⟩ − T·S with p_eq = e^(−E/k_BT)/Z; standard in stochastic thermodynamics: Esposito and Van den Broeck; the Parrondo, Horowitz, Sagawa review). Read: **available energy is information relative to equilibrium, converted by k_B·T** (per bit, k_B·T·ln2). Landauer becomes the erasure corollary of this state-level identity rather than the bridge itself. This is the closest rigorous form of the energy-information intuition, and it strengthens the layer's opening guard rather than weakening it: still no universal E = I, but an exact conditional identity with its conditions named (fixed T, named equilibrium reference).
 
@@ -30,10 +36,11 @@ The rigorous cycle p(X) → π → Y → y → R → p(X′) is the framework wa
 
 ## 3. Consequential edits staged (executed upon countersign)
 
-1. `plans/information_layer_formal_2026_08_21.md` to v1.1: R1 and R2 replacing their v1.0 sentences with the originals retained visibly; C1's measure-declaration rule added to §2; C2's spine and five theorems added as a new section (class S/I at P2, the retention observable flagged for — and m); C3 added to §3 as the primary bridge with Landauer as corollary; witnesses gaining Esposito/Van den Broeck and Parrondo-Horowitz-Sagawa.
-2. `Book-Theme_and_Variations/theme_and_variations.md` to v1.2 and the reader page in step: the Information variation's fingerprint clause amended to the accessibility form in plain words ("possibilities carry no information for any observer until a boundary tells them apart"); one clause, nothing else.
+1. `plans/information_layer_formal_2026_08_21.md` to v1.1: R1 and R2 replacing their v1.0 sentences with the originals retained visibly; C1's measure-declaration rule added to §2; C2's spine and five theorems added as a new section (class S/I at P2, with theorem 4 in the corrected about-Y wording); C4's loss-decomposition theorem added with its pole-gap identification; C3 added to §3 as the primary bridge with Landauer as corollary and the anchor line "information relative to equilibrium is available free energy expressed in units of k_B·T"; witnesses gaining Esposito/Van den Broeck and Parrondo-Horowitz-Sagawa.
+2. `Book-Theme_and_Variations/theme_and_variations.md` to v1.2 and the reader page in step: the Information variation's fingerprint clause amended to the properly relativized form (micro-edit of 2026-08-21, replacing an earlier draft that quantified over all observers): "possibilities that a boundary does not distinguish carry no accessible information for its observer," with the full formal wording ("Possibilities that a given observer's boundary does not distinguish carry no accessible information for that observer") carried in the formal note; one clause, nothing else.
 3. Master table: no change (the quadruple row stands).
-4. Batch record: disposition 12; atlas revision line.
+4. `plans/pole_gap_boundary.md`: one added line under the cross-connection, naming the loss decomposition as the gap's exact information-theoretic form.
+5. Batch record: disposition 12; atlas revision line.
 
 ## 4. Open decision (Ashman to adjudicate)
 
@@ -41,4 +48,5 @@ Countersign this amendment (corrections C1 to C3, revisions R1 and R2, the amend
 
 ## Revision history
 
+- 2026-08-21 v1.1: the review's two micro-edits incorporated (theorem 4's about-Y precision; the book clause properly relativized) and the Boundary-Record Loss Theorem added as C4, verified (chain rule plus Markov, two lines); the reviewer assesses the package ready to countersign.
 - 2026-08-21 v1.0: initial; the parallel session's review verified and staged.
