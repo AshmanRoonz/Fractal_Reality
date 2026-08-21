@@ -1,6 +1,6 @@
 # The Balance-Attractor Dynamics
 
-**Status:** derived formal model, 2026-08-20, v1.1. This note answers what additional dynamics would make \(b\equiv\text{◐}=1/2\) a stable attractor rather than only the unique algebraically perfect point. It formalizes Ashman's proposal: stable systems should balance input and output, convergence and emergence. The mathematical implications are proved and computationally verified. The choice of which law, if any, nature instantiates remains open and requires measurement. Framework integration awaits Ashman's countersign.
+**Status:** derived formal model, 2026-08-20, v1.1. This note answers what additional dynamics would make \(b\equiv\text{◐}=1/2\) a stable attractor rather than only the unique algebraically perfect point. It formalizes Ashman's proposal: stable systems should balance input and output, convergence and emergence. The mathematical implications are proved and computationally verified. The choice of which law, if any, nature instantiates remains open and requires measurement. **The constitutive principle and framework interpretation are COUNTERSIGNED (Ashman, 2026-08-21, "Yes. Signed"; disposition 8 in `plans/countersign_batch_2026_08_21.md`); canon-file integration joins the queued pass; the empirical commission remains open.**
 
 ## 0. Answer in one statement
 
@@ -772,5 +772,6 @@ Verified:
 
 ## Revision History
 
+- 2026-08-21 v1.2: constitutive principle countersigned (balance package, disposition 8); status updated, content unchanged.
 - 2026-08-20 v1.1: completed the continuity argument and the defect-gradient Lyapunov proof.
 - 2026-08-20 v1.0: bounded-persistence theorem, general attractor criterion, conservative exchange, storage homeostasis, boundary-preserving flow, defect-gradient dynamics, seam-restoring control, delay and noise predictions, and verification record.

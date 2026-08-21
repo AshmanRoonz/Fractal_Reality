@@ -11,6 +11,16 @@
 5. **The Λ adjudication: Option C** (`plans/lambda_constancy_audit_2026_08_21.md`): COUNTERSIGNED AS RECOMMENDED. The two dark-energy strata are held as dated rivals; the four-branch futures table is in force with its pre-assigned verdicts; the authorized edits are executed this date (one-line caveat on the Ladder Correction Notice's dark-energy witness in `CLAUDE.md`; rival-strata cross-notes at framework §12.1 and §12.2). Nothing is promoted or retracted before the data.
 6. **Two commissions, executed this date:** (a) the revision pass over `essays/reddit_r_circumpunct_unique_predictions.md` and `docs/circumpunct_predictions.html` (dated correction notes: Higgs items conformed to the 2026-07-18 scalar-minimality reversal; essay item 8 conformed to the 2026-07-29 ethics adjudication; w items conformed to disposition 5; essay item 5 conformed to disposition 4); (b) the §12.1 w-line dating verification from full GitHub history (findings recorded as an addendum to the Λ audit).
 
+## The balance package (second countersign, same day)
+
+Ashman countersigned ("Yes. Signed") the two-item balance package as presented:
+
+7. **The odd-cycle balance-rigidity theorem's framework interpretation** (`plans/balance_rigidity_theorem_2026_08_20.md`): COUNTERSIGNED. Balance is the unique point where the seven visible stations already constitute the complete group they generate; off balance they become a partial window into a larger finite cycle (rational b = a/q gives ℤ_{3q+a}) or a dense orbit (irrational b); the two-register rule governs the standing ℤ₇ harmonic results (the label DFT, chirp and tone, survives at every b; only at balance does it coincide with the coordinate-induced orthonormal analysis). Harmony does not disappear off balance; orthogonality does.
+8. **The balance-attractor dynamics' constitutive principle** (`plans/balance_attractor_dynamics_2026_08_20.md`): COUNTERSIGNED, canonical wording: **"A bounded persistent whole must balance total convergence and emergence over its complete cycle. It becomes dynamically stable when accumulated excess in either direction changes the next flow in the opposite direction."** Signed with its scope guards intact (complete cycle; all channels counted per the accounting-boundary protection; a growing system exempt while growing) and its three load-bearing results: the bounded-persistence theorem as a new independent route to ◐ = 1/2 (conservation plus boundedness, beside the standing symmetry, entropy, and virial routes); the periodic corollary legitimizing the pump (instantaneously off balance through the cycle, exactly balanced over it: the breath line as theorem); and the necessity of integral feedback (memory of cumulative error) for erasing accumulated seam displacement.
+
+Canon-file integration of dispositions 7 and 8 joins the queued integration pass alongside disposition 1's formal-pass results. The empirical commission (the conditional-drift test on a named system) remains open by Ashman's choice.
+
 ## Revision history
 
+- 2026-08-21 v1.1: the balance package (dispositions 7 and 8) countersigned, "Yes. Signed".
 - 2026-08-21 v1.0: initial; six dispositions from Ashman's "Yes to all".
