@@ -1,6 +1,6 @@
 # Theorem Atlas and Dependency Audit
 
-**Status:** working research index, 2026-08-20, landed and extended 2026-08-21, v1.8. This atlas inventories theorem-like claims across the active repository, separates proved mathematics from internal consequences, computation, conjecture, and interpretation, and records a first new derivation pass. It does not itself change canon. **Its staged judgments are COUNTERSIGNED (Ashman, 2026-08-21; disposition 2 in `plans/countersign_batch_2026_08_21.md`): the claim taxonomy, the quarantine register, the authority order, and the section 12 maintenance protocol are now editorial law for theorem-like claims.**
+**Status:** working research index, 2026-08-20, landed and extended 2026-08-21, v1.9. This atlas inventories theorem-like claims across the active repository, separates proved mathematics from internal consequences, computation, conjecture, and interpretation, and records a first new derivation pass. It does not itself change canon. **Its staged judgments are COUNTERSIGNED (Ashman, 2026-08-21; disposition 2 in `plans/countersign_batch_2026_08_21.md`): the claim taxonomy, the quarantine register, the authority order, and the section 12 maintenance protocol are now editorial law for theorem-like claims.**
 
 ## 1. Executive result
 
@@ -333,6 +333,7 @@ This atlas, the raw inventory, the half-balance formal pass, and the harvester (
 
 ## Revision history
 
+- 2026-08-21 v1.9: the information layer countersigned and registered (`plans/information_layer_formal_2026_08_21.md`): the quadruple and boundary principle (A3's Shannon form, I/P2) canon; dictionary class X with three firm anchors; four-channel balance accounting standing; Landauer bridge S/P4 with scope; IIT disambiguation mandatory; pole-gap program identified as the layer's experimental face; master-table Information row (charter v2.19) and the eleventh Theme-and-Variations variation landed.
 - 2026-08-21 v1.8: protocol amended to v1.2 (clamp check; constraint verdict; disposition 10) and Run 2 executed (breath, `plans/balance_breath_run_2026_08_21.md`): instrument validated on a natural oscillatory system (monotone 8/8-bin restoring profile, textbook weakens-with-lag, oscillator guard satisfied not tricked); breathing measured cycle-balanced to 0.1% with equilibrium 0.4915 (primary diagnostic detects the −0.9% offset, BIC discounts it); passive-data ceiling respected; class E evidence awaits a perturbed consented study.
 - 2026-08-21 v1.7: Run 1 executed (Xorzo2 spine, `plans/balance_xorzo2_run_2026_08_21.md`): instrument validated including the newly identified zero-variance constraint case; Xorzo2 measured as exactly cycle-balanced by construction (b pinned at 1/2, attraction undefined at that boundary); "three ways to sit at 1/2" (attracted, coincidental, constrained) enters the register as the run's conceptual yield.
 - 2026-08-21 v1.6: empirical protocol and analyzer landed with clean self-test (third section 6 extension); inventory refreshed to the 2026-08-21 snapshot (799/607, cross-tree match).
