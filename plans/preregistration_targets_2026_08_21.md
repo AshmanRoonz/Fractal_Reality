@@ -102,6 +102,17 @@ These require no new computation; the formulas and bands are already published. 
 3. **The B2 adjudication**: does the framework commit to w = −1 exactly? To be answered and dated before 2026-10 regardless of the Class A pick.
 4. **Landing**: whether this staging record and the eventual computation record get a public-facing page beside the claims card, and when (at commitment, or at adjudication).
 
+## Addendum (2026-08-21, same day, after the pick): correction to the Class A blindness claim
+
+The Class A header above says "no corpus formula exists." A deeper corpus search (grep across all eras, run after Ashman's pick and before any computation) shows that claim was too broad as a sector statement, though it holds for the two picked targets. The original text stands above per the no-silent-revision discipline; the corrected state is:
+
+- **sin²θ₁₂: clean everywhere.** No expression for it exists in the current grammar, in the archived braid-era Ch13 table (which carries sin²θ₁₃ = 1/45 and |V_us| = 1/φ³ − 0.01 but not θ₁₂), in the eml discovery program (its eight flavor targets did not include θ₁₂), or in the v10 operator-predictions run (θ₁₂ appears there only as a reference-table entry; no match was claimed in the findings).
+- **Δm²₂₁/|Δm²₃₁|: clean in the current grammar, with two disclosed prior nulls in a non-primary family.** The eml program searched this ratio at tree depths up to 3 and again at depth 4 and found no signal both times (`calculations/eml_discovery_results.md`, `calculations/eml_discovery_depth4_summary.md`). A prior null contaminates nothing (there is no candidate to steer toward); it is disclosed because clause 6 requires the full search history of a target to be visible.
+- **Sector archaeology, disclosed:** an archived exploratory stratum of `circumpunct_framework.md` (the braid-era 25-prediction table, whose 1/α = 4π³ + 13 contradicts the canonical closed form) contains PMNS θ₁₃ and CKM V_us entries; the eml program recorded candidates for sin²θ₂₃, sin²θ₁₃, and δ_CP that the corpus's own §27.7n caveat later downgraded (flavor-physics constants at size 3 do not reliably pass the matched-null bar). Consequence for A2: δ_CP's grade-i status carries a footnote; an eml-era candidate exists in `calculations/`, and any future δ_CP pre-registration must disclose and supersede it rather than ignore it.
+- **A strengthening found in the same search:** framework §27.7p and §27.7q already pre-commit the functional form for any future coupling (α^k · framework prefactor · (1 + α · framework ratio), k assembled from the pool) and name neutrino mixing angles among the empty κ-matrix cells that "either fill the remaining cells consistently or break the architecture," adding: "The matrix is not a postdiction device; it is the framework's main channel of falsification for the next decade of precision physics." The pre-registration therefore executes a commitment the corpus made in advance of the pick, not a procedure invented for the occasion.
+
+The pick stands: both picked targets are clean for the primary families, and the computation record (`plans/preregistration_juno_computation_2026_08_21.md`) carries the full disclosures.
+
 ## Sources (verified by web search, 2026-08-21)
 
 - JUNO first results: [Phys.org](https://phys.org/news/2025-11-juno-physics-results-months.html), [EurekAlert](https://www.eurekalert.org/news-releases/1106885), [JINR](https://www.jinr.ru/posts/juno-experiment-first-physics-results-obtained/), [JUNO physics program (arXiv:2104.02565)](https://arxiv.org/pdf/2104.02565)
