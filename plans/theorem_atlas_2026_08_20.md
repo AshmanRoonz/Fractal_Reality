@@ -1,6 +1,6 @@
 # Theorem Atlas and Dependency Audit
 
-**Status:** working research index, 2026-08-20, landed and extended 2026-08-21, v1.2. This atlas inventories theorem-like claims across the active repository, separates proved mathematics from internal consequences, computation, conjecture, and interpretation, and records a first new derivation pass. It does not itself change canon. **Its staged judgments are COUNTERSIGNED (Ashman, 2026-08-21; disposition 2 in `plans/countersign_batch_2026_08_21.md`): the claim taxonomy, the quarantine register, the authority order, and the section 12 maintenance protocol are now editorial law for theorem-like claims.**
+**Status:** working research index, 2026-08-20, landed and extended 2026-08-21, v1.3. This atlas inventories theorem-like claims across the active repository, separates proved mathematics from internal consequences, computation, conjecture, and interpretation, and records a first new derivation pass. It does not itself change canon. **Its staged judgments are COUNTERSIGNED (Ashman, 2026-08-21; disposition 2 in `plans/countersign_batch_2026_08_21.md`): the claim taxonomy, the quarantine register, the authority order, and the section 12 maintenance protocol are now editorial law for theorem-like claims.**
 
 ## 1. Executive result
 
@@ -110,6 +110,7 @@ These axes prevent four common category errors: treating an axiom as a theorem, 
 | Quadratic chirp character | S/C, P3 | The stated quadratic traversal is an exact CAZAC/Zadoff-Chu sequence on \(\mathbb Z_7\) | Standard finite harmonic analysis, exactly instantiated |
 | Linear splitting character | S/C, P3 | The pure-tone route is a single Fourier character on \(\mathbb Z_7\) | Same scope |
 | Octave single-period lemma | I, P2 | The half-step sequence has primitive period \(7/2\), one constant per residue, parity alternation, and traversal excess \(nR\) under its stated definitions | Do not transfer it to a deformed lattice without reproof |
+| Odd-cycle balance rigidity | S/I, P3 | For the staggered family with \(m\) structural intervals (\(N=2m+1\) stations, wrap \(L=m+b\)): eleven conditions are equivalent to \(b=1/2\) (equal spacing, additive closure, nontrivial rotational symmetry, zero circular centroid, Fourier unitarity, optimal conditioning, and five more); closure explosion: rational \(b=a/q\) generates \(\mathbb Z_{mq+a}\), irrational \(b\) a dense orbit; exact gap-variance \(m(m+1)(2b-1)^2/N^2\), displacement, sumset-growth, and Dirichlet-kernel Fourier-defect formulas; verification rerun bit-identically on this branch | Generalizes and supersedes the \(m=3\) group-only-at-balance entry; elementary methods, literature novelty not claimed; framework instantiation unproved; interpretation awaits countersign |
 
 Primary files:
 
@@ -120,6 +121,8 @@ Primary files:
 - `experiments/finite_window_certificate_v2_findings.md`
 - `docs/octave_wrap_lemma.html`
 - `experiments/staggered_octave_z7_findings_v1.md`
+- `plans/balance_rigidity_theorem_2026_08_20.md`
+- `experiments/balance_rigidity_v1.py` (output receipt: `experiments/balance_rigidity_v1_output.txt`)
 
 ## 5. Internal framework theorems
 
@@ -172,7 +175,9 @@ Two deductions materially sharpen the earlier staging:
 1. Local balance and final balance are different. Complementary off-balance octaves can cancel cumulative seam drift, but neither local station set gains \(\mathbb Z_7\) symmetry.
 2. An off-balance octave does close at its own tonic \(3+b\). It closes early or late only relative to the canonical balanced tonic \(7/2\). The earlier absolute wording is corrected.
 
-This formal pass is mathematically complete at its stated scope but awaits countersign before canon integration.
+This formal pass is mathematically complete at its stated scope. (Countersigned 2026-08-21, batch disposition 1.)
+
+**Extension (2026-08-20, landed and verified 2026-08-21).** The group-only-at-balance theorem opened into the odd-cycle balance-rigidity theorem (`plans/balance_rigidity_theorem_2026_08_20.md`, verification `experiments/balance_rigidity_v1.py`, rerun on this branch with output identical to the source session's). Eleven conditions are proved equivalent to \(b=1/2\) across the whole family \(N=2m+1\); the closure-explosion theorem classifies every imbalance (rational \(b=a/q\) embeds the \(N\) visible stations in \(\mathbb Z_{mq+a}\); irrational \(b\) generates a dense orbit; balance is uniquely the case where the visible stations already ARE the complete group they generate); and the two-register consequence protects the existing \(\mathbb Z_7\) harmonic results while bounding them: the label DFT (chirp and tone) survives at every \(b\), but only at balance does it coincide with the orthonormal harmonic analysis induced by coordinate translation. The mathematics is verified; the framework interpretation awaits countersign.
 
 ## 7. Computational and finite-model register
 
@@ -246,7 +251,7 @@ The last implication is now proved. It does not run backward to prove the ontolo
 \text{finite T-operator studies}.
 \]
 
-Changing the lattice parameter breaks the group step unless \(b=1/2\), so downstream DFT results cannot be assumed off balance.
+Changing the lattice parameter breaks the group step unless \(b=1/2\), so downstream DFT results cannot be assumed off balance. Refined by the balance-rigidity theorem (2026-08-21): the label-register DFT results survive at every \(b\); what breaks off balance is their coincidence with the coordinate-induced harmonic analysis, whose matrix stays invertible but loses unitarity, with condition number minimized uniquely at balance.
 
 ### 10.3 Zeta chain
 
@@ -318,6 +323,7 @@ This atlas, the raw inventory, the half-balance formal pass, and the harvester (
 
 ## Revision history
 
+- 2026-08-21 v1.3: odd-cycle balance-rigidity theorem landed and verified (new register row, section 6 extension, section 10.2 refinement); the section 6 countersign bracket added.
 - 2026-08-21 v1.2: staged judgments countersigned (batch disposition 2); the section 12 protocol becomes editorial law.
 - 2026-08-21 v1.1: landed in-repo; addendum with the landing receipt, the bit-identical harvest check, the executed section 11 item 6 (JUNO pre-registration), and the Λ two-voice cross-reference.
 - 2026-08-20 v1.0: initial active-corpus harvest, claim taxonomy, dependency audit, quarantine register, and integration of the half-balance formal pass.
