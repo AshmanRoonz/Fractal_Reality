@@ -120,6 +120,7 @@ Ten rows are accepted for mechanical testing, but they are not a scientifically 
 3. Synchronize their clocks.
 4. Estimate measurement error before testing balance.
 5. Set balance and accounting tolerances from that error budget, not from the observed answer.
+6. **Clamp check (added 2026-08-21, from Run 1's finding):** identify every normalization, homeostatic clamp, or per-sample closure in the system or measurement chain BEFORE selecting the boundary. A boundary whose stock closes at every sample pins b at 1/2 identically and makes every attraction diagnostic undefined; a single-signal derivation of both flows makes accounting closure a construction that carries no evidential weight. Declare both conditions where present.
 
 If the stock trajectory is not explained by integrated \(C-E\), stop. A failed accounting boundary cannot adjudicate the balance hypothesis.
 
@@ -285,6 +286,7 @@ The tolerances above are examples only. Replace them with values justified by th
 | `evidence_against_a_half_attractor` | The shortest-lag conditional drift points away from half |
 | `possible_hidden_state_or_oscillator` | Finite-lag mean reversion may be caused by projected cyclic dynamics |
 | `inconclusive` | Sampling, variation, or uncertainty does not resolve drift direction |
+| `balance_constrained_by_construction` (added 2026-08-21) | The balance observable has zero variance because a clamp or per-sample normalization pins it; attraction is undefined at this boundary, and the analyzer's per-lag "not enough balance variation" skips plus a not_tested assessment are the signature (Run 1, the Xorzo2 spine, is the worked case) |
 
 These are disciplined triage labels, not automatic publication claims.
 
@@ -332,5 +334,6 @@ Across all four controls, the finite-window balance identity holds to machine pr
 
 ## Revision History
 
+- 2026-08-21 v1.2: the constraint case added (Stage A clamp check; the balance_constrained_by_construction verdict), from Run 1's finding; countersigned as batch disposition 10.
 - 2026-08-21 v1.1: countersigned (batch disposition 9); Run 1 commissioned; status updated, content unchanged.
 - 2026-08-20 v1.0: data contract, exact finite-window audit, perturbation protocol, free-equilibrium comparison, lag identifiability safeguard, cycle test, falsifiers, and synthetic controls.

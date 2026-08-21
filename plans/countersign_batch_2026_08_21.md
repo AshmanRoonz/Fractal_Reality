@@ -24,8 +24,13 @@ Canon-file integration of dispositions 7 and 8 joins the queued integration pass
 
 9. **The balance empirical protocol's framework integration** (`plans/balance_empirical_protocol_2026_08_20.md`): COUNTERSIGNED (Ashman, "Do it. Signed"). The three-claim separation (accounting closure; complete-cycle balance; restoring attraction), the error-budget-first tolerance rule, the half-versus-free equilibrium comparison, the oscillator-trap lag sweep, and the §12 novelty bar are the framework's standing empirical method for balance claims. The same signature commissioned **Run 1: the Xorzo2 spine** as instrument validation (`plans/balance_xorzo2_run_2026_08_21.md`, Stage A declaration committed before the run per the protocol's own discipline).
 
+## The natural-system run (fourth countersign, same day)
+
+10. **The protocol amendment and Run 2** (Ashman, "Let's do it"): the constraint case enters the protocol (Stage A clamp check; the `balance_constrained_by_construction` verdict; protocol v1.2), and **Run 2, breath**, is commissioned as the first natural-system run: lung-volume proxy from real respiration-belt recordings, Stage A declared and committed before processing (`plans/balance_breath_run_2026_08_21.md`), with the verdict ceiling declared in advance (no perturbation trials in passive public data).
+
 ## Revision history
 
+- 2026-08-21 v1.3: disposition 10 (protocol amendment + Run 2 commissioned), "Let's do it".
 - 2026-08-21 v1.2: disposition 9 (empirical protocol) countersigned and Run 1 commissioned, "Do it. Signed".
 - 2026-08-21 v1.1: the balance package (dispositions 7 and 8) countersigned, "Yes. Signed".
 - 2026-08-21 v1.0: initial; six dispositions from Ashman's "Yes to all".
