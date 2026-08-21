@@ -1,6 +1,6 @@
 # Predictions Scoreboard (master record)
 
-**Status:** Live. Last updated 2026-04-22.
+**Status:** Live. Last updated 2026-08-21 (P5 added; P1 band semantics refined; both countersigned, `plans/countersign_batch_2026_08_21.md`). Previous update 2026-04-22; read tallies from §9's corrected verification, not §3's stale summary.
 **Companion pages:** `docs/circumpunct_predictions.html` (public-facing cards), `docs/predictions_history.html` (running log of hits and misses).
 **Purpose:** Answer the live open question of §27 honestly: does the structural grammar predict, or does it fit?
 
@@ -212,14 +212,21 @@ K dominates by a large margin; this is expected given the framework was written 
 
 ### 5.10 Pre-registered predictions (P)
 
-These are the four bolts with falsification bands committed in advance.
+These are the bolts with falsification bands committed in advance (four at the 2026-04-22 update; P5 added 2026-08-21).
 
 | # | Name | Formula | Band | Timeline | Data source | Status |
 |---|---|---|---|---|---|---|
-| P1 | 1/α next decimal | 137.035999147 | ±5 ppb | 2026-2030 | Atom interferometry (Cs, Rb, Sr next-gen) | live |
+| P1 | 1/α next decimal | 137.035999147 | see note (a) | 2026-2030 | CODATA 2026 (cutoff 2026-12-31); atom interferometry (Cs, Rb next-gen) | live |
 | P2 | X≡X/X−X ratio for Si, Ge, P, As | 0.778 | ±1% | 2026-2028 | Single-crystal XRD of disilyne / diphosphorus analogues | live |
 | P3 | Mycelial Murray's Law exponent | 2.5 | ±0.15 | 2026-2030 | Confocal imaging of Armillaria, Phanerochaete | live |
 | P4 | Five-virtue sequence effect size | Cohen's d ≥ 0.5 | d < 0.3 falsifies | 2027-2029 | Pre-registered longitudinal conflict resolution study | live |
+| P5 | Δm²₂₁/Δm²₃₁ (neutrino mass-square ratio) | 5/169 = (Φ+○)/V² = 0.0295858 | dead if excluded at >3σ by a future JUNO reactor-channel determination (roughly ±1% drift of the central value at JUNO design precision) | 2026-2032 | JUNO solar-sector releases (design ~0.36% on the ratio) | live |
+
+Notes (2026-08-21, countersigned):
+
+- (a) **P1 band semantics refined and countersigned:** survives within 3σ of the CODATA 2026 recommended value; critical tension between 3σ and 5σ (the rubidium-vs-cesium discrepancy's weighting examined before any verdict); dead beyond 5σ. This supersedes the earlier ±5 ppb phrasing here and in the unique-predictions essay. Grade at the 2022 adjustment: 0.22 ppb distance, about 1.4σ.
+- (b) **P5 provenance:** produced under the binding pre-registration protocol (targets staged and picked before looking; rules, candidate space, and decision procedure frozen and committed before the search; null calibration per §27.7n; no silent drops). The paired target sin²θ₁₂ returned null-by-multiplicity under the frozen rules and is reported as such, not registered. Blindness grade ii (sharpening survival). Files: `plans/preregistration_targets_2026_08_21.md`, `plans/preregistration_juno_computation_2026_08_21.md`, `experiments/preregistration_juno_search_v1.py`.
+- (c) The corpus also carries a dated dark-energy equation-of-state stake (framework §12.1, the public predictions page) now held under an adjudicated rival-strata futures table rather than as a simple P row; see `plans/lambda_constancy_audit_2026_08_21.md`.
 
 ---
 

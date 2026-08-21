@@ -1,6 +1,6 @@
 # Pre-Registration Targets for the Blind-Prediction Test
 
-**Status: staging record, 2026-08-21. Scouted and drafted by Claude on Ashman's commission ("Do it," 2026-08-21), executing the offers card's Tier 2 item 1 and its open decision 2 (`plans/what_it_offers_math_and_physics_2026_08_21.md`). The pick is Ashman's. Nothing in this record is a prediction; the grammar's value for any blind target is computed only after the pick, in a separate dated record.** Experimental facts below were verified by web search on 2026-08-21; sources are listed at the bottom; timeline claims are the experiments' own and inherit their slippage.
+**Status: staging record, 2026-08-21. Scouted and drafted by Claude on Ashman's commission ("Do it," 2026-08-21), executing the offers card's Tier 2 item 1 and its open decision 2 (`plans/what_it_offers_math_and_physics_2026_08_21.md`). The pick is Ashman's. Nothing in this record is a prediction; the grammar's value for any blind target is computed only after the pick, in a separate dated record. UPDATE, same date: the pick was made (the JUNO pair), the computation ran under the frozen protocol, and the outcomes were countersigned; see `plans/preregistration_juno_computation_2026_08_21.md` and `plans/countersign_batch_2026_08_21.md`.** Experimental facts below were verified by web search on 2026-08-21; sources are listed at the bottom; timeline claims are the experiments' own and inherit their slippage.
 
 ## What this record is
 
@@ -112,6 +112,10 @@ The Class A header above says "no corpus formula exists." A deeper corpus search
 - **A strengthening found in the same search:** framework §27.7p and §27.7q already pre-commit the functional form for any future coupling (α^k · framework prefactor · (1 + α · framework ratio), k assembled from the pool) and name neutrino mixing angles among the empty κ-matrix cells that "either fill the remaining cells consistently or break the architecture," adding: "The matrix is not a postdiction device; it is the framework's main channel of falsification for the next decade of precision physics." The pre-registration therefore executes a commitment the corpus made in advance of the pick, not a procedure invented for the occasion.
 
 The pick stands: both picked targets are clean for the primary families, and the computation record (`plans/preregistration_juno_computation_2026_08_21.md`) carries the full disclosures.
+
+## Addendum 2 (2026-08-21, same day): B2's premise corrected by the commissioned audit
+
+B2 above says the corpus's Λ reading "implies an equation of state w = −1, constant." The commissioned audit (`plans/lambda_constancy_audit_2026_08_21.md`) found that sentence describes one voice of a two-voiced corpus: §12.2/§27.7g and the Ladder Correction Notice carry constancy, while §12.1, the public predictions page, and the unique-predictions essay carry a dated evolution prediction (w(z) ≈ −1.033 + 0.017/(1+z), "falsified cleanly if w converges to exactly −1 ± 0.005"). B2's move is therefore not "state the commitment or find the freedom" but "adjudicate between two dated strata," and the audit stages that adjudication with a pre-assigned futures table. The original B2 text stands above per the no-silent-revision discipline; the audit record is the current state.
 
 ## Sources (verified by web search, 2026-08-21)
 

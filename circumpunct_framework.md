@@ -8968,7 +8968,11 @@ EQUATION OF STATE:
 TESTABLE: DESI 2026 (6σ signal expected)
 ```
 
+**Rival-strata note (2026-08-21, adjudicated Ashman, Option C).** §12.1's evolving equation of state (above; the geometric-dilution stratum, whose mechanism uses one fitted parameter) and §12.2/§27.7g's constant Λ (below; the ladder stratum) are held as dated rival strata: neither is promoted or retracted before the data. A four-branch futures table with pre-assigned verdicts is in force in `plans/lambda_constancy_audit_2026_08_21.md`; Euclid DR1 and DESI DR3 adjudicate. Current state of comparison: DESI DR2 (2025) prefers evolving dark energy at 3.1σ to 4.2σ, directionally toward §12.1 and away from §12.2, but at roughly fifty times §12.1's amplitude, so the present data leans away from both strata's specific forms.
+
 ### §12.2 The Cosmological Constant from the Dimensional Ladder
+
+**Rival-strata note (2026-08-21):** this section's constant Λ and §12.1's evolving w(z) are held as dated rivals under the adjudicated futures table; see the note above §12.2 and `plans/lambda_constancy_audit_2026_08_21.md`.
 
 ```
 THE DERIVATION:

@@ -1,6 +1,6 @@
 # Pre-Registered Computation: The JUNO Pair
 
-**Status: computation record under the binding protocol of `plans/preregistration_targets_2026_08_21.md`. Part I (this commit) freezes the rules, the targets, the candidate space, and the decision procedure BEFORE any search runs; Part II (a separate later commit) carries the search and its outcome. The git history is the timestamp separating the two. Drafted by Claude, executing Ashman's pick of 2026-08-21; the outcome, whatever it is, will be reported under clauses 5 through 7 (no revision, no silent drops, null is an outcome).**
+**Status: computation record under the binding protocol of `plans/preregistration_targets_2026_08_21.md`. Part I (this commit) freezes the rules, the targets, the candidate space, and the decision procedure BEFORE any search runs; Part II (a separate later commit) carries the search and its outcome. The git history is the timestamp separating the two. Drafted by Claude, executing Ashman's pick of 2026-08-21; the outcome, whatever it is, will be reported under clauses 5 through 7 (no revision, no silent drops, null is an outcome). COUNTERSIGNED (Ashman, 2026-08-21, "Yes to all"): the Part II outcome (disposition 3) and the §7 α thresholds (disposition 4) are signed; see `plans/countersign_batch_2026_08_21.md`. Scoreboard row P5 added the same date.**
 
 ---
 
@@ -83,3 +83,41 @@ Applied per target, in this order, to the union of in-band candidates from F1, F
 Already-published commitment, restated and dated here before the adjudicating data exists: the closed form **1/α = 360/φ² − 2/φ³ + α/(59/3) = 137.035999147** is frozen in `docs/alpha_derivation.html` with every factor pinned; its distance from CODATA 2022 (1/α = 137.035999177(21)) is 0.22 ppb, about 1.4σ of that adjustment. The CODATA 2026 adjustment (data cutoff 2026-12-31, publication early 2027) must digest the standing >5σ rubidium-vs-cesium interferometry discrepancy and the electron magnetic-moment route. **Proposed graded semantics, pending Ashman's countersign:** the auxiliary claim **survives** if the closed form lies within 3σ of the CODATA 2026 recommended value; **critical tension** (reported, with the discrepancy's treatment examined before any verdict, since CODATA's stated σ depends on how the discrepant inputs are weighted) between 3σ and 5σ; **dead** beyond 5σ. Either way the representation layer (α as measured input to κ_{0,0}) is untouched, per the corpus's separability clause.
 
 **End of Part I. Nothing below this line exists at the Part I commit; the search script and its results follow in a separate commit, and the git hashes are the receipt that the rules preceded the search.**
+
+---
+
+## Part II: the search and its outcome (separate commit; rules preceded search)
+
+### 8. Run receipts and implementation notes
+
+- **Instrument:** `experiments/preregistration_juno_search_v1.py` (v1.1), deterministic (null seed 27), stdlib only; full console receipt in `experiments/preregistration_juno_search_v1_output.txt`. Space sizes as enumerated: 729 distinct Tier 1 fraction values, 433,023 distinct F2 values, 22,040 distinct Tier 2 values.
+- **v1.0 incident, disclosed:** the first run imposed a value cap (fractions < 1) that the frozen spec never stated; it emptied F2 for Target 1 (the Cabibbo precedent's own prefactor is 8/3 > 1). Fixed in v1.1 before any verdict was drawn; the fix only widens F2, and every other v1.0 number was identical. The frozen space, not the buggy one, is what Part II reports.
+- **Declared implementation readings** (in the script docstring): the F1 parenthetical "correction well under 1%" implemented as |n·α/K| ≤ 1% of target; null-window "filtered survivor" statistics use the mechanical economy tier only (the address filter is semantic and cannot run on null windows); economy = distinct atoms + 1 for α + 1 for the half-power base, minimum over expressions per value.
+
+### 9. Target 1 (sin²θ₁₂): NULL BY MULTIPLICITY
+
+The frozen procedure, applied: Filter B ranks F2 first (flavor-mixing address) and F2 is non-empty in band (1,978 values), so F1/F3 cannot win. Filter C reduces F2's in-band set to its minimal economy tier: **14 members** at econ = 4 (the α^◐ · p/q forms and self-conjugate c-corrections; list in the receipt). The frozen verdict rule says more than five survivors is **null-by-multiplicity**, and the null calibration seconds it: the econ-tier size in 2,000 matched random windows has median 10 and 90th percentile 13, so the target window's 14 is at or above chance density. **No value is pre-registered for sin²θ₁₂.**
+
+Reported as data, not pre-registered (clause 6): the F3 window held four pure Tier 1 fractions (39/126 = 13/42 at +0.04σ, 4/13 at −0.17σ, 5/16 at +0.38σ, 11/35 at +0.58σ) against a null median of 7: below-median but failing every frozen signal branch, and outranked by non-empty F2 under Filter B regardless.
+
+What the null teaches, and it is a genuine structural finding: at magnitudes near 0.3, with Tier 1 prefactor freedom, the ◐-base family is dense enough that enumeration cannot individuate a value; the grammar as frozen **cannot claim the solar angle**. If the framework is ever to speak here it must come through a sharper selection principle (a derived address for the lepton 1↔2 cell of κ, per §27.7q), not through search. That is the honest boundary of the method, found by the method.
+
+### 10. Target 2 (Δm²₂₁/|Δm²₃₁|): PRE-REGISTERED VALUE
+
+**The pre-registered value: Δm²₂₁ / |Δm²₃₁| = 5/169 = 0.0295858 (exact rational; pool reading (Φ+○)/V²).**
+
+- **How the frozen procedure produced it:** Filter B gives the three families equal footing for this target (pre-declared). The union of in-band candidates (81 from F1, 3,864 from F2, 1 from F3) has minimal economy 2, achieved by exactly one member: 5/169. Every other candidate costs 4 or more objects. One survivor: the verdict rule pre-registers the value.
+- **Signal criterion (frozen §5), met on its first branch:** the F3 in-band count is 1, at or below the null median of 2, and the filtered survivor count is 1. Stated with its honest weight: a typical window of this width holds about two Tier 1 fractions, so the existence of some fraction is expected; what the procedure rewards is uniqueness at minimal economy. Today's centering (−0.02σ from the measured 0.029597 ± 0.000550) is observed, not a criterion, and buys nothing under the frozen rules. The evidential weight today is modest by construction; the claim's entire force is forward.
+- **Kill semantics** (Part I §4, now instantiated): dead if a future JUNO reactor-channel (or successor global) determination excludes 0.0295858 at more than 3σ of that measurement; tension between 2σ and 3σ. At JUNO design precision (roughly 0.3% and 0.2% on the constituents, so about 0.36% on the ratio), the 3σ corridor is about ±0.0003: **the value dies if the measured central ratio drifts by about 1% from today's.** Equivalent locked form for the constituents: Δm²₂₁ = (5/169) · |Δm²₃₁|; with NuFIT 6.0's |Δm²₃₁| = 2.534 × 10⁻³ eV² this reads Δm²₂₁ = 7.497 × 10⁻⁵ eV², against JUNO's measured 7.50 ± 0.12.
+- **Structural annotation, explicitly post-hoc and claiming nothing:** 5 = Φ+○ (the Weinberg correction numerator; the π-helix span) and 169 = V² (the §27.7f conjugate-pair numerator; V = G+1 = 13). No derivation is offered here, deliberately: under §27.7p, a surviving value creates a theory debt (which cell of κ, which stations, why (Φ+○)/V² and not something else), and the debt is the point. If JUNO confirms the value, the address must become derivable; if it never does, the hit remains bookkeeping and is graded as such.
+
+### 11. Joint verdict and grade
+
+Per Part I §1 the pair is adjudicated jointly and partial outcomes are reported as partial: **Target 1 null-by-multiplicity; Target 2 pre-registered at 5/169.** Blindness grade ii (sharpening survival): the expression was selected knowing the coarse current value, under rules frozen and committed before the search ran, and it now waits for a roughly five-fold precision jump it cannot influence. Ledger obligations stand: the outcome is reported hit, miss, or null when JUNO's next solar-sector release lands; the value does not move; corrections by addendum only.
+
+### 12. For Ashman's countersign
+
+1. **The Part II outcome as recorded** (Target 1 null; Target 2 pre-registered at 5/169 with the stated kill semantics).
+2. **The B1 α semantics** (Part I §7: survives within 3σ of CODATA 2026, critical tension 3σ to 5σ, dead beyond 5σ).
+3. **Ledger landing**: whether the pre-registered value also gets a row in `plans/predictions_scoreboard.md` and a public-facing note beside the claims card, now or at adjudication.
+
