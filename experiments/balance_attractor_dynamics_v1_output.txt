@@ -1,0 +1,13 @@
+Balance-attractor dynamics verification
+conservative exchange: b 0.800000 -> 0.500744
+boundary-preserving flow: b 0.01 -> 0.499999247
+boundary-preserving flow: b 0.10 -> 0.499999796
+boundary-preserving flow: b 0.25 -> 0.499999912
+boundary-preserving flow: b 0.75 -> 0.500000088
+boundary-preserving flow: b 0.90 -> 0.500000204
+boundary-preserving flow: b 0.99 -> 0.500000753
+gap-defect energy: 0.156734694 -> 1.919e-13
+local balance only: final delta 1.423e-45, residual seam 0.400000
+continuous seam controller energy: 0.191250 -> 4.834e-19; final state norm 1.332e-09
+discrete PI Jury test: 7900 parameter pairs, 4340 stable
+bounded periodic storage: net change 6.217e-15, throughput-weighted b 0.500000000000000

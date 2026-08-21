@@ -1,6 +1,6 @@
 # Theorem Atlas and Dependency Audit
 
-**Status:** working research index, 2026-08-20, landed and extended 2026-08-21, v1.3. This atlas inventories theorem-like claims across the active repository, separates proved mathematics from internal consequences, computation, conjecture, and interpretation, and records a first new derivation pass. It does not itself change canon. **Its staged judgments are COUNTERSIGNED (Ashman, 2026-08-21; disposition 2 in `plans/countersign_batch_2026_08_21.md`): the claim taxonomy, the quarantine register, the authority order, and the section 12 maintenance protocol are now editorial law for theorem-like claims.**
+**Status:** working research index, 2026-08-20, landed and extended 2026-08-21, v1.4. This atlas inventories theorem-like claims across the active repository, separates proved mathematics from internal consequences, computation, conjecture, and interpretation, and records a first new derivation pass. It does not itself change canon. **Its staged judgments are COUNTERSIGNED (Ashman, 2026-08-21; disposition 2 in `plans/countersign_batch_2026_08_21.md`): the claim taxonomy, the quarantine register, the authority order, and the section 12 maintenance protocol are now editorial law for theorem-like claims.**
 
 ## 1. Executive result
 
@@ -111,6 +111,7 @@ These axes prevent four common category errors: treating an axiom as a theorem, 
 | Linear splitting character | S/C, P3 | The pure-tone route is a single Fourier character on \(\mathbb Z_7\) | Same scope |
 | Octave single-period lemma | I, P2 | The half-step sequence has primitive period \(7/2\), one constant per residue, parity alternation, and traversal excess \(nR\) under its stated definitions | Do not transfer it to a deformed lattice without reproof |
 | Odd-cycle balance rigidity | S/I, P3 | For the staggered family with \(m\) structural intervals (\(N=2m+1\) stations, wrap \(L=m+b\)): eleven conditions are equivalent to \(b=1/2\) (equal spacing, additive closure, nontrivial rotational symmetry, zero circular centroid, Fourier unitarity, optimal conditioning, and five more); closure explosion: rational \(b=a/q\) generates \(\mathbb Z_{mq+a}\), irrational \(b\) a dense orbit; exact gap-variance \(m(m+1)(2b-1)^2/N^2\), displacement, sumset-growth, and Dirichlet-kernel Fourier-defect formulas; verification rerun bit-identically on this branch | Generalizes and supersedes the \(m=3\) group-only-at-balance entry; elementary methods, literature novelty not claimed; framework instantiation unproved; interpretation awaits countersign |
+| Balance-attractor dynamics | S/I, P3 | Bounded persistence with diverging throughput forces the throughput-weighted long-run balance to \(1/2\) from conservation alone (Theorem 1); complement symmetry fixes the point but not stability, so a feedback law is required; four explicit laws (conservative exchange, storage homeostasis, boundary-preserving relative growth, defect-gradient descent on the rigidity theorem's \(V_{\rm gap}\)) each make balance globally attractive with exact solutions; integral feedback is required in the linear model to erase accumulated seam displacement (continuous Lyapunov and the exact discrete Jury region \(k_i>0\), \(k_p>k_i\), \(2k_p-k_i<4\)); delay boundary \(\lambda\tau=\pi/2\); OU fluctuation signatures; a conditional-drift empirical protocol with four disconfirming outcomes | Standard dynamical-systems and control mathematics, exactly instantiated; which law, if any, nature uses is unmeasured; the constitutive principle and framework interpretation await countersign |
 
 Primary files:
 
@@ -123,6 +124,8 @@ Primary files:
 - `experiments/staggered_octave_z7_findings_v1.md`
 - `plans/balance_rigidity_theorem_2026_08_20.md`
 - `experiments/balance_rigidity_v1.py` (output receipt: `experiments/balance_rigidity_v1_output.txt`)
+- `plans/balance_attractor_dynamics_2026_08_20.md`
+- `experiments/balance_attractor_dynamics_v1.py` (output receipt: `experiments/balance_attractor_dynamics_v1_output.txt`)
 
 ## 5. Internal framework theorems
 
@@ -178,6 +181,8 @@ Two deductions materially sharpen the earlier staging:
 This formal pass is mathematically complete at its stated scope. (Countersigned 2026-08-21, batch disposition 1.)
 
 **Extension (2026-08-20, landed and verified 2026-08-21).** The group-only-at-balance theorem opened into the odd-cycle balance-rigidity theorem (`plans/balance_rigidity_theorem_2026_08_20.md`, verification `experiments/balance_rigidity_v1.py`, rerun on this branch with output identical to the source session's). Eleven conditions are proved equivalent to \(b=1/2\) across the whole family \(N=2m+1\); the closure-explosion theorem classifies every imbalance (rational \(b=a/q\) embeds the \(N\) visible stations in \(\mathbb Z_{mq+a}\); irrational \(b\) generates a dense orbit; balance is uniquely the case where the visible stations already ARE the complete group they generate); and the two-register consequence protects the existing \(\mathbb Z_7\) harmonic results while bounding them: the label DFT (chirp and tone) survives at every \(b\), but only at balance does it coincide with the orthonormal harmonic analysis induced by coordinate translation. The mathematics is verified; the framework interpretation awaits countersign.
+
+**Second extension (2026-08-20, landed and verified 2026-08-21): balance-attractor dynamics.** This executes section 11 item 2 (`plans/balance_attractor_dynamics_2026_08_20.md`, verification `experiments/balance_attractor_dynamics_v1.py`, rerun clean on this branch). Three results carry the weight: the bounded-persistence theorem derives the throughput-weighted long-run balance \(1/2\) from conservation plus boundedness alone (a route to ◐ = 1/2 independent of the symmetry, entropy, and virial arguments, valid only over complete cycles with all channels counted, per its own accounting guard); the periodic corollary legitimizes oscillation (a system can be instantaneously off balance throughout its cycle while exactly balanced over it); and the seam-residual theorem proves local balance restoration cannot erase accumulated displacement, so a stable whole needs memory of cumulative error (the integral term), with the exact discrete stability region given by the Jury conditions. The empirical face is the conditional-drift protocol: measure \(I\), \(O\), and storage, perturb, and test whether the drift of \(b\) points toward \(1/2\); four disconfirming outcomes are pre-stated. Which law, if any, nature instantiates is open; the constitutive principle awaits countersign.
 
 ## 7. Computational and finite-model register
 
@@ -323,6 +328,7 @@ This atlas, the raw inventory, the half-balance formal pass, and the harvester (
 
 ## Revision history
 
+- 2026-08-21 v1.4: balance-attractor dynamics landed and verified (register row, second section 6 extension); section 11 item 2 executed.
 - 2026-08-21 v1.3: odd-cycle balance-rigidity theorem landed and verified (new register row, section 6 extension, section 10.2 refinement); the section 6 countersign bracket added.
 - 2026-08-21 v1.2: staged judgments countersigned (batch disposition 2); the section 12 protocol becomes editorial law.
 - 2026-08-21 v1.1: landed in-repo; addendum with the landing receipt, the bit-identical harvest check, the executed section 11 item 6 (JUNO pre-registration), and the Λ two-voice cross-reference.
