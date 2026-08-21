@@ -50,3 +50,38 @@
 **Run-level disconfirmers:** none of these outcomes can disconfirm the framework's balance claims at this rung (declared); they validate or indict the instrument and the boundary choice. A future perturbation study (breath-holds, paced breathing, sighs, with consent and proper collection) is what could carry evidential weight, and its Stage A would build on this run's findings.
 
 **End of Part I. No signal has been processed at this commit.**
+
+---
+
+## Part II: the run and its findings (separate commit)
+
+Receipts: `experiments/balance_breath_observations_v1.py` (runner; pinned-commit fetch), `experiments/balance_breath_observations_v1.csv` (189 rows, three trials, zero windows dropped), `experiments/balance_breath_observations_v1_output.txt`, `experiments/balance_breath_analyzer_output.txt`, `experiments/balance_breath_report.json`. The frozen invocation ran unamended.
+
+### F1. Identity face, within budget
+
+Exact discrete closure at machine precision per trial; finite-window normalized mismatch −0.00105 against the 0.02 budget; analyzer stock accounting within tolerance. As declared, these carry no evidential weight (single-signal derivation).
+
+### F2. The instrument on nature: passed
+
+The binned conditional drift at the shortest lag is **monotone toward half in all eight quantile bins** (from +0.094 at b ≈ 0.20 to −0.087 at b ≈ 0.75, the sign change bracketed at the middle), with restoring fraction 0.86 and R² = 0.81 for the linear model. Slopes are negative with confidence at all four lags (−0.322, −0.087, −0.044, −0.026; every CI below zero) and the magnitude weakens with lag by a factor of ~12: the dissipative-relaxer signature the protocol's §7 names, so the oscillator guard was satisfied by the data rather than tricked, exactly the behavior this run existed to test. The verdict stayed within the declared passive-data ceiling.
+
+### F3. Breathing's measured posture
+
+Throughput-weighted balance over the ~16 minutes: **0.4995** (balanced to one part in a thousand). Restoring rate at the 5 s lag: λ ≈ 0.32 per second. The freely fitted equilibrium is strikingly stable across lags (0.4915, 0.4921, 0.4917, 0.4913), and the run's one detection is a **small offset below half, about −0.9%**: the shortest-lag bootstrap CI (0.4854, 0.4972) excludes 1/2, which under the protocol's declared primary diagnostic yields the verdict `restoring_but_not_to_half`. Reported with its honest counterweight: **BIC prefers the half-fixed model at every lag** (half minus free between −3.2 and −4.9), meaning the offset does not pay for its extra parameter under model comparison. A marginal, consistent, primary-diagnostic-level detection that model selection discounts: stated as exactly that.
+
+### F4. Candidate mechanisms for the offset (declared, none claimed)
+
+1. **Duty-cycle sampling bias:** resting expiration lasts longer than inspiration (I:E near 1:1.5), so fixed windows partially covering a cycle are caught mid-expiration more often, biasing windowed b slightly below half with no volume imbalance at all. If this is the mechanism, the instrument is correctly detecting that breathing spends longer exhaling than inhaling: a temporal asymmetry, not a volumetric one.
+2. **Belt nonlinearity and detrending leakage** (Part I's pre-declared leading suspect).
+3. **Flow-profile asymmetry** (inspiratory flow more impulsive, expiratory more gradual) interacting with the total-variation split.
+
+A paced-breathing or per-cycle-segmented follow-up would discriminate; per-cycle segmentation alone would collapse b toward the volume identity and needs the duty-cycle observable added, which is noted for that design.
+
+### F5. Methodological finding: what passive restoration can and cannot mean
+
+At 5 s windows over an oscillatory signal with natural period jitter, mean-reversion of b conflates two mechanisms that passive data cannot separate: homeostatic control, and phase decoherence of the cycle. Both produce exactly this signature. The analyzer's own epistemic-limit line covers it, and Part I's ceiling was set for this reason; breath-hold and paced-breathing perturbations are the separator, and any evidential run must include them.
+
+### Verdict
+
+Instrument validated on a natural system: the oscillator guard behaved correctly on real cyclic physiology, the drift machinery produced a clean monotone restoring profile, and the centering diagnostics resolved a sub-percent question and reported its ambiguity honestly. Breathing measured: cycle-balanced to 0.1%, strongly restoring in the windowed observable, equilibrium within 0.9% of half with the deviation's status split between the primary diagnostic and BIC. No framework-evidential claim is made at this rung, per Part I. The pump's plainest instance holds its balance the way the constitutive principle says a bounded persistent whole must, and demonstrating that this sentence can be earned rather than asserted is what the next, perturbed, consented study would be for.
+

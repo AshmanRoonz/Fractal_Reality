@@ -1,0 +1,10 @@
+Balance empirical test
+finite-window normalized mismatch: -0.0010455 (within_tolerance)
+throughput-weighted balance: 0.499477251
+stock accounting: within_tolerance
+shortest-lag drift slope: -0.321824 (95% block interval -0.351721, -0.285503)
+estimated restoring equilibrium: 0.49151027609553766
+lag diagnostic: weakens_with_lag
+attractor assessment: restoring_but_not_to_half
+Interpret the JSON report with the protocol's epistemic limits.
+complete report: experiments/balance_breath_report.json

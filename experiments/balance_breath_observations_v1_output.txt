@@ -1,0 +1,7 @@
+Breath balance observations (Run 2)
+source: neuropsychology/NeuroKit @ ff419d98
+  rest-5min    samples=30000  windows=59  exact closure=1.110e-16  b first/mean/std/last = 0.5621/0.4956/0.0861/0.4816
+  rest-8min    samples=50682  windows=101  exact closure=0.000e+00  b first/mean/std/last = 0.6368/0.4912/0.2069/0.6122
+  task-2.5min  samples=15000  windows=29  exact closure=1.110e-16  b first/mean/std/last = 0.6615/0.4931/0.1125/0.4080
+zero-variation windows dropped: 0
+rows written: 189 -> balance_breath_observations_v1.csv
