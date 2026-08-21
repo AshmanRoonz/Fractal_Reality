@@ -1,6 +1,6 @@
 # The Corrigibility Statement
 
-**Status: session record, 2026-08-21. Ashman's reflection on the forum-ban history, recorded as an adjudication-grade insight about the framework's communication layer, with the statement he wished he had led with drafted in two lengths, a candidate principle staged as a §25.17/§25.20 refinement, and placement decisions staged. Pending countersign.**
+**Status: session record, 2026-08-21. Ashman's reflection on the forum-ban history, recorded as an adjudication-grade insight about the framework's communication layer, with the statement he wished he had led with drafted in two lengths, a candidate principle staged as a §25.17/§25.20 refinement, and placement decisions staged. COUNTERSIGNED BY PLACEMENT DIRECTIVE (Ashman, "That should go in the main readme" + "And on docs/index.html"): the full form is countersigned as drafted and placed this date at the head of `README.md`'s "Read This First: How This Project Handles Being Wrong" section (flowing into the existing receipts list, which is the statement's "receipts for both" made literal) and as a bordered card in `docs/index.html`'s framework section, between the ⊙ hero card and the featured documents, signed with his name. Disposition 14 in `plans/countersign_batch_2026_08_21.md`. The method-disclosure line was NOT included at either surface: the README's tagline and About section already disclose the AI collaboration at full resolution, and the line remains venue-dependent per §4. Remaining §5 placements (other public pages' front matter; the short form as forum lead) and the §3 principle stay staged.**
 
 ## 1. The reflection (Ashman, verbatim in substance)
 
@@ -35,17 +35,18 @@ Staged as a refinement riding under §25.17 (epistemic status is part of the tra
 
 The optional line exists because the same invisible-state problem applies to method: in venues that care about AI involvement, an undisclosed method is another distinction the reader's record cannot resolve, and the corpus's FAITHFUL and TRUE argue for widening that partition too where it is material.
 
-## 5. Placement (staged)
+## 5. Placement
 
-1. The full form as standing front matter for public-facing framework pages (the synthesis page, the predictions page, the essays), in or beside the existing honesty boxes.
-2. The short form as the standing lead for any future forum or social posting.
-3. The principle of §3 adjudicated into §25.17's neighborhood at the next integration pass, if countersigned.
+0. **EXECUTED 2026-08-21 (directed):** the full form at the head of `README.md`'s "Read This First" section, and as a card in `docs/index.html`'s framework section (icon `refresh-ccw`, kicker "How to read the confidence", name as attribution, house card idiom, tag balance verified).
+1. Staged: the full form as standing front matter for other public-facing framework pages (the synthesis page, the predictions page, the essays), in or beside the existing honesty boxes.
+2. Staged: the short form as the standing lead for any future forum or social posting.
+3. Staged: the principle of §3 adjudicated into §25.17's neighborhood at the next integration pass, if countersigned.
 
 ## Open decisions (Ashman to adjudicate)
 
-1. Countersign the statement (both lengths, in his voice, edits welcome: it is his voice or it is nothing).
+1. ~~Countersign the statement~~ CLOSED: countersigned by the placement directive (full form, verbatim as drafted).
 2. The §3 principle as canon.
-3. Placement per §5, and whether the method-disclosure line is standing or venue-dependent.
+3. Remaining placements per §5 items 1-2, and whether the method-disclosure line is standing or venue-dependent (not included at the two executed surfaces; both already disclose the collaboration).
 
 ## Files consulted
 

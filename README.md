@@ -8,12 +8,14 @@ The backbone of [FractalReality.ca](https://fractalreality.ca) and the learning 
 
 ## Read This First: How This Project Handles Being Wrong
 
+**How to read the confidence.** I write in a declarative register because a framework stated at half-volume cannot be tested, and I want this one tested. The register is a method of exposure, not a report of certainty. My actual position: this is a hypothesis I have spent years refining, which has survived some checks and failed others, and the failures are on the public record with dated retractions that stay visible. Its quantitative claims carry stated bands and named kill conditions; some of them may die on schedule, and the record will say so. If you show me a real error, I will retract in public and credit the correction. That is the standing deal: full conviction in the writing, full corrigibility in the practice, and receipts for both.
+
 Big-picture projects are cheap; what is rare is a big-picture project that can lose arguments with reality and says so in writing. Before evaluating any claim below, evaluate the correction record, because it is the actual method here:
 
 - **No silent retraction.** Superseded claims stay visible, with dated retraction notices at the top of the affected documents. Every article carries a version header and a revision history. Interactive pages carry honesty boxes separating what is theorem, what is design choice, and what is interpretation.
 - **2026-06-09, the Ladder Correction:** the framework's station assignment of body and mind was reversed (boundary ○ to 2D, field Φ to 3D) on a topological argument; every dependent section was flagged and queued for re-derivation rather than quietly edited. This README itself carried the old labels until 2026-08-14; the corrected ladder is below, and the mistake is recorded here instead of erased.
 - **2026-07-18, a prediction retracted and replaced by its reverse:** the earlier "three extended Higgs states" claim was withdrawn; the standing falsifiable claim is now the opposite (the scalar sector is minimal on pain of the 64-state architecture; any charged Higgs or CP-odd scalar discovery falsifies it).
-- **The "zero free parameters" claim was softened in public:** α is treated as measured input, not derived; the closed-form expression for its value is a separable auxiliary claim with a stated kill band (0.22 ppb from CODATA; falsified outside ±5 ppb as measurements converge).
+- **The "zero free parameters" claim was softened in public:** α is treated as measured input, not derived; the closed-form expression for its value is a separable auxiliary claim with graded kill thresholds (0.22 ppb from CODATA 2022; against the CODATA 2026 recommended value it survives within 3σ, sits in critical tension between 3σ and 5σ, and is dead beyond 5σ).
 - **2026-08-01:** the scalar bond parameterization (0 < κ < κ*) was superseded by a two-coordinate form; the old notation is marked as a one-dimensional projection wherever it appears.
 - The [Falsification](#falsification) section below lists the ways the whole framework dies.
 
