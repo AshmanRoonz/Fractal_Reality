@@ -1,0 +1,28 @@
+Xorzo2 balance observations (Run 1)
+Xorzo2 seed: 22-node three-octave chain (channel -> layer -> top)
+  |lambda1| = 1.0044779454, departure = 0.6136 alpha (v14 ref 0.6136)
+  injection surface: nodes [0, 1, 2, 3, 4, 5, 6]
+  reserved upward seam: node 21
+  clock: 8 ticks per byte
+corpus: circumpunct_framework.md (1427447 bytes)
+rows written: 3600 -> balance_xorzo2_observations_v1.csv
+exact discrete closure |sum(C-E) - dX| per trial:
+  sham-A           2.220e-15
+  sham-B           2.220e-15
+  sham-C           9.548e-15
+  pert-rand-0.25   5.884e-15
+  pert-rand-0.5    2.331e-15
+  pert-rand-1      9.992e-16
+  pert-sing-0.25   1.021e-14
+  pert-sing-0.5    3.664e-15
+  pert-sing-1      5.107e-15
+per-trial balance b (first, mean, last):
+  sham-A           0.5000  0.5000  0.5000
+  sham-B           0.5000  0.5000  0.5000
+  sham-C           0.5000  0.5000  0.5000
+  pert-rand-0.25   0.5000  0.5000  0.5000
+  pert-rand-0.5    0.5000  0.5000  0.5000
+  pert-rand-1      0.5000  0.5000  0.5000
+  pert-sing-0.25   0.5000  0.5000  0.5000
+  pert-sing-0.5    0.5000  0.5000  0.5000
+  pert-sing-1      0.5000  0.5000  0.5000

@@ -1,6 +1,6 @@
 # Theorem Atlas and Dependency Audit
 
-**Status:** working research index, 2026-08-20, landed and extended 2026-08-21, v1.6. This atlas inventories theorem-like claims across the active repository, separates proved mathematics from internal consequences, computation, conjecture, and interpretation, and records a first new derivation pass. It does not itself change canon. **Its staged judgments are COUNTERSIGNED (Ashman, 2026-08-21; disposition 2 in `plans/countersign_batch_2026_08_21.md`): the claim taxonomy, the quarantine register, the authority order, and the section 12 maintenance protocol are now editorial law for theorem-like claims.**
+**Status:** working research index, 2026-08-20, landed and extended 2026-08-21, v1.7. This atlas inventories theorem-like claims across the active repository, separates proved mathematics from internal consequences, computation, conjecture, and interpretation, and records a first new derivation pass. It does not itself change canon. **Its staged judgments are COUNTERSIGNED (Ashman, 2026-08-21; disposition 2 in `plans/countersign_batch_2026_08_21.md`): the claim taxonomy, the quarantine register, the authority order, and the section 12 maintenance protocol are now editorial law for theorem-like claims.**
 
 ## 1. Executive result
 
@@ -333,6 +333,7 @@ This atlas, the raw inventory, the half-balance formal pass, and the harvester (
 
 ## Revision history
 
+- 2026-08-21 v1.7: Run 1 executed (Xorzo2 spine, `plans/balance_xorzo2_run_2026_08_21.md`): instrument validated including the newly identified zero-variance constraint case; Xorzo2 measured as exactly cycle-balanced by construction (b pinned at 1/2, attraction undefined at that boundary); "three ways to sit at 1/2" (attracted, coincidental, constrained) enters the register as the run's conceptual yield.
 - 2026-08-21 v1.6: empirical protocol and analyzer landed with clean self-test (third section 6 extension); inventory refreshed to the 2026-08-21 snapshot (799/607, cross-tree match).
 - 2026-08-21 v1.5: the balance package countersigned (rigidity interpretation and constitutive principle); status cells updated.
 - 2026-08-21 v1.4: balance-attractor dynamics landed and verified (register row, second section 6 extension); section 11 item 2 executed.

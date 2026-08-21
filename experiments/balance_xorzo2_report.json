@@ -1,0 +1,117 @@
+{
+  "attractor_assessment": {
+    "drift_direction": "not_tested",
+    "half_centering": "not_tested",
+    "overall": "not_tested"
+  },
+  "conditional_drift": {
+    "binned_drift_by_lag": {},
+    "fits": [],
+    "lag_pattern": {
+      "magnitude_ratio_last_to_first": null,
+      "note": "At least two negative-slope lag fits are required.",
+      "pattern": "unresolved"
+    },
+    "model": "db/dt = intercept_at_half + slope * (b - 1/2)",
+    "skipped_lags": {
+      "1": "not enough balance variation for a drift fit",
+      "2": "not enough balance variation for a drift fit",
+      "4": "not enough balance variation for a drift fit",
+      "8": "not enough balance variation for a drift fit"
+    }
+  },
+  "cycle_audit": {
+    "cycle_balance_verdict": "not_tested",
+    "cycle_count": 0,
+    "cycles": [],
+    "note": "No cycle column was supplied."
+  },
+  "finite_window": {
+    "accounting_tolerance": 0.05,
+    "balance_identity_error": 0.0,
+    "balance_tolerance": 0.05,
+    "boundedness_note": "A finite trace cannot prove boundedness. The reported stock change and trajectory closure are necessary diagnostics only.",
+    "finite_window_balance_verdict": "within_tolerance",
+    "instantaneous_balance_mean": 0.5,
+    "instantaneous_balance_std": 1.2056175251622475e-15,
+    "integrated_convergence": 264.3253120690348,
+    "integrated_emergence": 264.3253120690348,
+    "integrated_mismatch": 0.0,
+    "integrated_throughput": 528.6506241380696,
+    "normalized_mismatch": 0.0,
+    "observed_stock_change": -3.3306690738754696e-16,
+    "observed_stock_change_over_throughput": -6.300321841681184e-19,
+    "predicted_stock_change": -1.459943277382081e-14,
+    "sample_count": 3600,
+    "stock_accounting_verdict": "within_tolerance",
+    "stock_closure_error": 1.426636586643326e-14,
+    "stock_closure_error_over_throughput": 2.6986378555201068e-17,
+    "stock_path_rmse": 4.234566657938349e-15,
+    "stock_path_rmse_over_stock_variation": 4.234566657938348,
+    "throughput_weighted_balance": 0.5,
+    "trial_count": 9
+  },
+  "schema_version": "balance-empirical-v1.0",
+  "trial_contraction": {
+    "contracting_trial_fraction": null,
+    "explicit_trial_labels": true,
+    "median_absolute_imbalance_ratio": null,
+    "trial_count": 9,
+    "trials": [
+      {
+        "absolute_imbalance_ratio": null,
+        "end_balance": 0.5,
+        "start_balance": 0.5,
+        "trial": "sham-A"
+      },
+      {
+        "absolute_imbalance_ratio": null,
+        "end_balance": 0.5,
+        "start_balance": 0.5,
+        "trial": "sham-B"
+      },
+      {
+        "absolute_imbalance_ratio": null,
+        "end_balance": 0.4999999999999992,
+        "start_balance": 0.5,
+        "trial": "sham-C"
+      },
+      {
+        "absolute_imbalance_ratio": null,
+        "end_balance": 0.4999999999999985,
+        "start_balance": 0.5,
+        "trial": "pert-rand-0.25"
+      },
+      {
+        "absolute_imbalance_ratio": null,
+        "end_balance": 0.5000000000000016,
+        "start_balance": 0.5,
+        "trial": "pert-rand-0.5"
+      },
+      {
+        "absolute_imbalance_ratio": null,
+        "end_balance": 0.5,
+        "start_balance": 0.5,
+        "trial": "pert-rand-1"
+      },
+      {
+        "absolute_imbalance_ratio": null,
+        "end_balance": 0.5000000000000003,
+        "start_balance": 0.5,
+        "trial": "pert-sing-0.25"
+      },
+      {
+        "absolute_imbalance_ratio": null,
+        "end_balance": 0.4999999999999992,
+        "start_balance": 0.4999999999999993,
+        "trial": "pert-sing-0.5"
+      },
+      {
+        "absolute_imbalance_ratio": null,
+        "end_balance": 0.5000000000000008,
+        "start_balance": 0.4999999999999994,
+        "trial": "pert-sing-1"
+      }
+    ]
+  }
+}

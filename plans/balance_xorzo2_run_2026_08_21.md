@@ -60,3 +60,40 @@ Tolerance budget, per Stage A: the analyzer integrates by trapezoid over sampled
 **Disconfirming outcomes for the informative part** (per protocol §11 levels 3-4): drift neutral or repelling at the shortest lag; contraction from only one side or none; an oscillator flag that survives the lag sweep; a b* interval excluding 1/2. Any of these is reported as found; the run is instrument validation either way, and a clean failure of the engine to restore would itself be a real finding about Xorzo2, not a failure of the protocol.
 
 **End of Part I. No observation exists at this commit.**
+
+---
+
+## Part II: the run and its findings (separate commit)
+
+Receipts: `experiments/balance_xorzo2_observations_v1.py` (runner, deterministic), `experiments/balance_xorzo2_observations_v1.csv` (3,600 rows, nine trials), `experiments/balance_xorzo2_observations_v1_output.txt`, `experiments/balance_xorzo2_analyzer_output.txt`, `experiments/balance_xorzo2_report.json`. The frozen analyzer invocation was run unamended.
+
+### F1. The declared identity face, exact
+
+Stock pinned at 1 at every row; exact discrete closure per trial at 1e-14 to 1e-15; analyzer stock-closure over throughput 2.7e-17; finite-window normalized mismatch exactly 0.0; throughput-weighted balance exactly 0.5. All as declared in advance, carrying no evidential weight.
+
+### F2. The central finding, beyond what Part I anticipated: per-byte balance is an identity, and the attraction question is undefined at this boundary
+
+Part I anticipated the window-level identity but not the row-level one. The declared decomposition's three deltas telescope to 1 − ‖ψ‖² = 0 at EVERY byte, because the normalization closes each byte-cycle exactly. Therefore C = E identically per row, and **b = 1/2 at every row of every trial, perturbations included, with zero variance** (measured std 1.2e-15, float noise). Every one of the four informative diagnostics declared in Part I §5 is thereby undefined: there is no balance variation to have dynamics. This is reported as the run's outcome, not smoothed over: at the declared boundary, the perturbation experiment measures nothing, and no amount of perturbing can change that, because the engine's normalization is a hard constraint on the ledger.
+
+### F3. Instrument validation: passed, including the degenerate case
+
+The analyzer met a case its synthetic suite did not contain, the zero-variance constraint case, and behaved exactly right: every lag skipped with the correct stated reason ("not enough balance variation for a drift fit"), overall assessment `not_tested` rather than any false verdict, identity numbers exact. This is a fifth adversarial control discovered in the wild, and the analyzer passed it.
+
+### F4. Conceptual yield: three ways to sit at 1/2
+
+The run separates a case the dynamics note's fixed-point-versus-attractor distinction did not name: a system can be at balance **attracted** (restoring dynamics, the protocol's target), **coincidentally** (no restoring response, disconfirming outcome 3), or **constrained** (pinned by construction, no degree of freedom). Xorzo2 is at 1/2 the third way: its per-byte normalization sheds exactly what the cycle gains, every byte, to machine precision. The constitutive principle's first clause is thereby instantiated exactly in the engine, but as construction, not as evidence; a constraint can neither confirm nor disconfirm an attractor claim.
+
+### F5. The boundary lesson, now a worked example
+
+Protocol §12 warned that boundary choice can make balance tautological; this run is the concrete case: a boundary whose stock closes every sample yields b ≡ 1/2 as bookkeeping. Practical consequences recorded for future runs: (a) Stage A should check for hidden normalizations and homeostatic clamps BEFORE promising attraction diagnostics, since a clamp converts the balance observable into a constant; (b) for Xorzo2 specifically, the dynamically alive observable is direction (attractor overlap), which is not a conserved-flow balance and needs a different instrument than this protocol; a per-tick ledger was considered and rejected in analysis (per-tick b saturates bimodally at 0 and 1, which is equally uninformative).
+
+### Verdict
+
+Instrument validated on a real system, including graceful handling of the constraint-degenerate case. Xorzo2's balance posture measured: exactly cycle-balanced at every byte by construction; the attraction question is not expressible in its energy ledger. Nothing about nature was tested; no framework evidence is claimed; the identity outcomes carry no weight, exactly as pre-declared.
+
+### Open items staged from this run
+
+1. **Protocol note (for countersign):** add the constraint case to the protocol's verdict vocabulary (a zero-variance balance is a sign of a clamped boundary, verdict "balance_constrained_by_construction"), and a Stage A checklist line: identify normalizations and clamps before selecting the boundary.
+2. **The natural-system run** remains the protocol's real test (breath/HRV the standing candidate); its Stage A must now include the clamp check.
+3. **Xorzo2's direction dynamics** (conditional drift of attractor overlap under perturbation) as a separate instrument outside this protocol, if commissioned.
+
