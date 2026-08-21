@@ -3,7 +3,7 @@
 ```
 Created: 2026-08-08
 Last updated: 2026-08-21
-Version: 2.18
+Version: 2.19
 ```
 
 **Status: drafted from Ashman's pivot of 2026-08-08** ("the book is kinda boring, and not exactly what I was feeling"; "I think we should start with the point"; "The book should be named 'One'"; "we need to develop a solid definition of Truth"). The truth definition (v1.5, four lines), the spine and dramatic architecture (v1.6), and the face-order (TRUE-first) are ADJUDICATED; what remains open is the title countersign ("One"), the narcissism register, and the fate of the drafted circumpunct book. The problem, thesis, and engine below are Ashman's own statements, recorded. This charter supersedes `the_circumpunct_book_charter.md` as the live book plan; that charter and the drafted `Book-The_Circumpunct/the_circumpunct_book.md` are retained as adjudicated groundwork and quarry, not discarded.
@@ -148,6 +148,7 @@ The hierarchy beneath the four lines: Truth = Reality; *true* (the adjective) = 
 | Supplies | Possibility | The conversion | Constraint |
 | Moves by | Converging | The turn | Emerging |
 | Physics | Energy | Power | Mass |
+| Information | Potential distinction | Realized distinction | Retained distinction |
 
 Read as one sentence: Reality, flowing through a point of view, becomes a world.
 
@@ -289,6 +290,7 @@ Spine (adopted v1.1): **CENTER, WHOLE, OTHER, REALITY, TRUTH, ETHICS.** The v1.6
 
 ## Revision history
 
+- 2026-08-21 v2.19: the information row added (Ashman, countersigned "Yes"; disposition 11 in `plans/countersign_batch_2026_08_21.md`): Potential / Realized / Retained distinction as the information quadruple seated in the table; the quadruple's fourth term, distinction flowing, is the present's process face already carried by the Supplies and Moves-by rows; actuality = realized distinction joins the mechanics' vocabulary. Records: `plans/information_layer_2026_08_21.md` (audit), `plans/information_layer_formal_2026_08_21.md` (formal note).
 - 2026-08-21 v2.18: the physics row added (Ashman, countersigned "Yes"): Energy / Power / Mass as the economic triple seated in the table (E, 𝒫, m as future, present, past per the 2026-08-01 adjudication; the present's equation is the only one with time in it). Plain citable form countersigned with it: energy is what could happen; power is what is happening; mass is what has happened. Citation caution retained: E = mc² is the exchange rate, never the sequence. Integrated into §4.11a and CLAUDE.md same day under the standing authorization.
 - 2026-08-19 v2.17: the tense coordinate added to the narcissism sequence (Ashman, countersigned "Sounds good."): step two as the seat relocating into a past object (the image is a deposit; narcissism as past-terminal convergence on the self's image), curiosity as future-facing convergence (corrigibility's temporal face), health as the balanced breath with capacities at the corner. Records: the direction and temporal-balance pair of 2026-08-19.
 - 2026-08-19 v2.16: the kinematics row added (Ashman, countersigned "Yep good."): Moves by: converging / the turn / emerging, from the canonical two lines "The future converges. The past emerges." (the channel-tense table of §4.11 as sentences; the present deliberately unspoken, meeting at the silent center; light-cone pin recorded with it). Record: `plans/future_converges_past_emerges_2026_08_19.md`.

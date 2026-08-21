@@ -233,6 +233,11 @@ Assessed against this document as it stands: the distinctions are in §2a and §
 | `experiments/pole_gap_ctw_validation_v1.py` | CTW verified against enumeration |
 | `plans/pole_gap_thread_notes.md` | The conceptual thread and its open items |
 
+## Cross-connection: the information layer (2026-08-21)
+
+The countersigned information layer (`plans/information_layer_formal_2026_08_21.md`, disposition 11) identifies this program as its experimental face: the inclusion-pole and integration-pole are the layer's ∞ and ⊙ rows (undifferentiated possibility space versus an integrated whole pricing bits through its own partition), and the program's observer-class relativity is the layer's "the partition belongs to the observer's ○" adjudication, already carried here with receipts. Nothing in this program's boundary, protocol, or claims changes; the connection gives its results a second, canonical vocabulary, and gives the layer a laboratory that predates it.
+
 ## Revision history
 
+- 2026-08-21 v1.1: cross-connection to the countersigned information layer recorded; program content unchanged.
 - 2026-07-27 v1.0: initial. Written at the close of the originating session, opening with Ashman's principle, and recording the five instrument failures that generated the protocol.

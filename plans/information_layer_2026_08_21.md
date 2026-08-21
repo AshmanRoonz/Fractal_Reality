@@ -1,6 +1,6 @@
 # The Information Layer: Audit and Staging
 
-**Status: session record, 2026-08-21. A parallel working session proposed an information-theoretic layer for the circumpunct (relayed by Ashman as text, no files); this record audits it against countersigned canon, adds the required precisions and witnesses, and stages it for adjudication. Nothing here is canon until signed.**
+**Status: session record, 2026-08-21. A parallel working session proposed an information-theoretic layer for the circumpunct (relayed by Ashman as text, no files); this record audits it against countersigned canon, adds the required precisions and witnesses, and stages it for adjudication. COUNTERSIGNED (Ashman, "Yes," same date; disposition 11 in `plans/countersign_batch_2026_08_21.md`): all four staged decisions closed as recommended. The quadruple and the boundary principle are canon; precision 1 is adjudicated (the partition is the observer's ○; the cycle is the validation channel) and the four-channel accounting is the standing form; the dictionary landed as the master table's Information row (charter v2.19) and the eleventh variation of Theme and Variations; the formal note is `plans/information_layer_formal_2026_08_21.md` with the pole-gap cross-connection executed. CLAUDE.md integration joins the queued pass.**
 
 ## 1. The proposal, compactly
 

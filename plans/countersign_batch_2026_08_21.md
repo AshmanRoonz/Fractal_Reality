@@ -28,8 +28,13 @@ Canon-file integration of dispositions 7 and 8 joins the queued integration pass
 
 10. **The protocol amendment and Run 2** (Ashman, "Let's do it"): the constraint case enters the protocol (Stage A clamp check; the `balance_constrained_by_construction` verdict; protocol v1.2), and **Run 2, breath**, is commissioned as the first natural-system run: lung-volume proxy from real respiration-belt recordings, Stage A declared and committed before processing (`plans/balance_breath_run_2026_08_21.md`), with the verdict ceiling declared in advance (no perturbation trials in passive public data).
 
+## The information layer (fifth countersign, same day)
+
+11. **The information layer** (`plans/information_layer_2026_08_21.md`): COUNTERSIGNED (Ashman, "Yes"), all four staged decisions as recommended. (a) The quadruple is canon: **energy is potential distinction, information is realized distinction, structure is retained distinction, dynamics is distinction flowing**, with the temporal-triple identification (actuality = realized distinction) and the boundary principle as A3's Shannon form (no partition, no information: H = log₂1 = 0). (b) Precision 1 adjudicated as proposed: the partition belongs to the observing whole's ○, making the information cycle the validation channel, not genesis; and the four-channel accounting (Ṁ = C_I − E_I + G_I − L_I, Landauer pricing the erasure channel) is the layer's standing form. (c) The dictionary landed: the master table's Information row (charter v2.19) and the eleventh variation of Theme and Variations (v1.1, placed after Mathematics, Healing keeping the close; reader page updated). (d) The formal note written (`plans/information_layer_formal_2026_08_21.md`, atlas-registered) with the pole-gap cross-connection executed in `plans/pole_gap_boundary.md`. CLAUDE.md integration joins the queued pass.
+
 ## Revision history
 
+- 2026-08-21 v1.4: disposition 11 (the information layer), "Yes".
 - 2026-08-21 v1.3: disposition 10 (protocol amendment + Run 2 commissioned), "Let's do it".
 - 2026-08-21 v1.2: disposition 9 (empirical protocol) countersigned and Run 1 commissioned, "Do it. Signed".
 - 2026-08-21 v1.1: the balance package (dispositions 7 and 8) countersigned, "Yes. Signed".
