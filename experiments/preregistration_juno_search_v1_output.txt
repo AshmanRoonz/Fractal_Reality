@@ -1,0 +1,239 @@
+Pre-registered JUNO-pair search v1.0 (frozen spec)
+alpha = 1/137.035999177; atoms = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 15, 16, 20, 21, 24, 27, 28, 32, 35, 39, 56, 58, 59, 64, 72, 81, 84, 91, 126, 169, 247]
+Tier 1 distinct fraction values in (1e-4, 1): 729
+F2 distinct direct values: 433023; squared: 433022
+Target 2 band from quoted inputs: 0.029597 +/- 0.000550
+
+=== Target T1: 0.309200 +/- 0.008700 (band [0.300500, 0.317900], rel width 0.0281) ===
+  F3 (pure Tier 1 fraction): 4 in-band value(s)
+    0.309524  (+0.04 sigma)  econ=2  39/126
+    0.307692  (-0.17 sigma)  econ=2  4/13
+    0.312500  (+0.38 sigma)  econ=2  5/16
+    0.314286  (+0.58 sigma)  econ=2  11/35
+    minimal economy tier: econ=2, 4 member(s):
+      -> 0.309524  (+0.04 sigma)  39/126
+      -> 0.307692  (-0.17 sigma)  4/13
+      -> 0.312500  (+0.38 sigma)  5/16
+      -> 0.314286  (+0.58 sigma)  11/35
+    null (raw in-band): median=7, p90=10; null (econ-tier size): median=7, p90=10
+  F1 (fraction + n*alpha/K): 1508 in-band value(s)
+    0.309199  (-0.00 sigma)  econ=5  39/126 - 11*alpha/247
+    0.309202  (+0.00 sigma)  econ=5  4/13 + 12*alpha/58
+    0.309203  (+0.00 sigma)  econ=5  39/126 - 4*alpha/91
+    0.309189  (-0.00 sigma)  econ=5  4/13 + 8*alpha/39
+    0.309213  (+0.00 sigma)  econ=5  4/13 + 5*alpha/24
+    0.309182  (-0.00 sigma)  econ=5  39/126 - 3*alpha/64
+    0.309220  (+0.00 sigma)  econ=5  39/126 - 1*alpha/24
+    0.309222  (+0.00 sigma)  econ=5  39/126 - 7*alpha/169
+    0.309178  (-0.00 sigma)  econ=5  39/126 - 8*alpha/169
+    0.309177  (-0.00 sigma)  econ=5  4/13 + 12*alpha/59
+    0.309176  (-0.00 sigma)  econ=5  39/126 - 1*alpha/21
+    0.309175  (-0.00 sigma)  econ=4  4/13 + 13*alpha/64
+    0.309228  (+0.00 sigma)  econ=5  39/126 - 10*alpha/247
+    0.309169  (-0.00 sigma)  econ=5  39/126 - 12*alpha/247
+    0.309234  (+0.00 sigma)  econ=4  39/126 - 5*alpha/126
+    0.309163  (-0.00 sigma)  econ=5  39/126 - 4*alpha/81
+    0.309159  (-0.00 sigma)  econ=5  39/126 - 1*alpha/20
+    0.309153  (-0.01 sigma)  econ=5  39/126 - 3*alpha/59
+    0.309152  (-0.01 sigma)  econ=5  4/13 + 1*alpha/5
+    0.309150  (-0.01 sigma)  econ=4  39/126 - 2*alpha/39
+    0.309254  (+0.01 sigma)  econ=5  39/126 - 1*alpha/27
+    0.309146  (-0.01 sigma)  econ=5  39/126 - 3*alpha/58
+    0.309256  (+0.01 sigma)  econ=5  4/13 + 6*alpha/28
+    0.309258  (+0.01 sigma)  econ=5  39/126 - 9*alpha/247
+    0.309140  (-0.01 sigma)  econ=5  39/126 - 13*alpha/247
+    0.309263  (+0.01 sigma)  econ=5  39/126 - 1*alpha/28
+    0.309265  (+0.01 sigma)  econ=5  39/126 - 6*alpha/169
+    0.309135  (-0.01 sigma)  econ=5  39/126 - 9*alpha/169
+    0.309133  (-0.01 sigma)  econ=5  39/126 - 3*alpha/56
+    0.309272  (+0.01 sigma)  econ=5  39/126 - 2*alpha/58
+    0.309126  (-0.01 sigma)  econ=5  4/13 + 11*alpha/56
+    0.309276  (+0.01 sigma)  econ=5  39/126 - 2*alpha/59
+    0.309123  (-0.01 sigma)  econ=5  39/126 - 5*alpha/91
+    0.309118  (-0.01 sigma)  econ=5  39/126 - 4*alpha/72
+    0.309283  (+0.01 sigma)  econ=5  39/126 - 3*alpha/91
+    0.309287  (+0.01 sigma)  econ=5  39/126 - 8*alpha/247
+    0.309289  (+0.01 sigma)  econ=5  4/13 + 7*alpha/32
+    0.309292  (+0.01 sigma)  econ=4  39/126 - 4*alpha/126
+    0.309107  (-0.01 sigma)  econ=5  39/126 - 2*alpha/35
+    0.309296  (+0.01 sigma)  econ=5  39/126 - 1*alpha/32
+    ... 1468 more suppressed in print, counted above
+    minimal economy tier: econ=2, 4 member(s):
+      -> 0.309524  (+0.04 sigma)  39/126
+      -> 0.307692  (-0.17 sigma)  4/13
+      -> 0.312500  (+0.38 sigma)  5/16
+      -> 0.314286  (+0.58 sigma)  11/35
+    null (raw in-band): median=1676, p90=3031
+  F2 (alpha^(1/2+c*alpha) * p/q, squared: 1978 in-band value(s)
+    0.309205  (+0.00 sigma)  econ=6  [alpha^(1/2+(2/13)*alpha)*(72/11)]^2
+    0.309210  (+0.00 sigma)  econ=6  [alpha^(1/2+(9/4)*alpha)*(247/35)]^2
+    0.309189  (-0.00 sigma)  econ=6  [alpha^(1/2+(16/81)*alpha)*(59/9)]^2
+    0.309213  (+0.00 sigma)  econ=6  [alpha^(1/2+(11/56)*alpha)*(59/9)]^2
+    0.309185  (-0.00 sigma)  econ=6  [alpha^(1/2+(13/84)*alpha)*(72/11)]^2
+    0.309180  (-0.00 sigma)  econ=6  [alpha^(1/2+(59/21)*alpha)*(72/10)]^2
+    0.309176  (-0.00 sigma)  econ=6  [alpha^(1/2+(9/58)*alpha)*(72/11)]^2
+    0.309224  (+0.00 sigma)  econ=6  [alpha^(1/2+(32/13)*alpha)*(64/9)]^2
+    0.309229  (+0.00 sigma)  econ=4  [alpha^(1/2+(11/72)*alpha)*(72/11)]^2
+    0.309230  (+0.00 sigma)  econ=6  [alpha^(1/2+(3/1)*alpha)*(58/8)]^2
+    0.309166  (-0.00 sigma)  econ=5  [alpha^(1/2+(2/3)*alpha)*(20/3)]^2
+    0.309234  (+0.00 sigma)  econ=6  [alpha^(1/2+(9/59)*alpha)*(72/11)]^2
+    0.309240  (+0.00 sigma)  econ=6  [alpha^(1/2+(35/16)*alpha)*(169/24)]^2
+    0.309154  (-0.01 sigma)  econ=6  [alpha^(1/2+(28/3)*alpha)*(91/10)]^2
+    0.309152  (-0.01 sigma)  econ=6  [alpha^(1/2+(5/32)*alpha)*(72/11)]^2
+    0.309134  (-0.01 sigma)  econ=6  [alpha^(1/2+(1/5)*alpha)*(59/9)]^2
+    0.309123  (-0.01 sigma)  econ=6  [alpha^(1/2+(72/10)*alpha)*(59/7)]^2
+    0.309115  (-0.01 sigma)  econ=6  [alpha^(1/2+(39/247)*alpha)*(72/11)]^2
+    0.309288  (+0.01 sigma)  econ=6  [alpha^(1/2+(247/72)*alpha)*(81/11)]^2
+    0.309291  (+0.01 sigma)  econ=6  [alpha^(1/2+(3/20)*alpha)*(72/11)]^2
+    0.309292  (+0.01 sigma)  econ=6  [alpha^(1/2+(39/59)*alpha)*(20/3)]^2
+    0.309292  (+0.01 sigma)  econ=6  [alpha^(1/2+(59/27)*alpha)*(169/24)]^2
+    0.309295  (+0.01 sigma)  econ=6  [alpha^(1/2+(59/24)*alpha)*(64/9)]^2
+    0.309097  (-0.01 sigma)  econ=6  [alpha^(1/2+(20/126)*alpha)*(72/11)]^2
+    0.309082  (-0.01 sigma)  econ=6  [alpha^(1/2+(247/58)*alpha)*(91/12)]^2
+    0.309074  (-0.01 sigma)  econ=6  [alpha^(1/2+(27/169)*alpha)*(72/11)]^2
+    0.309332  (+0.02 sigma)  econ=6  [alpha^(1/2+(4/27)*alpha)*(72/11)]^2
+    0.309332  (+0.02 sigma)  econ=6  [alpha^(1/2+(24/7)*alpha)*(81/11)]^2
+    0.309065  (-0.02 sigma)  econ=6  [alpha^(1/2+(13/64)*alpha)*(59/9)]^2
+    0.309064  (-0.02 sigma)  econ=6  [alpha^(1/2+(59/58)*alpha)*(27/4)]^2
+    0.309059  (-0.02 sigma)  econ=5  [alpha^(1/2+(12/59)*alpha)*(59/9)]^2
+    0.309058  (-0.02 sigma)  econ=6  [alpha^(1/2+(13/81)*alpha)*(72/11)]^2
+    0.309346  (+0.02 sigma)  econ=6  [alpha^(1/2+(4/21)*alpha)*(59/9)]^2
+    0.309053  (-0.02 sigma)  econ=6  [alpha^(1/2+(9/56)*alpha)*(72/11)]^2
+    0.309039  (-0.02 sigma)  econ=6  [alpha^(1/2+(39/58)*alpha)*(20/3)]^2
+    0.309364  (+0.02 sigma)  econ=6  [alpha^(1/2+(11/58)*alpha)*(59/9)]^2
+    0.309366  (+0.02 sigma)  econ=5  [alpha^(1/2+(24/11)*alpha)*(169/24)]^2
+    0.309371  (+0.02 sigma)  econ=6  [alpha^(1/2+(32/169)*alpha)*(59/9)]^2
+    0.309379  (+0.02 sigma)  econ=6  [alpha^(1/2+(126/32)*alpha)*(15/2)]^2
+    0.309380  (+0.02 sigma)  econ=6  [alpha^(1/2+(27/11)*alpha)*(64/9)]^2
+    ... 1938 more suppressed in print, counted above
+    minimal economy tier: econ=4, 14 member(s):
+      -> 0.309229  (+0.00 sigma)  [alpha^(1/2+(11/72)*alpha)*(72/11)]^2
+      -> 0.309722  (+0.06 sigma)  [alpha^(1/2+(9/1)*alpha)*(9/1)]^2
+      -> 0.308313  (-0.10 sigma)  [alpha^(1/2)*(13/2)]^2
+      -> 0.310189  (+0.11 sigma)  [alpha^(1/2+(9/59)*alpha)*(59/9)]^2
+      -> 0.312640  (+0.40 sigma)  [alpha^(1/2)*(72/11)]^2
+      -> 0.304926  (-0.49 sigma)  [alpha^(1/2+(2/13)*alpha)*(13/2)]^2
+      -> 0.313606  (+0.51 sigma)  [alpha^(1/2)*(59/9)]^2
+      -> 0.304675  (-0.52 sigma)  [alpha^(1/2)*(84/13)]^2
+      -> 0.314377  (+0.60 sigma)  [alpha^(1/2+(91/10)*alpha)*(91/10)]^2
+      -> 0.303065  (-0.71 sigma)  [alpha^(1/2)*(58/9)]^2
+      -> 0.316370  (+0.82 sigma)  [alpha^(1/2+(64/7)*alpha)*(64/7)]^2
+      -> 0.316616  (+0.85 sigma)  [alpha^(1/2+(247/27)*alpha)*(247/27)]^2
+      -> 0.301394  (-0.90 sigma)  [alpha^(1/2+(247/28)*alpha)*(247/28)]^2
+      -> 0.301308  (-0.91 sigma)  [alpha^(1/2+(13/84)*alpha)*(84/13)]^2
+    null (raw in-band): median=1776, p90=2279; null (econ-tier size): median=10, p90=13
+  Tier 2 sensitivity: 282 in-band of 22040 values (null median=290, p90=305) -> multiplicity context only
+
+=== Target T2: 0.029597 +/- 0.000550 (band [0.029047, 0.030148], rel width 0.0186) ===
+  F3 (pure Tier 1 fraction): 1 in-band value(s)
+    0.029586  (-0.02 sigma)  econ=2  5/169
+    minimal economy tier: econ=2, 1 member(s):
+      -> 0.029586  (-0.02 sigma)  5/169
+    null (raw in-band): median=2, p90=3; null (econ-tier size): median=2, p90=3
+  F1 (fraction + n*alpha/K): 81 in-band value(s)
+    0.029586  (-0.02 sigma)  econ=2  5/169
+    0.029615  (+0.03 sigma)  econ=5  5/169 + 1*alpha/247
+    0.029629  (+0.06 sigma)  econ=4  5/169 + 1*alpha/169
+    0.029556  (-0.07 sigma)  econ=5  5/169 - 1*alpha/247
+    0.029644  (+0.08 sigma)  econ=5  5/169 + 1*alpha/126
+    0.029645  (+0.09 sigma)  econ=5  5/169 + 2*alpha/247
+    0.029543  (-0.10 sigma)  econ=4  5/169 - 1*alpha/169
+    0.029666  (+0.12 sigma)  econ=5  5/169 + 1*alpha/91
+    0.029528  (-0.13 sigma)  econ=5  5/169 - 1*alpha/126
+    0.029527  (-0.13 sigma)  econ=5  5/169 - 2*alpha/247
+    0.029672  (+0.14 sigma)  econ=4  5/169 + 2*alpha/169
+    0.029673  (+0.14 sigma)  econ=5  5/169 + 1*alpha/84
+    0.029674  (+0.14 sigma)  econ=5  5/169 + 3*alpha/247
+    0.029676  (+0.14 sigma)  econ=5  5/169 + 1*alpha/81
+    0.029687  (+0.16 sigma)  econ=5  5/169 + 1*alpha/72
+    0.029506  (-0.17 sigma)  econ=5  5/169 - 1*alpha/91
+    0.029499  (-0.18 sigma)  econ=4  5/169 - 2*alpha/169
+    0.029499  (-0.18 sigma)  econ=5  5/169 - 1*alpha/84
+    0.029497  (-0.18 sigma)  econ=5  5/169 - 3*alpha/247
+    0.029496  (-0.18 sigma)  econ=5  5/169 - 1*alpha/81
+    0.029700  (+0.19 sigma)  econ=5  5/169 + 1*alpha/64
+    0.029702  (+0.19 sigma)  econ=5  5/169 + 2*alpha/126
+    0.029704  (+0.19 sigma)  econ=5  5/169 + 4*alpha/247
+    0.029709  (+0.20 sigma)  econ=5  5/169 + 1*alpha/59
+    0.029484  (-0.21 sigma)  econ=5  5/169 - 1*alpha/72
+    0.029712  (+0.21 sigma)  econ=5  5/169 + 1*alpha/58
+    0.029715  (+0.21 sigma)  econ=4  5/169 + 3*alpha/169
+    0.029716  (+0.22 sigma)  econ=5  5/169 + 1*alpha/56
+    0.029472  (-0.23 sigma)  econ=5  5/169 - 1*alpha/64
+    0.029470  (-0.23 sigma)  econ=5  5/169 - 2*alpha/126
+    0.029468  (-0.24 sigma)  econ=5  5/169 - 4*alpha/247
+    0.029462  (-0.25 sigma)  econ=5  5/169 - 1*alpha/59
+    0.029734  (+0.25 sigma)  econ=4  5/169 + 5*alpha/247
+    0.029460  (-0.25 sigma)  econ=5  5/169 - 1*alpha/58
+    0.029456  (-0.26 sigma)  econ=4  5/169 - 3*alpha/169
+    0.029455  (-0.26 sigma)  econ=5  5/169 - 1*alpha/56
+    0.029746  (+0.27 sigma)  econ=5  5/169 + 2*alpha/91
+    0.029438  (-0.29 sigma)  econ=4  5/169 - 5*alpha/247
+    0.029759  (+0.29 sigma)  econ=4  5/169 + 4*alpha/169
+    0.029760  (+0.29 sigma)  econ=5  5/169 + 2*alpha/84
+    ... 41 more suppressed in print, counted above
+    minimal economy tier: econ=2, 1 member(s):
+      -> 0.029586  (-0.02 sigma)  5/169
+    null (raw in-band): median=199, p90=500
+  F2 (alpha^(1/2+c*alpha) * p/q): 3864 in-band value(s)
+    0.029597  (+0.00 sigma)  econ=6  alpha^(1/2+(3/4)*alpha)*(21/59)
+    0.029597  (-0.00 sigma)  econ=6  alpha^(1/2+(11/39)*alpha)*(7/20)
+    0.029598  (+0.00 sigma)  econ=6  alpha^(1/2+(13/7)*alpha)*(10/27)
+    0.029597  (-0.00 sigma)  econ=6  alpha^(1/2+(32/11)*alpha)*(5/13)
+    0.029598  (+0.00 sigma)  econ=6  alpha^(1/2+(9/32)*alpha)*(7/20)
+    0.029598  (+0.00 sigma)  econ=6  alpha^(1/2+(27/32)*alpha)*(10/28)
+    0.029597  (-0.00 sigma)  econ=6  alpha^(1/2+(7/2)*alpha)*(11/28)
+    0.029599  (+0.00 sigma)  econ=6  alpha^(1/2+(4/1)*alpha)*(2/5)
+    0.029596  (-0.00 sigma)  econ=6  alpha^(1/2+(24/58)*alpha)*(32/91)
+    0.029599  (+0.00 sigma)  econ=6  alpha^(1/2+(247/32)*alpha)*(16/35)
+    0.029599  (+0.00 sigma)  econ=6  alpha^(1/2+(169/64)*alpha)*(8/21)
+    0.029596  (-0.00 sigma)  econ=6  alpha^(1/2+(11/13)*alpha)*(10/28)
+    0.029600  (+0.00 sigma)  econ=6  alpha^(1/2+(16/39)*alpha)*(32/91)
+    0.029601  (+0.01 sigma)  econ=6  alpha^(1/2+(5/24)*alpha)*(59/169)
+    0.029594  (-0.01 sigma)  econ=6  alpha^(1/2+(6/28)*alpha)*(59/169)
+    0.029594  (-0.01 sigma)  econ=6  alpha^(1/2+(13/2)*alpha)*(7/16)
+    0.029601  (+0.01 sigma)  econ=6  alpha^(1/2+(11/5)*alpha)*(3/8)
+    0.029594  (-0.01 sigma)  econ=6  alpha^(1/2+(27/20)*alpha)*(4/11)
+    0.029593  (-0.01 sigma)  econ=6  alpha^(1/2+(12/7)*alpha)*(91/247)
+    0.029593  (-0.01 sigma)  econ=5  alpha^(1/2+(2/7)*alpha)*(7/20)
+    0.029593  (-0.01 sigma)  econ=6  alpha^(1/2+(5/12)*alpha)*(32/91)
+    0.029602  (+0.01 sigma)  econ=6  alpha^(1/2+(11/9)*alpha)*(21/58)
+    0.029602  (+0.01 sigma)  econ=5  alpha^(1/2+(35/169)*alpha)*(59/169)
+    0.029602  (+0.01 sigma)  econ=5  alpha^(1/2+(20/72)*alpha)*(7/20)
+    0.029602  (+0.01 sigma)  econ=6  alpha^(1/2+(12/58)*alpha)*(59/169)
+    0.029602  (+0.01 sigma)  econ=6  alpha^(1/2+(126/169)*alpha)*(21/59)
+    0.029593  (-0.01 sigma)  econ=6  alpha^(1/2+(16/13)*alpha)*(21/58)
+    0.029603  (+0.01 sigma)  econ=6  alpha^(1/2+(169/126)*alpha)*(4/11)
+    0.029592  (-0.01 sigma)  econ=6  alpha^(1/2+(169/58)*alpha)*(5/13)
+    0.029603  (+0.01 sigma)  econ=6  alpha^(1/2+(11/27)*alpha)*(32/91)
+    0.029604  (+0.01 sigma)  econ=6  alpha^(1/2+(72/59)*alpha)*(21/58)
+    0.029604  (+0.01 sigma)  econ=6  alpha^(1/2+(24/59)*alpha)*(32/91)
+    0.029604  (+0.01 sigma)  econ=6  alpha^(1/2+(16/58)*alpha)*(7/20)
+    0.029604  (+0.01 sigma)  econ=6  alpha^(1/2+(8/39)*alpha)*(59/169)
+    0.029604  (+0.01 sigma)  econ=5  alpha^(1/2+(13/32)*alpha)*(32/91)
+    0.029605  (+0.01 sigma)  econ=6  alpha^(1/2+(39/32)*alpha)*(21/58)
+    0.029605  (+0.01 sigma)  econ=6  alpha^(1/2+(58/13)*alpha)*(24/59)
+    0.029589  (-0.01 sigma)  econ=6  alpha^(1/2+(7/32)*alpha)*(59/169)
+    0.029589  (-0.01 sigma)  econ=6  alpha^(1/2+(39/5)*alpha)*(11/24)
+    0.029606  (+0.02 sigma)  econ=5  alpha^(1/2+(12/59)*alpha)*(59/169)
+    ... 3824 more suppressed in print, counted above
+    minimal economy tier: econ=4, 20 member(s):
+      -> 0.029616  (+0.03 sigma)  alpha^(1/2+(21/8)*alpha)*(8/21)
+      -> 0.029663  (+0.12 sigma)  alpha^(1/2+(32/91)*alpha)*(32/91)
+      -> 0.029529  (-0.12 sigma)  alpha^(1/2)*(28/81)
+      -> 0.029525  (-0.13 sigma)  alpha^(1/2+(7/20)*alpha)*(7/20)
+      -> 0.029457  (-0.26 sigma)  alpha^(1/2)*(20/58)
+      -> 0.029451  (-0.27 sigma)  alpha^(1/2+(59/169)*alpha)*(59/169)
+      -> 0.029424  (-0.32 sigma)  alpha^(1/2+(169/64)*alpha)*(64/169)
+      -> 0.029823  (+0.41 sigma)  alpha^(1/2)*(59/169)
+      -> 0.029365  (-0.42 sigma)  alpha^(1/2)*(11/32)
+      -> 0.029317  (-0.51 sigma)  alpha^(1/2)*(58/169)
+      -> 0.029899  (+0.55 sigma)  alpha^(1/2)*(7/20)
+      -> 0.029288  (-0.56 sigma)  alpha^(1/2)*(12/35)
+      -> 0.029927  (+0.60 sigma)  alpha^(1/2+(13/5)*alpha)*(5/13)
+      -> 0.030019  (+0.77 sigma)  alpha^(1/2+(21/59)*alpha)*(21/59)
+      -> 0.029165  (-0.79 sigma)  alpha^(1/2+(28/81)*alpha)*(28/81)
+    null (raw in-band): median=2985, p90=3848; null (econ-tier size): median=14, p90=19
+  Tier 2 sensitivity: 118 in-band of 22040 values (null median=135, p90=154) -> multiplicity context only
+
+Done. Decision procedure (filters A/B/C, verdict rules) applies in the record.
