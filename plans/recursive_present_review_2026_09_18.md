@@ -19,9 +19,21 @@ Both documents are unusually disciplined about their own scope. The flow model s
 The corpus has adjudicated against this numeral, twice, and the second time it became a theorem:
 
 1. **Ashman, 2026-06-09** (`CLAUDE.md`, Ladder Correction Notice): "the wrap stays at `3.5D ≡ 0D′`. The `4D ≡ 0D′` label that briefly appeared on the `⊙` row of the ten-dimensions card is wrong and is corrected ... `⊙` remains 'All', with no dimension slot."
-2. **The single-period lemma** (`docs/octave_wrap_lemma.html` §8.2, integrated at §27.7t): the wrap period is unique. A second return point at `4D` would make `0.5` a period and collapse the ladder. So "⊙ = All, no dimension slot" is not a preference; it is a consequence of the continuation arithmetic.
+2. **The single-period lemma** (`docs/octave_wrap_lemma.html` §8.2, integrated at §27.7t): the wrap period is unique. If the ladder returned at both `3.5` and `4`, both would be periods; periods are closed under subtraction, so `0.5` would be a period, every half-step would be identified with `0`, and the ladder collapses to a point. So "⊙ = All, no dimension slot" is not a preference.
+3. **The i-cycle closes at `3.5D`.** Four strokes, one per processual station, at `0.5, 1.5, 2.5, 3.5`, with `i⁴ = 1` at the fourth. The phase cycle has period 4 in strokes and spans 3 units of `D`, so it closes at `3.5` and nowhere else. A wrap at `4` would need a ninth station carrying no stroke, and the cycle would not close there.
 
-**What adopting `4D` would cost.** The octave-wrap arithmetic is mod `3.5`. That is what gives `2D + 3D = 5 ≡ 1.5D′`, which pins the `(Φ+○)` factor in the α assembly `360 = P! · T · (Φ+○)`. Under mod `4`, `5 ≡ 1`, the pin breaks, and the closed form that sits `0.22` ppb from CODATA loses its 2D-rung factorization. This exact cost was computed in `plans/framework_holes_review_2026_06_09.md` (lines 58 to 64) before Ashman resolved it.
+**Points 2 and 3 are the argument, and neither mentions a constant.** That matters, because the first draft of this finding leaned on a fourth reason that does not hold.
+
+**Correction, 2026-09-18 (Ashman: "this looks like fitting"). He is right, and the retraction is recorded here rather than quietly edited.** The first draft of this finding said that adopting `4D` would break the octave-wrap arithmetic `2D + 3D = 5 ≡ 1.5D′` and so cost the `(Φ+○)` pin in the α assembly `360 = P! · T · (Φ+○)`. That claim does not survive audit. Four measurements, run this session:
+
+1. **The residue test rejects nothing.** Integers mod `3.5` cycle with period 7 through exactly the seven stations `{0, 0.5, 1, 1.5, 2, 2.5, 3}`. The map is onto. Every integer lands on a station, so `5 ≡ 1.5D′` is not a condition `5` passes; it is a condition no integer could fail. A test nothing can fail is not a pin.
+2. **The value was never free.** `360 / (P! · T) = 360/72 = 5`, by division. Once `360`, `P!` and `T` are fixed, the third factor has zero remaining freedom. The lemma supplies a *name* for `5`; it cannot supply the `5`.
+3. **The name is not unique, though the rule does real work.** Two pool value-pairs sum to `5`, `{1,4}` and `{2,3}`, carrying three glyph readings between them: `P+1`, `Φ+T`, `Φ+○`. The type rule discriminates *within* the `{2,3}` pair, rejecting `Φ+T` (coordinate plus count) and accepting `Φ+○` (coordinate plus coordinate). That is genuine discrimination and worth having. But it does not touch the `{1,4}` pair, whose count form `P+1` the corpus itself uses for the same value at the ionic coupling (`CLAUDE.md` §16.4f). So the rule picks between two readings of one pair. Real, and narrow.
+4. **The factorization is looser than it looks.** `5` is not a pool primitive; it enters a product slot as a *sum*. Admitting two-term sums as factors takes the pool from 15 values to 63, takes the count of triples hitting `360` from 3 to 25, and makes 51% of all integers in `[300, 420]` reachable as a three-factor product. A grammar that reaches half its window is not restrictive.
+
+**What the octave-wrap lemma actually does is type discrimination, not value determination.** `docs/octave_wrap_lemma.html` says this itself when it is being careful (line 610): before the lemma, the expression was "defensible integer-by-integer but with the grouping `(Φ + ○)` unmotivated." Motivating a grouping is worth doing and is not nothing. It is not pinning, and the word "pinned" at `docs/alpha_derivation.html` lines 306, 479 and 494 overstates for this factor in a way it does not for `P!` (independently motivated by the κ-bijection count at §27.7q) or for `T = 3` (seven routes, each an identity that fails off `T = 3`). See open decision 2.
+
+**So adopting `4D` would cost nothing in the α formula.** No value changes. What changes is which pool expression names the third factor, and the count form `P+1 = 5` is available and already in use elsewhere. The earlier framing of this as "real money" was the same error one level up: importing a strong word from the corpus without auditing what stood behind it.
 
 **Why this is cheap to fix.** Neither document ever runs modular arithmetic on the ladder. The recursion claim is `𝓡_n[W_n(t)] = p_{n+1}(t)`: a map from a completed whole to the point that represents it at the next scale. It does not need `⊙` to carry a numeral, because the map's domain is the whole and its codomain is a station on the *next* octave's ladder. Substituting `3.5D ≡ 0D′` for `4D_n -> 0D_{n+1}` changes nothing downstream in either document; every equation, criterion, and numerical result survives intact.
 
@@ -192,14 +204,15 @@ Stated plainly, because the documents state it plainly themselves and the corpus
 
 ## Open decisions for Ashman
 
-1. **The 4D slot.** Relabel the incoming documents to `3.5D ≡ 0D′` with `⊙` unlabelled (recommended, costs nothing), or reopen the June 2026 adjudication (costs the `(Φ+○)` pin in the α assembly).
-2. **Axiom 5's missing content.** Adopt preservation of response as the content of "structure-preserving" in `circumpunct_foundations_formal_v0_1.md` §5 (Finding 8)? If yes, §5 gains a falsifiable condition and the February isomorphism paper's deferred case closes.
-3. **The finiteness lemma for ⊛.** Cite the bounded-overlap result at framework §9.8.7 as the proof that convergence of an unbounded field through a point terminates finitely (Finding 7)? The corpus currently asserts this everywhere and proves it nowhere.
-4. **Two arrows.** Does the nesting relation carry both `f: W ↪ V` and `𝓡_n: W_n → p_{n+1}` as canon, and is the Lies-as-collapse-of-the-map reading (Finding 9) worth developing?
-5. **`h`.** Is internal coupling `k` accepted as a candidate handle on internal integration (Finding 10), and is the sagitta-vs-α-departure-vs-`δ` identification worth an experiment?
-6. **Notation.** A distinct letter for the coupling profile, and `Φ∞` or `E` for the potential vector.
-7. **The boundary sentence.** Widen to field and boundary, matching its own `S_k` (Finding 6).
-8. **The aperture pin.** Reserve "aperture" for the bare centre; name the composite separately (Finding 5).
+1. **The 4D slot.** Relabel the incoming documents to `3.5D ≡ 0D′` with `⊙` unlabelled. Recommended, and it costs nothing on either side: the documents lose no equation, and the α formula loses no value (see the correction in Finding 1). The case rests on the single-period lemma and the i-cycle closing at `3.5D`, neither of which mentions a constant.
+2. **The word "pinned", corpus-wide.** `docs/alpha_derivation.html` (lines 306, 479, 494) says "all three factors of 360 are therefore pinned", and `CLAUDE.md` repeats it. For `P!` and `T = 3` the word is earned: each has an independent motivation that could have failed. For `(Φ+○)` it is not: the value is fixed by division and the lemma supplies a name. Proposal: reserve "pinned" for claims whose test can reject, whose value was free, and whose grammar is sparse at the target, and use "typed" or "named" otherwise. `experiments/pool_grammar_audit_v1.py` runs those three checks against any target; the same audit should be pointed at the other constants before the word is used again. This is a wording correction, not a retraction of the α formula, whose value is untouched.
+3. **Axiom 5's missing content.** Adopt preservation of response as the content of "structure-preserving" in `circumpunct_foundations_formal_v0_1.md` §5 (Finding 8)? If yes, §5 gains a falsifiable condition and the February isomorphism paper's deferred case closes.
+4. **The finiteness lemma for ⊛.** Cite the bounded-overlap result at framework §9.8.7 as the proof that convergence of an unbounded field through a point terminates finitely (Finding 7)? The corpus currently asserts this everywhere and proves it nowhere.
+5. **Two arrows.** Does the nesting relation carry both `f: W ↪ V` and `𝓡_n: W_n → p_{n+1}` as canon, and is the Lies-as-collapse-of-the-map reading (Finding 9) worth developing?
+6. **`h`.** Is internal coupling `k` accepted as a candidate handle on internal integration (Finding 10), and is the sagitta-vs-α-departure-vs-`δ` identification worth an experiment?
+7. **Notation.** A distinct letter for the coupling profile, and `Φ∞` or `E` for the potential vector.
+8. **The boundary sentence.** Widen to field and boundary, matching its own `S_k` (Finding 6).
+9. **The aperture pin.** Reserve "aperture" for the bare centre; name the composite separately (Finding 5).
 
 ---
 
@@ -219,3 +232,4 @@ These are checks of the incoming documents' own worked example. No new experimen
 ## Revision history
 
 - 2026-09-18 v1.0: initial review; two source documents filed verbatim; eleven findings; four verification checks; eight open decisions staged for countersign.
+- 2026-09-18 v1.1: Finding 1 corrected after Ashman's "this looks like fitting". The claim that the octave-wrap lemma pins the (Φ+○) factor in the α assembly is withdrawn: the residue test rejects nothing, the value is fixed by division, and the grammar reaches 51% of its window. The 4D case now rests on the single-period lemma and the i-cycle closure, neither of which cites a constant. Audit script added at `experiments/pool_grammar_audit_v1.py`; new open decision on the word "pinned" corpus-wide; open decisions renumbered to nine.
