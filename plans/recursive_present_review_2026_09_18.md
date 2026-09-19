@@ -20,7 +20,9 @@ The corpus has adjudicated against this numeral, twice, and the second time it b
 
 1. **Ashman, 2026-06-09** (`CLAUDE.md`, Ladder Correction Notice): "the wrap stays at `3.5D ≡ 0D′`. The `4D ≡ 0D′` label that briefly appeared on the `⊙` row of the ten-dimensions card is wrong and is corrected ... `⊙` remains 'All', with no dimension slot."
 2. **The single-period lemma** (`docs/octave_wrap_lemma.html` §8.2, integrated at §27.7t): the wrap period is unique. If the ladder returned at both `3.5` and `4`, both would be periods; periods are closed under subtraction, so `0.5` would be a period, every half-step would be identified with `0`, and the ladder collapses to a point. So "⊙ = All, no dimension slot" is not a preference.
-3. **The i-cycle closes at `3.5D`.** Four strokes, one per processual station, at `0.5, 1.5, 2.5, 3.5`, with `i⁴ = 1` at the fourth. The phase cycle has period 4 in strokes and spans 3 units of `D`, so it closes at `3.5` and nowhere else. A wrap at `4` would need a ninth station carrying no stroke, and the cycle would not close there.
+3. **The i-cycle closes at the fourth stroke.** Four strokes, one per processual station, with `i⁴ = 1` at the fourth. A wrap one station later would need a ninth station carrying no stroke, and the cycle would not close there.
+
+*(Restated 2026-09-19. This point originally read "the i-cycle closes at `3.5D`". Ashman, same day: "There aren't half dimensions. Structure has dimensionality. Process I don't think does." Under that correction there is no `3.5D` to close at, and the argument is better without it: index the eight stations `n = 0..7`, structures at even `n`, processes at odd `n` with an index and a phase but no dimension. The cycle closes at stroke four, `n = 7`; the disputed `4D` is `n = 8`; and the single-period lemma then says a second return at `n = 8` makes `8 − 7 = 1` a period, identifying every station with `0` and collapsing the ladder. Integers throughout. See `plans/process_has_no_dimension_2026_09_19.md`.)*
 
 **Points 2 and 3 are the argument, and neither mentions a constant.** That matters, because the first draft of this finding leaned on a fourth reason that does not hold.
 
@@ -232,4 +234,5 @@ These are checks of the incoming documents' own worked example. No new experimen
 ## Revision history
 
 - 2026-09-18 v1.0: initial review; two source documents filed verbatim; eleven findings; four verification checks; eight open decisions staged for countersign.
+- 2026-09-19 v1.2: Finding 1 point 3 restated on the integer station index after Ashman's "there aren't half dimensions"; the i-cycle argument no longer cites a fractional dimension. Record: `plans/process_has_no_dimension_2026_09_19.md`.
 - 2026-09-18 v1.1: Finding 1 corrected after Ashman's "this looks like fitting". The claim that the octave-wrap lemma pins the (Φ+○) factor in the α assembly is withdrawn: the residue test rejects nothing, the value is fixed by division, and the grammar reaches 51% of its window. The 4D case now rests on the single-period lemma and the i-cycle closure, neither of which cites a constant. Audit script added at `experiments/pool_grammar_audit_v1.py`; new open decision on the word "pinned" corpus-wide; open decisions renumbered to nine.
