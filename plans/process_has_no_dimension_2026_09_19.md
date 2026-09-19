@@ -1,6 +1,22 @@
 # Process Has No Dimension: the coordinate-type correction
 
-**Status: session record, 2026-09-19. Claude drafted, pending Ashman's adjudication.** Nothing in `CLAUDE.md` or `circumpunct_framework.md` is touched. This record reopens a **countersigned** verdict (`plans/half_integer_stations_audit_2026_08_19.md`, Open decision 1, countersigned 2026-08-19: "half-integer stations stand"), which only Ashman can do; it is reopened because the objection now on the table is not the objection that verdict answered.
+**Status: session record, 2026-09-19. Claude drafted; Ashman has since supplied the ontology cards that settle most of it (see the Adjudication note below).** Nothing in `CLAUDE.md` or `circumpunct_framework.md` is touched. This record revisits a **countersigned** verdict (`plans/half_integer_stations_audit_2026_08_19.md`, Open decision 1, countersigned 2026-08-19: "half-integer stations stand"), because the objection now on the table is not the objection that verdict answered.
+
+---
+
+## Adjudication note (Ashman, 2026-09-19): "This is just a refinement in the ontology"
+
+Four cards supplied the same day fix the ontology and settle four of the six open decisions below. Filed at `images/ontology_six_types_of_oneness.png`, `images/ontology_4D_0D_recursion.png`, `images/ontology_one_does_not_mean_partless.png`, `images/ontology_i_am_indivisible.png`.
+
+**The ontology, as drawn.** Six positions and no half-dimensions anywhere: `∞` inclusion, `0D` indivisibility, `1D` continuity, `2D` distinction, `3D` coherence, `⊙` integration. Dimension belongs to the four structural positions. `∞` carries none. **`⊙` carries none**, and the Six Types card says why in its own gloss: "All dimensions participate together as one centered whole." Integration is not another extension; it is the participation of the extensions.
+
+**This settles the `4D` question, and not in my favour.** The "4D = 0D RECURSION" card titles the recursion move; the Six Types card, listing the same row, labels it `⊙ Wholeness / Integration`. So `4D` is the name of the closing move, not a station, which is exactly what the 2026-06-09 adjudication said ("⊙ remains 'All', with no dimension slot"). **The conclusion I defended on 2026-09-18 survives; both of my arguments for it do not.** The single-period lemma (a second return at 4D makes 0.5 a period) and "the i-cycle closes at 3.5D" were both built on the half-integer lattice, and there is no 0.5 and no 3.5D under the refinement. The right reason is the one on the card and it is ontological, not arithmetical: **⊙ is not a position because it is the participation of all the positions.** Right conclusion, wrong reasons, replaced by a better one that is not mine.
+
+**`R = 7` survives, and the cards are what save it.** Verified (`experiments/station_index_audit_v1.py`, extended): if the integrated whole were a *position* at 4 identified with the next 0, the octave would hold nine slots, eight classes, `R = 8`, and the self-determination route `R = T² − 2 = 2T + 1 = 7` would die, since `T² − 2 = 8` has no integer solution. Because `⊙` takes no slot, the octave holds four structures and four transitions, the closing transition lands on the next `0D`, and eight slots give seven classes. `ℤ₇` intact, `R = 7` intact, and with it the Cabibbo correction `R/T`, `K = R·V = 91` in `G`, `SU(3)·R = 56` in `Λ`, the f-subshell count, and the `T = 3` route.
+
+**Verdict on the scale of the change.** "Refinement" is right and my framing of a 4,416-occurrence migration crisis was wrong in emphasis. The ontology was never the half-integers; the half-integers were coordinate bookkeeping on top of it. Nothing computational moves (Finding 3), and what changes is which layer the numbers are allowed to speak for.
+
+**Still open:** `c`'s square root (Finding 5), `G`'s `× 2 channels` factor (Finding 4.1), and the two senses of `1.5` (Finding 6). Those are unaffected by the cards.
 
 ## The claim under examination
 
@@ -64,9 +80,9 @@ The steelman for half-dimensions lands in the same place. The strongest case is 
 
 **Consequence, and it is a sharpening rather than a loss:** the corpus currently writes the measured Hausdorff dimension of a balanced path and the phase address of the branching stroke with the same string, `1.5D`, and lets the reader's eye identify them. They are different objects. If their numerical agreement is substantive it now needs an argument, and if it is an artifact of writing `n/2` it needs saying. Either way the ambiguity stops being free.
 
-## Consequence for the 4D question (2026-09-18)
+## Consequence for the 4D question (2026-09-18), as settled
 
-Yesterday's correction rested the case against the incoming documents' `4D` partly on "the i-cycle closes at `3.5D`." That phrasing is wrong under the present claim: there is no `3.5D`. The argument survives with the substitution and improves. The i-cycle closes at the **fourth stroke**, `n = 7`; the disputed `4D` is `n = 8`; and the single-period lemma says a second return at `n = 8` would make `1` a period, which identifies every station with `0` and collapses the ladder. Integers throughout, no fractional dimension anywhere in the argument.
+Superseded by the Adjudication note above. Short form: the conclusion stands and my arguments for it do not. `⊙` takes no dimension slot because integration is the participation of the extensions, not a further extension. That is the card's reason and it needs no lattice, no period arithmetic and no fractional dimension. The two arguments I gave on 2026-09-18 both presupposed the half-integer stations and are withdrawn.
 
 ## Assessment
 
@@ -85,4 +101,5 @@ Proposed grade: **A−** for the claim. Withheld from A only because the migrati
 
 ## Revision history
 
+- 2026-09-19 v1.1: Adjudication note added after Ashman's four ontology cards. `⊙` confirmed to carry no dimension slot; the `4D` conclusion stands while both of my arguments for it are withdrawn; `R = 7` shown to survive precisely because `⊙` takes no slot; "refinement" accepted over my migration-crisis framing. Three findings remain open.
 - 2026-09-19 v1.0: initial record; six findings; substitution verified at `experiments/station_index_audit_v1.py`; six open decisions.
