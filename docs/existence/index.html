@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Existence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Spectral:ital,wght@0,300;0,400;1,300;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: an art book spread. Left, a night-ink plate where each page's fractal is drawn live.
+   Right, a sheet of cool vellum holding one paragraph. Running head above; page rail below.
+   On phones the plate sits above the text. */
+:root {
+  --paper: #e8ebef;
+  --paper-2: #dde2e8;
+  --ink: #161922;
+  --ink-soft: #4a5161;
+  --rule: #c2c9d3;
+  --gold: #946a17;
+  --plate: #07080e;
+  --plate-edge: #1d2130;
+  --display: "Cormorant Garamond", "Cormorant", Garamond, "Times New Roman", serif;
+  --body: "Spectral", Georgia, "Times New Roman", serif;
+  --mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+  --space: #04050b;            /* behind the frame, the same in both themes */
+  --panel-edge: rgba(150, 180, 255, 0.28);
+  --inset-x: clamp(10px, 6vw, 150px);
+  --inset-y: clamp(10px, 5.5vh, 80px);
+  --step--1: 0.78rem;
+  --step-0: clamp(1.08rem, 1rem + 0.42vw, 1.36rem);
+  --step-1: clamp(1.25rem, 1.1rem + 0.6vw, 1.6rem);
+  --step-3: clamp(2rem, 1.35rem + 2.5vw, 3.35rem);
+  --step-5: clamp(3rem, 1.6rem + 4.4vw, 5.6rem);
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #0d0f15; --paper-2: #141721; --ink: #e3e1d9; --ink-soft: #a2a7b4;
+    --rule: #2a303d; --gold: #d8b15a; --plate: #04050a; --plate-edge: #1a1e2b;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #0d0f15; --paper-2: #141721; --ink: #e3e1d9; --ink-soft: #a2a7b4;
+  --rule: #2a303d; --gold: #d8b15a; --plate: #04050a; --plate-edge: #1a1e2b;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  background: var(--space);
+  color: var(--ink);
+  font-family: var(--body);
+  -webkit-font-smoothing: antialiased;
+}
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; border-radius: 2px; }
+
+/* The cosmic mandala frame fills the window; the book floats inside it as a page.
+   Its hue drifts once around the color wheel every two minutes. */
+.cosmos {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background: var(--space) url("img/cosmic-frame.jpg") center / cover no-repeat;
+  animation: hue-drift 120s linear infinite;
+  will-change: filter;
+}
+@keyframes hue-drift {
+  from { filter: hue-rotate(0deg); }
+  to { filter: hue-rotate(360deg); }
+}
+.book {
+  position: fixed; z-index: 1;
+  inset: calc(var(--inset-y) + env(safe-area-inset-top, 0px)) var(--inset-x) calc(var(--inset-y) + env(safe-area-inset-bottom, 0px));
+  background: var(--paper);
+  border-radius: 14px;
+  box-shadow: 0 0 0 1px var(--panel-edge), 0 24px 70px -20px rgba(0, 0, 0, 0.85);
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  padding-inline: clamp(16px, 3vw, 44px);
+}
+
+/* Running head */
+.masthead {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 1rem;
+  padding-block: 0.9rem 0.6rem;
+  border-bottom: 1px solid var(--rule);
+  font-family: var(--mono);
+  font-size: var(--step--1);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.masthead p { margin: 0; }
+.link {
+  justify-self: start;
+  background: none; border: 0; padding: 0.3rem 0; cursor: pointer;
+  letter-spacing: inherit; text-transform: inherit; font-family: inherit; font-size: inherit;
+  color: var(--ink-soft);
+}
+.link:hover { color: var(--ink); }
+.mast-left { justify-self: start; display: flex; align-items: center; gap: 1.1rem; min-width: 0; }
+.listen { color: var(--gold); display: inline-flex; align-items: center; gap: 0.5rem; }
+.listen .ico {
+  width: 0; height: 0;
+  border-left: 0.6em solid currentColor; border-top: 0.36em solid transparent; border-bottom: 0.36em solid transparent;
+}
+.listen[aria-pressed="true"] .ico {
+  width: 0.6em; height: 0.72em; border: 0;
+  border-left: 0.2em solid currentColor; border-right: 0.2em solid currentColor;
+}
+.clock { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.runhead {
+  font-family: var(--display); font-style: italic; font-size: 1.05rem;
+  text-transform: none; letter-spacing: 0.01em; color: var(--ink);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 46vw;
+}
+.folio { justify-self: end; font-variant-numeric: tabular-nums; }
+
+/* The spread */
+.spread {
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-content: start;
+  gap: 1.4rem;
+  padding-block: 1.2rem;
+  overflow-y: auto;
+}
+.plate { margin: 0; display: grid; gap: 0.55rem; justify-items: center; }
+.plate-frame {
+  position: relative;
+  width: min(100%, 46vh);
+  max-width: 100%;
+  aspect-ratio: 1 / 1;
+  background: var(--plate);
+  border: 1px solid var(--plate-edge);
+  box-shadow: 0 1px 0 var(--paper-2), 0 18px 40px -24px rgba(0, 0, 0, 0.55);
+  cursor: pointer;
+}
+.plate-frame canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+
+.page { min-width: 0; max-width: 36rem; justify-self: center; width: 100%; }
+.page-inner { display: grid; gap: 1.1rem; transition: opacity 260ms ease, transform 260ms ease; }
+.page-inner.leaving { opacity: 0; transform: translateY(6px); }
+
+.page p, .page h1, .page h2 { margin: 0; }
+.txt { font-size: var(--step-0); font-weight: 300; line-height: 1.66; text-wrap: pretty; }
+.txt strong { font-weight: 400; color: var(--ink); box-shadow: inset 0 -0.08em 0 var(--gold); }
+.txt.lead::first-letter {
+  font-family: var(--display); font-weight: 600; color: var(--gold);
+  float: left; font-size: 3.6em; line-height: 0.82; padding: 0.06em 0.09em 0 0;
+}
+.q { font-size: var(--step-1); font-style: italic; font-weight: 300; line-height: 1.5; text-wrap: balance; }
+.thesis {
+  font-family: var(--display); font-weight: 500; font-size: var(--step-3);
+  line-height: 1.06; letter-spacing: -0.005em; text-wrap: balance;
+}
+.mark {
+  width: 1.05rem; height: 1.05rem; border-radius: 50%;
+  border: 1.5px solid var(--gold); display: grid; place-items: center;
+}
+.mark::after { content: ""; width: 0.24rem; height: 0.24rem; border-radius: 50%; background: var(--gold); }
+.kicker {
+  font-family: var(--mono); font-size: var(--step--1); letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--ink-soft);
+}
+.title { font-family: var(--display); font-weight: 600; font-size: var(--step-5); line-height: 0.92; letter-spacing: -0.015em; }
+.subtitle { font-family: var(--display); font-style: italic; font-weight: 500; font-size: var(--step-1); color: var(--ink-soft); }
+.hint { font-family: var(--mono); font-size: var(--step--1); color: var(--ink-soft); }
+.page .lede { margin-top: 0.3rem; font-size: clamp(1rem, 0.94rem + 0.28vw, 1.16rem); line-height: 1.62; }
+.sym { font-family: var(--display); font-size: clamp(5rem, 3rem + 8vw, 9rem); line-height: 1; color: var(--gold); }
+
+.tbl-wrap { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 0.98rem; line-height: 1.45; }
+th, td { text-align: left; vertical-align: top; padding: 0.5rem 0.9rem 0.5rem 0; border-bottom: 1px solid var(--rule); }
+th { font-family: var(--mono); font-weight: 500; font-size: var(--step--1); letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-soft); }
+td:first-child { font-family: var(--mono); white-space: nowrap; color: var(--gold); }
+
+/* Footer: page rail */
+.foot {
+  display: grid; grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center; gap: 0.9rem;
+  padding-block: 0.6rem 0.9rem; border-top: 1px solid var(--rule);
+}
+.nav {
+  background: none; border: 0; cursor: pointer; padding: 0.45rem 0.2rem;
+  font-family: var(--mono); font-size: var(--step--1); letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--ink-soft); white-space: nowrap;
+}
+.nav:hover:not(:disabled) { color: var(--ink); }
+.nav:disabled { opacity: 0.35; cursor: default; }
+.rail { display: flex; align-items: center; height: 1.6rem; gap: 1px; }
+.tick { flex: 1 1 0; min-width: 0; height: 100%; padding: 0; border: 0; background: none; cursor: pointer; display: grid; align-items: center; }
+.tick::after { content: ""; height: 2px; background: var(--rule); border-radius: 1px; }
+.tick.ch::after { height: 9px; }
+.tick.past::after { background: var(--ink-soft); }
+.tick.on::after { background: var(--gold); height: 13px; }
+
+/* Contents sheet */
+.scrim { position: fixed; inset: 0; background: rgba(4, 5, 10, 0.45); z-index: 5; }
+.toc {
+  position: fixed; z-index: 6; inset: 0 auto 0 0; width: min(28rem, 100%);
+  background: var(--paper); border-right: 1px solid var(--rule);
+  padding: calc(1.2rem + env(safe-area-inset-top, 0px)) 1.5rem calc(1.2rem + env(safe-area-inset-bottom, 0px));
+  overflow-y: auto; display: grid; align-content: start; gap: 1rem;
+}
+.toc-head { display: flex; justify-content: space-between; align-items: baseline; }
+.toc h2 { margin: 0; font-family: var(--display); font-weight: 600; font-size: 1.9rem; }
+.toc ol { list-style: none; margin: 0; padding: 0; display: grid; }
+.toc li button {
+  width: 100%; display: grid; grid-template-columns: 2.2rem 1fr; gap: 0.6rem; align-items: baseline;
+  background: none; border: 0; border-bottom: 1px solid var(--rule); padding: 0.62rem 0; text-align: left; cursor: pointer;
+}
+.toc li button:hover .t { color: var(--gold); }
+.toc .n { font-family: var(--mono); font-size: var(--step--1); color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+.toc .t { font-family: var(--display); font-style: italic; font-size: 1.22rem; line-height: 1.2; }
+.toc li.here .t { color: var(--gold); }
+.colophon {
+  display: grid; gap: 0.45rem; padding-top: 0.4rem;
+  font-family: var(--mono); font-size: var(--step--1); line-height: 1.5; color: var(--ink-soft);
+}
+.colophon p, .colophon ul { margin: 0; }
+.colophon ul { padding-left: 1.1rem; }
+.colophon h3 {
+  margin: 0.4rem 0 0; font-family: var(--mono); font-weight: 500; font-size: var(--step--1);
+  letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-soft);
+}
+
+@media (min-width: 900px) {
+  .spread {
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+    align-content: stretch; align-items: center;
+    gap: clamp(2rem, 5vw, 5.5rem);
+    padding-block: 1.2rem;
+  }
+  .plate-frame { width: min(100%, calc(100dvh - 10.5rem - 2 * var(--inset-y))); }
+  .page { justify-self: start; }
+}
+@media (max-width: 600px) {
+  :root { --inset-x: 8px; --inset-y: 3.5vh; }
+}
+@media (max-width: 520px) {
+  .runhead { display: none; }
+  .masthead { grid-template-columns: 1fr 1fr; }
+  .nav .lbl { display: none; }
+  .clock { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .page-inner { transition: none; }
+  .cosmos { animation: none; }
+}
+</style>
+</head>
+<body>
+<div class="cosmos" aria-hidden="true"></div>
+<div class="book" id="book">
+  <header class="masthead">
+    <div class="mast-left">
+      <button class="link" id="tocBtn" type="button" aria-expanded="false" aria-controls="toc">Contents</button>
+      <button class="link listen" id="listen" type="button" aria-pressed="false" hidden><span class="ico" aria-hidden="true"></span><span class="lbl">Listen</span></button>
+      <span class="clock" id="clock"></span>
+    </div>
+    <p class="runhead" id="runhead"></p>
+    <p class="folio"><span id="pgNum">1</span> / <span id="pgTotal">1</span></p>
+  </header>
+
+  <main class="spread" id="spread">
+    <figure class="plate">
+      <div class="plate-frame" id="plateFrame" role="button" tabindex="0" title="Tap the plate to draw a new version">
+        <canvas id="art" aria-hidden="true"></canvas>
+      </div>
+    </figure>
+    <article class="page" id="page" aria-live="polite">
+      <div class="page-inner" id="pageInner"></div>
+    </article>
+  </main>
+
+  <footer class="foot">
+    <button class="nav" id="prev" type="button" aria-label="Previous page">&larr; <span class="lbl">Previous</span></button>
+    <nav class="rail" id="rail" aria-label="Pages"></nav>
+    <button class="nav" id="next" type="button" aria-label="Next page"><span class="lbl">Next</span> &rarr;</button>
+  </footer>
+</div>
+
+<div class="scrim" id="scrim" hidden></div>
+<aside class="toc" id="toc" hidden aria-label="Contents">
+  <div class="toc-head">
+    <h2>Contents</h2>
+    <button class="link" id="tocClose" type="button">Close</button>
+  </div>
+  <ol id="tocList"></ol>
+  <div class="colophon">
+    <p>Created: 2026-10-15 &middot; Last updated: 2026-10-15 &middot; Version: 1.0</p>
+    <h3>Revision history</h3>
+    <ul>
+      <li>2026-10-15 v1.0: initial; 75 pages, a live fractal plate per page, the cosmic frame, and narration in the author&rsquo;s cloned voice</li>
+    </ul>
+  </div>
+</aside>
+
+<script src="js/art-core.js"></script>
+<script src="js/art-a.js"></script>
+<script src="js/art-b.js"></script>
+<script src="js/art-hand.js"></script>
+<script src="js/pages.js"></script>
+<script src="js/narration.js"></script>
+<script src="js/book.js"></script>
+</body>
+</html>
