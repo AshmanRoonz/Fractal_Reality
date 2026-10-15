@@ -109,6 +109,7 @@ Ashman, on reading Finding 2's consequence: "And this is maybe why when I was 11
 4. Whether the A1 grounding (Finding 2) is written into the axioms table commentary, and whether "the difference between something and nothing is made of centers" enters as a canonical line.
 5. Whether "existence" becomes the standing book-register name for ∞ (recommended) or joins the identity chain as a seventh name (not recommended: the piece itself shows the word is position-specific to the inclusion pole, and the chain's six names deliberately span positions).
 6. Whether Axiom 3's second clause in `circumpunct_foundations_formal_v0_1.md` is sharpened per Finding 6 ("Without the point, infinity would be indistinguishable from nothing"), and whether the childhood line ("God needs us just as much as we need God," Ashman, 1993) enters the ontological reading table as the plain form of the prime duality, credited with its date.
+7. The manifesto. `existence_manifesto_v0_1.md` (root, same day) assembles the whole thread: the oneness ladder (with the melody line in place of the 4D label), the August sentence, the something-from-nothing derivation, the temporal triple, the childhood line, the two Lies, and the stakes-itself closing. Every sentence traces to adjudicated canon or to this record and the 2026-08-19 record; Ashman's own sentences are kept verbatim where they existed. To countersign, edit, or redirect; once countersigned, candidate final home is `docs/existence.html` in house style beside `consciousness_is_wholeness.html`.
 
 ## Files consulted
 
