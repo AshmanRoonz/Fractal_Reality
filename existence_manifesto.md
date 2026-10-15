@@ -5,7 +5,7 @@
 ```
 Created: 2026-10-15
 Last updated: 2026-10-15
-Version: 0.3.1
+Version: 0.4
 ```
 
 Look at your hand.
@@ -83,7 +83,7 @@ Indivisibility and integration also answer different questions. A center is one 
 
 I am singular in perspective, continuous through my path, distinct through my boundary, coherent through my mind, integrated as a whole, and included in existence.
 
-Which kind of one are we noticing when we say "one person"?
+Which kind of one are we noticing when we say “one person”?
 
 The wider metaphysical picture begins with two primitives: the unbounded, ∞, and infinitely many indivisible, persistent centers. I associate ∞ with inexhaustible potential and, in theological language, call it God. I call the multiplicity of centers the soul matrix. These are starting commitments of the fuller framework. Inclusion alone does not establish infinity.
 
@@ -117,7 +117,7 @@ What are you bringing into this moment that the moment itself did not give you?
 
 Focus has both a direction and a manner. What am I attending to? How am I attending?
 
-The first concerns the center's orientation within its field. The second concerns how the whole receives and responds through mind and body. I can listen with curiosity, fear, impatience, care, or the determination to be right. Each can shape what I notice and how I act.
+The soul has no orientation of its own. It is oriented only through its whole: the relationships of path, body, mind, and world. These relationships shape both what I attend to and how I receive and respond. I can listen with curiosity, fear, impatience, care, or the determination to be right. Each can shape what I notice and how I act.
 
 **The aperture is the whole. The hole in the whole is the center.**
 
@@ -181,6 +181,7 @@ What changes when you begin to notice how many ways there are to be one?
 
 ## Revision history
 
+- 2026-10-15 v0.4: Ashman's revision of the focus paragraph: "The soul has no orientation of its own. It is oriented only through its whole: the relationships of path, body, mind, and world." Removes the last variable property v0.3 still attributed to the center ("the center's orientation within its field"); direction and manner of attention now both belong to the whole's relationships, completing the invariant-hole doctrine (consistent with the 2026-08-01 aperture adjudication: nothing touches the center).
 - 2026-10-15 v0.3.1: the path row's symbol restored to the canonical 1D glyph — (Ashman: "that L needs to be an em dash"). The glyph is notation here, not punctuation; the symbol column is the reserved use the house rule protects.
 - 2026-10-15 v0.3: Ashman's integrated version, adopted verbatim. Socratic doorway (the hand) joined to the declarative spine; the circumpunct glyph introduced in-text; the four aspects given their framework names (soul, mind, body, path) and "Consciousness is centered wholeness" stated as the central proposal; the two orders distinguished in plain words (order of integration; looking outward from a formed center); the two primitives and the soul matrix stated as starting commitments with "Inclusion alone does not establish infinity"; location-individuation adopted with its open questions flagged; the four beats in plain words (convergence, branching, emergence, recursion); always-surrounded and compression from the debate; the two senses of aperture made explicit ("The aperture is the whole. The hole in the whole is the center."); participation affirmed within constraints ("It still makes a difference"); ethics as questions with the is-ought acknowledgment ("A circle cannot decide them for us"); the dimensional-label stipulation broadened to the whole table, 4D / ⊙ retained under it.
 - 2026-10-15 v0.2: Ashman's rewrite of the assembled draft; declarative form with the oneness table.
