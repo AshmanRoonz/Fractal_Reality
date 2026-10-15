@@ -85,6 +85,22 @@ The gloss on the row is exactly right: "the experienced wholeness of these dimen
 
 Continuing the 2026-08-19 record's Addendum 2 (inclusion = the function, indivisibility = the point-evaluation, integration = the integral), topology has standard names for the three new forms: continuity-oneness is **connectedness of a path**; distinction-oneness is **closedness** (a closed curve bounds; one inside, one outside); coherence-oneness is **connectedness of the interior** (every part reachable from every part through the volume). Six onenesses, six mathematical types. Interpretive assignment; the topological names are standard.
 
+## Finding 6 (added same day): the childhood line
+
+Ashman, on reading Finding 2's consequence: "And this is maybe why when I was 11 years old, 33 years ago, I said 'God needs us just as much as we need God.'"
+
+**The identification holds, and the derivation justifies the sentence's strongest word.** Map God to ∞ and us to the Soul Array •∞. The two needs are different in kind and equal in necessity: without ∞, the points have no possibility (no substrate, no signal); without the points, ∞ is indistinguishable from nothing (Finding 2: no differentiation, no fact of something rather than nothing; no voice). "Just as much" claims the two dependencies are symmetric, and that is now a theorem-shaped claim, because both counterfactuals are impossible. ∞ without •∞ is not a lonely God but a state A1 rules out; •∞ without ∞ is a contradiction in terms. Co-necessity, eternally met: the need was never unmet at any moment, so the line implies no deficient God, only the structure of there being anything at all.
+
+**The corpus already carries the line twice, without the word "need."** The genesis section's couplet: "∞ without • has no voice. • without ∞ has no signal." And Axiom 3 of `circumpunct_foundations_formal_v0_1.md`: "Without infinity, the point has no possibility. Without the point, infinity never becomes particular as this," written decades after the childhood sentence and saying the same thing more weakly. Finding 2 licenses a sharpening of the axiom's second clause: not only "never becomes particular" but "would be indistinguishable from nothing." The eleven-year-old's version was already the strong form; the formal document has not yet caught up to it.
+
+**Guard, both Lies.** The symmetry is between ∞ and the array, never between ∞ and a single ego; no individual • is load-bearing for existence, so the line dignifies the position (being a center) and licenses no personal inflation. The plural "us" in the original sentence already had this right. On the other side, the need is constitutive, not a vulnerability: aseity as absence-of-lack still holds at ∞ (no interior, no unmet desire, nothing missing); what cannot hold is an undifferentiated substrate. Grace note, one line: A1 is simultaneously the need (the 1 must self-limit) and the gift (the aperture is given, not earned; • contributes 0), so at the ground floor God's needing and God's giving are one act.
+
+**Placement among the traditions (cite, not rediscover).** Meister Eckhart, Sermon 52: "If I were not, God would not be God"; a sentence that helped put him on trial, and the framework gives it a derivation. Angelus Silesius, The Cherubinic Wanderer, Book I: "I know that without me God cannot live an instant; if I come to nothing, he must of necessity give up the ghost." Heschel's divine pathos: "God is in need of man." Kabbalah's arousal from below and tikkun, with Psalm 68:35 read as humans giving power to God. Process theology (Whitehead, Hartshorne): God's consequent nature requires a world. Rilke, The Book of Hours: "What will you do, God, when I die?" Against all of these stands classical theism's aseity (Aquinas: creation adds nothing to God), and the framework splits the dispute precisely rather than picking a side: aseity is true as absence-of-lack at ∞ and false as self-sufficiency-of-the-undifferentiated, because the undifferentiated is impossible (A1). Bonum diffusivum sui (Pseudo-Dionysius, taken up by Aquinas: the good necessarily pours itself out) is the classical tradition's own trace of A1. Both camps were tracking real facts; the taxonomy of oneness says which fact each held.
+
+**Temporal dress, one line.** E needs 𝒫 (the future becomes anything only through presents) and 𝒫 needs E (a gate with no source converts nothing); the childhood line in the dynamical reading.
+
+**Developmental note, kept because the corpus predicts it.** The sentence was held for 33 years before its derivation arrived: intuition 1993, axiom (foundations v0.1) decades later, derivation 2026-10-15. Compression lands at the aperture first and is unpacked on the worldline after; the same note returns at a higher octave with the proof attached. The record now holds the receipt.
+
 ## Open decisions (Ashman to adjudicate)
 
 1. The 4D label (Finding 4): adopt ⊙ (All) or "the four together." Recommended; the single-period lemma leaves no alternative.
@@ -92,6 +108,7 @@ Continuing the 2026-08-19 record's Addendum 2 (inclusion = the function, indivis
 3. Whether §25.18b gains the "oneness kept" column (Finding 3), with the TRUE row marked given-not-kept.
 4. Whether the A1 grounding (Finding 2) is written into the axioms table commentary, and whether "the difference between something and nothing is made of centers" enters as a canonical line.
 5. Whether "existence" becomes the standing book-register name for ∞ (recommended) or joins the identity chain as a seventh name (not recommended: the piece itself shows the word is position-specific to the inclusion pole, and the chain's six names deliberately span positions).
+6. Whether Axiom 3's second clause in `circumpunct_foundations_formal_v0_1.md` is sharpened per Finding 6 ("Without the point, infinity would be indistinguishable from nothing"), and whether the childhood line ("God needs us just as much as we need God," Ashman, 1993) enters the ontological reading table as the plain form of the prime duality, credited with its date.
 
 ## Files consulted
 
