@@ -5,7 +5,7 @@
 ```
 Created: 2026-10-15
 Last updated: 2026-10-15
-Version: 0.3
+Version: 0.3.1
 ```
 
 Look at your hand.
@@ -68,7 +68,7 @@ The word *one* keeps returning, with different work to do:
 | --- | --- | --- |
 | ∞ | Existence | Inclusion |
 | 0D / • | Center or soul | Indivisibility |
-| 1D / L | Path through time | Continuity |
+| 1D / — | Path through time | Continuity |
 | 2D / ○ | Body as boundary and interface | Distinction |
 | 3D / Φ | Mind as a field of relationships | Coherence |
 | 4D / ⊙ | Centered wholeness | Integration |
@@ -181,6 +181,7 @@ What changes when you begin to notice how many ways there are to be one?
 
 ## Revision history
 
+- 2026-10-15 v0.3.1: the path row's symbol restored to the canonical 1D glyph — (Ashman: "that L needs to be an em dash"). The glyph is notation here, not punctuation; the symbol column is the reserved use the house rule protects.
 - 2026-10-15 v0.3: Ashman's integrated version, adopted verbatim. Socratic doorway (the hand) joined to the declarative spine; the circumpunct glyph introduced in-text; the four aspects given their framework names (soul, mind, body, path) and "Consciousness is centered wholeness" stated as the central proposal; the two orders distinguished in plain words (order of integration; looking outward from a formed center); the two primitives and the soul matrix stated as starting commitments with "Inclusion alone does not establish infinity"; location-individuation adopted with its open questions flagged; the four beats in plain words (convergence, branching, emergence, recursion); always-surrounded and compression from the debate; the two senses of aperture made explicit ("The aperture is the whole. The hole in the whole is the center."); participation affirmed within constraints ("It still makes a difference"); ethics as questions with the is-ought acknowledgment ("A circle cannot decide them for us"); the dimensional-label stipulation broadened to the whole table, 4D / ⊙ retained under it.
 - 2026-10-15 v0.2: Ashman's rewrite of the assembled draft; declarative form with the oneness table.
 - 2026-10-15 v0.1: initial draft, assembled from the session thread (Claude); pending countersign.
