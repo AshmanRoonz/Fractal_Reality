@@ -109,123 +109,48 @@ window.PAGES = [
 {k:"p", a:"ifs", x:"One hand, with parts. One part of you. An interface through which you can touch another hand."},
 {k:"q", a:"circumpunct", x:"What changes when you begin to notice how many ways there are to be one?"},
 
-// ---------- Part Two: The Ways of the Whole ----------
-// k: part (part opening) | pp (titled page). t: the page title; p: its paragraphs.
-{k:"part", a:"nested", n:"Part Two", t:"The Ways of the Whole", x:"*Look at your hand. You know what it is by now: one thing that is never just one thing. This part of the book asks what the whole does: how a centered life receives, defends, breaks, and reopens. Bring your own.*"},
-
-{k:"pp", a:"hand", t:"One and many, again", p:[
-  "One hand. Several fingers. A whole with parts, a part of you.",
-  "You are also trillions of cells, a stream of thoughts, a body meeting the world, and a part of every relationship you are in. How much of your life has that structure? Almost all of it.",
-  "I am whole. I am part."]},
-{k:"pp", a:"circumpunct", t:"The whole you are", p:[
-  "A center from which experience occurs. A path through time. A boundary that distinguishes and connects. A field where perceptions, thoughts, feelings, memories, and intentions cohere.",
-  "Consciousness is centered wholeness. The subject is the center. The person is the whole.",
-  "I am a circumpunct whole."]},
-{k:"pp", a:"attractor", t:"What changes", p:[
-  "The center itself remains unchanged while its relationships change. Its contents change. Its organization changes.",
-  "Becoming belongs to the living whole.",
-  "The geometric point expresses the commitment. The argument for an indivisible subject must go further than the drawing, and this part of the book is that further argument, made from inside."]},
-{k:"pp", a:"flow", t:"Always surrounded", p:[
-  "The center is always surrounded. Being surrounded is not the soul's circumstance. It is its condition.",
-  "A center without a field is not a soul. It is not anything.",
-  "Nothing unfiltered ever happens to anyone. Every experience arrives *through*."]},
-{k:"pp", a:"mandel", t:"Compression", p:[
-  "What converges through a center takes a particular, limited form. I call this compression: a wider reality, rendered.",
-  "All experience is compression. Finitude is not a failure; it is the architecture.",
-  "Every wholeness is a partial rendering of existence."]},
-{k:"pp", a:"circumpunct", o:{aperture:1}, t:"The aperture", p:[
-  "The center stays open. It did not choose to experience, and it cannot choose to stop. Openness is not the soul's act. It is the soul's kind.",
-  "What changes is what converges, and how the convergence is shaped. The hole in the whole does not change. Focus changes. Filters change."]},
-{k:"pp", a:"lightning", t:"Focus", p:[
-  "Focus has a direction and a manner. What am I attending to? How am I attending?",
-  "The soul has no orientation of its own. It is oriented only through its whole.",
-  "Within the constraints of Reality, what I focus on and how I focus affect the emergence of my Reality, alongside the choices of others and events beyond my control.",
-  "It still makes a difference."]},
-{k:"pp", a:"circumpunct", o:{lone:1}, t:"Where I am", p:[
-  "Location individuates the center. What kind of location?",
-  "Right where I am. Here, now: the place experience happens from.",
-  "Every center can say “here” with equal right. The soul matrix has no ranking in it. Whatever hierarchies exist among persons live in the wholes (in relations, roles, renderings), never in the openness.",
-  "All centers equal by position. All difference made by organization."]},
-{k:"pp", a:"nested", t:"The circle without a dot", p:[
-  "Wholes within wholes. A cell in an organ, an organ in a body, a person in a community.",
-  "A whole with many parts can function as one participant at a greater scale, taking the role of a point while its complexity remains.",
-  "But a role is not a soul. Societies are circles without dots. Their center is not a someone. It is a shared goal or, deeper, a shared shape.",
-  "Groups that fuse identity with their goal escalate when proven wrong; groups that hold it as a goal revise."]},
-{k:"pp", a:"tree", t:"Roles", p:[
-  "A shared goal gives each member a role. Roles are real parts of persons, and they are the most perishable parts: given mostly from outside, taken away by change.",
-  "When a goal dies, the role loses its anchor. Grief follows, and grief runs in two channels: pain tracks investment; relief tracks harm. Both run in every loss, weighted differently.",
-  "The filters keep firing toward a center that no longer answers. That is the pain. And when the role was harming you, its death arrives partly as relief."]},
-{k:"pp", a:"koch", t:"Shapes", p:[
-  "What survives the death of a goal is not the goal but the shape: the inscribed form, the dispositions and expectations the role carved into the filters.",
-  "Shapes outlive their contents. Form persists where content dies.",
-  "Deeply worn filters firing into a void hurt the same regardless of what the void used to be. Investment, not worth, sets the weight of the pain."]},
-{k:"pp", a:"rings", t:"Resonance", p:[
-  "Shaped persons encounter each other, and their filters align. Convergence amplifies instead of interfering. I call this resonance: form finding form.",
-  "From resonance, a new aim can grow, consonant with the old shape, not identical to it. Revival is not resurrection. Revivals rhyme.",
-  "Suppression attenuates what it cannot kill. We have observed this, and we claim it as a pattern, not a law. What survives suppression is what keeps its encounter-infrastructure: the gatherings, the rituals, the texts, the songs. Stored resonance, waiting for shaped persons."]},
-{k:"pp", a:"phyllotaxis", t:"Broadcast", p:[
-  "An idea, once private, can be broadcast, and tune other minds toward its frequency.",
-  "Resonance runs from private to public through artifacts and gatherings, and sometimes back again. A tradition is a resonance-infrastructure. Ritual is not symbolism; it is maintenance."]},
-{k:"pp", a:"julia", t:"The image at the center", p:[
-  "A self-image is a compression, part of the mind. Pathology begins when content is placed where only the center should be.",
-  "The whole organizes around defending the image. Correction arrives as existential threat, not because the correction is large, but because the image has been installed at the position where only openness should be.",
-  "Grandiosity is armor over fragility. The image is thin because it is a substitute rendering, and it needs defense in proportion to its thinness."]},
-{k:"pp", a:"ifs", t:"Degree, not species", p:[
-  "Narcissism is not a kind of person. It is a kind of organization: a degree, not a species.",
-  "Every whole has invested images. Defenses are universal, differentially activated by threat and investment.",
-  "The signature: attention conscripted for preservation. Criticism pre-compressed as attack. Boundaries sealed against correction. Others reduced from ⊙ to ○, valued as mirrors."]},
-{k:"pp", a:"koch", t:"Where the seal is", p:[
-  "The seal is never in the center. It is always in the whole: in the filters, in the recursion, in the encounters pre-read as confirmation.",
-  "The center stays open. Change is never ontologically foreclosed. It is only ever organizationally difficult.",
-  "The developmental evidence is precise: narcissism is predicted by being mirrored as an image; healthy self-esteem, by being met as a center. The problem is never convergence. It is corrupted convergence: an image delivered as identity."]},
-{k:"pp", a:"lightning", t:"The two that are needed", p:[
-  "Healing requires two things, never one: a disconfirming encounter, and curiosity (the filter about filters, pointed outward at reality itself, which is also an other).",
-  "Encounter without curiosity bounces, pre-compressed as attack.",
-  "Curiosity without encounter spins: the seal, turning in place.",
-  "Failure, loss, illness: reality penetrates where no person could. Let reality ripple the ponds."]},
-{k:"pp", a:"dragon", t:"Evidence", p:[
-  "Change is visible in the same evidence at every scale: acknowledging specific actions, making repairs, responding differently over time.",
-  "A person shows it this way. A nation shows it this way. A whole shows it this way.",
-  "A whole that can only restate the image is repeating. A whole that can say what it did, and change what it does, is re-founding."]},
-{k:"pp", a:"flow", t:"Pure", p:[
-  "When distortions in compression are removed, expression is pure.",
-  "Pure does not mean uncompressed. All experience arrives compressed. Pure means undistorted: compression whose correction channel is still live.",
-  "All rendering is lossy. Purity is loss you can still be corrected about."]},
-{k:"pp", a:"rings", o:{pair:1}, t:"Love", p:[
-  "I cannot know you without compressing you into an image. So love cannot mean having no image of you.",
-  "Love is compressing answerably: holding that image *as an image*, not as you, and letting you revise how I see you.",
-  "The same holds for my image of myself. Held as the center instead of as an image, it turns narcissistic.",
-  "To be someone's mirror is to reflect back only the image they need. Refusing is not a failure of love. Sometimes it is love. No one may be drafted into being another's cure. A boundary held in fidelity is as much care as a boundary opened."]},
-{k:"pp", a:"rose", t:"The half-steps", p:[
-  "The whole-number stations are things, and virtues sit in them. Between them are one-way movements, and a movement can only cost something, never possess it.",
-  "Every one-way step takes courage.",
-  "**Out**: beginning.",
-  "**Turn**: choosing a branch you cannot un-choose.",
-  "**Back**: letting correction cross the boundary inward.",
-  "**Home**: letting a whole complete itself, and become part of something larger."]},
-{k:"pp", a:"pythagoras", t:"The skill", p:[
-  "Corrigibility is a skill. It lives in the filters, shaped by recursion. You get better at it the way you get better at anything: through encounters where you let the correction land and discover the center survived.",
-  "And it takes courage, because it is paid at the Back step, the one-way step. Once correction lands, the old rendering is gone. You cannot un-cross.",
-  "Corrigibility is the practice of voluntarily paying one-way costs in real time, so the whole's distortions don't get paid later, larger, by someone else."]},
-{k:"pp", a:"attractor", t:"Not a state", p:[
-  "Corrigibility is not a state you reach. It cannot be self-ascribed: the moment “I am corrigible” becomes a claim, it is an image at the center-role, the seal wearing the costume of openness.",
-  "It stays third-person and retrospective, visible only in the evidence.",
-  "You can't possess it. You can only keep doing it, and be seen doing it.",
-  "The center stays open: that was never your work. The channel staying answerable: that is."]},
-{k:"pp", a:"nested", t:"How we participate, again", p:[
-  "True, at the center: what is true here?",
-  "Faithful, along the path: what am I continuing, and to what am I remaining faithful?",
-  "Good, at the boundary: what am I protecting, and how am I connecting?",
-  "Right, within the field: how does my participation fit the lives involved?",
-  "Wholeness, through experience: what whole are we helping form, and what is it like to live within it?",
-  "What I care about matters. What you care about matters. When cares conflict: listen, give reasons, examine consequences, revise."]},
-{k:"pp", a:"newton", t:"Still open", p:[
-  "Location: here (indexical, equal, unranked). What this means for persistence past the path's end remains a question.",
-  "Steering: the whole redirects focus consciously, as the whole. The mechanism beneath the experience is not yet described.",
-  "Greater wholes: a society's center is a goal or a shape. Whether any greater whole has a soul (a perspective of its own) is unknown. Maybe we are parts of a greater consciousness. The framework holds the question, not an answer."]},
-{k:"pp", a:"hand", t:"Look again", p:[
-  "Look at your hand. One hand, with parts. One part of you. An interface through which you can touch another hand.",
-  "There are many ways to be one, and each is itself one way.",
-  "The center stays open. The whole stays answerable.",
-  "That is the whole of it."]}
+// ---------- Part Two: What We Become ----------
+// k: part (part opener) | pp (titled page). s: the section, shown above the title and in the Contents;
+// t: the page title; p: its paragraphs. Imported from the Part Two markdown by tools/import-part-two.js.
+{k:"part", a:"phyllotaxis", n:"Part Two", t:"What We Become", x:"An encounter can change a day. A repeated encounter can become part of a life. We carry those changes into the next person we meet, and into the things we build together. What are we becoming through our participation, and what happens when we stop noticing?"},
+{k:"pp", a:"lightning", s:"In an encounter", t:"Before you answer", p:["Someone tells you that you hurt them. Before they have finished, you feel your reply taking shape. Perhaps you want to explain what you meant. Perhaps you want to leave. Can you notice that movement before deciding what to do with it?"]},
+{k:"pp", a:"flow", s:"In an encounter", t:"What you heard", p:["Their words meet more than your ears. They meet the morning you have had, an old embarrassment, the person you hope you are. A request may arrive sounding like an accusation. What did they say? What did you hear? Where did the difference come from?"]},
+{k:"pp", a:"circumpunct", o:{aperture:1}, s:"In an encounter", t:"A little room", p:["Perhaps you ask them to say it again. Perhaps you need time before you can listen well. That little room can change the encounter. There may be something to acknowledge, something to question, or something neither of you has understood yet. You do not have to know which before you begin listening."]},
+{k:"pp", a:"attractor", s:"In an encounter", t:"Turning my attention", p:["I can attend to the explanation I am preparing, to the tension in my body, or to what you are trying to tell me. I redirect my focus through the whole that I am. My history and circumstances shape what is possible here. How I participate can still change what happens next."]},
+{k:"pp", a:"tree", s:"In an encounter", t:"What I practise", p:["A response ends, but something of it can remain: a phrase easier to say again, a question I remember to ask, a silence I begin to expect. Through what I do, I help shape the world around me. Through that participation, I also help shape myself. What am I practising when I respond this way?"]},
+{k:"pp", a:"mandel", s:"The image and the person", t:"A story of me", p:["I am reliable. I am kind. I am someone who listens. These accounts can guide me toward a life I value. They can also leave things out. My image of myself belongs within my mind, within the whole that I am. How much of a person can any one account contain?"]},
+{k:"pp", a:"pythagoras", s:"The image and the person", t:"A mistake has a size", p:["One missed promise may matter deeply to the person waiting. I need to acknowledge what I did and what it cost them. That mistake belongs to my life. It does not tell everything about me. Can I give it its full weight without either erasing it or making it the whole of who I am?"]},
+{k:"pp", a:"newton", s:"The image and the person", t:"When the image must survive", p:["Suppose I need to remain the person who is always considerate. Your hurt now presents a problem for my image. I may search for a way you misunderstood, exaggerated, or caused it yourself. Before I have examined the encounter, I have chosen what its explanation must protect. What becomes difficult for me to notice?"]},
+{k:"pp", a:"circumpunct", s:"The image and the person", t:"What the whole protects", p:["The danger I am exploring in narcissistic self-protection is a whole organizing around an image that must not be corrected. Attention, interpretation, and response can all serve that protection. In this account, the person's center is never what is broken. What needs examining is how the person receives and responds, and what those responses do to other lives."]},
+{k:"pp", a:"dragon", s:"The image and the person", t:"A story to maintain", p:["If I hide something I know happened, the next conversation begins with something else to protect: my earlier account. A further lie may seem to offer a way through. Each encounter can become work spent maintaining the story. A sincerely mistaken account can persist too. Being mistaken and deliberately misleading someone are different things to acknowledge."]},
+{k:"pp", a:"julia", s:"The image and the person", t:"Someone beyond my account", p:["You have reasons, memories, and concerns that do not begin with me. If I hear you only as praise or criticism of myself, how much of you am I missing? You remain someone even where I understand you poorly. Can I let what you tell me change the picture I have been defending?"]},
+{k:"pp", a:"rose", s:"Between us", t:"Room for difficult feelings", p:["We can make room for anger while setting limits on how we treat each other. A pause may protect the conversation. Returning to the concern matters too. Your anger does not settle every question about what happened, and my discomfort does not make your concern disappear. What would help both of us be heard?"]},
+{k:"pp", a:"nested", s:"Between us", t:"What we practise together", p:["When a question is welcomed, I may find it easier to ask another. When speaking repeatedly brings dismissal, I may begin to keep things to myself. Each response helps shape the conditions of the next encounter. A relationship acquires habits through our participation. Which of ours make room for us, and which make us smaller?"]},
+{k:"pp", a:"ifs", o:{kind:"fern"}, s:"What stays with us", t:"A place in something", p:["A shared purpose can give me a role: the person who teaches, organizes, repairs, or remembers. I learn what others expect of me and what I can contribute. That role becomes part of my days and part of how I understand myself. I am someone within this undertaking, and I have a life beyond it."]},
+{k:"pp", a:"flow", s:"What stays with us", t:"When a role ends", p:["The project ends. The children grow. The work that once organized the morning is no longer there. I may still wake ready for it. An ending changes what is asked of me before it changes everything I have learned to expect. What do I miss: the task, the people, the place I had among them?"]},
+{k:"pp", a:"koch", s:"What stays with us", t:"The shape that remains", p:["A role can shape a person. The shape does not disappear when the goal does. A skill remains available; an expectation arrives where it no longer fits. I may carry a way of caring into a new life, or keep preparing for a demand that has ended. What is still useful in what I carry?"]},
+{k:"pp", a:"attractor", s:"What stays with us", t:"Missing and leaving", p:["I can miss parts of a life I needed to leave. There may be grief, relief, uncertainty, or feelings I cannot yet name. Missing something does not decide whether I should return to it. I can honour what mattered while asking what kind of participation is possible and good for me now."]},
+{k:"pp", a:"rings", o:{pair:1}, s:"What stays with us", t:"Something familiar", p:["Someone uses a phrase you thought only your family used. Someone cares about work you thought no one else noticed. A familiar shape appears in another life. I call that recognition a kind of resonance. It can invite a new connection, and something that ended can begin again in a new form. Revival is not resurrection. Revivals rhyme. What might we make of it, without requiring our histories to be the same?"]},
+{k:"pp", a:"phyllotaxis", s:"A shared life", t:"A shared aim", p:["Neighbours decide to turn an empty plot into a garden. Someone brings tools, someone knows the soil, someone makes time to water. A shared goal gives their different efforts a direction. The garden grows through what they do together. So does a way of knowing one another."]},
+{k:"pp", a:"nested", s:"A shared life", t:"A center to gather around", p:["A goal can function as a center for a group: something its members organize around. That role differs from the experiencing center I call soul. Shared activity alone does not tell us whether the greater whole has a perspective of its own. We can explore what we become together while leaving that question open."]},
+{k:"pp", a:"hand", s:"A shared life", t:"What becomes possible", p:["The garden becomes more than food. Children learn the names of plants. Neighbours find someone to ask for help. A skill passes from one pair of hands to another. Their participation creates possibilities that were not part of the original plan. Which possibilities are opening around what we do together?"]},
+{k:"pp", a:"ifs", s:"A shared life", t:"Belonging", p:["A place in a group can make room for parts of me that had nowhere to go. I can contribute, depend on others, and discover what I can do. I want belonging that also leaves room to disagree, rest, change, or leave. What does this whole ask of its parts, and what does it make possible for them?"]},
+{k:"pp", a:"tree", s:"A shared life", t:"Branches", p:["Some neighbours want more food from the garden. Others want a quiet place to sit. Their purposes branch. If they want to continue within the same whole, they need to find a greater goal that can give both aims a place. What could they agree to cultivate together?"]},
+{k:"pp", a:"pythagoras", s:"A shared life", t:"A greater goal", p:["A greater goal needs room for the branches that make it shared. The neighbours still have to decide where to plant, where to sit, who will work, and how disagreements will be settled. Some aims may prove incompatible. A shared name for the project cannot do the work of agreement for them."]},
+{k:"pp", a:"julia", s:"The dangers we share", t:"Whose whole?", p:["Calling a goal shared does not make it so. Who helped choose it? Who can question it? Who does the work, and who bears the cost? One participant may have much more power to answer those questions than another. That power comes from how the group is organized, not from anyone being worth more. All centers equal by position. All difference made by organization. I want the whole to remain answerable to the lives being shaped within it."]},
+{k:"pp", a:"newton", s:"The dangers we share", t:"When reputation becomes the goal", p:["Imagine an organization that says it cares for people. Someone reports harm, and the first concern becomes what the report will do to its reputation. The reporter becomes a problem to manage. The image of care is being protected while an opportunity to practise care is being lost. What is this organization becoming through that response?"]},
+{k:"pp", a:"lightning", s:"The dangers we share", t:"A powerful image", p:["A leader, a slogan, or a story of who we are can become the focus of a group. It may help us act together. It may also become something we defend regardless of what we do in its name. Groups that fuse identity with their goal escalate when proven wrong; groups that hold it as a goal revise. If admitting harm becomes betrayal, how will the people harmed ever be heard?"]},
+{k:"pp", a:"rings", s:"The dangers we share", t:"What we pass on", p:["An idea moves from a private thought into a conversation, a song, a lesson, a screen. Other people interpret it and carry versions onward. Gatherings and rituals keep it alive between tellings. Ritual is not symbolism; it is maintenance. Recognition can help a useful idea travel. It can help a comforting distortion travel too. Agreement and familiarity leave a question unanswered: what reasons do we have to believe this?"]},
+{k:"pp", a:"dragon", s:"The dangers we share", t:"The image of them", p:["I can become so certain about another group's closed-mindedness that nothing its members say can surprise me. Their disagreement becomes proof of the picture I already hold. What would I accept as evidence that I have misunderstood them? Asking this leaves me free to judge actions and consequences, while keeping my own account open to correction."]},
+{k:"pp", a:"circumpunct", o:{aperture:1}, s:"The dangers we share", t:"Making correction possible", p:["A group needs ways to hear concerns, examine evidence, question decisions, and make changes without punishing people for raising problems. A family can return to a difficult conversation. An institution can open its decisions to review. What makes correction possible where you participate?"]},
+{k:"pp", a:"mandel", s:"Staying answerable", t:"The first question", p:["Sometimes curiosity begins with something another person says. Sometimes a memory no longer fits my story, or I notice a difference between what I value and what I keep doing. I can begin with a small question: what am I missing? I do not need to have a new account ready before examining the old one."]},
+{k:"pp", a:"koch", s:"Staying answerable", t:"The skill", p:["Corrigibility is a skill. I practise it by examining what I believe, considering reasons, acknowledging mistakes, and changing my actions when correction is warranted. I can practise badly, notice that, and try again. How I respond after defensiveness matters too. The next encounter is another place to practise."]},
+{k:"pp", a:"rose", s:"Staying answerable", t:"The courage", p:["Some corrections are welcome. Others threaten a role, a reputation, or a hope I have invested in. Practising corrigibility then takes courage: enough willingness to face what I might learn and what it may ask of me. Sometimes I need support, time, or a safer setting to do that work."]},
+{k:"pp", a:"newton", s:"Staying answerable", t:"My judgment matters too", p:["A proposed correction can itself be mistaken. I can ask for reasons, compare accounts, and say where I remain unconvinced. My experience deserves consideration alongside yours. Corrigibility includes the judgment needed to distinguish a useful challenge from an unsupported accusation. What would help us examine the difference?"]},
+{k:"pp", a:"ifs", o:{kind:"fern"}, s:"Staying answerable", t:"Repair", p:["I can name what I did, listen to its effects, and ask what can be repaired. Some consequences remain. A promise may need time and repeated action before it can be trusted. What changes after the apology? The answer becomes part of the path we can actually look back on."]},
+{k:"pp", a:"rings", o:{pair:1}, s:"Staying answerable", t:"Love and the image", p:["Part of loving you is remembering that my picture of you is incomplete. You can surprise me. I can learn something that changes how I understand you. I want you to have that room with me, and I want room to become more fully known by you. What are we willing to learn about each other?"]},
+{k:"pp", a:"circumpunct", s:"Staying answerable", t:"A boundary can remain", p:["I can care about your becoming without making myself responsible for producing it. You have to participate in your own change. So do I. Sometimes care can continue within a relationship; sometimes distance or leaving is needed. I am whole. I am part. My participation cannot require that my own life stop mattering."]},
+{k:"pp", a:"nested", s:"Staying answerable", t:"What matters here", p:["In a difficult choice, I return to what is true, what I am continuing, what I am protecting, and how I am connecting. I consider the lives affected and the whole my action helps form. These questions give me somewhere to begin. The answers have to meet the circumstances, and remain open to what follows."]},
+{k:"pp", a:"lightning", s:"Staying answerable", t:"A different next time", p:["Someone tells you that you hurt them. Again, you feel your reply taking shape. This time you ask what happened before explaining what you meant. Perhaps you still disagree. Perhaps there is something to repair. The encounter has room to become something you did not decide in advance."]},
+{k:"pp", a:"phyllotaxis", s:"What comes next", t:"What we become", p:["The person I become enters your life. The person you become enters mine. Together we help shape relationships, habits, places, and possibilities that others will enter after us. I cannot choose all that follows from my participation. I can keep asking what it makes possible. The center stays open. The whole stays answerable. What are we helping one another become?"]}
 ];

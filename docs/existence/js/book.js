@@ -15,6 +15,7 @@
     if (p.k === 'title') chapters.push({ title: 'Existence', page: i });
     else if (p.k === 'th') chapters.push({ title: plain(p.x), page: i });
     else if (p.k === 'part') chapters.push({ title: p.n + ': ' + plain(p.t), page: i, part: true });
+    else if (p.s) { if (!PAGES[i - 1] || PAGES[i - 1].s !== p.s) chapters.push({ title: p.s, page: i, sub: true }); }
     else if (p.k === 'pp') chapters.push({ title: plain(p.t), page: i, sub: true });
     else if (p.ch) chapters.push({ title: p.ch, page: i });
     chapterOf[i] = Math.max(0, chapters.length - 1);
@@ -44,7 +45,8 @@
         return '<p class="kicker">' + md(p.n) + '</p><h2 class="parttitle">' + md(p.t) + '</h2>' +
           '<p class="subtitle">' + md(p.x) + '</p>';
       case 'pp':
-        return '<div class="mark" aria-hidden="true"></div><h2 class="pagehead">' + md(p.t) + '</h2>' +
+        return (p.s ? '<p class="kicker">' + md(p.s) + '</p>' : '<div class="mark" aria-hidden="true"></div>') +
+          '<h2 class="pagehead">' + md(p.t) + '</h2>' +
           p.p.map(function (s) { return '<p class="txt">' + md(s) + '</p>'; }).join('');
       case 'th':
         return '<div class="mark" aria-hidden="true"></div><h2 class="thesis">' + md(p.x) + '</h2>';
