@@ -22,6 +22,19 @@
   });
   const partCount = 1 + PAGES.filter(function (p) { return p.k === 'part'; }).length;
 
+  // The narration (js/narration.js): one recording per track, played in order. A track covers
+  // pages first .. first + starts.length - 1.
+  const N = window.NARRATION;
+  const tracks = N && N.tracks ? N.tracks.filter(function (t) { return t.starts && t.starts.length; }) : [];
+  const narrSecs = tracks.reduce(function (s, t) { return s + t.duration; }, 0);
+  const narrPages = tracks.reduce(function (s, t) { return s + t.starts.length; }, 0);
+  const trackOf = function (i) {
+    for (let k = 0; k < tracks.length; k++) {
+      if (i >= tracks[k].first && i < tracks[k].first + tracks[k].starts.length) return k;
+    }
+    return -1;
+  };
+
   function md(s) {
     return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
       .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
@@ -37,9 +50,9 @@
           (p.x ? '<p class="txt lede">' + md(p.x) + '</p>' : '') +
           '<p class="hint">' + PAGES.length + ' pages' + (partCount > 1 ? ' in ' + partCount + ' parts' : '') + '. ' +
           'Turn pages with the arrow keys, a swipe, or the buttons below, and tap a plate to draw it again.' +
-          (window.NARRATION ? ' Press Listen, top left, to hear ' +
-            (window.NARRATION.starts.length < PAGES.length ? 'Part One' : 'it') +
-            ' read in the author’s cloned voice (about ' + Math.round(window.NARRATION.duration / 60) + ' minutes).' : '') +
+          (tracks.length ? ' Press Listen, top left, to hear ' +
+            (narrPages < PAGES.length ? 'the first ' + narrPages + ' pages' : 'it') +
+            ' read in the author’s cloned voice (about ' + Math.round(narrSecs / 60) + ' minutes).' : '') +
           '</p>';
       case 'part':
         return '<p class="kicker">' + md(p.n) + '</p><h2 class="parttitle">' + md(p.t) + '</h2>' +
@@ -237,14 +250,17 @@
   }
 
   // ---------- narration: the book read aloud, turning pages at each pause ----------
-  const N = window.NARRATION, listenBtn = $('listen'), clock = $('clock');
-  if (N && N.starts && N.starts.length > 0 && N.starts.length <= PAGES.length) {
-    const narrated = N.starts.length;   // the recording covers pages 0 .. narrated - 1
-    let audio = null, syncing = false;   // syncing: a seek is in flight, so time updates must not turn pages
-    const pageAt = function (t) {
-      let p = 0;
-      while (p + 1 < N.starts.length && N.starts[p + 1] <= t) p++;
-      return p;
+  // One audio element plays the tracks in order. Within a track, starts[j] is the second at which
+  // page first + j turns; when a track ends, the next one carries on from its first page.
+  const listenBtn = $('listen'), clock = $('clock');
+  if (tracks.length) {
+    const offset = [];   // seconds of narration before each track
+    tracks.reduce(function (s, t, k) { offset[k] = s; return s + t.duration; }, 0);
+    const pageAt = function (k, t) {
+      const s = tracks[k].starts;
+      let j = 0;
+      while (j + 1 < s.length && s[j + 1] <= t) j++;
+      return tracks[k].first + j;
     };
     const fmt = function (s) {
       s = Math.max(0, Math.floor(s));
@@ -254,8 +270,10 @@
       listenBtn.setAttribute('aria-pressed', playing ? 'true' : 'false');
       listenBtn.querySelector('.lbl').textContent = playing ? 'Pause' : 'Listen';
     };
+    let audio = null, tk = -1, syncing = false;   // tk: the loaded track. syncing: a seek is in flight, so time updates must not turn pages
     // target: a seek waiting until the file allows it. landing: a seek in flight, checked on arrival.
-    let target = null, landing = null, fromMemory = false, resumeAfterSeek = false;
+    let target = null, landing = null, resumeAfterSeek = false, fetching = -1;
+    const blobs = [];   // per track: the file fetched into memory, as a blob URL
     const canSeekTo = function (t) {
       const s = audio.seekable;
       for (let i = 0; i < s.length; i++) if (t >= s.start(i) && t <= s.end(i) + 0.5) return true;
@@ -263,16 +281,21 @@
     };
     // A server without range requests leaves an MP3 unseekable. Then fetch it once and play from memory.
     const fromBlob = function () {
-      fromMemory = true;
+      const k = tk;
+      if (blobs[k] || fetching === k) return;
+      fetching = k;
       resumeAfterSeek = resumeAfterSeek || !audio.paused;
       audio.pause();
       clock.textContent = 'Loading narration';
-      fetch(N.src).then(function (r) {
+      fetch(tracks[k].src).then(function (r) {
         if (!r.ok) throw new Error('HTTP ' + r.status);
         return r.blob();
       }).then(function (b) {
-        audio.src = URL.createObjectURL(b);
+        blobs[k] = URL.createObjectURL(b);
+        fetching = -1;
+        if (tk === k) audio.src = blobs[k];
       }).catch(function () {
+        fetching = -1;
         syncing = false;
         resumeAfterSeek = false;
         audio.muted = false;
@@ -281,19 +304,28 @@
     };
     const applySeek = function () {
       if (target == null || audio.readyState < 1) return;
-      if (!canSeekTo(target)) { if (!fromMemory) fromBlob(); return; }   // in memory: wait for the next readiness event
+      if (!canSeekTo(target)) { fromBlob(); return; }   // in memory already: wait for the next readiness event
       landing = target;
       target = null;
       audio.currentTime = landing;
     };
-    const seekTo = function (t) {
+    // Point the player at page i: load its track if another one is loaded, then seek to the page.
+    const seekTo = function (i) {
+      const k = trackOf(i), t = tracks[k].starts[i - tracks[k].first];
+      if (k !== tk) {
+        tk = k;
+        target = null;
+        landing = null;
+        audio.src = blobs[k] || tracks[k].src;   // a new source starts paused, at its beginning
+        if (t < 0.05) { syncing = false; audio.muted = false; return; }
+      }
       syncing = true;
       target = t;
       applySeek();
     };
     const load = function () {
       if (audio) return audio;
-      audio = new Audio(N.src);
+      audio = new Audio();
       audio.preload = 'auto';
       ['loadedmetadata', 'durationchange', 'canplay'].forEach(function (ev) { audio.addEventListener(ev, applySeek); });
       audio.addEventListener('seeked', function () {
@@ -301,7 +333,7 @@
           // The seek did not land (the file cannot be seeked here): keep pages locked and play from memory.
           target = landing;
           landing = null;
-          if (!fromMemory) fromBlob();
+          fromBlob();
           return;
         }
         landing = null;
@@ -313,14 +345,18 @@
         }
       });
       audio.addEventListener('timeupdate', function () {
-        if (syncing) return;
-        const p = pageAt(audio.currentTime);
+        if (syncing || tk < 0) return;
+        const p = pageAt(tk, audio.currentTime);
         if (p !== cur) go(p, { fromAudio: true });
-        clock.textContent = fmt(audio.currentTime) + ' / ' + fmt(N.duration);
+        clock.textContent = fmt(offset[tk] + audio.currentTime) + ' / ' + fmt(narrSecs);
       });
       audio.addEventListener('play', function () { show(true); });
       audio.addEventListener('pause', function () { show(false); });
-      audio.addEventListener('ended', function () { show(false); });
+      audio.addEventListener('ended', function () {
+        if (tk + 1 >= tracks.length) return;   // the end of the book
+        seekTo(tracks[tk + 1].first);           // carry straight on into the next recording
+        audio.play().catch(function () { show(false); });
+      });
       audio.addEventListener('error', function () {
         show(false);
         listenBtn.disabled = true;
@@ -330,27 +366,33 @@
     };
     narrator = {
       toggle: function () {
-        if (cur >= narrated) return;   // pages past the recording have no narration yet
+        if (trackOf(cur) < 0) return;   // a page with no recording
         const a = load();
-        if (fromMemory && a.src.indexOf('blob:') !== 0) return;   // still loading into memory
+        if (fetching >= 0) return;   // still loading into memory
         if (!a.paused) { a.pause(); return; }
-        if (a.ended || pageAt(a.currentTime) !== cur) {
+        if (trackOf(cur) !== tk || a.ended || pageAt(tk, a.currentTime) !== cur) {
           a.muted = true;   // silent until the seek lands, so the opening words never leak through
-          seekTo(N.starts[cur]);
+          seekTo(cur);
         }
         const played = a.play();   // called inside the click so browsers allow sound
         if (played && played.catch) played.catch(function () { show(false); });
       },
       seek: function (i) {
-        if (i >= narrated) { if (audio && !audio.paused) audio.pause(); return; }
-        if (audio && pageAt(audio.currentTime) !== i) seekTo(N.starts[i]);
+        if (!audio || tk < 0) return;
+        const k = trackOf(i);
+        if (k < 0) { if (!audio.paused) audio.pause(); return; }
+        if (k === tk && pageAt(tk, audio.currentTime) === i) return;
+        const resume = k !== tk && !audio.paused;   // a new source starts paused
+        if (resume) audio.muted = true;
+        seekTo(i);
+        if (resume) audio.play().catch(function () { show(false); });
       }
     };
     onTurn = narrator.seek;
     onPage = function (i) {
-      const off = i >= narrated;
+      const off = trackOf(i) < 0;
       listenBtn.disabled = off;
-      listenBtn.title = off ? 'The narration covers Part One' :
+      listenBtn.title = off ? 'This page is not narrated yet' :
         'Read aloud by an ElevenLabs clone of ' + N.reader + '’s voice';
     };
     listenBtn.hidden = false;
