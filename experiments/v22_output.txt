@@ -1,0 +1,336 @@
+unified_expression_T_v22_hierarchical_lattice.py  (v1.0, 2026-10-16)
+alpha = 1/137.035999177 (measured); numpy 2.3.5; seed 20261022
+
+==============================================================================
+E0  INSTRUMENTS AND VERIFICATION
+==============================================================================
+  chain rule, level 1 (98 nodes) vs v21.build_ring(14) [seq]: 1.1e-16; vs v20.sync_ring(14) [sync]: 5.6e-16
+  departure (|l1|-1)/alpha, 14-octave ring: ours 0.811338, StaggeredOperator.ring 0.811338
+  Xorzo v3 tree (169 nodes): departure ours 0.6659, StaggeredOperator 0.6659 (v3 notes: 0.6659)
+  octave block vs t_operator.build_octave_beats_at: 0.0e+00
+  leakage identity on the beat lattice (R_dec, m = 4): direct 0.985137, identity 0.985137
+  all instrument checks pass: True
+  [E0_instruments: 2s]
+
+==============================================================================
+E1  CONSTRUCTION AND PRECONDITIONS
+==============================================================================
+  beat pairs (first appearance): [(0, 1), (0, 4), (1, 5), (2, 3), (2, 4), (3, 5), (4, 5), (4, 6), (5, 7), (6, 7)]
+  node counts (octaves) by level, root = two-octave ring (14 nodes):
+    chain      L0 14 (2), L1 98 (14), L2 686 (98), L3 4802 (686)
+    beat       L0 14 (2), L1 134 (20), L2 1334 (200), L3 13334 (2000)
+    parity720  L0 14 (2), L1 218 (32), L2 3482 (512), L3 55706 (8192)
+    complete   L0 14 (2), L1 350 (56), L2 9758 (1568), L3 273182 (43904)
+  tonic degree of the 14 root nodes at level 1:
+    chain      [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2]
+    beat       [4, 2, 2, 2, 4, 4, 2, 4, 2, 2, 2, 4, 4, 2]
+    parity720  [4, 2, 2, 2, 4, 4, 2, 4, 2, 2, 2, 4, 4, 2]
+    complete   [14, 7, 7, 7, 7, 7, 7, 14, 7, 7, 7, 7, 7, 7]
+  conservation departure (|lambda_1| - 1)/alpha of T = kappa F (O(1) = no compounding):
+    level 1, seq : chain 0.811, beat 0.733, parity720 0.699, complete 0.640
+    level 1, sync: chain 0.672, beat 0.406, parity720 0.591, complete 0.763
+    level 2, seq : chain 0.833, beat 0.705   (root ring: 0.655)
+  symmetry: rules act octave by octave, so level L+1 keeps the root's one-octave
+  translation (sync root: ||S F S^-1 - F|| = 1.8e-15).
+  v20 Theorem 1's floor came from a fine translation that acts on the coarse ring as
+  a one-station shift, which the coarse octave lacks. A rule has such a translation
+  only if its pair set is invariant under the station shift j -> j+1 (mod 14);
+  share of pairs mapped onto pairs:  chain 14/14  beat 10/20  parity720 10/20  complete 44/55
+  (the chain alone is invariant: the lattices carry no finer translation, so the
+  Theorem 1 floor has no analog on them).
+  the beat graph is bipartite: [1, 3, 4, 7] | [0, 2, 5, 6]; coordinate parity (local
+  index mod 2) disagrees with it exactly at the two hubs (local 4 sits with the
+  processual stations, local 5 with the structural): the six hub pairs are the
+  same-parity pairs, which parity720 carries through two octaves.
+  [E1_construction: 17s]
+
+==============================================================================
+E2  CORPUS MAPS: delta(m), m = 1..8 (rows F then T)
+==============================================================================
+
+  level 1 -> level 0 (seq):
+    geometry  map            1      2      3      4      5      6      7      8
+    chain     R_dec      0.992  0.975  0.977  0.984  0.969  0.973  0.940  0.947
+                T        0.992  0.975  0.977  0.984  0.970  0.973  0.940  0.948
+    chain     R_cell     0.932  0.970  0.974  0.991  0.971  0.969  0.924  0.944
+                T        0.932  0.969  0.973  0.991  0.970  0.969  0.924  0.944
+    chain     R_whole    0.918  0.932  0.943  0.984  0.994  0.986  0.967  0.963
+                T        0.918  0.932  0.943  0.984  0.992  0.987  0.968  0.965
+    beat      R_dec      0.992  0.949  0.954  0.985  0.939  0.959  0.993  0.960
+                T        0.992  0.949  0.954  0.985  0.940  0.960  0.994  0.961
+    beat      R_cell     0.918  0.960  0.974  0.962  0.982  0.989  0.958  0.951
+                T        0.918  0.960  0.974  0.962  0.982  0.989  0.958  0.952
+    beat      R_whole    0.912  0.915  0.950  0.976  0.956  0.986  0.992  0.980
+                T        0.912  0.915  0.950  0.975  0.956  0.986  0.991  0.981
+    parity720 R_dec      0.988  0.981  0.968  0.973  0.987  0.990  0.929  0.968
+                T        0.989  0.981  0.968  0.973  0.987  0.989  0.930  0.969
+    parity720 R_cell     0.915  0.946  0.958  0.977  0.991  0.995  0.952  0.952
+                T        0.914  0.946  0.958  0.976  0.990  0.996  0.953  0.951
+    parity720 R_whole    0.909  0.910  0.943  0.947  0.967  0.986  0.961  0.964
+                T        0.908  0.910  0.943  0.947  0.968  0.985  0.962  0.965
+    complete  R_dec      1.000  0.998  0.998  0.993  0.989  0.985  0.980  0.990
+                T        0.999  0.998  0.997  0.993  0.989  0.985  0.980  0.991
+    complete  R_cell     0.943  0.989  0.979  0.989  0.980  0.992  0.978  0.974
+                T        0.943  0.988  0.979  0.989  0.980  0.993  0.977  0.974
+    complete  R_whole    0.958  0.973  0.979  0.988  0.986  0.990  0.973  0.982
+                T        0.958  0.973  0.980  0.988  0.987  0.990  0.974  0.982
+
+  level 1 -> level 0 (sync):
+    geometry  map            1      2      3      4      5      6      7      8
+    chain     R_dec      0.995  0.967  0.950  0.981  0.967  0.983  0.943  0.974
+                T        0.995  0.966  0.950  0.981  0.967  0.982  0.944  0.974
+    chain     R_cell     0.960  0.978  0.971  0.971  0.964  0.967  0.930  0.950
+                T        0.960  0.978  0.972  0.972  0.964  0.968  0.931  0.951
+    chain     R_whole    0.914  0.949  0.945  0.950  0.967  0.992  0.977  0.972
+                T        0.914  0.949  0.945  0.950  0.966  0.992  0.978  0.972
+    beat      R_dec      0.985  0.988  0.961  0.965  0.967  0.993  0.984  0.971
+                T        0.985  0.988  0.960  0.965  0.967  0.993  0.984  0.971
+    beat      R_cell     0.946  0.968  0.965  0.982  0.985  0.973  0.982  0.944
+                T        0.946  0.968  0.965  0.982  0.985  0.973  0.984  0.945
+    beat      R_whole    0.899  0.940  0.961  0.963  0.948  0.968  0.965  0.960
+                T        0.899  0.940  0.961  0.963  0.948  0.968  0.965  0.961
+    parity720 R_dec      0.989  0.993  0.982  0.974  0.995  0.972  0.945  0.997
+                T        0.989  0.993  0.982  0.974  0.994  0.973  0.945  0.998
+    parity720 R_cell     0.966  0.954  0.989  0.978  0.984  0.968  0.960  0.968
+                T        0.966  0.954  0.989  0.978  0.984  0.968  0.960  0.968
+    parity720 R_whole    0.909  0.927  0.957  0.951  0.970  0.957  0.961  0.961
+                T        0.909  0.927  0.956  0.951  0.969  0.956  0.960  0.961
+    complete  R_dec      0.992  0.992  0.989  0.962  0.957  0.989  0.975  0.963
+                T        0.993  0.992  0.990  0.962  0.957  0.989  0.976  0.964
+    complete  R_cell     0.984  0.990  0.991  0.987  0.981  0.962  0.989  0.986
+                T        0.984  0.990  0.991  0.987  0.981  0.962  0.989  0.986
+    complete  R_whole    0.992  0.991  0.982  0.968  0.949  0.990  0.992  0.972
+                T        0.992  0.991  0.982  0.967  0.949  0.990  0.991  0.972
+
+  level 2 -> level 1 (seq; lattice to lattice):
+    geometry  map            1      2      3      4      5      6      7      8
+    chain     R_dec      0.991  0.973  0.975  0.979  0.966  0.969  0.931  0.952
+                T        0.991  0.973  0.975  0.980  0.967  0.968  0.931  0.952
+    chain     R_cell     0.934  0.971  0.975  0.992  0.964  0.961  0.925  0.950
+                T        0.933  0.971  0.974  0.992  0.963  0.962  0.926  0.950
+    chain     R_whole    0.921  0.934  0.947  0.992  0.994  0.982  0.959  0.969
+                T        0.921  0.934  0.947  0.991  0.993  0.983  0.960  0.971
+    beat      R_dec      0.991  0.942  0.949  0.983  0.939  0.960  0.989  0.955
+                T        0.992  0.942  0.949  0.983  0.940  0.960  0.989  0.955
+    beat      R_cell     0.915  0.958  0.974  0.958  0.981  0.985  0.957  0.954
+                T        0.915  0.958  0.974  0.958  0.981  0.985  0.957  0.954
+    beat      R_whole    0.910  0.912  0.949  0.972  0.957  0.986  0.990  0.977
+                T        0.910  0.911  0.950  0.971  0.957  0.987  0.990  0.978
+    parity720 R_dec      0.987  0.976  0.963  0.967  0.981  0.982  0.919  0.966
+                T        0.987  0.976  0.963  0.967  0.981  0.981  0.919  0.966
+    parity720 R_cell     0.912  0.941  0.957  0.976  0.986  0.996  0.953  0.954
+                T        0.912  0.941  0.956  0.975  0.985  0.997  0.953  0.954
+    parity720 R_whole    0.907  0.907  0.939  0.946  0.967  0.981  0.959  0.967
+                T        0.907  0.906  0.938  0.945  0.967  0.981  0.961  0.968
+  [E2_fixed_maps: 3s]
+
+==============================================================================
+E3  NULLS FOR THE CORPUS MAPS (level 1 -> 0 seq/sync; level 2 -> 1 seq)
+==============================================================================
+  families: Haar co-isometries (same shape); random decimations (same sparsity as
+  R_dec); random cell weights (same sparsity as R_cell, R_whole); and, at level 1
+  seq, random-geometry and random-block lattices under R_dec (50 draws each).
+  null mean (min) over draws and m = 1..8, F:
+                                      haar         randdec        randcell        randgeom       randblock
+    level 1 seq  beat         0.977 (0.940)   0.977 (0.922)   0.976 (0.930)   0.980 (0.940)   0.983 (0.934)
+    level 1 seq  chain        0.973 (0.916)   0.972 (0.910)   0.971 (0.905)   0.980 (0.940)   0.977 (0.921)
+    level 1 seq  complete     0.980 (0.946)   0.979 (0.927)   0.979 (0.941)   0.980 (0.940)   0.994 (0.962)
+    level 1 seq  parity720    0.977 (0.937)   0.976 (0.926)   0.974 (0.923)   0.980 (0.940)   0.985 (0.949)
+    level 1 sync beat         0.980 (0.946)   0.978 (0.921)   0.977 (0.931)               -               -
+    level 1 sync chain        0.973 (0.915)   0.970 (0.905)   0.971 (0.907)               -               -
+    level 1 sync complete     0.976 (0.921)   0.973 (0.906)   0.974 (0.920)               -               -
+    level 1 sync parity720    0.979 (0.949)   0.977 (0.929)   0.976 (0.935)               -               -
+    level 2 seq  beat         0.978 (0.957)   0.978 (0.943)   0.977 (0.949)               -               -
+    level 2 seq  chain        0.976 (0.936)   0.976 (0.933)   0.975 (0.928)               -               -
+    level 2 seq  parity720    0.978 (0.958)   0.978 (0.954)   0.976 (0.946)               -               -
+
+  cells: 528 (delta range 0.899 to 1.000); delta <= 0.10: 0; below the 1st percentile of every null family: 145; SUPPORTED: 0
+  the cells below every null (structure beyond chance, not self-similarity) have
+  delta 0.899 to 0.982; most frequent (map, m): R_whole m=1 x18, R_whole m=3 x16, R_whole m=2 x14, R_cell m=8 x10, R_cell m=1 x10, R_whole m=4 x10
+  [E3_nulls: 176s]
+
+==============================================================================
+E4  CEILINGS: PER-NODE CELL FAMILY (F, seq; unconstrained / constrained)
+==============================================================================
+  level 1 -> 0:        m=1            m=2            m=4            m=8         
+    chain            0.652 / 0.769   0.657 / 0.764   0.706 / 0.754   0.676 / 0.748
+    beat             0.658 / 0.765   0.671 / 0.735   0.701 / 0.735   0.690 / 0.733
+    parity720        0.638 / 0.774   0.643 / 0.768   0.652 / 0.742   0.663 / 0.751
+    complete         0.647 / 0.736   0.660 / 0.722   0.672 / 0.720   0.688 / 0.724
+    cross-check: v21 per-node window family (8 nodes, the closing octave) on the
+    same chain, m = 4, constrained: 0.731
+  nulls at m = 4 (constrained):
+    random octave blocks, chain     : 0.767 +/- 0.016 (min 0.730); canonical 0.754 at pct 0.15
+    random octave blocks, beat      : 0.761 +/- 0.018 (min 0.738); canonical 0.735 at pct 0.00
+    random octave blocks, parity720 : 0.768 +/- 0.023 (min 0.734); canonical 0.742 at pct 0.15
+    random octave blocks, complete  : 0.746 +/- 0.012 (min 0.725); canonical 0.720 at pct 0.00
+    random connected 10-pair geometries (canonical octaves): 0.756 +/- 0.012 (min 0.739); beat lattice 0.735 at pct 0.00
+  reference: the best UNRESTRICTED co-isometry (eigenvalue matching, no locality),
+  beat lattice m = 4: delta = 0.013; locality is what the
+  test measures.
+  level 2 -> 1 (lattice to lattice), m = 4:
+    chain            0.707 / 0.758   [15s]
+    beat             0.701 / 0.745   [63s]
+  [E4_ceilings: 293s]
+
+==============================================================================
+E5  LEAKAGE SPLIT AND CARRYING CAPACITY
+==============================================================================
+  For a co-isometric R: delta^2 = 1 - |<F_c, M>|/N_c, M = R F^m R^dag; leak^2 =
+  1 - ||M||^2/N_c. Every fixed-map cell (level 1 -> 0, seq, F), ranges over m = 1..8:
+    chain      R_dec    leak 0.77 to 0.99;  cos(M, F_c) 0.08 to 0.22
+    chain      R_cell   leak 0.78 to 0.96;  cos(M, F_c) 0.06 to 0.25
+    chain      R_whole  leak 0.83 to 0.97;  cos(M, F_c) 0.05 to 0.29
+    beat       R_dec    leak 0.90 to 0.99;  cos(M, F_c) 0.03 to 0.28
+    beat       R_cell   leak 0.89 to 0.95;  cos(M, F_c) 0.06 to 0.34
+    beat       R_whole  leak 0.86 to 0.94;  cos(M, F_c) 0.04 to 0.34
+    parity720  R_dec    leak 0.91 to 0.99;  cos(M, F_c) 0.07 to 0.32
+    parity720  R_cell   leak 0.86 to 0.97;  cos(M, F_c) 0.03 to 0.34
+    parity720  R_whole  leak 0.83 to 0.96;  cos(M, F_c) 0.09 to 0.33
+    complete   R_dec    leak 0.97 to 1.00;  cos(M, F_c) 0.03 to 0.15
+    complete   R_cell   leak 0.93 to 0.97;  cos(M, F_c) 0.06 to 0.30
+    complete   R_whole  leak 0.96 to 0.98;  cos(M, F_c) 0.10 to 0.28
+  At m = 4, with the constrained optima:
+    geometry   map              leak  cos(M,Fc)   delta
+    chain      R_dec           0.902      0.075   0.984
+    chain      R_cell          0.956      0.058   0.991
+    chain      cell constr.    0.761      0.664   0.754
+    beat       R_dec           0.930      0.080   0.985
+    beat       R_cell          0.949      0.235   0.962
+    beat       cell constr.    0.785      0.741   0.735
+    parity720  R_dec           0.956      0.183   0.973
+    parity720  R_cell          0.950      0.148   0.977
+    parity720  cell constr.    0.692      0.623   0.742
+    complete   R_dec           0.990      0.102   0.993
+    complete   R_cell          0.964      0.085   0.989
+    complete   cell constr.    0.815      0.832   0.720
+
+  Carrying capacity: share of the squared weight of the coarse generator
+  G_c = log F_c (root ring) that a geometry can carry at leading order in weak
+  seams: per-pair (each bridge its own effective coupling: diagonal + its pairs)
+  and uniform (identical canonical bridges: a four-dimensional real span).
+    seq: diagonal share 0.032; best achievable cos(G_eff, G_c):
+      chain      pairs  14: per-pair 0.484 (weight share 0.235); uniform bridges 0.124
+      beat       pairs  20: per-pair 0.543 (weight share 0.295); uniform bridges 0.211
+      parity720  pairs  20: per-pair 0.543 (weight share 0.295); uniform bridges n/a (two-bridge paths)
+      complete   pairs  55: per-pair 0.893 (weight share 0.797); uniform bridges 0.277
+    sync: diagonal share 0.029; best achievable cos(G_eff, G_c):
+      chain      pairs  14: per-pair 0.513 (weight share 0.263); uniform bridges 0.161
+      beat       pairs  20: per-pair 0.465 (weight share 0.216); uniform bridges 0.209
+      parity720  pairs  20: per-pair 0.465 (weight share 0.216); uniform bridges n/a (two-bridge paths)
+      complete   pairs  55: per-pair 0.915 (weight share 0.837); uniform bridges 0.197
+  [E5_leakage_and_carrying: 0s]
+
+==============================================================================
+E6  WEAK SEAMS: THE PROTECTED CHANNEL (bridges with tonic couplings x eps)
+==============================================================================
+  v21 section 4: self-similarity would need an octave-local protected channel
+  whose induced dynamics is the coarse octave's. Weak seams protect the tonics
+  (leak -> 0 as eps -> 0); the coarse target stays the canonical root ring.
+  min over 1 <= m <= m_max of delta(R_dec), with leak and cos(M, F_c) at the best m;
+  null: the same statistic against 4 random-block coarse rings.
+  A frozen channel (M = phase x I) scores delta = sqrt(1 - |tr F_c|/N_c): 0.859 for the canonical
+  ring, 0.948 on average for the random targets. Columns: min delta, the m
+  where it occurs, leak and cos(M, F_c) there; then the random targets' mean min delta.
+
+  eps = 1.0   (m <= 200)
+    chain      canon 0.908 at m = 78     (leak 0.85, cos 0.33);  random targets 0.944
+    beat       canon 0.939 at m = 5      (leak 0.91, cos 0.28);  random targets 0.951
+    parity720  canon 0.929 at m = 7      (leak 0.91, cos 0.32);  random targets 0.962
+    complete   canon 0.963 at m = 129    (leak 0.96, cos 0.26);  random targets 0.971
+
+  eps = 0.3   (m <= 555)
+    chain      canon 0.909 at m = 1      (leak 0.74, cos 0.26);  random targets 0.927
+    beat       canon 0.907 at m = 1      (leak 0.80, cos 0.30);  random targets 0.935
+    parity720  canon 0.906 at m = 1      (leak 0.80, cos 0.30);  random targets 0.942
+    complete   canon 0.943 at m = 5      (leak 0.92, cos 0.28);  random targets 0.955
+
+  eps = 0.1   (m <= 4999)
+    chain      canon 0.866 at m = 1      (leak 0.28, cos 0.26);  random targets 0.907
+    beat       canon 0.865 at m = 1      (leak 0.33, cos 0.27);  random targets 0.905
+    parity720  canon 0.865 at m = 1      (leak 0.34, cos 0.27);  random targets 0.924
+    complete   canon 0.880 at m = 1      (leak 0.53, cos 0.27);  random targets 0.900
+
+  eps = 0.05   (m <= 19999)
+    chain      canon 0.861 at m = 1      (leak 0.14, cos 0.26);  random targets 0.895
+    beat       canon 0.861 at m = 1      (leak 0.17, cos 0.26);  random targets 0.900
+    parity720  canon 0.860 at m = 1      (leak 0.17, cos 0.26);  random targets 0.913
+    complete   canon 0.862 at m = 5093   (leak 0.59, cos 0.32);  random targets 0.891
+
+  effective coarse generator at weak seams vs G_c = log F_c (seq root):
+    eps 0.05  chain     ||G_eff|| = 1.89e-01, outside the uniform span 0.056, cos(G_eff, G_c) = +0.015 (mode weight >= 0.673)
+    eps 0.05  beat      ||G_eff|| = 2.41e-01, outside the uniform span 0.098, cos(G_eff, G_c) = +0.060 (mode weight >= 0.624)
+    eps 0.05  complete  ||G_eff|| = 4.57e-01, outside the uniform span 0.132, cos(G_eff, G_c) = +0.029 (mode weight >= 0.547)
+    eps 0.02  chain     ||G_eff|| = 4.44e-02, outside the uniform span 0.022, cos(G_eff, G_c) = +0.017 (mode weight >= 0.856)
+    eps 0.02  beat      ||G_eff|| = 6.02e-02, outside the uniform span 0.043, cos(G_eff, G_c) = +0.063 (mode weight >= 0.804)
+    eps 0.02  complete  ||G_eff|| = 1.32e-01, outside the uniform span 0.077, cos(G_eff, G_c) = +0.024 (mode weight >= 0.716)
+  [E6_weak_seams: 16s]
+
+==============================================================================
+E7  THE 720 IN THE LATTICE
+==============================================================================
+  parity720 vs beat (same pairs; same-parity pairs carried through two octaves):
+  see E2 and E4. Two scale steps (level 2 -> level 0, R_dec o R_dec, seq):
+    geometry         1      2      3      4      5      6      7      8     16     49     64
+    chain        0.986  0.981  0.963  0.993  0.988  0.988  0.946  0.994  0.984  0.988  0.976
+    beat         0.999  0.998  0.994  0.994  0.989  0.997  0.975  0.976  0.994  0.978  0.993
+    Haar (beat)  0.962  0.969  0.986  0.986  0.984  0.989  0.973  0.982  0.992  0.996  0.994
+    parity720    0.999  0.998  0.994  0.994  0.992  0.997  0.976  0.983  0.980  0.993  0.978
+  [E7_720: 3s]
+
+==============================================================================
+E8  XORZO TREE CONTROL (peel: the coarse tree is the fine tree minus its leaves)
+==============================================================================
+  Xorzo v3 tree 169 -> 57 (N 169 -> 57; departure 0.666)
+    R_peel F:  0.348  0.847  0.884  0.960  0.963  0.933  0.960  0.959
+    R_peel T:  0.348  0.847  0.884  0.958  0.965  0.933  0.959  0.960
+    iterated, R F^n vs F_c^n R (n = 1..8):  0.348  0.479  0.566  0.628  0.667  0.688  0.713  0.744
+    random octave blocks, same tree, m = 1: R_peel 0.344 +/- 0.015; constrained ceiling 0.249 +/- 0.021
+    m = 1: leak 0.348, cos 0.938; per-node ceiling 0.214 / 0.255; Haar 0.956 (min 0.947)
+    m = 4: leak 0.596, cos 0.099; per-node ceiling 0.739 / 0.805; Haar 0.974 (min 0.965)
+  2-ary depth 4 -> 3 (N 106 -> 50; departure 0.645)
+    R_peel F:  0.282  0.845  0.879  0.973  0.975  0.913  0.939  0.969
+    R_peel T:  0.282  0.844  0.878  0.971  0.976  0.914  0.939  0.970
+    iterated, R F^n vs F_c^n R (n = 1..8):  0.282  0.386  0.458  0.507  0.545  0.572  0.604  0.635
+    random octave blocks, same tree, m = 1: R_peel 0.280 +/- 0.016; constrained ceiling 0.201 +/- 0.021
+    m = 1: leak 0.280, cos 0.959; per-node ceiling 0.165 / 0.206; Haar 0.956 (min 0.943)
+    m = 4: leak 0.481, cos 0.060; per-node ceiling 0.748 / 0.831; Haar 0.979 (min 0.966)
+  3-ary depth 3 -> 2 (N 92 -> 29; departure 0.641)
+    R_peel F:  0.317  0.855  0.879  0.974  0.961  0.915  0.934  0.949
+    R_peel T:  0.317  0.854  0.878  0.973  0.962  0.914  0.934  0.949
+    iterated, R F^n vs F_c^n R (n = 1..8):  0.317  0.439  0.525  0.589  0.623  0.644  0.666  0.693
+    random octave blocks, same tree, m = 1: R_peel 0.318 +/- 0.011; constrained ceiling 0.225 +/- 0.019
+    m = 1: leak 0.321, cos 0.950; per-node ceiling 0.201 / 0.235; Haar 0.955 (min 0.938)
+    m = 4: leak 0.562, cos 0.062; per-node ceiling 0.741 / 0.813; Haar 0.973 (min 0.952)
+  [E8_trees: 184s]
+
+==============================================================================
+E9  ROBUSTNESS OF THE BEAT LATTICE (level 1 -> 0, seq, F, m = 4)
+==============================================================================
+  beat (as built)          N  134: R_dec 0.985; cell ceiling 0.701 / 0.736
+  orientation flipped      N  134: R_dec 0.979; cell ceiling 0.682 / 0.753
+  ascending order          N  134: R_dec 0.985; cell ceiling 0.701 / 0.736
+  reversed order           N  134: R_dec 0.993; cell ceiling 0.689 / 0.751
+  root: one open octave    N   68: R_dec 0.981; cell ceiling 0.695 / 0.703
+  [E9_robustness: 5s]
+
+==============================================================================
+E10 TENSOR-NESTING NULL (closed form from v20 E8)
+==============================================================================
+  depth 2:  0.000  0.836  0.838  0.847  0.982  0.737  0.863  0.883
+  depth 3:  0.000  0.954  0.955  0.959  0.999  0.889  0.967  0.975
+  [E10_tensor: 0s]
+
+==============================================================================
+VERDICT (pre-stated rule: supported iff delta <= 0.10 AND below the 1st percentile of every null)
+==============================================================================
+  corpus-map cells: 528; small: 0; below every null: 145; supported: 0.
+  best constrained cell ceiling anywhere: 0.720
+  constrained ceilings at m = 4 against their same-geometry random-block nulls:
+    chain      0.754 vs 0.767 +/- 0.016 (pct 0.15, z -0.8)
+    beat       0.735 vs 0.761 +/- 0.018 (pct 0.00, z -1.4)
+    parity720  0.742 vs 0.768 +/- 0.023 (pct 0.15, z -1.1)
+    complete   0.720 vs 0.746 +/- 0.012 (pct 0.00, z -2.2)
+    beat vs random 10-pair geometries: 0.735 vs 0.756 +/- 0.012 (pct 0.00, z -1.6)
+
+[total runtime 700s]
