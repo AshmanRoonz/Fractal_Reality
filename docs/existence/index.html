@@ -172,14 +172,25 @@ button { font: inherit; color: inherit; }
   text-transform: uppercase; color: var(--ink-soft);
 }
 .title { font-family: var(--display); font-weight: 600; font-size: var(--step-5); line-height: 0.92; letter-spacing: -0.015em; }
+.parttitle {
+  font-family: var(--display); font-weight: 600; font-size: clamp(2.6rem, 1.6rem + 3.2vw, 4.4rem);
+  line-height: 0.98; letter-spacing: -0.012em; text-wrap: balance;
+}
+.pagehead {
+  font-family: var(--display); font-weight: 500; font-size: clamp(1.65rem, 1.25rem + 1.4vw, 2.4rem);
+  line-height: 1.08; letter-spacing: -0.005em; text-wrap: balance;
+}
+.page-inner[data-kind="pp"] { gap: 0.7rem; }
+.page-inner[data-kind="pp"] .txt { font-size: clamp(1rem, 0.94rem + 0.3vw, 1.18rem); line-height: 1.56; }
+.listen:disabled { opacity: 0.45; cursor: default; }
 .subtitle { font-family: var(--display); font-style: italic; font-weight: 500; font-size: var(--step-1); color: var(--ink-soft); }
 .hint { font-family: var(--mono); font-size: var(--step--1); color: var(--ink-soft); }
 .page .lede { margin-top: 0.3rem; font-size: clamp(1rem, 0.94rem + 0.28vw, 1.16rem); line-height: 1.62; }
 .sym { font-family: var(--display); font-size: clamp(5rem, 3rem + 8vw, 9rem); line-height: 1; color: var(--gold); }
 
 .tbl-wrap { overflow-x: auto; }
-table { border-collapse: collapse; width: 100%; font-size: 0.98rem; line-height: 1.45; }
-th, td { text-align: left; vertical-align: top; padding: 0.5rem 0.9rem 0.5rem 0; border-bottom: 1px solid var(--rule); }
+table { border-collapse: collapse; width: 100%; font-size: 0.92rem; line-height: 1.38; }
+th, td { text-align: left; vertical-align: top; padding: 0.4rem 0.75rem 0.4rem 0; border-bottom: 1px solid var(--rule); }
 th { font-family: var(--mono); font-weight: 500; font-size: var(--step--1); letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-soft); }
 td:first-child { font-family: var(--mono); white-space: nowrap; color: var(--gold); }
 
@@ -222,6 +233,9 @@ td:first-child { font-family: var(--mono); white-space: nowrap; color: var(--gol
 .toc .n { font-family: var(--mono); font-size: var(--step--1); color: var(--ink-soft); font-variant-numeric: tabular-nums; }
 .toc .t { font-family: var(--display); font-style: italic; font-size: 1.22rem; line-height: 1.2; }
 .toc li.here .t { color: var(--gold); }
+.toc li.partrow button { margin-top: 0.9rem; border-top: 1px solid var(--rule); }
+.toc li.partrow .t { font-style: normal; font-weight: 600; }
+.toc li.subrow .t { font-size: 1.08rem; }
 .colophon {
   display: grid; gap: 0.45rem; padding-top: 0.4rem;
   font-family: var(--mono); font-size: var(--step--1); line-height: 1.5; color: var(--ink-soft);
@@ -297,9 +311,10 @@ td:first-child { font-family: var(--mono); white-space: nowrap; color: var(--gol
   </div>
   <ol id="tocList"></ol>
   <div class="colophon">
-    <p>Created: 2026-10-15 &middot; Last updated: 2026-10-15 &middot; Version: 1.0</p>
+    <p>Created: 2026-10-15 &middot; Last updated: 2026-10-16 &middot; Version: 1.1</p>
     <h3>Revision history</h3>
     <ul>
+      <li>2026-10-16 v1.1: Part Two, The Ways of the Whole: 27 pages grown from the manifesto and one long night&rsquo;s conversation (not yet narrated)</li>
       <li>2026-10-15 v1.0: initial; 75 pages, a live fractal plate per page, the cosmic frame, and narration in the author&rsquo;s cloned voice</li>
     </ul>
   </div>

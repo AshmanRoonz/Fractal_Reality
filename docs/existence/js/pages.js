@@ -107,5 +107,125 @@ window.PAGES = [
 {k:"p", a:"pythagoras", x:"The Circumpunct Framework is my attempt to think these relationships together. Its claims must remain answerable to experience, reasons, and counterexamples. Its value depends on what it helps us notice and whether its distinctions hold up when questioned."},
 {k:"p", a:"hand", o:{left:1}, x:"Look again at your hand."},
 {k:"p", a:"ifs", x:"One hand, with parts. One part of you. An interface through which you can touch another hand."},
-{k:"q", a:"circumpunct", x:"What changes when you begin to notice how many ways there are to be one?"}
+{k:"q", a:"circumpunct", x:"What changes when you begin to notice how many ways there are to be one?"},
+
+// ---------- Part Two: The Ways of the Whole ----------
+// k: part (part opening) | pp (titled page). t: the page title; p: its paragraphs.
+{k:"part", a:"nested", n:"Part Two", t:"The Ways of the Whole", x:"*Look at your hand. You know what it is by now: one thing that is never just one thing. This part of the book asks what the whole does: how a centered life receives, defends, breaks, and reopens. Bring your own.*"},
+
+{k:"pp", a:"hand", t:"One and many, again", p:[
+  "One hand. Several fingers. A whole with parts, a part of you.",
+  "You are also trillions of cells, a stream of thoughts, a body meeting the world, and a part of every relationship you are in. How much of your life has that structure? Almost all of it.",
+  "I am whole. I am part."]},
+{k:"pp", a:"circumpunct", t:"The whole you are", p:[
+  "A center from which experience occurs. A path through time. A boundary that distinguishes and connects. A field where perceptions, thoughts, feelings, memories, and intentions cohere.",
+  "Consciousness is centered wholeness. The subject is the center. The person is the whole.",
+  "I am a circumpunct whole."]},
+{k:"pp", a:"attractor", t:"What changes", p:[
+  "The center itself remains unchanged while its relationships change. Its contents change. Its organization changes.",
+  "Becoming belongs to the living whole.",
+  "The geometric point expresses the commitment. The argument for an indivisible subject must go further than the drawing, and this part of the book is that further argument, made from inside."]},
+{k:"pp", a:"flow", t:"Always surrounded", p:[
+  "The center is always surrounded. Being surrounded is not the soul's circumstance. It is its condition.",
+  "A center without a field is not a soul. It is not anything.",
+  "Nothing unfiltered ever happens to anyone. Every experience arrives *through*."]},
+{k:"pp", a:"mandel", t:"Compression", p:[
+  "What converges through a center takes a particular, limited form. I call this compression: a wider reality, rendered.",
+  "All experience is compression. Finitude is not a failure; it is the architecture.",
+  "Every wholeness is a partial rendering of existence."]},
+{k:"pp", a:"circumpunct", o:{aperture:1}, t:"The aperture", p:[
+  "The center stays open. It did not choose to experience, and it cannot choose to stop. Openness is not the soul's act. It is the soul's kind.",
+  "What changes is what converges, and how the convergence is shaped. The hole in the whole does not change. Focus changes. Filters change."]},
+{k:"pp", a:"lightning", t:"Focus", p:[
+  "Focus has a direction and a manner. What am I attending to? How am I attending?",
+  "The soul has no orientation of its own. It is oriented only through its whole.",
+  "Within the constraints of Reality, what I focus on and how I focus affect the emergence of my Reality, alongside the choices of others and events beyond my control.",
+  "It still makes a difference."]},
+{k:"pp", a:"circumpunct", o:{lone:1}, t:"Where I am", p:[
+  "Location individuates the center. What kind of location?",
+  "Right where I am. Here, now: the place experience happens from.",
+  "Every center can say “here” with equal right. The soul matrix has no ranking in it. Whatever hierarchies exist among persons live in the wholes (in relations, roles, renderings), never in the openness.",
+  "All centers equal by position. All difference made by organization."]},
+{k:"pp", a:"nested", t:"The circle without a dot", p:[
+  "Wholes within wholes. A cell in an organ, an organ in a body, a person in a community.",
+  "A whole with many parts can function as one participant at a greater scale, taking the role of a point while its complexity remains.",
+  "But a role is not a soul. Societies are circles without dots. Their center is not a someone. It is a shared goal or, deeper, a shared shape.",
+  "Groups that fuse identity with their goal escalate when proven wrong; groups that hold it as a goal revise."]},
+{k:"pp", a:"tree", t:"Roles", p:[
+  "A shared goal gives each member a role. Roles are real parts of persons, and they are the most perishable parts: given mostly from outside, taken away by change.",
+  "When a goal dies, the role loses its anchor. Grief follows, and grief runs in two channels: pain tracks investment; relief tracks harm. Both run in every loss, weighted differently.",
+  "The filters keep firing toward a center that no longer answers. That is the pain. And when the role was harming you, its death arrives partly as relief."]},
+{k:"pp", a:"koch", t:"Shapes", p:[
+  "What survives the death of a goal is not the goal but the shape: the inscribed form, the dispositions and expectations the role carved into the filters.",
+  "Shapes outlive their contents. Form persists where content dies.",
+  "Deeply worn filters firing into a void hurt the same regardless of what the void used to be. Investment, not worth, sets the weight of the pain."]},
+{k:"pp", a:"rings", t:"Resonance", p:[
+  "Shaped persons encounter each other, and their filters align. Convergence amplifies instead of interfering. I call this resonance: form finding form.",
+  "From resonance, a new aim can grow, consonant with the old shape, not identical to it. Revival is not resurrection. Revivals rhyme.",
+  "Suppression attenuates what it cannot kill. We have observed this, and we claim it as a pattern, not a law. What survives suppression is what keeps its encounter-infrastructure: the gatherings, the rituals, the texts, the songs. Stored resonance, waiting for shaped persons."]},
+{k:"pp", a:"phyllotaxis", t:"Broadcast", p:[
+  "An idea, once private, can be broadcast, and tune other minds toward its frequency.",
+  "Resonance runs from private to public through artifacts and gatherings, and sometimes back again. A tradition is a resonance-infrastructure. Ritual is not symbolism; it is maintenance."]},
+{k:"pp", a:"julia", t:"The image at the center", p:[
+  "A self-image is a compression, part of the mind. Pathology begins when content is placed where only the center should be.",
+  "The whole organizes around defending the image. Correction arrives as existential threat, not because the correction is large, but because the image has been installed at the position where only openness should be.",
+  "Grandiosity is armor over fragility. The image is thin because it is a substitute rendering, and it needs defense in proportion to its thinness."]},
+{k:"pp", a:"ifs", t:"Degree, not species", p:[
+  "Narcissism is not a kind of person. It is a kind of organization: a degree, not a species.",
+  "Every whole has invested images. Defenses are universal, differentially activated by threat and investment.",
+  "The signature: attention conscripted for preservation. Criticism pre-compressed as attack. Boundaries sealed against correction. Others reduced from ⊙ to ○, valued as mirrors."]},
+{k:"pp", a:"koch", t:"Where the seal is", p:[
+  "The seal is never in the center. It is always in the whole: in the filters, in the recursion, in the encounters pre-read as confirmation.",
+  "The center stays open. Change is never ontologically foreclosed. It is only ever organizationally difficult.",
+  "The developmental evidence is precise: narcissism is predicted by being mirrored as an image; healthy self-esteem, by being met as a center. The problem is never convergence. It is corrupted convergence: an image delivered as identity."]},
+{k:"pp", a:"lightning", t:"The two that are needed", p:[
+  "Healing requires two things, never one: a disconfirming encounter, and curiosity (the filter about filters, pointed outward at reality itself, which is also an other).",
+  "Encounter without curiosity bounces, pre-compressed as attack.",
+  "Curiosity without encounter spins: the seal, turning in place.",
+  "Failure, loss, illness: reality penetrates where no person could. Let reality ripple the ponds."]},
+{k:"pp", a:"dragon", t:"Evidence", p:[
+  "Change is visible in the same evidence at every scale: acknowledging specific actions, making repairs, responding differently over time.",
+  "A person shows it this way. A nation shows it this way. A whole shows it this way.",
+  "A whole that can only restate the image is repeating. A whole that can say what it did, and change what it does, is re-founding."]},
+{k:"pp", a:"flow", t:"Pure", p:[
+  "When distortions in compression are removed, expression is pure.",
+  "Pure does not mean uncompressed. All experience arrives compressed. Pure means undistorted: compression whose correction channel is still live.",
+  "All rendering is lossy. Purity is loss you can still be corrected about."]},
+{k:"pp", a:"rings", o:{pair:1}, t:"Love", p:[
+  "I cannot know you without compressing you into an image. So love cannot mean having no image of you.",
+  "Love is compressing answerably: holding that image *as an image*, not as you, and letting you revise how I see you.",
+  "The same holds for my image of myself. Held as the center instead of as an image, it turns narcissistic.",
+  "To be someone's mirror is to reflect back only the image they need. Refusing is not a failure of love. Sometimes it is love. No one may be drafted into being another's cure. A boundary held in fidelity is as much care as a boundary opened."]},
+{k:"pp", a:"rose", t:"The half-steps", p:[
+  "The whole-number stations are things, and virtues sit in them. Between them are one-way movements, and a movement can only cost something, never possess it.",
+  "Every one-way step takes courage.",
+  "**Out**: beginning.",
+  "**Turn**: choosing a branch you cannot un-choose.",
+  "**Back**: letting correction cross the boundary inward.",
+  "**Home**: letting a whole complete itself, and become part of something larger."]},
+{k:"pp", a:"pythagoras", t:"The skill", p:[
+  "Corrigibility is a skill. It lives in the filters, shaped by recursion. You get better at it the way you get better at anything: through encounters where you let the correction land and discover the center survived.",
+  "And it takes courage, because it is paid at the Back step, the one-way step. Once correction lands, the old rendering is gone. You cannot un-cross.",
+  "Corrigibility is the practice of voluntarily paying one-way costs in real time, so the whole's distortions don't get paid later, larger, by someone else."]},
+{k:"pp", a:"attractor", t:"Not a state", p:[
+  "Corrigibility is not a state you reach. It cannot be self-ascribed: the moment “I am corrigible” becomes a claim, it is an image at the center-role, the seal wearing the costume of openness.",
+  "It stays third-person and retrospective, visible only in the evidence.",
+  "You can't possess it. You can only keep doing it, and be seen doing it.",
+  "The center stays open: that was never your work. The channel staying answerable: that is."]},
+{k:"pp", a:"nested", t:"How we participate, again", p:[
+  "True, at the center: what is true here?",
+  "Faithful, along the path: what am I continuing, and to what am I remaining faithful?",
+  "Good, at the boundary: what am I protecting, and how am I connecting?",
+  "Right, within the field: how does my participation fit the lives involved?",
+  "Wholeness, through experience: what whole are we helping form, and what is it like to live within it?",
+  "What I care about matters. What you care about matters. When cares conflict: listen, give reasons, examine consequences, revise."]},
+{k:"pp", a:"newton", t:"Still open", p:[
+  "Location: here (indexical, equal, unranked). What this means for persistence past the path's end remains a question.",
+  "Steering: the whole redirects focus consciously, as the whole. The mechanism beneath the experience is not yet described.",
+  "Greater wholes: a society's center is a goal or a shape. Whether any greater whole has a soul (a perspective of its own) is unknown. Maybe we are parts of a greater consciousness. The framework holds the question, not an answer."]},
+{k:"pp", a:"hand", t:"Look again", p:[
+  "Look at your hand. One hand, with parts. One part of you. An interface through which you can touch another hand.",
+  "There are many ways to be one, and each is itself one way.",
+  "The center stays open. The whole stays answerable.",
+  "That is the whole of it."]}
 ];

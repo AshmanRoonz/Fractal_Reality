@@ -14,9 +14,12 @@
   PAGES.forEach(function (p, i) {
     if (p.k === 'title') chapters.push({ title: 'Existence', page: i });
     else if (p.k === 'th') chapters.push({ title: plain(p.x), page: i });
+    else if (p.k === 'part') chapters.push({ title: p.n + ': ' + plain(p.t), page: i, part: true });
+    else if (p.k === 'pp') chapters.push({ title: plain(p.t), page: i, sub: true });
     else if (p.ch) chapters.push({ title: p.ch, page: i });
     chapterOf[i] = Math.max(0, chapters.length - 1);
   });
+  const partCount = 1 + PAGES.filter(function (p) { return p.k === 'part'; }).length;
 
   function md(s) {
     return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
@@ -31,10 +34,18 @@
         return '<h1 class="title">Existence</h1>' +
           '<p class="subtitle">One and many. A Circumpunct manifesto.</p>' +
           (p.x ? '<p class="txt lede">' + md(p.x) + '</p>' : '') +
-          '<p class="hint">' + PAGES.length + ' pages' +
-          (window.NARRATION ? ', about ' + Math.round(window.NARRATION.duration / 60) + ' minutes' : '') + '. ' +
+          '<p class="hint">' + PAGES.length + ' pages' + (partCount > 1 ? ' in ' + partCount + ' parts' : '') + '. ' +
           'Turn pages with the arrow keys, a swipe, or the buttons below, and tap a plate to draw it again.' +
-          (window.NARRATION ? ' Press Listen, top left, to hear it read in the author’s cloned voice.' : '') + '</p>';
+          (window.NARRATION ? ' Press Listen, top left, to hear ' +
+            (window.NARRATION.starts.length < PAGES.length ? 'Part One' : 'it') +
+            ' read in the author’s cloned voice (about ' + Math.round(window.NARRATION.duration / 60) + ' minutes).' : '') +
+          '</p>';
+      case 'part':
+        return '<p class="kicker">' + md(p.n) + '</p><h2 class="parttitle">' + md(p.t) + '</h2>' +
+          '<p class="subtitle">' + md(p.x) + '</p>';
+      case 'pp':
+        return '<div class="mark" aria-hidden="true"></div><h2 class="pagehead">' + md(p.t) + '</h2>' +
+          p.p.map(function (s) { return '<p class="txt">' + md(s) + '</p>'; }).join('');
       case 'th':
         return '<div class="mark" aria-hidden="true"></div><h2 class="thesis">' + md(p.x) + '</h2>';
       case 'q':
@@ -91,22 +102,24 @@
 
   // ---------- navigation ----------
   let textTimer = 0;
-  let narrator = null, onTurn = null;   // set by the narration block below
+  let narrator = null, onTurn = null, onPage = null;   // set by the narration block below
 
   function go(i, opts) {
     i = Math.max(0, Math.min(PAGES.length - 1, i | 0));
     if (i === cur) return;
     const first = cur < 0;
     cur = i;
-    const html = pageHTML(i);
+    const html = pageHTML(i), kind = PAGES[i].k;
     clearTimeout(textTimer);
     if (first || reduce) {
       inner.innerHTML = html;
+      inner.dataset.kind = kind;
       inner.classList.remove('leaving');
     } else {
       inner.classList.add('leaving');
       textTimer = setTimeout(function () {
         inner.innerHTML = html;
+        inner.dataset.kind = kind;
         spread.scrollTop = 0;
         inner.classList.remove('leaving');
       }, 170);
@@ -125,6 +138,7 @@
     try { localStorage.setItem('existence-page', String(i)); } catch (e) { /* storage blocked */ }
     if (!(opts && opts.noArt)) startArt();
     if (onTurn && !(opts && opts.fromAudio)) onTurn(i);
+    if (onPage) onPage(i);
   }
 
   function redraw() {
@@ -148,6 +162,8 @@
   const list = $('tocList');
   chapters.forEach(function (c) {
     const li = document.createElement('li');
+    if (c.part) li.className = 'partrow';
+    else if (c.sub) li.className = 'subrow';
     const b = document.createElement('button');
     b.type = 'button';
     b.innerHTML = '<span class="n">' + (c.page + 1) + '</span><span class="t"></span>';
@@ -220,7 +236,8 @@
 
   // ---------- narration: the book read aloud, turning pages at each pause ----------
   const N = window.NARRATION, listenBtn = $('listen'), clock = $('clock');
-  if (N && N.starts && N.starts.length === PAGES.length) {
+  if (N && N.starts && N.starts.length > 0 && N.starts.length <= PAGES.length) {
+    const narrated = N.starts.length;   // the recording covers pages 0 .. narrated - 1
     let audio = null, syncing = false;   // syncing: a seek is in flight, so time updates must not turn pages
     const pageAt = function (t) {
       let p = 0;
@@ -311,6 +328,7 @@
     };
     narrator = {
       toggle: function () {
+        if (cur >= narrated) return;   // pages past the recording have no narration yet
         const a = load();
         if (fromMemory && a.src.indexOf('blob:') !== 0) return;   // still loading into memory
         if (!a.paused) { a.pause(); return; }
@@ -322,10 +340,17 @@
         if (played && played.catch) played.catch(function () { show(false); });
       },
       seek: function (i) {
+        if (i >= narrated) { if (audio && !audio.paused) audio.pause(); return; }
         if (audio && pageAt(audio.currentTime) !== i) seekTo(N.starts[i]);
       }
     };
     onTurn = narrator.seek;
+    onPage = function (i) {
+      const off = i >= narrated;
+      listenBtn.disabled = off;
+      listenBtn.title = off ? 'The narration covers Part One' :
+        'Read aloud by an ElevenLabs clone of ' + N.reader + '’s voice';
+    };
     listenBtn.hidden = false;
     listenBtn.title = 'Read aloud by an ElevenLabs clone of ' + N.reader + '’s voice';
     listenBtn.addEventListener('click', narrator.toggle);
