@@ -1,0 +1,288 @@
+unified_expression_T_v21_seam_modulated.py  (v1.0, 2026-10-16)
+alpha = 1/137.035999177 (measured); numpy 2.3.5
+
+==============================================================================
+E0  INSTRUMENTS AND VERIFICATION
+==============================================================================
+  canonical modulation, n = 1: seq vs StaggeredOperator.ring 0.0e+00; sync vs v20/v16 sync ring 0.0e+00
+  canonical modulation, n = 2: seq vs StaggeredOperator.ring 4.4e-16; sync vs v20/v16 sync ring 0.0e+00
+  canonical modulation, n = 7: seq vs StaggeredOperator.ring 5.8e-16; sync vs v20/v16 sync ring 0.0e+00
+  fast family optimizer vs v20 (TC w8, v20 sync ring n_c=2, m=4): 0.871856 vs 0.871856
+  fast family optimizer vs v20 (SD w8, v20 sync ring n_c=2, m=4): 0.631549 vs 0.631549
+  v20 F6 case, SD w8 (sync n_c=2, m=4): unconstrained 0.632 <= constrained 0.742 <= row-normalized 0.776  ok;  unconstrained optimum has 4 of 14 rows below 10% (min 0.047)
+  v20 F6 case, SD w15 (sync n_c=2, m=4): unconstrained 0.476 <= constrained 0.609 <= row-normalized 0.693  ok;  unconstrained optimum has 8 of 14 rows below 10% (min 0.037)
+  seam roles on the 49-octave ring (seam j = 0..48, grouped by 7): 0123456 1123456 2123456 3123456 4123456 5123456 6123456
+  all instrument checks: PASS
+
+==============================================================================
+E1  THE CONSTRUCTION, AND WHETHER V20'S OBSTRUCTIONS STILL APPLY
+==============================================================================
+  role d: 0=tonic(i^0)  1=conv(i^1)  2=line(i^0)  3=branch(i^2)  4=field(i^0)  5=emerge(i^3)  6=bound(i^0)
+  role strokes: the octave closing into role d uses beat-4 stroke i^s(d) (canon i^0); role gates: seam phase i^s(d) once per cycle.
+  relative non-invariance ||U F U^dag - F|| / ||F|| on the 49-octave ring (U = 1-octave and 7-octave shifts):
+    sync homogeneous   1-octave 5.111e-16   7-octave 5.148e-16
+    sync role strokes  1-octave 9.757e-01   7-octave 3.596e-01
+    sync role gates    1-octave 5.915e-01   7-octave 2.160e-01
+    seq  homogeneous   1-octave 2.022e-01   7-octave 2.065e-01
+    seq  role strokes  1-octave 9.522e-01   7-octave 4.073e-01
+    seq  role gates    1-octave 6.200e-01   7-octave 2.884e-01
+  v20 Theorem 1 needs exact octave invariance and Theorem 2 needs a lattice momentum: the modulation removes both preconditions.
+  conservation (|l1| - 1)/alpha, fine and coarse (seq):
+    homogeneous   0.8299  0.7913
+    role strokes  0.6539  0.6387
+    role gates    0.6129  0.5833
+
+==============================================================================
+E2  CORPUS SCALE MAPS ON THE MODULATED CHAIN: delta(m), m = 1..8
+==============================================================================
+  L  comp  modulation    R        op       1      2      3      4      5      6      7      8
+  2  seq   homogeneous   R_dec    F    0.991  0.973  0.976  0.980  0.967  0.970  0.932  0.952
+  2  seq   homogeneous   R_dec    T    0.991  0.973  0.975  0.980  0.968  0.969  0.932  0.953
+  2  seq   homogeneous   R_whole  F    0.888  0.911  0.946  0.960  0.974  0.977  0.947  0.957
+  2  seq   homogeneous   R_whole  T    0.888  0.910  0.945  0.959  0.973  0.977  0.948  0.958
+  2  seq   homogeneous   R_unif   F    0.917  0.947  0.964  0.966  0.973  0.973  0.931  0.936
+  2  seq   homogeneous   R_unif   T    0.916  0.947  0.964  0.967  0.972  0.974  0.932  0.936
+  2  seq   role strokes  R_dec    F    0.996  0.979  0.985  0.996  0.967  0.981  0.960  0.983
+  2  seq   role strokes  R_dec    T    0.996  0.979  0.985  0.997  0.966  0.981  0.961  0.984
+  2  seq   role strokes  R_whole  F    0.921  0.961  0.976  0.990  0.978  0.979  0.994  0.997
+  2  seq   role strokes  R_whole  T    0.921  0.961  0.976  0.990  0.978  0.979  0.994  0.997
+  2  seq   role strokes  R_unif   F    0.928  0.974  0.990  0.955  0.962  0.989  0.969  0.970
+  2  seq   role strokes  R_unif   T    0.928  0.974  0.990  0.955  0.962  0.989  0.969  0.969
+  2  seq   role gates    R_dec    F    0.992  0.972  0.985  0.974  0.954  0.970  0.975  0.976
+  2  seq   role gates    R_dec    T    0.992  0.972  0.985  0.973  0.954  0.970  0.975  0.976
+  2  seq   role gates    R_whole  F    0.893  0.925  0.944  0.960  0.957  0.971  0.985  0.993
+  2  seq   role gates    R_whole  T    0.893  0.924  0.943  0.958  0.956  0.971  0.985  0.993
+  2  seq   role gates    R_unif   F    0.927  0.961  0.963  0.940  0.972  0.984  0.983  0.990
+  2  seq   role gates    R_unif   T    0.927  0.961  0.963  0.940  0.970  0.983  0.983  0.989
+  2  sync  homogeneous   R_dec    F    0.995  0.966  0.950  0.981  0.966  0.984  0.941  0.976
+  2  sync  homogeneous   R_dec    T    0.995  0.966  0.949  0.981  0.966  0.984  0.942  0.976
+  2  sync  homogeneous   R_whole  F    0.901  0.912  0.921  0.937  0.965  0.954  0.955  0.968
+  2  sync  homogeneous   R_whole  T    0.901  0.912  0.921  0.936  0.964  0.953  0.955  0.967
+  2  sync  homogeneous   R_unif   F    0.985  0.947  0.970  0.982  0.978  0.979  0.951  0.974
+  2  sync  homogeneous   R_unif   T    0.985  0.947  0.970  0.981  0.978  0.979  0.952  0.974
+  2  sync  role strokes  R_dec    F    0.986  0.984  0.974  0.993  0.996  0.986  0.948  0.993
+  2  sync  role strokes  R_dec    T    0.985  0.984  0.974  0.993  0.996  0.986  0.948  0.993
+  2  sync  role strokes  R_whole  F    0.937  0.965  0.991  0.987  0.976  0.979  0.992  0.991
+  2  sync  role strokes  R_whole  T    0.936  0.965  0.991  0.986  0.975  0.978  0.992  0.991
+  2  sync  role strokes  R_unif   F    0.989  0.968  0.983  0.973  0.970  0.986  0.973  0.991
+  2  sync  role strokes  R_unif   T    0.989  0.968  0.983  0.973  0.970  0.986  0.973  0.991
+  2  sync  role gates    R_dec    F    0.981  0.994  0.990  0.985  0.979  0.970  0.984  0.965
+  2  sync  role gates    R_dec    T    0.981  0.994  0.990  0.984  0.980  0.970  0.984  0.964
+  2  sync  role gates    R_whole  F    0.910  0.923  0.945  0.967  0.965  0.969  0.981  0.985
+  2  sync  role gates    R_whole  T    0.909  0.923  0.945  0.966  0.964  0.969  0.980  0.986
+  2  sync  role gates    R_unif   F    0.972  0.945  0.975  0.971  0.985  0.994  0.985  0.989
+  2  sync  role gates    R_unif   T    0.972  0.945  0.975  0.971  0.985  0.995  0.985  0.989
+  1  seq   homogeneous   R_dec    F    0.984  0.984  0.975  0.982  0.967  0.976  0.955  0.940
+  1  seq   homogeneous   R_whole  F    0.918  0.940  0.970  0.977  0.970  0.970  0.948  0.964
+  1  seq   homogeneous   R_unif   F    0.955  0.958  0.970  0.957  0.962  0.983  0.940  0.961
+  1  seq   role strokes  R_dec    F    0.989  0.970  0.979  0.982  0.974  0.994  0.952  0.970
+  1  seq   role strokes  R_whole  F    0.923  0.954  0.965  0.978  0.991  0.989  0.974  0.971
+  1  seq   role strokes  R_unif   F    0.959  0.991  0.985  0.955  0.974  0.973  0.961  0.956
+  1  seq   role gates    R_dec    F    0.998  0.973  0.987  0.986  0.959  0.975  0.968  0.986
+  1  seq   role gates    R_whole  F    0.928  0.957  0.966  0.977  0.975  0.982  0.992  0.983
+  1  seq   role gates    R_unif   F    0.966  0.961  0.975  0.950  0.983  0.981  0.996  0.979
+  depth L = 3 (fine 343 octaves, 2401 nodes -> coarse 49 octaves), seq, F, m = 4, 8:
+    homogeneous   R_dec 0.978 0.951   R_whole 0.960 0.957
+    role strokes  R_dec 0.995 0.985   R_whole 0.991 0.998
+    role gates    R_dec 0.972 0.975   R_whole 0.959 0.993
+
+==============================================================================
+E3  NULLS FOR THE CORPUS MAPS (L = 2, seq; 200 draws per family)
+==============================================================================
+  pct = fraction of null draws with defect <= the corpus value
+
+  [role strokes]  m:                   1      2      3      4      5      6      7      8
+  Haar co-isometry  mean     0.969  0.981  0.989  0.990  0.988  0.995  0.984  0.991   min 0.961
+  random decimation mean     0.965  0.977  0.985  0.986  0.985  0.992  0.983  0.988   min 0.935
+  random weights    mean     0.962  0.965  0.978  0.981  0.976  0.982  0.965  0.986   min 0.919
+  R_dec    corpus    0.996  0.979  0.985  0.996  0.967  0.981  0.960  0.983
+           max pct    1.00   0.83   1.00   1.00   0.17   0.67   0.17   0.67
+  R_whole  corpus    0.921  0.961  0.976  0.990  0.978  0.979  0.994  0.997
+           max pct    0.01   0.42   0.40   0.79   0.57   0.34   1.00   0.99
+  R_unif   corpus    0.928  0.974  0.990  0.955  0.962  0.989  0.969  0.970
+           max pct    0.04   0.70   0.85   0.01   0.12   0.76   0.60   0.03
+
+  [role gates]  m:                   1      2      3      4      5      6      7      8
+  Haar co-isometry  mean     0.963  0.970  0.986  0.988  0.983  0.993  0.975  0.979   min 0.954
+  random decimation mean     0.958  0.966  0.984  0.986  0.982  0.990  0.976  0.981   min 0.933
+  random weights    mean     0.950  0.959  0.965  0.967  0.961  0.973  0.974  0.968   min 0.892
+  R_dec    corpus    0.992  0.972  0.985  0.974  0.954  0.970  0.975  0.976
+           max pct    1.00   0.83   0.83   0.50   0.17   0.17   0.67   0.23
+  R_whole  corpus    0.893  0.925  0.944  0.960  0.957  0.971  0.985  0.993
+           max pct    0.01   0.03   0.10   0.28   0.38   0.40   1.00   1.00
+  R_unif   corpus    0.927  0.961  0.963  0.940  0.972  0.984  0.983  0.990
+           max pct    0.17   0.51   0.47   0.07   0.72   0.72   1.00   1.00
+
+  random-modulation null (30 random 35-parameter modulations, L = 2, seq):
+    R_dec m4    mean 0.980 +/- 0.011   min 0.957
+    R_dec m8    mean 0.984 +/- 0.007   min 0.966
+    R_whole m4  mean 0.977 +/- 0.013   min 0.949
+    R_whole m8  mean 0.976 +/- 0.011   min 0.947
+    SD7c m4     mean 0.843 +/- 0.013   min 0.814
+    [10s]
+
+==============================================================================
+E4  FAMILY CEILINGS (L = 2, seq): unconstrained / CONSTRAINED / row-normalized
+==============================================================================
+  constrained = every coarse row at unit norm (no coarse node dropped); the honest ceiling, bracketed by the other two.
+  TC = translation-covariant window (8 weights); SD7 = station-dependent (56); PN = per-node windows (392)
+    homogeneous   m=1: TC 0.862/0.862/0.862   SD7 0.633/0.768/0.830
+    homogeneous   m=4: TC 0.863/0.863/0.863   SD7 0.642/0.738/0.789   PN 0.640/0.732/0.795
+    homogeneous   m=8: TC 0.856/0.856/0.856   SD7 0.643/0.713/0.754
+    role strokes  m=1: TC 0.875/0.875/0.875   SD7 0.635/0.808/0.882
+    role strokes  m=4: TC 0.917/0.917/0.917   SD7 0.673/0.812/0.857   PN 0.660/0.747/0.805
+    role strokes  m=8: TC 0.930/0.930/0.930   SD7 0.717/0.808/0.881
+    role gates    m=1: TC 0.859/0.859/0.859   SD7 0.632/0.773/0.823
+    role gates    m=4: TC 0.876/0.876/0.876   SD7 0.651/0.748/0.819   PN 0.648/0.737/0.796
+    role gates    m=8: TC 0.897/0.897/0.897   SD7 0.666/0.734/0.807
+
+  same-geometry null under the constraint: random 8x8 octave blocks (seq rings, same block at both scales), SD7 constrained, m = 4:
+    v20 size, fine 14 -> coarse 2 octaves: canonical 0.748; random blocks 0.762 +/- 0.018 (min 0.725); canonical pct 0.30
+    v21 size, fine 49 -> coarse 7 octaves: canonical 0.738; random blocks 0.744 +/- 0.020 (min 0.707); canonical pct 0.40
+    v21 size, fine 49 -> coarse 7 octaves, with role gates: canonical 0.748; random blocks 0.759 +/- 0.017; pct 0.33
+
+==============================================================================
+E5  THE BEST SEAM MODULATION (35-parameter search, committed in --optimize)
+==============================================================================
+  stage 1 (unconstrained SD7 ceiling, L = 2, m = 4), start -> best:
+    canonical     0.6419 -> 0.5735
+    role strokes  0.6732 -> 0.5867
+    role gates    0.6513 -> 0.5775
+    random 0      0.6382 -> 0.6389
+    random 1      0.6759 -> 0.5973
+    random 2      0.6510 -> 0.6170
+  stage 2 (constrained, from canonical): 0.7269 -> 0.6998
+  capacity null (same search, coarse target from a random octave block): 0.5443 -> 0.5070 (constrained 0.6932); 0.7170 -> 0.6319 (constrained 0.7863); 0.7311 -> 0.6169 (constrained 0.7532)
+  best modulation (per role 0..6):
+    close_phase -0.158 -0.131 -0.531 -0.192 -0.130 -0.293 -0.207 pi
+    close_gain  +1.333 +1.412 +1.133 +1.351 +1.516 +1.544 +1.387
+    open_phase  +0.002 +0.013 -0.028 -0.050 -0.019 +0.067 +0.081 pi
+    open_gain   +1.297 +1.032 +1.151 +1.219 +1.326 +1.178 +1.234
+    gate_phase  -0.801 -0.092 +0.092 -0.158 -0.547 -0.586 -0.679 pi
+  L=2 seq R_dec    F   0.985  0.976  0.975  0.956  0.989  0.961  0.984  0.975
+  L=2 seq R_dec    T   0.985  0.975  0.975  0.955  0.989  0.961  0.984  0.975
+  L=2 seq R_whole  F   0.884  0.905  0.936  0.963  0.972  0.981  0.987  0.997
+  L=2 seq R_whole  T   0.884  0.905  0.936  0.963  0.971  0.981  0.987  0.998
+  L=2 seq R_unif   F   0.906  0.924  0.974  0.970  0.967  0.943  0.954  0.969
+  L=2 seq R_unif   T   0.906  0.923  0.974  0.971  0.967  0.943  0.954  0.969
+  L=2 seq m=1: SD7 0.626/0.738/0.834   (unconstrained/constrained/row-normalized)
+  L=2 seq m=4: SD7 0.588/0.700/0.749   PN 0.571/0.670/0.734   (unconstrained/constrained/row-normalized)
+  L=2 seq m=8: SD7 0.645/0.741/0.818   (unconstrained/constrained/row-normalized)
+  L=1 seq m=4: SD7 0.573/0.615/0.651;  R_dec 0.968
+  L=3 seq m=4: SD7 0.588/0.694/0.744;  R_dec 0.955
+  L=2 sync m=4: SD7 0.582/0.707/0.756
+
+==============================================================================
+E6  THE LEAKAGE IDENTITY: WHY NO LOCAL COARSE-GRAINING WORKS
+==============================================================================
+  For a co-isometric R with row space V and M = R F^m R^dag (the compressed
+  fine dynamics): delta^2 = 1 - |<F_c, M>| / N_c, and since |<F_c, M>| <=
+  sqrt(N_c) ||M|| = N_c sqrt(1 - leak^2), delta >= sqrt(1 - sqrt(1 - leak^2)).
+  Self-similarity needs BOTH leak -> 0 (V invariant) AND M -> c F_c.
+  modulation     R (m=4)        leak  cos(M,Fc)   delta  identity   floor
+  homogeneous    R_dec         0.901      0.091   0.980     0.980   0.753
+  homogeneous    R_whole       0.862      0.148   0.962     0.962   0.702
+  homogeneous    SD7 constr    0.645      0.575   0.749     0.749   0.486
+  homogeneous    PN constr     0.651      0.590   0.743     0.743   0.491
+  role strokes   R_dec         0.880      0.016   0.996     0.996   0.725
+  role strokes   R_whole       0.910      0.041   0.992     0.992   0.765
+  role strokes   SD7 constr    0.723      0.478   0.819     0.819   0.556
+  role strokes   PN constr     0.736      0.621   0.761     0.761   0.568
+  best (search)  R_dec         0.922      0.224   0.956     0.956   0.784
+  best (search)  R_whole       0.852      0.136   0.964     0.964   0.691
+  best (search)  SD7 constr    0.655      0.658   0.709     0.709   0.494
+  best (search)  PN constr     0.630      0.697   0.677     0.677   0.472
+  identity check: max |delta - sqrt(1 - |<F_c,M>|/N_c)| = 3.3e-16
+
+==============================================================================
+E6b LOCALITY OF THE COARSE GENERATOR (why slow seams would not help either)
+==============================================================================
+  Octaves coupled only through shared tonics generate, at leading order in a weak
+  seam coupling, a coarse dynamics with nearest-neighbor generator. Share of the
+  squared Frobenius weight of the principal log of the coarse operator, by the
+  ring distance between the stations it couples:
+    single octave log F8:   d=0 0.061   d=1 0.278   d>=2 0.661
+    7-octave coarse ring (homogeneous): d=0 0.020   d=1 0.164   d=2-3 0.332   d>=4 0.485
+    7-octave coarse ring (role strokes): d=0 0.015   d=1 0.180   d=2-3 0.337   d>=4 0.467
+
+==============================================================================
+E7  THE ATTRACTOR (T leading mode, L = 2, seq)
+==============================================================================
+  homogeneous    overlap R_dec 0.010, R_whole 0.027 (chance 0.130 +/- 0.064)
+                 seam phase advance: per fine octave +0.464 pi; across 7 fine octaves -0.771 pi; coarse per coarse octave +0.362 pi
+  role strokes   overlap R_dec 0.214, R_whole 0.188 (chance 0.126 +/- 0.066)
+                 seam phase advance: per fine octave -0.148 pi; across 7 fine octaves -0.284 pi; coarse per coarse octave -0.065 pi
+  role gates     overlap R_dec 0.077, R_whole 0.090 (chance 0.127 +/- 0.068)
+                 seam phase advance: per fine octave +0.602 pi; across 7 fine octaves +0.559 pi; coarse per coarse octave -0.045 pi
+  best (search)  overlap R_dec 0.006, R_whole 0.008 (chance 0.123 +/- 0.067)
+                 seam phase advance: per fine octave +0.148 pi; across 7 fine octaves +0.157 pi; coarse per coarse octave +0.405 pi
+
+==============================================================================
+E8  TENSOR-NESTING NULL (closed form from v20 E8; R contracts the finest factor)
+==============================================================================
+  delta(m) = sqrt(1 - |tr F8^(m-1)/8|^(depth-1)): exact at m = 1, compounding:
+    depth 2:  0.000  0.836  0.838  0.847  0.982  0.737  0.863  0.883
+    depth 3:  0.000  0.954  0.955  0.959  0.999  0.889  0.967  0.975
+    depth 4:  0.000  0.986  0.987  0.989  1.000  0.951  0.992  0.995
+
+==============================================================================
+E9  THE 720 TEST: SELF-SIMILARITY OVER TWO SCALE STEPS
+==============================================================================
+  Ashman (2026-10-16): "the point is a process at the next scale, in the staggered
+  octave model, but then another scale again and it's a structure again... that's the 720".
+  Reading: one scale step moves a point by 3.5 (a half-integer: process parity), two steps
+  by 7D = R (integer: structure again); the parity double cover of section 27.7t.5, 360
+  degrees flips, 720 restores. v20 and E2-E8 compared scale n with n+1 only.
+
+  (a) attractor arithmetic (canon ring; q* = phase advance per octave):
+    q* (measured alpha)     one step, R(q) = 7q  : fixed points 2 pi k/6; nearest 0.333333 pi, offset +5.180 deg
+    q* (measured alpha)     two steps, R(q) = 49q: fixed points 2 pi k/48; nearest 0.375000 pi, offset -2.320 deg
+    q* (measured alpha)     one step with a sign flip (7q = q + pi): nearest 0.5000 pi, offset -24.82 deg
+    q*_0 (alpha -> 0, v17)  one step, R(q) = 7q  : fixed points 2 pi k/6; nearest 0.333333 pi, offset +5.248 deg
+    q*_0 (alpha -> 0, v17)  two steps, R(q) = 49q: fixed points 2 pi k/48; nearest 0.375000 pi, offset -2.252 deg
+    q*_0 (alpha -> 0, v17)  one step with a sign flip (7q = q + pi): nearest 0.5000 pi, offset -24.75 deg
+
+  (b) canon sync ring, fine 98 octaves: one step (to 14 octaves) vs two steps (to 2):
+    m:                                     1      2      3      4      5      6      7      8     16     49     64
+    one step  R_dec                    0.995  0.966  0.950  0.981  0.966  0.984  0.941  0.976  0.996  0.994  0.992
+    two steps R_dec o R_dec            0.992  0.978  0.965  0.993  0.983  0.986  0.940  0.992  0.990  0.982  0.988
+    two steps R_whole o R_whole        0.909  0.908  0.932  0.922  0.962  0.948  0.945  0.938  0.923  0.968  0.970
+    Haar co-isometry, same shape (mean) 0.964  0.975  0.978  0.989  0.989  0.993  0.936  0.973  0.981  0.985  0.993
+    symmetry floor for any translation-covariant two-step projection: 0.5004
+    attractor on these finite rings: q_f = 0.3673 pi, 49 q_f = 0.0000 pi, level-2 Q_c = 2.0000 pi (coincide by rounding); overlap 0.434 vs within-sector chance 0.340 +/- 0.164
+
+  (c) seam-modulated chain, two levels: fine 343 octaves -> 7 octaves (seq, F):
+    homogeneous    two steps R_dec    0.986  0.981  0.964  0.994  0.988  0.989  0.945  0.994  0.984
+    homogeneous    two steps R_whole  0.901  0.908  0.955  0.956  0.989  0.976  0.935  0.950  0.938
+    role strokes   two steps R_dec    0.992  0.996  0.989  0.990  0.989  0.991  0.974  0.992  0.969
+    role strokes   two steps R_whole  0.929  0.967  0.987  0.986  0.976  0.990  0.985  0.991  0.989
+    best (search)  two steps R_dec    0.981  0.996  0.959  0.985  0.990  0.983  0.998  0.978  0.978
+    best (search)  two steps R_whole  0.905  0.925  0.929  0.949  0.949  0.951  0.968  0.981  0.968
+
+  (d) where the parity flip is dynamical: the whole-tone reading (v18 strokes at odd
+      coordinates), one step, sync ring, fine 56 octaves -> 8; canon on the same builder:
+    whole-tone  R_dec  0.978  0.995  0.976  0.990  0.990  0.979  0.988  0.988  0.992   m=1 constrained SD7 0.865; m=4 constrained SD7 0.895
+    canon       R_dec  0.995  0.966  0.950  0.981  0.966  0.984  0.941  0.976  0.996   m=1 constrained SD7 0.760; m=4 constrained SD7 0.741
+
+  (e) the reading closest to the sentence: ratio 3.5, each fine octave -> two coarse
+      stations (body = structure, closing point = process); fine 14 octaves -> 4:
+    sync  fixed R_bc  0.943  0.966  0.969  0.977  0.986  0.984  0.934  0.952  0.972
+    sync  per-node family, constrained: m=1 0.632; m=4 0.621
+    seq   fixed R_bc  0.953  0.947  0.956  0.958  0.992  0.974  0.971  0.963  0.938
+    seq   per-node family, constrained: m=1 0.595; m=4 0.592
+    symmetry floor (sync; fine one-octave shift = coarse two-node shift): 0.5048
+    attractor: 7 fine octaves = 2 coarse octaves, so 7q = 2q, fixed points 2 pi k/5; q* offset from 0.4 pi -6.82 deg
+    same-geometry null (random octave blocks, seq, m = 4, constrained): 0.632 +/- 0.020 (min 0.580); canonical 0.592 at pct 0.07
+
+==============================================================================
+VERDICT (pre-stated rule: supported iff delta <= 0.10 AND below the 1st percentile of every null)
+==============================================================================
+  corpus-instance cells tested (role strokes, role gates; 3 maps; m = 1..8): 48
+  SUPPORTED: 0
+  below every null but not small: 2
+    role strokes  R_whole  m=1: delta 0.921, max pct 0.005
+    role gates    R_whole  m=1: delta 0.893, max pct 0.005
+  smallest corpus-instance defect: 0.893
+  best searched modulation, smallest constrained family ceiling (L = 2): 0.670  (small would be <= 0.10)
+
+[total runtime 184s]

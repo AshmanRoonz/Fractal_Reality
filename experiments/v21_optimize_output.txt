@@ -1,0 +1,17 @@
+unified_expression_T_v21_seam_modulated.py --optimize  (v1.0, 2026-10-16)
+alpha = 1/137.035999177 (measured); numpy 2.3.5; search seed 2101
+  stage 1 [canonical   ] unconstrained 0.6419 -> 0.5735 (1200 evals, 234s)
+  stage 1 [role strokes] unconstrained 0.6732 -> 0.5867 (645 evals, 135s)
+  stage 1 [role gates  ] unconstrained 0.6513 -> 0.5775 (667 evals, 166s)
+  stage 1 [random 0    ] unconstrained 0.6382 -> 0.6389 (369 evals, 64s)
+  stage 1 [random 1    ] unconstrained 0.6759 -> 0.5973 (684 evals, 118s)
+  stage 1 [random 2    ] unconstrained 0.6510 -> 0.6170 (1055 evals, 167s)
+  stage 2 [from canonical] constrained 0.7269 -> 0.6998 (300 evals, 139s)
+  capacity null [random target 0] unconstrained 0.5443 -> 0.5070; constrained at optimum 0.6932 (756 evals, 132s)
+  capacity null [random target 1] unconstrained 0.7170 -> 0.6319; constrained at optimum 0.7863 (1200 evals, 211s)
+  capacity null [random target 2] unconstrained 0.7311 -> 0.6169; constrained at optimum 0.7532 (1200 evals, 176s)
+
+  BEST_VEC = [-0.495932, -0.410785, -1.668735, -0.604646, -0.408764, -0.919452, -0.65052, 1.332635, 1.411935, 1.132559, 1.350686, 1.516123, 1.54442, 1.386543, 0.004847, 0.039781, -0.088732, -0.158371, -0.061119, 0.209888, 0.253927, 1.297393, 1.032094, 1.151107, 1.218821, 1.325976, 1.17805, 1.233755, -2.516864, -0.28746, 0.290544, -0.496894, -1.717017, -1.840208, -2.134552]
+  SEARCH_SUMMARY = {'stage1': {'canonical': (0.6419, 0.5735), 'role strokes': (0.6732, 0.5867), 'role gates': (0.6513, 0.5775), 'random 0': (0.6382, 0.6389), 'random 1': (0.6759, 0.5973), 'random 2': (0.651, 0.617)}, 'stage2': ('canonical', 0.7269, 0.6998), 'capacity': [(0.5443, 0.507, 0.6932), (0.717, 0.6319, 0.7863), (0.7311, 0.6169, 0.7532)]}
+
+[total runtime 1543s]
