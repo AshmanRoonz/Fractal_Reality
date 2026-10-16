@@ -1,0 +1,259 @@
+unified_expression_T_v20_self_similarity.py  (v1.0, 2026-10-16)
+alpha = 1/137.035999177 (measured); numpy 2.3.5
+
+==============================================================================
+E0  INSTRUMENTS AND VERIFICATION
+==============================================================================
+  StaggeredOperator.chain(1): |l1| = 1.0047036339  v14 ref 1.0047036339  ok
+  StaggeredOperator.chain(2): |l1| = 1.0047155246  v14 ref 1.0047155246  ok
+  StaggeredOperator.chain(3): |l1| = 1.0044779454  v14 ref 1.0044779454  ok
+  sync ring n=2 vs v16 ring_T_sync: max |diff| = 0.0e+00
+  sync ring n=3 vs v16 ring_T_sync: max |diff| = 0.0e+00
+  sync ring n=6 vs v16 ring_T_sync: max |diff| = 0.0e+00
+  canonical octave block vs t_operator.build_F_8D: 0.0e+00
+  sequential ring n=2 from block vs StaggeredOperator.ring: 4.4e-16
+  sequential ring n=3 from block vs StaggeredOperator.ring: 6.1e-16
+  tensor depth-3 builder vs v14-C512 build_T_512: 0.0e+00
+  departure (|l1|-1)/alpha, tensor depth 1, 2, 3: 0.6446, 1.6920, 2.7423   (compounds)
+  departure, staggered chain n = 1, 2, 3, 7, 14: 0.6446, 0.6462, 0.6136, 0.7063, 0.7751   (stays in the v14 band; no compounding)
+  whole-mode |psi|^2 (C8 attractor, local 0..7): 0.0948 0.0212 0.2784 0.1365 0.0291 0.0160 0.2850 0.1391
+  all instrument checks: PASS
+
+==============================================================================
+E2  CORPUS SCALE MAPS: DEFECT delta(m), m = 1..8 (fine 14 octaves -> coarse 2)
+==============================================================================
+  delta = 0 exact (up to phase), 1 uncorrelated.  Columns m = 1..8; m = 4 and m = 8 are columns 4 and 8.
+  system     R        op       1      2      3      4      5      6      7      8
+  chain      R_dec    F    0.997  0.976  0.974  0.971  0.956  0.970  0.922  0.975
+  chain      R_dec    T    0.997  0.976  0.973  0.972  0.957  0.970  0.922  0.976
+  chain      R_whole  F    0.878  0.903  0.944  0.961  0.973  0.990  0.951  0.958
+  chain      R_whole  T    0.878  0.902  0.943  0.960  0.972  0.991  0.952  0.959
+  chain      R_unif   F    0.908  0.943  0.978  0.955  0.973  0.975  0.919  0.932
+  chain      R_unif   T    0.908  0.943  0.978  0.955  0.972  0.976  0.919  0.932
+  seq ring   R_dec    F    0.992  0.975  0.977  0.984  0.969  0.973  0.940  0.947
+  seq ring   R_dec    T    0.992  0.975  0.977  0.984  0.970  0.973  0.940  0.948
+  seq ring   R_whole  F    0.889  0.912  0.945  0.962  0.973  0.976  0.948  0.954
+  seq ring   R_whole  T    0.889  0.911  0.944  0.961  0.973  0.977  0.949  0.955
+  seq ring   R_unif   F    0.920  0.947  0.963  0.962  0.968  0.977  0.931  0.937
+  seq ring   R_unif   T    0.920  0.947  0.963  0.962  0.968  0.977  0.932  0.937
+  sync ring  R_dec    F    0.995  0.967  0.950  0.981  0.967  0.983  0.943  0.974
+  sync ring  R_dec    T    0.995  0.966  0.950  0.981  0.967  0.982  0.944  0.974
+  sync ring  R_whole  F    0.903  0.914  0.922  0.938  0.965  0.955  0.955  0.969
+  sync ring  R_whole  T    0.903  0.913  0.922  0.937  0.964  0.954  0.955  0.968
+  sync ring  R_unif   F    0.984  0.948  0.969  0.983  0.978  0.980  0.951  0.974
+  sync ring  R_unif   T    0.984  0.948  0.969  0.983  0.978  0.980  0.952  0.974
+  chain      R_harm   F    0.931  0.901  0.942  0.931  0.982  0.984  0.954  0.956   (fine 4 oct, 2:1)
+  chain      R_harm   T    0.931  0.901  0.942  0.931  0.983  0.985  0.955  0.958   (fine 4 oct, 2:1)
+  sync ring  R_harm   F    0.955  0.926  0.924  0.953  0.955  0.965  0.978  0.924   (fine 4 oct, 2:1)
+  sync ring  R_harm   T    0.955  0.926  0.923  0.954  0.955  0.967  0.978  0.924   (fine 4 oct, 2:1)
+  sync ring  R_shift  F    0.000  0.857  0.904  0.917  0.960  0.960  0.979  0.725   (same size: octave shift)
+  sync ring  R_shift  T    0.000  0.856  0.903  0.916  0.960  0.960  0.982  0.728   (same size: octave shift)
+             closed   F    0.000  0.857  0.904  0.917  0.960  0.960  0.979  0.725   sqrt(1 - |tr F^(m-1)| / N): exact for the shift
+  chain      R_peel   F    0.290  0.853  0.874  0.964  0.954  0.849  0.982  0.824   (3 -> 2 oct: bottom octave into its closure tonic)
+  chain      R_peel   T    0.290  0.852  0.873  0.963  0.956  0.849  0.983  0.824   (3 -> 2 oct: bottom octave into its closure tonic)
+
+==============================================================================
+E2b DEPTH TREND (m = 4, 8) AND LONG-m SCAN (m = 1..49)
+==============================================================================
+  system     R          n_c=1 m4     m8   n_c=2 m4     m8   n_c=3 m4     m8
+  chain      R_dec         0.963  0.992      0.971  0.975      0.974  0.968
+  chain      R_whole       0.962  0.958      0.961  0.958      0.961  0.958
+  seq ring   R_dec           n/a    n/a      0.984  0.947      0.983  0.953
+  seq ring   R_whole         n/a    n/a      0.962  0.954      0.961  0.957
+  sync ring  R_dec         0.976  0.962      0.981  0.974      0.981  0.976
+  sync ring  R_whole       0.932  0.967      0.938  0.969      0.937  0.968
+  sync ring n_c=2 R_dec: min over m = 1..49 is 0.943 at m = 7;  m = 7, 14, 21, 28, 49: 0.943 0.983 0.993 0.964 0.986
+  sync ring n_c=2 R_whole: min over m = 1..49 is 0.903 at m = 1;  m = 7, 14, 21, 28, 49: 0.955 0.965 0.984 0.975 0.995
+
+==============================================================================
+E3  RANDOM-R NULLS FOR THE CORPUS MAPS (n_c = 2, 200 draws each)
+==============================================================================
+  pct = fraction of null draws with defect <= the corpus value (small pct = corpus map beats the null)
+
+  [chain]  m:                 1      2      3      4      5      6      7      8
+  Haar co-isometry  mean   0.960  0.971  0.977  0.984  0.978  0.988  0.936  0.980
+                    min    0.932  0.948  0.956  0.962  0.952  0.971  0.919  0.959
+  random decimation mean   0.956  0.961  0.974  0.980  0.977  0.984  0.939  0.980
+                    min    0.902  0.919  0.941  0.947  0.947  0.952  0.910  0.941
+  wrong residue s=1..6 min 0.914  0.926  0.950  0.914  0.954  0.957  0.916  0.937
+  random weights    mean   0.948  0.953  0.967  0.965  0.958  0.969  0.927  0.960
+                    min    0.886  0.907  0.920  0.913  0.899  0.919  0.886  0.908
+  R_dec    corpus   0.997  0.976  0.974  0.971  0.956  0.970  0.922  0.975
+           max pct   1.00   0.86   0.83   0.67   0.17   0.33   0.33   0.83
+  R_whole  corpus   0.878  0.903  0.944  0.961  0.973  0.990  0.951  0.958
+           max pct   0.00   0.00   0.09   0.43   0.74   0.93   0.94   0.47
+  R_unif   corpus   0.908  0.943  0.978  0.955  0.973  0.975  0.919  0.932
+           max pct   0.05   0.30   0.71   0.27   0.74   0.63   0.37   0.07
+
+  [sync ring]  m:                 1      2      3      4      5      6      7      8
+  Haar co-isometry  mean   0.962  0.973  0.975  0.985  0.985  0.987  0.936  0.972
+                    min    0.930  0.947  0.951  0.962  0.966  0.966  0.902  0.950
+  random decimation mean   0.960  0.970  0.974  0.982  0.983  0.984  0.934  0.971
+                    min    0.895  0.924  0.942  0.944  0.952  0.964  0.905  0.925
+  wrong residue s=1..6 min 0.917  0.933  0.952  0.935  0.966  0.973  0.912  0.955
+  random weights    mean   0.955  0.966  0.961  0.965  0.970  0.971  0.931  0.966
+                    min    0.899  0.902  0.917  0.912  0.921  0.921  0.898  0.921
+  R_dec    corpus   0.995  0.967  0.950  0.981  0.967  0.983  0.943  0.974
+           max pct   1.00   0.39   0.01   0.67   0.17   0.67   0.84   0.83
+  R_whole  corpus   0.903  0.914  0.922  0.938  0.965  0.955  0.955  0.969
+           max pct   0.01   0.01   0.01   0.09   0.33   0.14   0.98   0.60
+  R_unif   corpus   0.984  0.948  0.969  0.983  0.978  0.980  0.951  0.974
+           max pct   0.98   0.17   0.63   0.84   0.67   0.69   0.96   0.68
+
+==============================================================================
+E3b DIAGNOSTIC: WHY R_whole BEATS THE NULLS AT SMALL m (the frozen image)
+==============================================================================
+  overlap of the whole-mode with the eight F8 eigenvectors: 1.0000 0.0082 0.0024 0.0019 0.0019 0.0011 0.0009 0.0005
+  R_whole reads each fine octave in a near-eigenmode of its own beat block, so
+  its coarse image barely moves (R F_f^m ~ mu^m R) and can overlap F_c R only
+  through the identity (trace) part of F_c. Frozen defect d(R F^m, R), m = 1..8,
+  and the frozen-image level d(R, F_c R) (= sqrt(1 - |tr F_c|/N_c) for co-isometric R):
+    chain      R_whole  frozen  0.537  0.638  0.781  0.824  0.926  0.981  0.868  0.914   level 0.843
+    chain      R_unif   frozen  0.675  0.861  0.842  0.878  0.928  0.968  0.766  0.841   level 0.850
+    chain      R_dec    frozen  0.970  0.952  0.885  0.967  0.959  0.971  0.768  0.964   level 0.848
+    chain      sqrt(1 - |tr F_c| / N_c) = 0.848
+    sync ring  R_whole  frozen  0.549  0.615  0.699  0.757  0.885  0.875  0.818  0.871   level 0.857
+    sync ring  R_unif   frozen  0.941  0.711  0.940  0.832  0.944  0.950  0.815  0.979   level 0.863
+    sync ring  R_dec    frozen  0.968  0.913  0.860  0.974  0.935  0.947  0.745  0.969   level 0.859
+    sync ring  sqrt(1 - |tr F_c| / N_c) = 0.859
+  The above-chance cells (R_whole, m <= 3) sit just above the frozen-image level and
+  return to the null level as leakage through the shared tonics unfreezes the image.
+
+==============================================================================
+E4  THEOREM 1: THE SYMMETRY FLOOR FOR TRANSLATION-COVARIANT MAPS
+==============================================================================
+  If F_f commutes with the fine octave shift U_f (exact on the sync ring)
+  and R U_f = S R (S = coarse one-node shift), then for every m and phase:
+    R F_f^m - c F_c R  -  S (R F_f^m - c F_c R) U_f^dag  =  c (S F_c S^dag - F_c) R
+  so delta >= ||(S F_c S^dag - F_c) R||_F / (2 sqrt(||R F^m||^2+||F_c R||^2)).
+  For a co-isometric R (R R^dag = 1) the floor is R-independent:
+    delta >= ||S F_c S^dag - F_c||_F / (2 sqrt(2 N_c))  for ALL m.
+    n_c = 1: floor(F) = 0.4996   floor(T) ~ 0.4999
+    n_c = 2: floor(F) = 0.5004   floor(T) ~ 0.5004
+    n_c = 3: floor(F) = 0.4976   floor(T) ~ 0.4975
+    n_c = 4: floor(F) = 0.4975   floor(T) ~ 0.4974
+  verified on 36 translation-covariant maps x 8 m (sync ring n_c=2): min(delta - floor) = 0.3632  (>= 0 required)
+  the floor is m-independent: no time dilation m can rescue any translation-covariant octave-to-station map.
+
+==============================================================================
+E5  THEOREM 2: THE ATTRACTOR SELECTION RULE (momentum maps q -> 7q)
+==============================================================================
+  Any R covariant at the coarse-lattice level (R U_f^7 = U_c^7 R: seven fine
+  octaves = one coarse octave; every ratio-7 map in E2-E6) sends a fine
+  Bloch mode of momentum q (per octave) to coarse momentum 7q (mod 2 pi).
+  (For the 2:1 harmonic map the same argument gives q -> 2q, whose only fixed
+  point is q = 0; the adjacency shift maps the attractor to itself up to e^{iq*}.)
+  The fine and coarse attractors are the same construction, both at q*.
+  So <psi_c, R psi_f> = 0 unless 7 q* = q* (mod 2 pi), i.e. q* in (pi/3) Z.
+  q* at the measured alpha (recomputed from v16 Bloch blocks) = 0.362109515 pi   (v16: 0.3621 pi)
+  q*_0, the alpha -> 0 limit (v17 perturbation theorem) = 0.362487638892 pi
+  q*    nearest RG-compatible momentum 1 pi/3; offset +0.028776 pi (+5.180 deg); image 7 q* mod 2 pi = 0.534767 pi vs q* = 0.362110 pi
+  q*_0  nearest RG-compatible momentum 1 pi/3; offset +0.029154 pi (+5.248 deg); image 7 q*_0 mod 2 pi = 0.537413 pi vs q*_0 = 0.362488 pi
+  different momentum sectors in both cases: the attractor-to-attractor overlap is 0 exactly.
+  Finite rings (sync; momentum = phase advance per octave of the leading T mode):
+    n_c=2: q_f = 0.4286 pi, 7 q_f = 1.0000 pi, Q_c = 2.0000 pi  differ;  overlap dec/whole/unif = 5.42e-15/6.53e-15/7.32e-15
+    n_c=3: q_f = 0.3810 pi, 7 q_f = 0.6667 pi, Q_c = 1.3333 pi  differ;  overlap dec/whole/unif = 1.87e-14/1.48e-14/1.46e-14
+    n_c=4: q_f = 0.3571 pi, 7 q_f = 0.5000 pi, Q_c = 0.5000 pi  COINCIDE (finite-size rounding);  overlap dec/whole/unif = 4.15e-01/4.15e-01/4.15e-01;  within-sector chance 0.357 +/- 0.165
+  Weight level (|psi|^2 instead of amplitudes), n_c=2: fine attractor per-octave weights max/min = 1.000000000 (uniform, v16), so every
+  block-summed octave-to-station image is uniform over coarse nodes; the coarse attractor within one octave is not:
+    coarse station shares (local 0..6): 0.0637 0.0154 0.4139 0.1759 0.0187 0.0335 0.2789
+  Open chain (no momentum; attractor = standing dome): tonic-decimation overlap
+    n_c=1: overlap 0.243   random-vector chance 0.324 +/- 0.155
+    n_c=2: overlap 0.194   random-vector chance 0.235 +/- 0.116
+    n_c=3: overlap 0.007   random-vector chance 0.187 +/- 0.099
+
+==============================================================================
+E6  FAMILY CEILINGS: THE BEST R INSIDE CORPUS-SHAPED FAMILIES
+==============================================================================
+  TC w8  = translation-covariant octave window, 8 free complex weights
+  SD w8  = station-dependent window (weights depend on coarse residue j mod 7), 56 weights
+  SD w15 = station-dependent two-octave window, 105 weights
+  offset s: window starts at fine node 7j - 7 + s (s = 0: one fine octave, tonic to tonic)
+
+  sync ring n_c=2, m = 1..8:
+    TC w8   s=0:  0.862  0.866  0.871  0.872  0.872  0.874  0.875  0.881
+    TC w8   s=1:  0.861  0.867  0.871  0.874  0.874  0.876  0.878  0.880
+    TC w8   s=2:  0.860  0.874  0.882  0.880  0.894  0.897  0.881  0.891
+    TC w8   s=3:  0.870  0.873  0.886  0.881  0.888  0.889  0.870  0.885
+    TC w8   s=4:  0.868  0.881  0.881  0.870  0.902  0.895  0.871  0.878
+    TC w8   s=5:  0.866  0.880  0.883  0.883  0.903  0.902  0.871  0.887
+    TC w8   s=6:  0.858  0.862  0.867  0.876  0.879  0.880  0.882  0.887
+    SD w8   s=0:  0.616  0.631  0.633  0.632  0.639  0.636  0.620  0.640
+    SD w8   s=1:  0.583  0.602  0.630  0.621  0.625  0.622  0.613  0.613
+    SD w8   s=2:  0.560  0.602  0.617  0.636  0.651  0.671  0.640  0.636
+    SD w8   s=3:  0.622  0.636  0.667  0.658  0.664  0.681  0.602  0.653
+    SD w8   s=4:  0.631  0.608  0.669  0.620  0.681  0.659  0.612  0.649
+    SD w8   s=5:  0.628  0.653  0.670  0.671  0.681  0.675  0.623  0.647
+    SD w8   s=6:  0.587  0.617  0.627  0.648  0.651  0.650  0.625  0.637
+    SD w15  s=0:  0.466  0.467  0.474  0.476  0.479  0.481  0.486  0.492
+    SD w15  s=3:  0.472  0.506  0.515  0.523  0.518  0.530  0.507  0.528
+    TC w8: aligned minus best misaligned, per m:  0.004  0.004  0.004  0.002 -0.002 -0.002  0.005  0.003
+    SD w8: aligned minus best misaligned, per m:  0.056  0.029  0.015  0.011  0.014  0.014  0.018  0.028
+
+  sequential ring (StaggeredOperator.ring) n_c=2 and the same-geometry nulls (m = 4, 8):
+    canonical: SD w8 0.641 0.643   TC w8 0.864 0.859
+    random-block construction, both scales   SD w8 m=4: 0.686 +/- 0.046 (min 0.571); m=8: 0.701 +/- 0.045;  canonical pct 0.20/0.15
+    random-block fine, canonical coarse      SD w8 m=4: 0.642 +/- 0.011 (min 0.623); m=8: 0.651 +/- 0.017;  canonical pct 0.62/0.40
+    Haar-random fine unitary (non-local)          SD w8 m=4: 0.849 +/- 0.004 (min 0.842)   [26s]
+
+  depth trend of the ceilings (sync ring, m = 1, 4, 8):
+    n_c=1 (fine 7 oct): TC w8 0.875 0.887 0.882   SD w8 0.620 0.618 0.626
+    n_c=2 (fine 14 oct): TC w8 0.862 0.872 0.881   SD w8 0.616 0.632 0.640
+    n_c=3 (fine 21 oct): TC w8 0.859 0.870 0.879   SD w8 0.616 0.632 0.640
+
+==============================================================================
+E7  STROKE-LEVEL READING (sync ring; F only)
+==============================================================================
+  (a) one completed fine cycle per coarse stroke, stroke by stroke:
+      R F_f^k  vs  (B_c[k-1] ... B_c[0]) R,  k = 1..4  (k = 4 is the cycle-level m = 4)
+  (b) literal "m fine strokes per coarse stroke": R S_f(m) vs B_c[0] R, m = 1..8,
+      S_f(m) = first m fine strokes in canon order (S_f(4) = F_f)
+    R_dec      (a)  0.982  0.963  0.988  0.981    (b)  0.919  0.919  0.955  0.982  0.912  0.912  0.947  0.965
+    R_whole    (a)  0.871  0.964  0.972  0.938    (b)  0.904  0.980  0.923  0.871  0.863  0.959  0.949  0.885
+    Haar mean  (a)  0.951  0.985  0.987  0.984    (b)  0.934  0.979  0.985  0.951  0.958  0.967  0.983  0.965
+
+==============================================================================
+E8  TENSOR-NESTING NULL (v11 / v14-C512 construction, R = contract finest factor)
+==============================================================================
+  |tr F8^k| / 8, k = 0..8: 1.0000 0.3010 0.2970 0.2831 0.0365 0.4571 0.2552 0.2209 0.3164
+  depth  R                op       1      2      3      4      5      6      7      8
+  2->1   <whole| (C8 FP)  F    0.004  0.836  0.838  0.847  0.982  0.737  0.863  0.883
+  2->1   <whole| (C8 FP)  T    0.009  0.835  0.838  0.845  0.985  0.737  0.868  0.881
+  2->1   <F8 eigvec|      F    0.000  0.836  0.838  0.847  0.982  0.737  0.863  0.883
+  3->2   <whole| (C8 FP)  F    0.004  0.954  0.955  0.959  0.999  0.889  0.967  0.975
+  3->2   <whole| (C8 FP)  T    0.009  0.953  0.954  0.958  0.999  0.890  0.969  0.974
+  3->2   <F8 eigvec|      F    0.000  0.954  0.955  0.959  0.999  0.889  0.967  0.975
+  closed form (pure F, w an eigenvector of F8): delta^2 = 1 - |tr F8^(m-1)/8|^(depth-1)
+    depth 2:  0.000  0.836  0.838  0.847  0.982  0.737  0.863  0.883
+    depth 3:  0.000  0.954  0.955  0.959  0.999  0.889  0.967  0.975
+    depth 4:  0.000  0.986  0.987  0.989  1.000  0.951  0.992  0.995
+    depth 5:  0.000  0.996  0.996  0.997  1.000  0.978  0.998  0.999
+    depth 6:  0.000  0.999  0.999  0.999  1.000  0.990  0.999  1.000
+    depth 7:  0.000  1.000  1.000  1.000  1.000  0.995  1.000  1.000
+    depth 8:  0.000  1.000  1.000  1.000  1.000  0.998  1.000  1.000
+  m = 1 is exact for any separable nesting (the same rule at every level);
+  for m >= 2 the defect compounds toward 1 with depth.
+
+==============================================================================
+E9  ROBUSTNESS: LET THE COARSE BEAT ANGLE (AND ALPHA) RENORMALIZE
+==============================================================================
+  m=4: R_dec   min over theta' 0.942 at 0.850 pi (canonical pi/2: 0.981)
+        SD w8   min over theta' 0.276 at 0.033 pi (canonical pi/2: 0.632);  profile: 0.28 0.36 0.57 0.69 0.74 0.63 0.53 0.56 0.60 0.57 0.59
+  m=8: R_dec   min over theta' 0.941 at 0.667 pi (canonical pi/2: 0.974)
+        SD w8   min over theta' 0.271 at 0.033 pi (canonical pi/2: 0.640);  profile: 0.30 0.34 0.54 0.69 0.71 0.64 0.54 0.57 0.63 0.65 0.62
+  T with renormalized coarse alpha' (R_dec, m = 4): alpha'=0 alpha: 0.9809, alpha'=1 alpha: 0.9807, alpha'=2 alpha: 0.9805, alpha'=10 alpha: 0.9792
+
+==============================================================================
+VERDICT (pre-stated rule: supported iff delta <= 0.10 AND below the 1st percentile of every null)
+==============================================================================
+  corpus map x system x m cells tested: 48
+  SUPPORTED: 0
+  below every null but not small (structure beyond chance): 5
+    chain      R_whole  m=1: delta 0.878, max pct 0.000
+    chain      R_whole  m=2: delta 0.903, max pct 0.000
+    sync ring  R_whole  m=1: delta 0.903, max pct 0.005
+    sync ring  R_whole  m=2: delta 0.914, max pct 0.010
+    sync ring  R_whole  m=3: delta 0.922, max pct 0.010
+  smallest corpus-map defect anywhere: 0.878
+
+[total runtime 71s]
