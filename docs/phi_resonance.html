@@ -712,6 +712,16 @@
   }
   .vol-caution.show { display: block; }
 
+  .bg-status {
+    color: var(--muted);
+    font-size: 0.75rem;
+    text-align: center;
+    line-height: 1.4;
+  }
+  .bg-status:empty { display: none; }
+  .bg-status.ready { color: #8fe3a8; }
+  .bg-status.warn { color: #ffb08f; }
+
   /* Safety notice (shown once, before the first session) */
   #safetyNotice {
     position: fixed;
@@ -859,6 +869,7 @@
     <h2>⊙ Transport</h2>
     <div class="transport">
       <button class="play-btn" id="playBtn">▶ BEGIN SESSION</button>
+      <div class="bg-status" id="bgStatus" aria-live="polite"></div>
 
       <div class="param">
         <div class="param-row"><span>Master Volume</span><span class="param-val" id="volVal">25%</span></div>
@@ -1525,7 +1536,7 @@
     const el = loopElement();
     el.src = silentUrl();
     const pr = el.play();
-    if (pr && pr.catch) pr.catch(() => { loopState.disabled = true; });
+    if (pr && pr.catch) pr.catch(() => { loopState.disabled = true; updateBgStatus(); });
   }
 
   // Snap every oscillator so it completes whole cycles in the loop length
@@ -1567,7 +1578,7 @@
     const lead = state.params.revSz + 0.25;
     let off;
     try { off = new OfflineAudioContext(2, Math.ceil(rate * (LOOP_SEC + lead)), rate); }
-    catch (e) { loopState.disabled = true; return; }
+    catch (e) { loopState.disabled = true; updateBgStatus(); return; }
     snapOscillators(off, LOOP_SEC);
 
     const liveGraph = detachGraph();
@@ -1606,7 +1617,34 @@
       fadeOutGraph(g, 0.2);
       state.nodes = g.nodes;   // keep the layer descriptors for the visuals
       if (prev) URL.revokeObjectURL(prev);
-    }).catch(() => { loopState.disabled = true; });
+      // Then pause the live engine entirely: an idle but running
+      // AudioContext underruns when the phone locks (the crackle) and can
+      // take the element down with it. With it paused, the page is just a
+      // media element, like an MP3 player.
+      setTimeout(() => {
+        if (loopState.active && state.ctx && state.ctx.state === 'running') state.ctx.suspend();
+      }, 400);
+      updateBgStatus();
+    }).catch(() => { loopState.disabled = true; updateBgStatus(); });
+  }
+
+  function updateBgStatus() {
+    const el = $('bgStatus');
+    if (!el) return;
+    let text = '', cls = '';
+    if (state.playing) {
+      if (loopState.disabled || !window.OfflineAudioContext) {
+        text = 'Keep the screen on: this browser cannot play in the background';
+        cls = 'warn';
+      } else if (loopState.active) {
+        text = '✓ Background ready: you can lock the screen';
+        cls = 'ready';
+      } else {
+        text = 'Preparing background audio… keep the screen on';
+      }
+    }
+    el.textContent = text;
+    el.className = 'bg-status' + (cls ? ' ' + cls : '');
   }
 
   // Hand the sound back to the live synth; the element keeps playing
@@ -1768,6 +1806,7 @@
     acquireWakeLock();
     updateMediaSession();
     scheduleLoopRender();
+    updateBgStatus();
   }
 
   function stopSession(fadeSec = FADE_OUT) {
@@ -1776,12 +1815,20 @@
     loopState.version++;
     if (state.ctx) {
       if (loopState.active) {
-        // The element can't fade on iOS, so the live synth takes the fade out
+        // The element can't fade on iOS, so the live synth takes the fade
+        // out, starting from full level where the loop leaves off
         teardownGraph(detachGraph());
         leaveLoop();
-        buildGraph(0.02);
+        buildGraph(0);
+        const now = state.ctx.currentTime;
+        state.fade.gain.cancelScheduledValues(now);
+        state.fade.gain.setValueAtTime(1, now);
+        state.fade.gain.linearRampToValueAtTime(0, now + fadeSec);
+        const g = detachGraph();
+        setTimeout(() => teardownGraph(g), fadeSec * 1000 + 80);
+      } else {
+        fadeOutGraph(detachGraph(), fadeSec);
       }
-      fadeOutGraph(detachGraph(), fadeSec);
     }
     state.playing = false;
     $('playBtn').textContent = '▶ BEGIN SESSION';
@@ -1789,9 +1836,13 @@
     stopTimer();
     releaseWakeLock();
     setTimeout(() => {
-      if (!state.playing && loopState.el) loopState.el.pause();
+      if (state.playing) return;
+      if (loopState.el) loopState.el.pause();
+      // Nothing left to render; let the engine sleep (start resumes it)
+      if (state.ctx && state.ctx.state === 'running') state.ctx.suspend();
     }, fadeSec * 1000 + 150);
     updateMediaSession();
+    updateBgStatus();
   }
 
   // Parameter change while playing: crossfade into a rebuilt graph; the
@@ -1807,6 +1858,7 @@
     renderLayers();
     updateMediaSession();
     scheduleLoopRender();
+    updateBgStatus();
   }
 
   function buildGraph(fadeInSec, dest) {
@@ -2643,7 +2695,8 @@
   document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'visible' && state.playing) {
       acquireWakeLock();
-      if (state.ctx && state.ctx.state !== 'running') state.ctx.resume();
+      // While the loop plays, the live engine stays paused on purpose
+      if (state.ctx && state.ctx.state !== 'running' && !loopState.active) state.ctx.resume();
     }
   });
 
