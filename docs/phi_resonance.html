@@ -349,6 +349,7 @@
     color: var(--muted);
     text-transform: uppercase;
   }
+  .stat .label, .stat .value { display: block; }
   .stat .value {
     font-family: var(--display);
     font-size: 0.8rem;
@@ -360,6 +361,59 @@
     text-overflow: ellipsis;
     white-space: nowrap;
   }
+
+  /* the stats are buttons: each opens its editor under the row */
+  button.stat {
+    width: 100%;
+    color: inherit;
+    cursor: pointer;
+    transition: border-color .15s, background .15s, box-shadow .15s;
+  }
+  button.stat .label::after {
+    content: "\25BE";
+    margin-left: 4px;
+    font-family: system-ui, sans-serif;
+    font-size: 1.5em;
+    line-height: 0;
+    letter-spacing: 0;
+    vertical-align: -1px;
+  }
+  button.stat:hover { border-color: rgba(80, 180, 255, 0.6); }
+  button.stat[aria-expanded="true"] {
+    border-color: rgba(255, 170, 0, 0.85);
+    background: rgba(255, 170, 0, 0.12);
+    box-shadow: 0 0 14px rgba(255, 170, 0, 0.2);
+  }
+  button.stat[aria-expanded="true"] .label::after { content: "\25B4"; }
+  .stat-edit {
+    display: none;
+    margin-top: -4px;
+    padding: 6px 10px 8px;
+    border: 1px solid rgba(255, 170, 0, 0.35);
+    border-radius: 8px;
+    background: rgba(5, 8, 18, 0.45);
+  }
+  .stat-edit.open { display: block; }
+  .stat-pane { display: none; }
+  .stat-pane[data-active="1"] { display: block; }
+  .stat-edit .setting-row { border-bottom: none; }
+  .stat-edit .mode-tabs { grid-template-columns: repeat(2, 1fr); padding-top: 4px; }
+  .stat-nudge { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin: 2px 0 4px; }
+  .stat-nudge button {
+    min-height: 38px;
+    border-radius: 6px;
+    border: 1px solid var(--chip-edge);
+    background: var(--chip-bg);
+    color: var(--chip);
+    font-family: var(--display);
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: background .15s, border-color .15s, color .15s;
+  }
+  .stat-nudge button:hover { background: rgba(80, 180, 255, 0.2); border-color: rgba(80, 180, 255, 0.85); color: #fff; }
+  .stat-hint { font-size: 0.86rem; color: var(--muted); text-align: center; }
 
   /* primary: BEGIN / STOP */
   .play-btn {
@@ -1687,10 +1741,52 @@
         <button class="pp-arrow" id="presetNext" type="button" aria-label="Next preset">▶</button>
       </div>
       <div class="pp-desc" id="presetDesc">432 base, beat = φ Hz, binaural, sine</div>
+      <!-- Base, Beat and Mode: tap one to change it here; tap it again to close -->
       <div class="stats">
-        <div class="stat"><div class="label">Base Hz</div><div class="value" id="baseStat">432</div></div>
-        <div class="stat"><div class="label">Beat Hz</div><div class="value" id="beatStat">1.618</div></div>
-        <div class="stat"><div class="label">Mode</div><div class="value" id="modeStat">BINAURAL</div></div>
+        <button class="stat" type="button" data-edit="base" aria-expanded="false" aria-controls="statEdit"><span class="label">Base Hz</span><span class="value" id="baseStat">432</span></button>
+        <button class="stat" type="button" data-edit="beat" aria-expanded="false" aria-controls="statEdit"><span class="label">Beat Hz</span><span class="value" id="beatStat">1.618</span></button>
+        <button class="stat" type="button" data-edit="mode" aria-expanded="false" aria-controls="statEdit"><span class="label">Mode</span><span class="value" id="modeStat">BINAURAL</span></button>
+      </div>
+      <div class="stat-edit" id="statEdit">
+        <div class="stat-pane" data-pane="base">
+          <div class="setting-row">
+            <label for="qBase">Base frequency</label>
+            <input type="range" id="qBase" min="40" max="1200" value="432" step="1">
+            <span class="param-val" id="qBaseVal">432 Hz</span>
+          </div>
+          <div class="stat-nudge">
+            <button type="button" data-nudge="base" data-by="-10">−10</button>
+            <button type="button" data-nudge="base" data-by="-1">−1</button>
+            <button type="button" data-nudge="base" data-by="1">+1</button>
+            <button type="button" data-nudge="base" data-by="10">+10</button>
+          </div>
+        </div>
+        <div class="stat-pane" data-pane="beat">
+          <div class="setting-row">
+            <label for="qBeat">Beat</label>
+            <input type="range" id="qBeat" min="0.1" max="40" value="1.618" step="0.001">
+            <span class="param-val" id="qBeatVal">1.618 Hz</span>
+          </div>
+          <div class="stat-nudge">
+            <button type="button" data-nudge="beat" data-by="-1">−1</button>
+            <button type="button" data-nudge="beat" data-by="-0.1">−0.1</button>
+            <button type="button" data-nudge="beat" data-by="0.1">+0.1</button>
+            <button type="button" data-nudge="beat" data-by="1">+1</button>
+          </div>
+        </div>
+        <div class="stat-pane" data-pane="mode">
+          <div class="mode-tabs">
+            <button class="mode-tab" data-mode="binaural">Binaural</button>
+            <button class="mode-tab" data-mode="isochronic">Isochronic</button>
+            <button class="mode-tab" data-mode="monaural">Monaural</button>
+            <button class="mode-tab" data-mode="drone">Drone</button>
+            <button class="mode-tab" data-mode="harmonic">Harmonic</button>
+            <button class="mode-tab" data-mode="cascade">φ-Cascade</button>
+            <button class="mode-tab" data-mode="noise">Noise</button>
+            <button class="mode-tab" data-mode="chord">Chord</button>
+          </div>
+        </div>
+        <div class="stat-hint" id="statHint">Tap the number to type an exact value.</div>
       </div>
 
       <button class="play-btn" id="playBtn">▶ BEGIN SESSION</button>
@@ -4692,21 +4788,75 @@
   window.addEventListener('resize', tabEdges);
   tabEdges();
 
+  // ---- Base, Beat and Mode in the session card: tap one to change it there ----
+  // (owner: "i should be able to click on the base hz and the beat hz and mode,
+  // as buttons to change those values"). The quick sliders drive the Sound
+  // tab's own sliders, so every change takes the same path; the quick mode
+  // buttons are more .mode-tab buttons, which the mode code already serves.
+  let openStat = '';
+  const QUICK = {
+    base: { real: 'base', quick: 'qBase', fmt: v => Math.round(v) + ' Hz' },
+    beat: { real: 'beat', quick: 'qBeat', fmt: v => v.toFixed(3) + ' Hz' }
+  };
+  function syncQuick() {
+    Object.keys(QUICK).forEach(k => {
+      const q = QUICK[k], real = $(q.real), quick = $(q.quick), out = $(q.quick + 'Val');
+      if (quick.value !== real.value) quick.value = real.value;
+      if (!out.querySelector('.val-input')) out.textContent = q.fmt(parseFloat(real.value));
+    });
+  }
+  function setReal(k, v) {
+    const real = $(QUICK[k].real);
+    real.value = String(v);
+    real.dispatchEvent(new Event('input', { bubbles: true }));
+    syncQuick();
+    // a typed value commits while its input is still in the readout; relabel
+    // the readout once the input has gone
+    setTimeout(syncQuick, 0);
+  }
+  function showStat(name) {
+    openStat = name || '';
+    document.querySelectorAll('.stat[data-edit]').forEach(b => b.setAttribute('aria-expanded', String(b.dataset.edit === openStat)));
+    document.querySelectorAll('#statEdit .stat-pane').forEach(p => { p.dataset.active = p.dataset.pane === openStat ? '1' : ''; });
+    $('statEdit').classList.toggle('open', !!openStat);
+    $('statHint').hidden = openStat === 'mode';
+    if (openStat) syncQuick();
+  }
+  document.querySelectorAll('.stat[data-edit]').forEach(b => {
+    b.addEventListener('click', () => showStat(openStat === b.dataset.edit ? '' : b.dataset.edit));
+  });
+  Object.keys(QUICK).forEach(k => {
+    $(QUICK[k].quick).addEventListener('input', e => setReal(k, e.target.value));
+    $(QUICK[k].real).addEventListener('input', () => { if (openStat) syncQuick(); });
+  });
+  document.querySelectorAll('[data-nudge]').forEach(b => {
+    b.addEventListener('click', () => {
+      const k = b.dataset.nudge, real = $(QUICK[k].real);
+      const dec = (String(real.step).split('.')[1] || '').length;
+      let v = parseFloat(real.value) + parseFloat(b.dataset.by);
+      v = Math.min(parseFloat(real.max), Math.max(parseFloat(real.min), v));
+      setReal(k, dec ? v.toFixed(dec) : Math.round(v));
+    });
+  });
+  // presets, frequency chips and saved states set the sliders without an event
+  setInterval(() => { if (openStat) syncQuick(); }, 250);
+
   // ---- the breath guide's own view ----
   const openBreathGuide = () => openOverlay($('breathOverlay'));
   $('openBreath').addEventListener('click', openBreathGuide);
   $('openBreath2').addEventListener('click', openBreathGuide);
   $('breathClose').addEventListener('click', () => closeOverlay($('breathOverlay')));
 
-  // Esc closes the breath view, or else the open panel. (Capture phase: this
-  // runs before the safety notice's and the flashes' own Esc handlers, so it
-  // can leave them their Esc and one press closes one thing; a field being
-  // typed in keeps its Esc too.)
+  // Esc closes the breath view, or else an open stat editor, or else the open
+  // panel. (Capture phase: this runs before the safety notice's and the
+  // flashes' own Esc handlers, so it can leave them their Esc and one press
+  // closes one thing; a field being typed in keeps its Esc too.)
   document.addEventListener('keydown', (e) => {
     if (e.key !== 'Escape') return;
     if ($('safetyNotice').classList.contains('active') || (state.vbeat && state.vbeat.active)) return;
     if (e.target && e.target.closest && e.target.closest('input, select, textarea')) return;
     if ($('breathOverlay').classList.contains('open')) { e.preventDefault(); closeOverlay($('breathOverlay')); return; }
+    if (openStat) { e.preventDefault(); showStat(''); return; }
     if (openTab) { e.preventDefault(); showTab(''); }
   }, true);
 
