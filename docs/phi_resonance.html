@@ -143,27 +143,6 @@
     letter-spacing: 3px;
     min-width: 0;
   }
-  .top-links { display: flex; align-items: center; gap: 2px; flex-shrink: 0; }
-  .top-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    min-height: 44px;
-    padding: 8px 9px;
-    background: transparent;
-    border: none;
-    color: var(--text-2);
-    font-family: var(--display);
-    font-size: 0.68rem;
-    font-weight: 700;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: color .15s, text-shadow .15s;
-  }
-  .top-link .ico { font-size: 1.05rem; line-height: 1; }
-  .top-link:hover, .top-link:focus-visible { color: var(--amber-hi); text-shadow: 0 0 12px rgba(255, 170, 0, 0.45); outline: none; }
-  @media (max-width: 600px) { .top-link .lbl { display: none; } }
 
   .main {
     display: grid;
@@ -186,7 +165,7 @@
     --viz-h: 84px;
     --lane-h: 0px;
   }
-  @media (min-width: 900px) { .stage { min-height: calc(100vh - 120px); max-height: 760px; --viz-h: 130px; } }
+  @media (min-width: 900px) { .stage { min-height: calc(100vh - 170px); max-height: 760px; --viz-h: 130px; } }
   .stage-orb {
     position: absolute;
     inset: 0 0 calc(var(--viz-h) + var(--lane-h) - 4px) 0;
@@ -284,7 +263,7 @@
   .stage-breath-phase.inhale { color: #8fd3ff; text-shadow: 0 0 10px rgba(143, 211, 255, 0.55); }
   .stage-breath-phase.exhale { color: #ffb08f; text-shadow: 0 0 10px rgba(255, 176, 143, 0.55); }
   .stage.flashing .stage-breath-phase { text-shadow: 0 0 3px #000, 0 0 12px rgba(0, 0, 0, 0.9); }
-  @media (min-width: 900px) { .stage.breath-on { --lane-h: 170px; min-height: calc(100vh - 120px); } }
+  @media (min-width: 900px) { .stage.breath-on { --lane-h: 170px; min-height: calc(100vh - 170px); } }
   .viz {
     position: relative;
     width: 100%;
@@ -859,6 +838,95 @@
   .settings-panel[data-active="1"] { display: block; }
   .settings-section { width: 100%; margin-bottom: 14px; padding: 12px 16px 8px; }
 
+  /* ── the tabs along the top of the main screen: sticky; on a phone the row
+     scrolls sideways and its edges fade where more tabs wait ── */
+  .tabbar {
+    position: sticky;
+    top: 0;
+    z-index: 60;
+    margin: 0 0 12px;
+  }
+  .tabbar::before {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 100vw;
+    transform: translateX(-50%);
+    background: rgba(6, 7, 18, 0.93);
+    border-bottom: 1px solid rgba(185, 207, 223, 0.16);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    pointer-events: none;
+  }
+  .main-tabs { position: relative; border-bottom: none; gap: 2px 18px; }
+  .main-tabs.more-right {
+    -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 34px), transparent);
+    mask-image: linear-gradient(to right, #000 calc(100% - 34px), transparent);
+  }
+  .main-tabs.more-left {
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 34px);
+    mask-image: linear-gradient(to right, transparent, #000 34px);
+  }
+  .main-tabs.more-left.more-right {
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 34px, #000 calc(100% - 34px), transparent);
+    mask-image: linear-gradient(to right, transparent, #000 34px, #000 calc(100% - 34px), transparent);
+  }
+  @media (max-width: 600px) {
+    .main-tabs { gap: 2px 16px; }
+    .main-tabs .settings-tab { font-size: 0.66rem; letter-spacing: 2px; }
+  }
+
+  /* ── the main column: the stage, then the open tab's settings ── */
+  .main-col { display: grid; gap: 14px; min-width: 0; align-content: start; }
+  .stage, .tab-panels { scroll-margin-top: 58px; }
+  .tab-panels { display: none; }
+  .app.panel-open .tab-panels { display: block; }
+  .tab-panels .settings-panel { max-width: none; }
+  .panel-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin: 0 0 10px;
+  }
+  .panel-title {
+    font-family: var(--display);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: var(--amber);
+    text-shadow: 0 0 12px rgba(255, 170, 0, 0.4);
+  }
+  .panel-close {
+    flex: 0 0 auto;
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(10, 16, 28, 0.7);
+    border: 1px solid rgba(185, 207, 223, 0.3);
+    border-radius: 50%;
+    color: #b9cfdf;
+    font-family: var(--display);
+    font-size: 0.95rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: color .15s, border-color .15s, box-shadow .15s, transform .2s;
+  }
+  .panel-close:hover { color: var(--amber); border-color: rgba(255, 170, 0, 0.85); box-shadow: 0 0 18px rgba(255, 170, 0, 0.38); transform: rotate(90deg); }
+  @media (min-width: 900px) {
+    /* the session card stays in view beside a long panel */
+    .play-card { position: sticky; top: 58px; }
+    /* with a panel open the stage steps back so the settings show */
+    .app.panel-open .stage { min-height: clamp(300px, 44vh, 440px); }
+    .app.panel-open .stage.breath-on { --lane-h: 140px; min-height: clamp(420px, 56vh, 560px); }
+  }
+
   /* ── the breath view ── */
   .breath-wrap { width: 100%; max-width: 760px; display: grid; gap: 14px; }
   .breath-stage {
@@ -1156,13 +1224,25 @@
 
   <header class="topbar">
     <div class="brand"><span class="lss-tag"><span class="lt-text">φ-ENTRAINMENT</span></span></div>
-    <nav class="top-links" aria-label="Menu">
-      <button class="top-link" id="fullscreenBtn" type="button" title="Fullscreen"><span class="ico">⛶</span><span class="lbl">Fullscreen</span></button>
-      <button class="top-link" id="openSettings" type="button" title="Settings"><span class="ico">⚙</span><span class="lbl">Settings</span></button>
-    </nav>
   </header>
 
+  <!-- THE TABS: every setting one tap from the main screen; the open tab again closes it -->
+  <div class="tabbar">
+    <nav class="settings-tabs main-tabs" id="mainTabs" role="tablist" aria-label="Settings">
+      <button class="settings-tab" data-tab="sound" type="button" role="tab" aria-selected="false">Sound</button>
+      <button class="settings-tab" data-tab="layers" type="button" role="tab" aria-selected="false">Layers</button>
+      <button class="settings-tab" data-tab="texture" type="button" role="tab" aria-selected="false">Texture</button>
+      <button class="settings-tab" data-tab="tuning" type="button" role="tab" aria-selected="false">Tuning</button>
+      <button class="settings-tab" data-tab="library" type="button" role="tab" aria-selected="false">Library</button>
+      <button class="settings-tab" data-tab="visuals" type="button" role="tab" aria-selected="false">Visuals</button>
+      <button class="settings-tab" data-tab="export" type="button" role="tab" aria-selected="false">Export</button>
+      <button class="settings-tab" data-tab="about" type="button" role="tab" aria-selected="false">About</button>
+    </nav>
+  </div>
+
   <div class="main">
+
+    <div class="main-col">
 
     <!-- THE STAGE: the field behind, a circumpunct that beats with the session, the waveform -->
     <section class="stage" id="stage" aria-label="The field">
@@ -1182,71 +1262,12 @@
       <canvas class="viz" id="viz"></canvas>
     </section>
 
-    <!-- THE SESSION CARD -->
-    <section class="play-card glass" aria-label="Session">
-      <div class="card-title">Session</div>
-      <div class="preset-picker">
-        <button class="pp-arrow" id="presetPrev" type="button" aria-label="Previous preset">◀</button>
-        <button class="pp-name" id="presetName" type="button" title="All presets">✹ φ-BEAT</button>
-        <button class="pp-arrow" id="presetNext" type="button" aria-label="Next preset">▶</button>
+    <!-- THE OPEN TAB'S SETTINGS (under the stage; hidden until a tab is chosen) -->
+    <div class="tab-panels" id="tabPanels" role="tabpanel" aria-labelledby="panelTitle">
+      <div class="panel-head">
+        <span class="panel-title" id="panelTitle">Settings</span>
+        <button class="panel-close" id="panelClose" type="button" title="Close (Esc)" aria-label="Close this panel">✕</button>
       </div>
-      <div class="pp-desc" id="presetDesc">432 base, beat = φ Hz, binaural, sine</div>
-      <div class="stats">
-        <div class="stat"><div class="label">Base Hz</div><div class="value" id="baseStat">432</div></div>
-        <div class="stat"><div class="label">Beat Hz</div><div class="value" id="beatStat">1.618</div></div>
-        <div class="stat"><div class="label">Mode</div><div class="value" id="modeStat">BINAURAL</div></div>
-      </div>
-
-      <button class="play-btn" id="playBtn">▶ BEGIN SESSION</button>
-      <button class="lock-btn" id="lockBtn" type="button">🔒 PLAY WITH SCREEN OFF</button>
-      <div class="bg-status" id="bgStatus" aria-live="polite"></div>
-
-      <div class="setting-row">
-        <label for="vol">Master volume</label>
-        <input type="range" id="vol" min="0" max="100" value="25" step="1">
-        <span class="param-val" id="volVal">25%</span>
-      </div>
-      <div class="vol-caution" id="volCaution">High level. Long sessions this loud can harm hearing, especially on headphones; lower the volume if it feels loud.</div>
-
-      <div class="timer-head"><span>Timer</span><span class="timer-display" id="timer">00:00</span></div>
-      <div class="timer-buttons">
-        <button class="tbtn" data-time="0">∞</button>
-        <button class="tbtn" data-time="5">5m</button>
-        <button class="tbtn" data-time="15">15m</button>
-        <button class="tbtn" data-time="30">30m</button>
-        <button class="tbtn" data-time="45">45m</button>
-        <button class="tbtn" data-time="60">60m</button>
-        <button class="tbtn" data-time="90">90m</button>
-        <button class="tbtn" data-time="120">2h</button>
-      </div>
-    </section>
-
-  </div>
-
-  <footer class="app-foot">
-    <a href="circumpunct_consciousness_theory.html">Consciousness Theory</a> ·
-    <a href="attune.html">Attune</a> ·
-    <a href="hemispheric_resonance.html">Hemispheric Resonance</a> ·
-    <a href="how_reality_is_built.html">How Reality Is Built</a>
-  </footer>
-</div>
-
-<!-- SETTINGS (the game's settings menu: sticky head, flat tabs, glass cards) -->
-<div class="overlay" id="settingsOverlay" role="dialog" aria-modal="true" aria-label="Settings">
-  <div class="overlay-head">
-    <h1><span class="lss-tag"><span class="lt-text">SETTINGS</span></span></h1>
-    <div class="settings-tabs" role="tablist">
-      <button class="settings-tab" data-tab="sound" type="button">Sound</button>
-      <button class="settings-tab" data-tab="layers" type="button">Layers</button>
-      <button class="settings-tab" data-tab="texture" type="button">Texture</button>
-      <button class="settings-tab" data-tab="tuning" type="button">Tuning</button>
-      <button class="settings-tab" data-tab="library" type="button">Library</button>
-      <button class="settings-tab" data-tab="visuals" type="button">Visuals</button>
-      <button class="settings-tab" data-tab="export" type="button">Export</button>
-      <button class="settings-tab" data-tab="about" type="button">About</button>
-    </div>
-    <button class="overlay-close" id="settingsClose" type="button" title="Close (Esc)" aria-label="Close settings">✕</button>
-  </div>
 
   <!-- SOUND -->
   <div class="settings-panel" data-panel="sound">
@@ -1653,6 +1674,57 @@
       </div>
     </div>
   </div>
+    </div>
+
+    </div>
+
+    <!-- THE SESSION CARD -->
+    <section class="play-card glass" aria-label="Session">
+      <div class="card-title">Session</div>
+      <div class="preset-picker">
+        <button class="pp-arrow" id="presetPrev" type="button" aria-label="Previous preset">◀</button>
+        <button class="pp-name" id="presetName" type="button" title="All presets">✹ φ-BEAT</button>
+        <button class="pp-arrow" id="presetNext" type="button" aria-label="Next preset">▶</button>
+      </div>
+      <div class="pp-desc" id="presetDesc">432 base, beat = φ Hz, binaural, sine</div>
+      <div class="stats">
+        <div class="stat"><div class="label">Base Hz</div><div class="value" id="baseStat">432</div></div>
+        <div class="stat"><div class="label">Beat Hz</div><div class="value" id="beatStat">1.618</div></div>
+        <div class="stat"><div class="label">Mode</div><div class="value" id="modeStat">BINAURAL</div></div>
+      </div>
+
+      <button class="play-btn" id="playBtn">▶ BEGIN SESSION</button>
+      <button class="lock-btn" id="lockBtn" type="button">🔒 PLAY WITH SCREEN OFF</button>
+      <div class="bg-status" id="bgStatus" aria-live="polite"></div>
+
+      <div class="setting-row">
+        <label for="vol">Master volume</label>
+        <input type="range" id="vol" min="0" max="100" value="25" step="1">
+        <span class="param-val" id="volVal">25%</span>
+      </div>
+      <div class="vol-caution" id="volCaution">High level. Long sessions this loud can harm hearing, especially on headphones; lower the volume if it feels loud.</div>
+
+      <div class="timer-head"><span>Timer</span><span class="timer-display" id="timer">00:00</span></div>
+      <div class="timer-buttons">
+        <button class="tbtn" data-time="0">∞</button>
+        <button class="tbtn" data-time="5">5m</button>
+        <button class="tbtn" data-time="15">15m</button>
+        <button class="tbtn" data-time="30">30m</button>
+        <button class="tbtn" data-time="45">45m</button>
+        <button class="tbtn" data-time="60">60m</button>
+        <button class="tbtn" data-time="90">90m</button>
+        <button class="tbtn" data-time="120">2h</button>
+      </div>
+    </section>
+
+  </div>
+
+  <footer class="app-foot">
+    <a href="circumpunct_consciousness_theory.html">Consciousness Theory</a> ·
+    <a href="attune.html">Attune</a> ·
+    <a href="hemispheric_resonance.html">Hemispheric Resonance</a> ·
+    <a href="how_reality_is_built.html">How Reality Is Built</a>
+  </footer>
 </div>
 
 <!-- BREATH GUIDE (its own full-screen view; runs alongside a session) -->
@@ -4178,7 +4250,7 @@
     if (state.breath.onFlash && !state.breath.playing) startBreath();
     if (state.vbeat.where === 'stage') {
       // in the main window the stage flashes behind the circumpunct
-      closeOverlay($('settingsOverlay'));
+      revealStage();
       $('stage').classList.add('flashing');
       $('stageFlashStop').hidden = false;
     } else {
@@ -4552,11 +4624,12 @@
   syncBreathControls();
   state.breath.raf = requestAnimationFrame(breathLoop);
 
-  // ============= THE SHELL: settings, breath guide, preset picker, stage =============
-  // The Last Ship Sailing layout (owner: "last ship sailing has a nice interface,
-  // and the settings menu is nice too"): the main screen is a player, and every
-  // other control lives in a Settings overlay with tabs. Esc or ✕ closes.
-  const SETTINGS_TAB_KEY = 'phi_resonance_settings_tab';
+  // ============= THE SHELL: tabs, breath guide, preset picker, stage =============
+  // The Last Ship Sailing look (owner: "last ship sailing has a nice interface,
+  // and the settings menu is nice too"). The main screen is the player, with
+  // every settings tab along its top (owner: "put all the tabs from the
+  // settings screen onto the main screen at the top"): a tab opens its panel
+  // under the stage, and the open tab again, the panel's ✕, or Esc closes it.
 
   function anyOverlayOpen() { return !!document.querySelector('.overlay.open'); }
   function openOverlay(el) {
@@ -4569,64 +4642,73 @@
     if (!anyOverlayOpen()) document.body.classList.remove('overlay-open');
   }
 
-  function selectSettingsTab(name) {
-    const ov = $('settingsOverlay');
-    ov.querySelectorAll('.settings-tab').forEach(b => {
-      const on = b.dataset.tab === name;
+  // ---- the tabs along the top ----
+  const appEl = document.querySelector('.app');
+  const tabRow = $('mainTabs');
+  const tabPanels = $('tabPanels');
+  let openTab = '';
+
+  // Bring something into view when it starts off screen or under the tab row
+  function revealEl(el, minRoom) {
+    requestAnimationFrame(() => {
+      const r = el.getBoundingClientRect();
+      const barBottom = tabRow.getBoundingClientRect().bottom;
+      if (r.top < barBottom || r.top > window.innerHeight - (minRoom || 160)) {
+        el.scrollIntoView({ block: 'start', behavior: 'smooth' });
+      }
+    });
+  }
+  function revealStage() { revealEl($('stage'), 240); }
+
+  function showTab(name) {
+    openTab = name || '';
+    tabRow.querySelectorAll('.settings-tab').forEach(b => {
+      const on = b.dataset.tab === openTab;
       b.dataset.active = on ? '1' : '';
       b.setAttribute('aria-selected', String(on));
+      if (!on) return;
+      $('panelTitle').textContent = b.textContent;
+      // keep the open tab in view along a row that scrolls sideways
+      if (b.offsetLeft < tabRow.scrollLeft || b.offsetLeft + b.offsetWidth > tabRow.scrollLeft + tabRow.clientWidth) {
+        tabRow.scrollTo({ left: b.offsetLeft - (tabRow.clientWidth - b.offsetWidth) / 2, behavior: 'smooth' });
+      }
     });
-    ov.querySelectorAll('.settings-panel').forEach(p => { p.dataset.active = p.dataset.panel === name ? '1' : ''; });
-    ov.scrollTop = 0;
-    const tab = ov.querySelector('.settings-tab[data-tab="' + name + '"]');
-    if (tab && tab.scrollIntoView) tab.scrollIntoView({ block: 'nearest', inline: 'nearest' });
-    try { localStorage.setItem(SETTINGS_TAB_KEY, name); } catch (e) {}
+    tabPanels.querySelectorAll('.settings-panel').forEach(p => { p.dataset.active = p.dataset.panel === openTab ? '1' : ''; });
+    appEl.classList.toggle('panel-open', !!openTab);
+    if (openTab) revealEl(tabPanels);
   }
-
-  // Opens on the tab you used last (or the one asked for)
-  function openSettings(tab) {
-    let name = tab;
-    if (!name) { try { name = localStorage.getItem(SETTINGS_TAB_KEY); } catch (e) {} }
-    if (!name || !document.querySelector('#settingsOverlay [data-panel="' + name + '"]')) name = 'sound';
-    openOverlay($('settingsOverlay'));
-    selectSettingsTab(name);
-  }
-
-  $('openSettings').addEventListener('click', () => openSettings());
-  $('settingsClose').addEventListener('click', () => closeOverlay($('settingsOverlay')));
-  document.querySelectorAll('#settingsOverlay .settings-tab').forEach(b => {
-    b.addEventListener('click', () => selectSettingsTab(b.dataset.tab));
+  tabRow.querySelectorAll('.settings-tab').forEach(b => {
+    b.addEventListener('click', () => showTab(openTab === b.dataset.tab ? '' : b.dataset.tab));
   });
+  $('panelClose').addEventListener('click', () => showTab(''));
 
-  const openBreathGuide = () => { closeOverlay($('settingsOverlay')); openOverlay($('breathOverlay')); };
+  // On a phone the row scrolls sideways; its edges fade where more tabs wait
+  function tabEdges() {
+    const max = tabRow.scrollWidth - tabRow.clientWidth;
+    tabRow.classList.toggle('more-left', tabRow.scrollLeft > 4);
+    tabRow.classList.toggle('more-right', tabRow.scrollLeft < max - 4);
+  }
+  tabRow.addEventListener('scroll', tabEdges, { passive: true });
+  window.addEventListener('resize', tabEdges);
+  tabEdges();
+
+  // ---- the breath guide's own view ----
+  const openBreathGuide = () => openOverlay($('breathOverlay'));
   $('openBreath').addEventListener('click', openBreathGuide);
   $('openBreath2').addEventListener('click', openBreathGuide);
   $('breathClose').addEventListener('click', () => closeOverlay($('breathOverlay')));
 
-  // (capture phase: this runs before the safety notice's and the flashes' own
-  // Esc handlers, so it can leave them their Esc and one press closes one thing)
+  // Esc closes the breath view, or else the open panel. (Capture phase: this
+  // runs before the safety notice's and the flashes' own Esc handlers, so it
+  // can leave them their Esc and one press closes one thing; a field being
+  // typed in keeps its Esc too.)
   document.addEventListener('keydown', (e) => {
     if (e.key !== 'Escape') return;
-    // the safety notice and the flash view handle their own Esc
     if ($('safetyNotice').classList.contains('active') || (state.vbeat && state.vbeat.active)) return;
-    const open = [$('breathOverlay'), $('settingsOverlay')].find(el => el.classList.contains('open'));
-    if (open) { e.preventDefault(); closeOverlay(open); }
+    if (e.target && e.target.closest && e.target.closest('input, select, textarea')) return;
+    if ($('breathOverlay').classList.contains('open')) { e.preventDefault(); closeOverlay($('breathOverlay')); return; }
+    if (openTab) { e.preventDefault(); showTab(''); }
   }, true);
-
-  // Fullscreen for the whole app (iPhone Safari has no element fullscreen, so
-  // the button hides there)
-  const rootEl = document.documentElement;
-  const fsRequest = rootEl.requestFullscreen || rootEl.webkitRequestFullscreen;
-  if (!fsRequest) $('fullscreenBtn').style.display = 'none';
-  $('fullscreenBtn').addEventListener('click', () => {
-    if (document.fullscreenElement || document.webkitFullscreenElement) {
-      const exit = document.exitFullscreen || document.webkitExitFullscreen;
-      if (exit) { const p = exit.call(document); if (p && p.catch) p.catch(() => {}); }
-    } else if (fsRequest) {
-      const p = fsRequest.call(rootEl);
-      if (p && p.catch) p.catch(() => {});
-    }
-  });
 
   // The flashes run full screen, or inside the main window where the
   // circumpunct and the breath lane stay in view
@@ -4667,7 +4749,7 @@
   }
   $('presetPrev').addEventListener('click', () => stepPreset(-1));
   $('presetNext').addEventListener('click', () => stepPreset(1));
-  $('presetName').addEventListener('click', () => openSettings('library'));
+  $('presetName').addEventListener('click', () => showTab('library'));
   updatePresetPicker();
 
   // The stage's circumpunct beats with the session: a gentle swell at the beat
