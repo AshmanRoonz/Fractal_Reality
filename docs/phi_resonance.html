@@ -3,20 +3,47 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#0a0a1a">
+<meta name="theme-color" content="#05050f">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
 <title>φ-Entrainment | Sound Laboratory</title>
 <style>
+  /* ═══ THE LAST SHIP SAILING LOOK ═══════════════════════════════════════════
+     Owner: "last ship sailing has a nice interface, and the settings menu is nice
+     too". So the app wears the game's language (LSS index.html, the v52.74
+     settings): the deep-space backdrop, Orbitron for what you press, Rajdhani for
+     what you read, the chromatic tag for titles, glass cards with amber headings,
+     flat tabs lit from below, chip-blue secondary controls, rose for stop and
+     danger. The main screen is a player (field, preset, begin, lock, volume,
+     timer); everything else lives in a Settings overlay with tabs. */
   :root {
-    --gold: #ffd700;
-    --gold-dim: rgba(255, 215, 0, 0.35);
-    --gold-faint: rgba(255, 215, 0, 0.12);
-    --bg-0: #05050c;
-    --bg-1: #0a0a1a;
-    --panel: rgba(12, 12, 22, 0.82);
-    --panel-edge: rgba(255, 215, 0, 0.22);
-    --text: #e8e8ef;
-    --muted: #9a9aa8;
-    --blue: #6fa6ff;
+    --amber: #ffaa00;
+    --amber-hi: #ffd27a;
+    --amber-dim: rgba(255, 170, 0, 0.35);
+    --amber-faint: rgba(255, 170, 0, 0.10);
+    --chip: #a8d8ff;
+    --chip-edge: rgba(80, 180, 255, 0.42);
+    --chip-bg: rgba(80, 180, 255, 0.08);
+    --text: #e6eef7;
+    --text-2: #cfdeeb;
+    --muted: rgba(185, 207, 223, 0.62);
+    --card: rgba(10, 16, 28, 0.62);
+    --card-edge: rgba(185, 207, 223, 0.10);
+    --rose: #ff9cab;
+    --green: #8fe3a8;
+    --display: 'Orbitron', 'Rajdhani', system-ui, sans-serif;
+    --body: 'Rajdhani', 'Inter', 'Helvetica Neue', system-ui, sans-serif;
+    /* older names the rest of the page (and the composer) still use */
+    --gold: var(--amber);
+    --gold-dim: var(--amber-dim);
+    --gold-faint: var(--amber-faint);
+    --panel: var(--card);
+    --panel-b: var(--card-edge);
+    --panel-edge: var(--card-edge);
+    --bg-0: #05050f;
+    --bg-1: #0a0d18;
+    --blue: #50b4ff;
     --pink: #ff7aa6;
   }
 
@@ -30,13 +57,19 @@
   }
 
   body {
-    font-family: 'Courier New', ui-monospace, SFMono-Regular, Menlo, monospace;
-    background: radial-gradient(circle at 50% 30%, var(--bg-1) 0%, var(--bg-0) 70%);
+    font-family: var(--body);
+    font-weight: 500;
     color: var(--text);
+    background:
+      radial-gradient(1100px 700px at 22% 28%, rgba(40, 25, 80, 0.42), transparent 62%),
+      radial-gradient(900px 600px at 82% 80%, rgba(0, 60, 90, 0.28), transparent 60%),
+      #05050f;
+    background-attachment: fixed;
     min-height: 100vh;
     overflow-x: hidden;
     padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
   }
+  body.overlay-open { overflow: hidden; }
 
   #bgcanvas {
     position: fixed;
@@ -45,779 +78,1003 @@
     height: 100%;
     z-index: 0;
     pointer-events: none;
-    opacity: 0.75;
+    opacity: 0.8;
   }
 
-  .wrap {
+  button { font-family: inherit; }
+
+  /* ── the chromatic tag (LSS .lss-tag): titles ── */
+  .lss-tag {
+    position: relative;
+    display: inline-block;
+    font-family: var(--display);
+    font-weight: 700;
+    white-space: nowrap;
+    animation: tagJitter 0.18s steps(2) infinite, tagGlitch 4.7s steps(1) infinite;
+  }
+  .lss-tag .lt-text {
+    position: relative;
+    display: inline-block;
+    padding: 0 8px 1px;
+    color: currentColor;
+    background: rgba(5, 8, 18, 0.35);
+    text-shadow:
+      -1px 0 0 rgba(255, 64, 96, 0.6),
+       1px 0 0 rgba(64, 220, 255, 0.6),
+       0 0 4px currentColor,
+       0 0 8px currentColor;
+  }
+  @keyframes tagJitter {
+    0%, 100% { transform: translate(0, 0); }
+    16% { transform: translate(0.5px, -0.5px); }
+    33% { transform: translate(-0.5px, 0); }
+    50% { transform: translate(0, 0.5px); }
+    66% { transform: translate(0.5px, 0); }
+    83% { transform: translate(-0.5px, -0.5px); }
+  }
+  @keyframes tagGlitch {
+    0%, 96%, 100% { clip-path: none; filter: none; }
+    96.5% { clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%); transform: translate(2px, 0); }
+    97.0% { clip-path: polygon(0 55%, 100% 55%, 100% 100%, 0 100%); transform: translate(-2px, 0); }
+    97.5% { clip-path: polygon(0 20%, 100% 20%, 100% 80%, 0 80%); transform: translate(1px, 0); filter: hue-rotate(45deg); }
+    98.0% { clip-path: none; transform: translate(-1px, 0); }
+  }
+  @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+  /* ── the app frame ── */
+  .app {
     position: relative;
     z-index: 2;
-    max-width: 1400px;
+    max-width: 1240px;
     margin: 0 auto;
-    padding: 16px 14px 60px;
-    display: grid;
-    gap: 16px;
-    grid-template-columns: 1fr;
+    padding: 0 14px 24px;
   }
 
-  header.hero {
-    text-align: center;
-    padding: 20px 10px 8px;
-  }
-
-  .phi-symbol {
-    font-size: clamp(2.2rem, 9vw, 3.6rem);
-    color: var(--gold);
-    text-shadow: 0 0 24px rgba(255, 215, 0, 0.55);
-    display: inline-block;
-    animation: spin 10s linear infinite;
-  }
-
-  @keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-  }
-
-  h1.title {
-    font-size: clamp(1.4rem, 5.4vw, 2.2rem);
-    color: var(--gold);
-    letter-spacing: 2px;
-    margin-top: 4px;
-  }
-
-  .sub {
-    color: var(--muted);
-    font-size: clamp(0.82rem, 3vw, 0.95rem);
-    margin-top: 4px;
-  }
-
-  .panel {
-    background: var(--panel);
-    border: 1px solid var(--panel-edge);
-    border-radius: 14px;
-    padding: 14px;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-  }
-
-  .panel + .panel { margin-top: 0; }
-
-  h2 {
-    color: var(--gold);
-    font-size: 0.95rem;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    border-bottom: 1px solid var(--gold-dim);
-    padding-bottom: 8px;
-    margin-bottom: 12px;
-  }
-
-  /* Transport */
-  .transport {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 10px;
-  }
-
-  .play-btn {
-    width: 100%;
-    padding: 18px 16px;
-    font-size: 1.05rem;
-    font-weight: bold;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    border: none;
-    border-radius: 12px;
-    cursor: pointer;
-    background: linear-gradient(135deg, #ffd700, #ffed4e);
-    color: #111;
-    font-family: inherit;
-    transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.25s ease;
-    min-height: 60px;
-  }
-
-  .play-btn:active { transform: translateY(1px); }
-  .play-btn.playing {
-    background: linear-gradient(135deg, #ff4d6b, #ff8a3c);
-    color: #fff;
-  }
-
-  .stats {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     gap: 8px;
+    padding: 12px 0 8px;
   }
-
-  .stat {
-    background: rgba(255,255,255,0.04);
-    border: 1px solid var(--gold-faint);
-    border-radius: 8px;
-    padding: 10px;
-    text-align: center;
+  .brand {
+    color: var(--amber);
+    font-size: clamp(1rem, 4.6vw, 1.45rem);
+    letter-spacing: 3px;
+    min-width: 0;
   }
-
-  .stat .label {
-    font-size: 0.7rem;
-    color: var(--muted);
+  .top-links { display: flex; align-items: center; gap: 2px; flex-shrink: 0; }
+  .top-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 44px;
+    padding: 8px 9px;
+    background: transparent;
+    border: none;
+    color: var(--text-2);
+    font-family: var(--display);
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
     text-transform: uppercase;
-    letter-spacing: 1px;
+    cursor: pointer;
+    transition: color .15s, text-shadow .15s;
+  }
+  .top-link .ico { font-size: 1.05rem; line-height: 1; }
+  .top-link:hover, .top-link:focus-visible { color: var(--amber-hi); text-shadow: 0 0 12px rgba(255, 170, 0, 0.45); outline: none; }
+  @media (max-width: 600px) { .top-link .lbl { display: none; } }
+
+  .main {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  @media (min-width: 900px) {
+    .main { grid-template-columns: minmax(0, 1fr) 390px; align-items: start; }
   }
 
-  .stat .value {
-    color: var(--gold);
-    font-size: 1.2rem;
-    font-weight: bold;
-    font-variant-numeric: tabular-nums;
-    margin-top: 3px;
+  /* ── the stage: the field, a beating circumpunct, the waveform ── */
+  .stage {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    min-height: clamp(210px, 34vh, 470px);
+    border-radius: 12px;
+    overflow: hidden;
+    --viz-h: 84px;
+    --lane-h: 0px;
   }
-
-  /* Parameters */
-  .param { margin-bottom: 14px; }
-  .param:last-child { margin-bottom: 0; }
-
-  .param-row {
+  @media (min-width: 900px) { .stage { min-height: calc(100vh - 120px); max-height: 760px; --viz-h: 130px; } }
+  .stage-orb {
+    position: absolute;
+    inset: 0 0 calc(var(--viz-h) + var(--lane-h) - 4px) 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    will-change: transform;
+  }
+  .stage-orb .orb-glyph {
+    display: inline-block;
+    font-size: clamp(5.5rem, 26vw, 12rem);
+    line-height: 1;
+    color: var(--amber);
+    text-shadow: 0 0 34px rgba(255, 170, 0, 0.5), 0 0 80px rgba(255, 170, 0, 0.18);
+    animation: spin 30s linear infinite;
+  }
+  .stage-now {
+    position: absolute;
+    top: 10px;
+    left: 12px;
+    right: 12px;
     display: flex;
     justify-content: space-between;
-    align-items: baseline;
-    margin-bottom: 6px;
-    font-size: 0.85rem;
-    color: var(--gold);
+    gap: 10px;
+    font-family: var(--display);
+    font-size: 0.62rem;
+    letter-spacing: 2px;
+    color: var(--muted);
+    text-transform: uppercase;
+    pointer-events: none;
+  }
+  .stage-now b { color: var(--amber-hi); font-weight: 700; }
+  .stage-chip {
+    pointer-events: auto;
+    min-height: 40px;
+    margin: -8px -4px 0 0;
+    padding: 8px 12px;
+    background: rgba(10, 16, 28, 0.55);
+    border: 1px solid var(--chip-edge);
+    border-radius: 999px;
+    color: var(--chip);
+    font-family: var(--display);
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background .15s, border-color .15s, color .15s;
+  }
+  .stage-chip:hover { background: rgba(80, 180, 255, 0.2); border-color: rgba(80, 180, 255, 0.85); color: #fff; }
+  .stage-balance { padding-top: 2px; }
+  .stage-chips { display: flex; gap: 8px; align-items: flex-start; }
+  .stage-chip.warn { border-color: rgba(255, 105, 125, 0.65); background: rgba(40, 8, 16, 0.6); color: #ffc2cc; }
+  .stage-chip.warn:hover { background: rgba(255, 70, 95, 0.25); border-color: rgba(255, 105, 125, 0.95); color: #fff; }
+
+  /* the flashes, when they run in the main window: behind everything on the stage */
+  .stage-flash { position: absolute; inset: 0; display: none; background: #000; }
+  .stage.flashing .stage-flash { display: block; }
+  .stage-flash canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: none; }
+  .stage.flashing .stage-now { color: #e6eef7; text-shadow: 0 0 3px #000, 0 0 10px rgba(0, 0, 0, 0.85); }
+
+  /* the breath lane: the breath guide on the main screen, between the
+     circumpunct and the waveform; tap it to start or pause */
+  .stage.breath-on { --lane-h: 118px; min-height: clamp(330px, 50vh, 600px); }
+  .stage-breath {
+    position: relative;
+    display: none;
+    width: 100%;
+    height: var(--lane-h);
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: inherit;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .stage.breath-on .stage-breath { display: block; }
+  .stage-breath canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  .stage-breath:focus-visible { outline: 1px solid var(--chip-edge); outline-offset: -4px; border-radius: 8px; }
+  .stage-breath-phase {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 54%;
+    text-align: center;
+    font-family: var(--display);
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.3em;
+    color: var(--muted);
+    pointer-events: none;
+  }
+  .stage-breath-phase.inhale { color: #8fd3ff; text-shadow: 0 0 10px rgba(143, 211, 255, 0.55); }
+  .stage-breath-phase.exhale { color: #ffb08f; text-shadow: 0 0 10px rgba(255, 176, 143, 0.55); }
+  .stage.flashing .stage-breath-phase { text-shadow: 0 0 3px #000, 0 0 12px rgba(0, 0, 0, 0.9); }
+  @media (min-width: 900px) { .stage.breath-on { --lane-h: 170px; min-height: calc(100vh - 120px); } }
+  .viz {
+    position: relative;
+    width: 100%;
+    height: var(--viz-h);
+    display: block;
+    background: linear-gradient(to top, rgba(5, 8, 18, 0.55), rgba(5, 8, 18, 0));
   }
 
-  .param-val, #vbeatIntVal {
-    color: #fff;
-    font-weight: bold;
-    font-variant-numeric: tabular-nums;
+  /* ── glass cards and their headings (LSS .settings-section) ── */
+  .glass, .settings-section {
+    background: var(--card);
+    border: 1px solid var(--card-edge);
+    border-radius: 10px;
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.30);
   }
-  /* Click-to-edit value readouts */
-  .editable-val {
-    cursor: text;
-    padding: 1px 4px;
-    border-radius: 4px;
-    border: 1px dashed transparent;
-    transition: border-color 120ms, background 120ms;
+  .card-title, .settings-section h3 {
+    font-family: var(--display);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin: 2px 0 6px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid;
+    border-image: linear-gradient(to right, rgba(255, 170, 0, 0.45), rgba(255, 170, 0, 0)) 1;
   }
-  .editable-val:hover { border-color: rgba(255,215,0,0.45); background: rgba(255,215,0,0.06); }
-  .editable-val:focus-within { border-color: var(--gold); background: rgba(255,215,0,0.1); }
-  .val-input {
+
+  .play-card {
+    padding: 14px 14px 12px;
+    display: grid;
+    gap: 12px;
+  }
+  /* the card is narrow even on desktop: its rows always stack */
+  .play-card .setting-row { grid-template-columns: 1fr auto; grid-template-areas: "lbl val" "ctl ctl"; padding: 4px 2px; }
+
+  /* preset picker: ◀ NAME ▶ (the game's map selector) */
+  .preset-picker {
+    display: grid;
+    grid-template-columns: 46px 1fr 46px;
+    align-items: center;
+    gap: 6px;
+  }
+  .pp-arrow {
+    height: 46px;
+    border-radius: 6px;
+    background: var(--chip-bg);
+    border: 1px solid var(--chip-edge);
+    color: var(--chip);
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: background .15s, border-color .15s, color .15s;
+  }
+  .pp-arrow:hover { background: rgba(80, 180, 255, 0.2); border-color: rgba(80, 180, 255, 0.85); color: #fff; }
+  .pp-name {
     background: transparent;
-    color: #fff;
+    border: none;
+    min-height: 46px;
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 0.95rem;
+    letter-spacing: 2px;
+    color: var(--text);
+    cursor: pointer;
+    text-align: center;
+  }
+  .pp-name:hover { color: var(--amber-hi); }
+  .pp-desc { text-align: center; color: var(--muted); font-size: 0.95rem; margin-top: -6px; }
+
+  .stats { display: grid; grid-template-columns: 1fr 1fr 1.4fr; gap: 6px; }
+  .stat {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--card-edge);
+    border-radius: 8px;
+    padding: 7px 4px 8px;
+    text-align: center;
+    min-width: 0;
+  }
+  .stat .label {
+    font-family: var(--display);
+    font-size: 0.52rem;
+    letter-spacing: 2px;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+  .stat .value {
+    font-family: var(--display);
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--amber-hi);
+    margin-top: 3px;
+    font-variant-numeric: tabular-nums;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* primary: BEGIN / STOP */
+  .play-btn {
+    width: 100%;
+    min-height: 58px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 170, 0, 0.85);
+    background: linear-gradient(180deg, rgba(255, 170, 0, 0.26), rgba(255, 170, 0, 0.08));
+    color: var(--amber-hi);
+    font-family: var(--display);
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    text-shadow: 0 0 12px rgba(255, 170, 0, 0.55);
+    box-shadow: 0 0 22px rgba(255, 170, 0, 0.18), inset 0 0 18px rgba(255, 170, 0, 0.10);
+    cursor: pointer;
+    transition: box-shadow .2s, background .2s, transform .1s;
+  }
+  .play-btn:hover { box-shadow: 0 0 32px rgba(255, 170, 0, 0.36), inset 0 0 22px rgba(255, 170, 0, 0.16); }
+  .play-btn:active { transform: translateY(1px); }
+  .play-btn.playing {
+    border-color: rgba(255, 105, 125, 0.85);
+    background: linear-gradient(180deg, rgba(255, 70, 95, 0.24), rgba(255, 70, 95, 0.07));
+    color: #ffd3da;
+    text-shadow: 0 0 12px rgba(255, 80, 105, 0.6);
+    box-shadow: 0 0 22px rgba(255, 80, 105, 0.2), inset 0 0 18px rgba(255, 80, 105, 0.08);
+  }
+
+  /* lock button: chip blue, fills with progress, green when ready */
+  .lock-btn {
+    width: 100%;
+    min-height: 48px;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid var(--chip-edge);
+    background: var(--chip-bg);
+    color: var(--chip);
+    font-family: var(--display);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background .15s, border-color .15s, color .15s;
+  }
+  .lock-btn:hover { border-color: rgba(80, 180, 255, 0.85); color: #fff; }
+  .lock-btn:active { transform: translateY(1px); }
+  .lock-btn.preparing {
+    background: linear-gradient(90deg, rgba(80, 180, 255, 0.30) var(--p, 0%), rgba(80, 180, 255, 0.06) var(--p, 0%));
+    cursor: progress;
+  }
+  .lock-btn.ready { background: rgba(70, 200, 120, 0.16); border-color: var(--green); color: var(--green); }
+  .lock-btn.warn { background: rgba(255, 120, 90, 0.08); border-color: rgba(255, 176, 143, 0.6); color: #ffb08f; cursor: default; }
+  .bg-status { margin-top: -6px; color: var(--muted); font-size: 0.9rem; text-align: center; line-height: 1.35; }
+  .bg-status:empty { display: none; }
+  .bg-status.ready { color: var(--green); }
+  .bg-status.warn { color: #ffb08f; }
+
+  .vol-caution { display: none; color: #ffb08f; font-size: 0.88rem; line-height: 1.35; margin-top: -6px; }
+  .vol-caution.show { display: block; }
+
+  .timer-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    font-family: var(--display);
+    font-size: 0.62rem;
+    letter-spacing: 3px;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+  .timer-display {
+    font-family: var(--display);
+    font-size: 1.15rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--amber-hi);
+    font-variant-numeric: tabular-nums;
+    text-shadow: 0 0 10px rgba(255, 170, 0, 0.35);
+  }
+
+  /* segmented controls (the game's EASY / MEDIUM / HARD) */
+  .seg, .timer-buttons, .mode-tabs, .style-tabs {
+    display: grid;
+    gap: 6px;
+  }
+  .timer-buttons { grid-template-columns: repeat(4, 1fr); }
+  .mode-tabs { grid-template-columns: repeat(2, 1fr); }
+  @media (min-width: 560px) { .mode-tabs { grid-template-columns: repeat(4, 1fr); } }
+  .tbtn, .mode-tab, .style-tab {
+    min-height: 42px;
+    padding: 8px 4px;
+    border-radius: 6px;
+    border: 1px solid var(--card-edge);
+    background: rgba(255, 255, 255, 0.03);
+    color: var(--text-2);
+    font-family: var(--display);
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    line-height: 1.2;
+    cursor: pointer;
+    transition: border-color .15s, color .15s, background .15s, box-shadow .15s;
+  }
+  .tbtn:hover, .mode-tab:hover, .style-tab:hover { border-color: rgba(80, 180, 255, 0.6); color: #fff; }
+  .tbtn.active, .mode-tab.active, .style-tab.active {
+    border-color: rgba(255, 170, 0, 0.85);
+    background: rgba(255, 170, 0, 0.14);
+    color: var(--amber-hi);
+    box-shadow: 0 0 14px rgba(255, 170, 0, 0.22);
+    text-shadow: 0 0 10px rgba(255, 170, 0, 0.45);
+  }
+
+  /* ── setting rows (LSS .setting-row): label, control, value ── */
+  .setting-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-areas: "lbl val" "ctl ctl";
+    align-items: center;
+    column-gap: 12px;
+    row-gap: 2px;
+    padding: 8px 4px;
+    border-bottom: 1px solid rgba(185, 207, 223, 0.07);
+  }
+  .setting-row:last-child { border-bottom: none; }
+  .setting-row > label, .setting-row > .lbl { grid-area: lbl; font-size: 1.02rem; color: var(--text-2); letter-spacing: 0.02em; }
+  .setting-row > input[type="range"], .setting-row > select, .setting-row > .ctl { grid-area: ctl; width: 100%; }
+  .setting-row > .param-val { grid-area: val; }
+  .setting-row.sel { grid-template-areas: "lbl" "ctl"; grid-template-columns: 1fr; }
+  .setting-row.check { grid-template-areas: "lbl val"; }
+  @media (min-width: 620px) {
+    .setting-row { grid-template-columns: 1fr minmax(170px, 250px) 84px; grid-template-areas: "lbl ctl val"; padding: 7px 6px; }
+    .setting-row.sel { grid-template-columns: 1fr minmax(200px, 334px); grid-template-areas: "lbl ctl"; }
+    .setting-row.check { grid-template-columns: 1fr auto; grid-template-areas: "lbl val"; }
+  }
+  .setting-row:hover { background: rgba(255, 255, 255, 0.02); }
+  .param-val, #vbeatIntVal {
+    font-family: var(--display);
+    font-size: 0.7rem;
+    letter-spacing: 1px;
+    color: var(--amber-hi);
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  .row-note { color: var(--muted); font-size: 0.92rem; line-height: 1.4; padding: 2px 4px 8px; }
+
+  /* click-to-edit value readouts */
+  .editable-val { cursor: text; padding: 2px 5px; border-radius: 4px; border: 1px dashed transparent; transition: border-color 120ms, background 120ms; }
+  .editable-val:hover { border-color: rgba(255, 170, 0, 0.45); background: rgba(255, 170, 0, 0.06); }
+  .editable-val:focus-within { border-color: var(--amber); background: rgba(255, 170, 0, 0.1); }
+  .val-input {
+    width: 6ch;
+    background: transparent;
     border: none;
     outline: none;
+    color: #fff;
     font: inherit;
-    font-weight: bold;
-    font-variant-numeric: tabular-nums;
-    width: 6ch;
+    font-weight: 700;
     text-align: right;
-    padding: 0;
-    margin: 0;
     -moz-appearance: textfield;
   }
-  .val-input::-webkit-outer-spin-button,
-  .val-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+  .val-input::-webkit-outer-spin-button, .val-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 
+  /* range: amber thumb on a dim track */
   input[type="range"] {
     -webkit-appearance: none;
     appearance: none;
     width: 100%;
-    height: 28px;
+    height: 30px;
     background: transparent;
     outline: none;
+    cursor: pointer;
   }
-
-  input[type="range"]::-webkit-slider-runnable-track {
-    height: 6px;
-    background: rgba(255,255,255,0.1);
-    border-radius: 3px;
-  }
-  input[type="range"]::-moz-range-track {
-    height: 6px;
-    background: rgba(255,255,255,0.1);
-    border-radius: 3px;
-  }
+  input[type="range"]::-webkit-slider-runnable-track { height: 6px; background: rgba(185, 207, 223, 0.16); border-radius: 3px; }
+  input[type="range"]::-moz-range-track { height: 6px; background: rgba(185, 207, 223, 0.16); border-radius: 3px; }
+  input[type="range"]::-moz-range-progress { height: 6px; background: var(--amber); border-radius: 3px; }
   input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
-    width: 22px;
-    height: 22px;
-    margin-top: -8px;
+    width: 20px;
+    height: 20px;
+    margin-top: -7px;
     border-radius: 50%;
-    background: var(--gold);
-    border: none;
-    cursor: pointer;
-    box-shadow: 0 0 10px rgba(255,215,0,0.55);
+    background: var(--amber);
+    border: 2px solid #ffe2a8;
+    box-shadow: 0 0 10px rgba(255, 170, 0, 0.6);
   }
   input[type="range"]::-moz-range-thumb {
-    width: 22px;
-    height: 22px;
+    width: 18px;
+    height: 18px;
     border-radius: 50%;
-    background: var(--gold);
-    border: none;
-    cursor: pointer;
-    box-shadow: 0 0 10px rgba(255,215,0,0.55);
+    background: var(--amber);
+    border: 2px solid #ffe2a8;
+    box-shadow: 0 0 10px rgba(255, 170, 0, 0.6);
   }
+  input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 3px rgba(255, 170, 0, 0.35), 0 0 12px rgba(255, 170, 0, 0.7); }
 
+  /* selects and text: the picker's chip blue */
   select, input[type="number"], input[type="text"] {
     width: 100%;
-    padding: 12px 10px;
-    background-color: #14141f;
-    background-image: none;
-    border: 1px solid rgba(255, 215, 0, 0.35);
-    color: #ffd700;
-    border-radius: 8px;
-    font-family: inherit;
-    font-size: 0.95rem;
     min-height: 44px;
+    padding: 9px 34px 9px 12px;
+    background-color: rgba(8, 12, 24, 0.92);
+    border: 1px solid rgba(80, 180, 255, 0.38);
+    border-radius: 6px;
+    color: var(--text);
+    font-family: var(--body);
+    font-size: 1rem;
+    font-weight: 600;
     -webkit-appearance: none;
     appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path fill='%23a8d8ff' d='M0 0l5 6 5-6z'/></svg>");
     background-repeat: no-repeat;
     background-position: right 12px center;
     background-size: 10px;
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path fill='%23ffd700' d='M0 0l5 6 5-6z'/></svg>");
-    padding-right: 32px;
   }
-
-  select option {
-    background-color: #14141f;
-    color: #ffd700;
-  }
-
-  select:focus, input:focus {
+  input[type="text"] { background-image: none; padding-right: 12px; }
+  select option, select optgroup { background-color: #0a0f1c; color: var(--text); }
+  select:hover, select:focus, input[type="text"]:focus {
+    border-color: rgba(80, 180, 255, 0.85);
+    box-shadow: 0 0 10px rgba(80, 180, 255, 0.25);
     outline: none;
-    border-color: #ffd700;
-    box-shadow: 0 0 0 2px rgba(255, 215, 0, 0.25);
   }
+  input[type="checkbox"] { accent-color: var(--amber); width: 20px; height: 20px; cursor: pointer; }
 
-  /* Preset tile grid */
-  .preset-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 8px;
-  }
-
-  .preset {
-    background: linear-gradient(135deg, rgba(255,215,0,0.06), rgba(255,215,0,0.14));
-    border: 1px solid var(--gold-dim);
-    color: var(--gold);
-    padding: 10px 10px;
-    border-radius: 10px;
+  /* chip-blue buttons inside cards (LSS .settings-section button) */
+  .btn, .io-row button, .save-row button {
+    min-height: 42px;
+    padding: 9px 14px;
+    background: var(--chip-bg);
+    border: 1px solid var(--chip-edge);
+    border-radius: 6px;
+    color: var(--chip);
+    font-family: var(--display);
+    font-size: 0.64rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
     cursor: pointer;
-    text-align: left;
-    font-family: inherit;
-    transition: transform 0.12s ease, background 0.2s ease, border-color 0.2s ease;
-    min-height: 64px;
+    transition: background .15s, border-color .15s, color .15s;
   }
+  .btn:hover, .io-row button:hover, .save-row button:hover { background: rgba(80, 180, 255, 0.20); border-color: rgba(80, 180, 255, 0.85); color: #fff; }
+  .btn.amber {
+    background: rgba(255, 170, 0, 0.12);
+    border-color: rgba(255, 170, 0, 0.75);
+    color: var(--amber-hi);
+  }
+  .btn.amber:hover { background: rgba(255, 170, 0, 0.22); color: #fff; box-shadow: 0 0 16px rgba(255, 170, 0, 0.3); }
+  .io-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
+  .save-row { display: grid; grid-template-columns: 1fr auto; gap: 8px; margin-bottom: 10px; }
 
-  .preset:active { transform: scale(0.98); }
-  .preset.active {
-    background: linear-gradient(135deg, #ffd700, #ffed4e);
-    color: #111;
-    border-color: #fff;
-    box-shadow: 0 0 20px rgba(255,215,0,0.35);
-  }
-
-  .preset .name {
-    font-weight: bold;
-    font-size: 0.92rem;
-    margin-bottom: 3px;
-  }
-  .preset .desc {
-    font-size: 0.72rem;
-    opacity: 0.85;
-    line-height: 1.3;
-  }
-
-  /* Tag chips for quick frequency sets */
-  .chips {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-  }
-
+  /* chips: quick frequency sets */
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; padding: 4px 0 6px; }
   .chip {
-    background: rgba(255,215,0,0.08);
-    border: 1px solid var(--gold-dim);
-    color: var(--gold);
+    min-height: 36px;
+    padding: 6px 12px;
+    background: var(--chip-bg);
+    border: 1px solid var(--chip-edge);
     border-radius: 999px;
-    padding: 7px 12px;
-    font-family: inherit;
-    font-size: 0.78rem;
+    color: var(--chip);
+    font-family: var(--display);
+    font-size: 0.64rem;
+    font-weight: 700;
+    letter-spacing: 1px;
     cursor: pointer;
-    min-height: 34px;
+    transition: background .15s, border-color .15s, color .15s;
   }
-  .chip.active {
-    background: var(--gold);
-    color: #111;
-    border-color: #fff;
-  }
+  .chip:hover { background: rgba(80, 180, 255, 0.2); border-color: rgba(80, 180, 255, 0.85); color: #fff; }
+  .chip.active { background: rgba(255, 170, 0, 0.14); border-color: rgba(255, 170, 0, 0.85); color: var(--amber-hi); }
 
-  /* Save / load rows */
-  .save-row {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    gap: 6px;
-    margin-bottom: 8px;
-  }
-  .save-row input[type="text"] { min-height: 40px; }
-  .save-row button {
-    padding: 10px 14px;
-    background: linear-gradient(135deg, #ffd700, #ffed4e);
-    color: #111;
-    border: none;
+  /* presets (in the Library tab) */
+  .preset-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; padding: 4px 0 6px; }
+  @media (min-width: 620px) { .preset-grid { grid-template-columns: repeat(3, 1fr); } }
+  .preset {
+    min-height: 66px;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--card-edge);
     border-radius: 8px;
-    font-family: inherit;
-    font-weight: bold;
+    color: var(--text);
+    text-align: left;
     cursor: pointer;
-    min-height: 40px;
-    min-width: 72px;
+    transition: border-color .15s, background .15s, box-shadow .15s;
   }
-  .save-row button:active { transform: scale(0.97); }
+  .preset:hover { border-color: rgba(80, 180, 255, 0.6); }
+  .preset .name { font-family: var(--display); font-size: 0.7rem; font-weight: 700; letter-spacing: 1.5px; color: var(--amber-hi); margin-bottom: 4px; }
+  .preset .desc { font-size: 0.9rem; line-height: 1.25; color: var(--muted); }
+  .preset.active { border-color: rgba(255, 170, 0, 0.85); background: rgba(255, 170, 0, 0.10); box-shadow: 0 0 16px rgba(255, 170, 0, 0.2); }
 
-  .saved-list {
-    display: grid;
-    gap: 6px;
-  }
+  /* saved states */
+  .saved-list { display: grid; gap: 6px; }
   .saved-row {
     display: grid;
     grid-template-columns: 1fr auto;
-    gap: 6px;
-    align-items: stretch;
-    background: rgba(255,255,255,0.03);
-    border-left: 3px solid var(--gold);
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--card-edge);
+    border-left: 3px solid var(--amber);
     border-radius: 6px;
     overflow: hidden;
   }
   .saved-load {
-    background: transparent;
-    color: var(--gold);
-    border: none;
+    min-height: 44px;
     padding: 10px 12px;
+    background: transparent;
+    border: none;
+    color: var(--text);
+    font-size: 1rem;
     text-align: left;
-    font-family: inherit;
-    font-size: 0.85rem;
     cursor: pointer;
-    min-height: 40px;
     word-break: break-word;
   }
-  .saved-load:active { background: rgba(255,215,0,0.12); }
+  .saved-load:hover { background: rgba(255, 170, 0, 0.08); }
   .saved-del {
-    background: rgba(255, 80, 80, 0.12);
-    color: #ff7070;
+    min-width: 44px;
+    background: rgba(255, 70, 95, 0.10);
     border: none;
-    padding: 0 14px;
-    font-family: inherit;
+    color: var(--rose);
     font-size: 1.2rem;
     cursor: pointer;
-    min-width: 40px;
-    min-height: 40px;
   }
-  .saved-del:active { background: rgba(255, 80, 80, 0.25); }
+  .saved-del:hover { background: rgba(255, 70, 95, 0.22); color: #fff; }
 
-  .io-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 6px;
-    margin-top: 8px;
-  }
-  .io-row button {
-    padding: 10px 6px;
-    background: rgba(255,255,255,0.05);
-    border: 1px solid var(--gold-dim);
-    color: var(--gold);
-    border-radius: 8px;
-    font-family: inherit;
-    font-size: 0.82rem;
-    cursor: pointer;
-    min-height: 40px;
-  }
-  .io-row button:active { background: rgba(255,215,0,0.12); }
-
-  /* Collapsible sections */
-  details.section {
-    border: 1px solid var(--gold-faint);
-    border-radius: 10px;
-    padding: 0;
-    background: rgba(255,255,255,0.02);
-    margin-top: 10px;
-  }
-
-  details.section > summary {
-    list-style: none;
-    padding: 12px 14px;
-    cursor: pointer;
-    color: var(--gold);
-    font-size: 0.88rem;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    user-select: none;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  details.section > summary::-webkit-details-marker { display: none; }
-  details.section > summary::after {
-    content: "+";
-    color: var(--gold);
-    font-weight: bold;
-    font-size: 1.1rem;
-    transition: transform 0.2s ease;
-  }
-  details.section[open] > summary::after { content: "−"; }
-  details.section > .section-body {
-    padding: 12px 14px 14px;
-    border-top: 1px solid var(--gold-faint);
-  }
-
-  /* Timer */
-  .timer-display {
-    text-align: center;
-    font-size: 2.4rem;
-    color: var(--gold);
-    font-weight: bold;
-    font-variant-numeric: tabular-nums;
-    margin: 4px 0 10px;
-  }
-
-  .timer-buttons {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 6px;
-  }
-
-  .tbtn {
-    padding: 10px 6px;
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.15);
-    color: #fff;
-    border-radius: 8px;
-    font-family: inherit;
-    font-size: 0.85rem;
-    cursor: pointer;
-    min-height: 40px;
-  }
-  .tbtn.active, .tbtn:active { background: var(--gold-dim); color: var(--gold); border-color: var(--gold); }
-
-  /* Waveform / layer monitor */
-  .viz {
-    width: 100%;
-    height: 160px;
-    background: rgba(0,0,0,0.35);
-    border-radius: 10px;
-    display: block;
-  }
-
-  .layer-list {
-    display: grid;
-    gap: 6px;
-    max-height: 260px;
-    overflow-y: auto;
-  }
-
+  /* active layers */
+  .layer-list { display: grid; gap: 6px; max-height: 300px; overflow-y: auto; }
   .layer-row {
     display: grid;
     grid-template-columns: 1fr auto;
-    gap: 8px;
     align-items: center;
-    background: rgba(255,255,255,0.03);
-    border-left: 3px solid var(--gold);
-    border-radius: 6px;
+    gap: 8px;
     padding: 8px 10px;
-    font-size: 0.8rem;
+    background: rgba(255, 255, 255, 0.03);
+    border-left: 3px solid var(--amber);
+    border-radius: 6px;
+    font-size: 0.98rem;
   }
-  .layer-row .freq { color: var(--muted); font-size: 0.72rem; }
+  .layer-row b { font-family: var(--display); font-size: 0.66rem; letter-spacing: 1.5px; color: var(--amber-hi); }
+  .layer-row .freq { color: var(--muted); font-size: 0.92rem; }
   .dot {
     width: 16px;
     height: 16px;
     border-radius: 50%;
-    background: radial-gradient(circle, var(--gold) 0%, transparent 70%);
+    background: radial-gradient(circle, var(--amber) 0%, transparent 70%);
     animation: pulse 2s ease-in-out infinite;
   }
-  @keyframes pulse {
-    0%, 100% { transform: scale(0.7); opacity: 0.4; }
-    50% { transform: scale(1.2); opacity: 1; }
-  }
+  @keyframes pulse { 0%, 100% { transform: scale(0.7); opacity: 0.4; } 50% { transform: scale(1.2); opacity: 1; } }
 
   .info {
-    background: rgba(255,215,0,0.05);
-    border: 1px solid var(--gold-faint);
+    margin-top: 6px;
+    padding: 10px 12px;
+    background: rgba(255, 170, 0, 0.04);
+    border: 1px solid rgba(255, 170, 0, 0.14);
     border-radius: 8px;
-    padding: 12px;
-    line-height: 1.55;
-    font-size: 0.82rem;
-    color: #c9c9d0;
-    margin-top: 10px;
+    color: var(--text-2);
+    font-size: 0.98rem;
+    line-height: 1.45;
   }
-  .info strong { color: var(--gold); }
+  .info strong { color: var(--amber-hi); font-weight: 700; }
+  .info a { color: var(--chip); }
 
-  /* Tabs for sound engine mode */
-  .mode-tabs {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 6px;
-    margin-bottom: 12px;
-  }
-  .mode-tab {
-    padding: 10px 4px;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid var(--gold-faint);
+  /* ── SETTINGS overlay (LSS #settings-overlay) ── */
+  .overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    display: none;
+    overflow-y: auto;
+    overflow-x: hidden;
     color: var(--text);
-    border-radius: 8px;
-    font-family: inherit;
-    font-size: 0.75rem;
-    text-align: center;
+    background:
+      radial-gradient(1100px 700px at 22% 28%, rgba(40, 25, 80, 0.42), transparent 62%),
+      radial-gradient(900px 600px at 82% 80%, rgba(0, 60, 90, 0.28), transparent 60%),
+      rgba(5, 5, 15, 0.97);
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 170, 0, 0.35) transparent;
+    -webkit-overflow-scrolling: touch;
+  }
+  .overlay.open { display: flex; flex-direction: column; align-items: center; padding: 0 16px 36px; }
+  .overlay::-webkit-scrollbar { width: 8px; }
+  .overlay::-webkit-scrollbar-thumb { background: rgba(255, 170, 0, 0.30); border-radius: 4px; }
+  .overlay-head {
+    position: sticky;
+    top: 0;
+    z-index: 4;
+    width: 100%;
+    max-width: 760px;
+    flex: 0 0 auto;
+    padding: calc(16px + env(safe-area-inset-top)) 0 0;
+    margin-bottom: 16px;
+  }
+  .overlay-head::before {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    bottom: -16px;
+    left: 50%;
+    width: 100vw;
+    transform: translateX(-50%);
+    background: linear-gradient(to bottom, rgb(6, 7, 18) 0, rgb(6, 7, 18) calc(100% - 16px), rgba(6, 7, 18, 0) 100%);
+    pointer-events: none;
+  }
+  .overlay-head h1 {
+    margin: 0 0 12px;
+    padding-right: 56px;
+    font-size: clamp(1rem, 4.6vw, 1.4rem);
+    letter-spacing: 6px;
+    color: var(--amber);
+    line-height: 1.25;
+  }
+  .overlay-close {
+    position: absolute;
+    top: calc(12px + env(safe-area-inset-top));
+    right: 0;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(10, 16, 28, 0.70);
+    border: 1px solid rgba(185, 207, 223, 0.30);
+    border-radius: 50%;
+    color: #b9cfdf;
+    font-family: var(--display);
+    font-size: 1.1rem;
+    line-height: 1;
     cursor: pointer;
-    min-height: 44px;
-    line-height: 1.2;
+    transition: color .15s, border-color .15s, box-shadow .15s, transform .2s;
   }
-  .mode-tab.active {
-    background: var(--gold);
-    color: #111;
-    border-color: #fff;
-    font-weight: bold;
-  }
+  .overlay-close:hover { color: var(--amber); border-color: rgba(255, 170, 0, 0.85); box-shadow: 0 0 18px rgba(255, 170, 0, 0.38); transform: rotate(90deg); }
 
-  .two-col {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
+  .settings-tabs {
+    display: flex;
+    align-items: center;
+    gap: 2px 20px;
+    width: 100%;
+    border-bottom: 1px solid rgba(185, 207, 223, 0.16);
+    overflow-x: auto;
+    scrollbar-width: none;
   }
-
-  .three-col {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
+  .settings-tabs::-webkit-scrollbar { display: none; }
+  .settings-tab {
+    position: relative;
+    flex: 0 0 auto;
+    padding: 10px 2px 12px;
+    background: transparent;
+    border: none;
+    color: rgba(185, 207, 223, 0.62);
+    font-family: var(--display);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: color .15s, text-shadow .15s;
   }
+  .settings-tab:hover { color: var(--text); }
+  .settings-tab::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 2px;
+    background: var(--amber);
+    box-shadow: 0 0 12px rgba(255, 170, 0, 0.75);
+    transform: scaleX(0);
+    transition: transform .2s ease;
+  }
+  .settings-tab[data-active="1"] { color: var(--amber-hi); text-shadow: 0 0 14px rgba(255, 170, 0, 0.45); }
+  .settings-tab[data-active="1"]::after { transform: scaleX(1); }
 
-  /* Breath lead section */
+  .settings-panel { display: none; width: 100%; max-width: 760px; }
+  .settings-panel[data-active="1"] { display: block; }
+  .settings-section { width: 100%; margin-bottom: 14px; padding: 12px 16px 8px; }
+
+  /* ── the breath view ── */
+  .breath-wrap { width: 100%; max-width: 760px; display: grid; gap: 14px; }
   .breath-stage {
     position: relative;
     width: 100%;
-    height: clamp(160px, 28vw, 220px);
+    height: clamp(240px, 48vh, 480px);
     border-radius: 12px;
-    border: 1px solid var(--panel-b);
-    background: linear-gradient(180deg, #0a0a14 0%, #05050a 100%);
+    border: 1px solid var(--card-edge);
+    background: radial-gradient(ellipse at 50% 100%, rgba(255, 170, 0, 0.06), transparent 60%), rgba(5, 8, 18, 0.55);
     overflow: hidden;
-    margin: 10px 0;
   }
-  .breath-stage canvas {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    display: block;
-  }
+  .breath-stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
   .breath-phase {
     position: absolute;
-    top: 10px;
+    top: 14px;
     left: 0;
     right: 0;
     text-align: center;
-    font-size: 1.1rem;
-    letter-spacing: 0.2em;
-    font-weight: 600;
-    color: var(--gold);
-    text-shadow: 0 1px 3px rgba(0,0,0,0.7);
+    font-family: var(--display);
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: 0.3em;
+    color: var(--amber);
+    text-shadow: 0 0 12px currentColor;
     pointer-events: none;
   }
   .breath-phase.inhale { color: #8fd3ff; }
   .breath-phase.exhale { color: #ffb08f; }
-  .breath-controls {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    flex-wrap: wrap;
-    margin-top: 8px;
-  }
   .breath-play {
-    min-width: 120px;
-    padding: 12px 16px;
-    border-radius: 10px;
-    border: 1px solid var(--gold);
-    background: transparent;
-    color: var(--gold);
-    font-weight: 600;
-    letter-spacing: 0.1em;
+    width: 100%;
+    min-height: 54px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 170, 0, 0.85);
+    background: linear-gradient(180deg, rgba(255, 170, 0, 0.24), rgba(255, 170, 0, 0.08));
+    color: var(--amber-hi);
+    font-family: var(--display);
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 3px;
     cursor: pointer;
-    transition: all 120ms;
   }
-  .breath-play:hover, .breath-play:focus { background: var(--gold); color: #000; }
-  .breath-play.playing { background: var(--gold); color: #000; }
+  .breath-play.playing { border-color: rgba(185, 207, 223, 0.4); background: rgba(10, 16, 28, 0.7); color: var(--text-2); }
 
-  /* Visual beat section */
-  .vbeat-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    align-items: stretch;
-    margin-top: 10px;
+  /* ── the breath over the full-screen flashes ── */
+  .flash-breath {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 64px;
+    height: min(36vh, 320px);
+    display: none;
+    pointer-events: none;
   }
+  #flashOverlay.with-breath .flash-breath { display: block; }
+  .flash-breath canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  .flash-breath-phase {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 52%;
+    text-align: center;
+    font-family: var(--display);
+    font-size: clamp(0.9rem, 3.4vw, 1.6rem);
+    font-weight: 700;
+    letter-spacing: 0.35em;
+    color: #fff;
+    text-shadow: 0 0 3px #000, 0 0 16px rgba(0, 0, 0, 0.9);
+  }
+  .flash-breath-phase.inhale { color: #d2ecff; }
+  .flash-breath-phase.exhale { color: #ffe2d4; }
+
+  /* ── ON / OFF toggles and a two-way choice ── */
+  .toggle {
+    grid-area: val;
+    justify-self: end;
+    min-width: 66px;
+    min-height: 36px;
+    padding: 6px 14px;
+    border-radius: 999px;
+    border: 1px solid rgba(185, 207, 223, 0.22);
+    background: rgba(10, 16, 28, 0.6);
+    color: var(--muted);
+    font-family: var(--display);
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    cursor: pointer;
+    transition: background .15s, border-color .15s, color .15s, box-shadow .15s;
+  }
+  .toggle:hover { border-color: rgba(80, 180, 255, 0.6); color: #fff; }
+  .toggle[aria-pressed="true"] {
+    border-color: rgba(255, 170, 0, 0.85);
+    background: rgba(255, 170, 0, 0.16);
+    color: var(--amber-hi);
+    box-shadow: 0 0 12px rgba(255, 170, 0, 0.2);
+  }
+  .seg { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+  .seg-btn {
+    min-height: 42px;
+    padding: 8px 4px;
+    border-radius: 6px;
+    border: 1px solid var(--card-edge);
+    background: rgba(255, 255, 255, 0.03);
+    color: var(--text-2);
+    font-family: var(--display);
+    font-size: 0.64rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: border-color .15s, color .15s, background .15s, box-shadow .15s;
+  }
+  .seg-btn:hover { border-color: rgba(80, 180, 255, 0.6); color: #fff; }
+  .seg-btn[aria-pressed="true"] {
+    border-color: rgba(255, 170, 0, 0.85);
+    background: rgba(255, 170, 0, 0.14);
+    color: var(--amber-hi);
+    box-shadow: 0 0 14px rgba(255, 170, 0, 0.22);
+  }
+
+  /* ── visual beat (settings → Visuals) ── */
+  .vbeat-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; align-items: stretch; margin: 6px 0 8px; }
   .vbeat-swatch {
-    border-radius: 12px;
-    min-height: 120px;
-    border: 1px solid var(--panel-b);
+    min-height: 116px;
+    border-radius: 10px;
+    border: 1px solid var(--card-edge);
     background: radial-gradient(circle at center, var(--swatch, #111) 0%, #05050a 80%);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1rem;
-    font-weight: 600;
+    font-family: var(--display);
+    font-weight: 700;
     letter-spacing: 0.08em;
     color: #fff;
-    text-shadow: 0 1px 3px rgba(0,0,0,0.8);
-    box-shadow: inset 0 0 30px rgba(0,0,0,0.5);
-    transition: background 120ms linear;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+    box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.5);
   }
-  .vbeat-info {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    font-size: 0.82rem;
-    color: var(--muted);
-  }
-  .vbeat-info strong { color: var(--gold); }
-  .vbeat-launch {
-    width: 100%;
-    padding: 14px;
-    margin-top: 12px;
-    border-radius: 10px;
-    border: 1px solid var(--gold);
-    background: transparent;
-    color: var(--gold);
-    font-size: 1rem;
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    cursor: pointer;
-    transition: all 120ms;
-  }
-  .vbeat-launch:hover, .vbeat-launch:focus {
-    background: var(--gold);
-    color: #000;
-  }
+  .vbeat-info { display: flex; flex-direction: column; gap: 6px; font-size: 0.98rem; color: var(--muted); }
+  .vbeat-info strong { color: var(--amber-hi); }
+  .param-label { display: flex; justify-content: space-between; gap: 10px; }
   .vbeat-warn {
     margin-top: 10px;
     padding: 10px 12px;
-    border: 1px solid rgba(255, 120, 120, 0.4);
+    border: 1px solid rgba(255, 105, 125, 0.45);
     border-radius: 8px;
-    background: rgba(80, 20, 20, 0.25);
-    color: #ffd7d7;
-    font-size: 0.78rem;
-    line-height: 1.5;
+    background: rgba(255, 70, 95, 0.08);
+    color: #ffd0d7;
+    font-size: 0.95rem;
+    line-height: 1.45;
   }
 
-  .vol-caution {
-    display: none;
-    margin-top: 6px;
-    color: #ffb08f;
-    font-size: 0.75rem;
-    line-height: 1.4;
-  }
-  .vol-caution.show { display: block; }
-
-  .bg-status {
-    color: var(--muted);
-    font-size: 0.75rem;
-    text-align: center;
-    line-height: 1.4;
-  }
-  .bg-status:empty { display: none; }
-  .bg-status.ready { color: #8fe3a8; }
-  .bg-status.warn { color: #ffb08f; }
-
-  /* Prepare-for-lock button: fills with progress, turns green when ready */
-  .lock-btn {
-    width: 100%;
-    min-height: 48px;
-    padding: 12px 10px;
-    border-radius: 10px;
-    border: 1px solid var(--gold-dim);
-    background: rgba(255, 215, 0, 0.05);
-    color: var(--gold);
-    font-family: inherit;
-    font-size: 0.85rem;
-    font-weight: bold;
-    letter-spacing: 1px;
-    cursor: pointer;
-  }
-  .lock-btn:active { transform: translateY(1px); }
-  .lock-btn.preparing {
-    background: linear-gradient(90deg, rgba(255, 215, 0, 0.3) var(--p, 0%), rgba(255, 215, 0, 0.05) var(--p, 0%));
-    cursor: progress;
-  }
-  .lock-btn.ready {
-    background: rgba(70, 200, 120, 0.18);
-    border-color: #8fe3a8;
-    color: #8fe3a8;
-  }
-  .lock-btn.warn {
-    border-color: rgba(255, 176, 143, 0.6);
-    color: #ffb08f;
-    cursor: default;
-  }
-
-  /* Safety notice (shown once, before the first session) */
+  /* ── safety notice ── */
   #safetyNotice {
     position: fixed;
     inset: 0;
     z-index: 10000;
-    background: rgba(0, 0, 0, 0.78);
     display: none;
     align-items: center;
     justify-content: center;
     padding: 16px;
+    background: rgba(2, 3, 10, 0.82);
   }
   #safetyNotice.active { display: flex; }
   #safetyNotice .card {
-    max-width: 440px;
     width: 100%;
+    max-width: 460px;
     max-height: 100%;
     overflow-y: auto;
-    background: var(--bg-1);
-    border: 1px solid var(--panel-edge);
-    border-radius: 14px;
     padding: 20px 18px;
+    background: rgb(8, 11, 22);
+    border: 1px solid rgba(255, 170, 0, 0.35);
+    border-radius: 12px;
+    box-shadow: 0 0 40px rgba(255, 170, 0, 0.12);
     color: var(--text);
-    font-size: 0.88rem;
-    line-height: 1.55;
+    font-size: 1.02rem;
+    line-height: 1.5;
   }
   #safetyNotice h3 {
-    color: var(--gold);
-    font-size: 1rem;
-    letter-spacing: 1px;
+    font-family: var(--display);
+    font-size: 0.85rem;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--amber);
     margin-bottom: 10px;
   }
   #safetyNotice ul { padding-left: 18px; margin: 8px 0 16px; }
   #safetyNotice li { margin-bottom: 6px; }
   #safetyNotice .actions { display: grid; grid-template-columns: 1fr 2fr; gap: 10px; }
   #safetyNotice button {
-    min-height: 48px;
-    border-radius: 10px;
-    font-family: inherit;
-    font-weight: bold;
-    font-size: 0.9rem;
+    min-height: 50px;
+    border-radius: 8px;
+    font-family: var(--display);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
     cursor: pointer;
   }
-  #safetyCancel { background: transparent; color: var(--muted); border: 1px solid var(--panel-edge); }
-  #safetyOk { background: var(--gold); color: #111; border: none; }
+  #safetyCancel { background: transparent; color: var(--muted); border: 1px solid var(--card-edge); }
+  #safetyOk { background: rgba(255, 170, 0, 0.18); color: var(--amber-hi); border: 1px solid rgba(255, 170, 0, 0.85); }
 
-  /* Flash overlay (full-screen) */
+  /* ── full-screen flash (unchanged behaviour) ── */
   #flashOverlay {
     position: fixed;
     inset: 0;
     z-index: 9999;
-    background: #000;
     display: none;
     align-items: center;
     justify-content: center;
     flex-direction: column;
+    background: #000;
     cursor: pointer;
     overflow: hidden;
   }
   #flashOverlay.active { display: flex; }
-  #flashPanel {
-    position: absolute;
-    inset: 0;
-    background: #000;
-    transition: background-color 40ms linear, opacity 40ms linear;
-  }
+  #flashPanel { position: absolute; inset: 0; background: #000; transition: background-color 40ms linear, opacity 40ms linear; }
   #flashHUD {
     position: absolute;
     bottom: 20px;
@@ -828,10 +1085,11 @@
     align-items: center;
     gap: 12px;
     pointer-events: none;
-    font-family: ui-monospace, monospace;
-    font-size: 0.75rem;
-    color: rgba(255,255,255,0.7);
-    text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+    font-family: var(--display);
+    font-size: 0.62rem;
+    letter-spacing: 1.5px;
+    color: rgba(255, 255, 255, 0.7);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
   }
   #flashClose {
     position: absolute;
@@ -839,146 +1097,188 @@
     right: 16px;
     width: 44px;
     height: 44px;
-    border-radius: 50%;
-    background: rgba(0,0,0,0.5);
-    color: #fff;
-    border: 1px solid rgba(255,255,255,0.3);
-    font-size: 1.2rem;
-    cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #fff;
+    font-size: 1.2rem;
+    cursor: pointer;
     pointer-events: auto;
   }
-  #flashClose:hover { background: rgba(255,255,255,0.15); }
 
-  /* Footer */
-  footer {
+  .app-foot {
+    margin-top: 18px;
     text-align: center;
-    padding: 24px 8px;
-    color: var(--muted);
-    font-size: 0.82rem;
+    color: rgba(185, 207, 223, 0.45);
+    font-size: 0.9rem;
   }
-  footer a { color: var(--gold); text-decoration: none; }
-  footer a:hover { text-decoration: underline; }
+  .app-foot a { color: var(--muted); text-decoration: none; }
+  .app-foot a:hover { color: var(--amber-hi); }
 
-  /* Desktop layout */
-  @media (min-width: 900px) {
-    .wrap {
-      grid-template-columns: 1fr 1fr;
-      padding: 24px;
-    }
-    .preset-grid { grid-template-columns: repeat(3, 1fr); }
-    .stats { grid-template-columns: repeat(4, 1fr); }
-    .col-span-2 { grid-column: span 2; }
+  /* old helpers the composer edition's markup still uses */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .param { margin-bottom: 12px; }
+  .param-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 4px; font-size: 1rem; color: var(--text-2); }
+  details.section { margin-top: 10px; border: 1px solid var(--card-edge); border-radius: 8px; background: rgba(255, 255, 255, 0.02); }
+  details.section > summary {
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 44px;
+    padding: 10px 12px;
+    font-family: var(--display);
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--amber);
+    cursor: pointer;
+    user-select: none;
   }
+  details.section > summary::-webkit-details-marker { display: none; }
+  details.section > summary::after { content: "+"; font-size: 1rem; }
+  details.section[open] > summary::after { content: "\2212"; }
+  details.section > .section-body { padding: 10px 12px 12px; border-top: 1px solid var(--card-edge); }
 
-  @media (min-width: 1200px) {
-    .wrap {
-      grid-template-columns: 380px 1fr 380px;
-    }
-    .col-span-2 { grid-column: span 1; }
-    .col-span-3 { grid-column: span 3; }
-    .preset-grid { grid-template-columns: repeat(2, 1fr); }
+  @media (prefers-reduced-motion: reduce) {
+    .lss-tag, .stage-orb .orb-glyph, .dot { animation: none; }
   }
 </style>
 </head>
 <body>
 <canvas id="bgcanvas"></canvas>
 
-<div class="wrap">
+<div class="app">
 
-  <!-- HERO -->
-  <header class="hero col-span-2 col-span-3">
-    <div class="phi-symbol">⊙</div>
-    <h1 class="title">φ-ENTRAINMENT</h1>
-    <div class="sub">Sound lab: binaural, isochronic, monaural, drone, harmonic, cascade, noise, chord</div>
+  <header class="topbar">
+    <div class="brand"><span class="lss-tag"><span class="lt-text">φ-ENTRAINMENT</span></span></div>
+    <nav class="top-links" aria-label="Menu">
+      <button class="top-link" id="fullscreenBtn" type="button" title="Fullscreen"><span class="ico">⛶</span><span class="lbl">Fullscreen</span></button>
+      <button class="top-link" id="openSettings" type="button" title="Settings"><span class="ico">⚙</span><span class="lbl">Settings</span></button>
+    </nav>
   </header>
 
-  <!-- LEFT / TRANSPORT + PRESETS -->
-  <section class="panel">
-    <h2>⊙ Transport</h2>
-    <div class="transport">
+  <div class="main">
+
+    <!-- THE STAGE: the field behind, a circumpunct that beats with the session, the waveform -->
+    <section class="stage" id="stage" aria-label="The field">
+      <div class="stage-flash" id="stageFlash" aria-hidden="true"><canvas id="stageFlashCanvas"></canvas></div>
+      <div class="stage-now">
+        <span class="stage-balance">Balance <b id="betaStat">0.50</b></span>
+        <span class="stage-chips">
+          <button class="stage-chip warn" id="stageFlashStop" type="button" title="Stop the flashes (Esc)" hidden>✕ Flash</button>
+          <button class="stage-chip" id="openBreath" type="button" title="Breath guide">◠ Breathe</button>
+        </span>
+      </div>
+      <div class="stage-orb" id="stageOrb"><span class="orb-glyph">⊙</span></div>
+      <button class="stage-breath" id="stageBreath" type="button" aria-label="Breath guide: tap to start or pause">
+        <canvas id="stageBreathCanvas"></canvas>
+        <span class="stage-breath-phase" id="stageBreathPhase">TAP TO BREATHE</span>
+      </button>
+      <canvas class="viz" id="viz"></canvas>
+    </section>
+
+    <!-- THE SESSION CARD -->
+    <section class="play-card glass" aria-label="Session">
+      <div class="card-title">Session</div>
+      <div class="preset-picker">
+        <button class="pp-arrow" id="presetPrev" type="button" aria-label="Previous preset">◀</button>
+        <button class="pp-name" id="presetName" type="button" title="All presets">✹ φ-BEAT</button>
+        <button class="pp-arrow" id="presetNext" type="button" aria-label="Next preset">▶</button>
+      </div>
+      <div class="pp-desc" id="presetDesc">432 base, beat = φ Hz, binaural, sine</div>
+      <div class="stats">
+        <div class="stat"><div class="label">Base Hz</div><div class="value" id="baseStat">432</div></div>
+        <div class="stat"><div class="label">Beat Hz</div><div class="value" id="beatStat">1.618</div></div>
+        <div class="stat"><div class="label">Mode</div><div class="value" id="modeStat">BINAURAL</div></div>
+      </div>
+
       <button class="play-btn" id="playBtn">▶ BEGIN SESSION</button>
       <button class="lock-btn" id="lockBtn" type="button">🔒 PLAY WITH SCREEN OFF</button>
       <div class="bg-status" id="bgStatus" aria-live="polite"></div>
 
-      <div class="param">
-        <div class="param-row"><span>Master Volume</span><span class="param-val" id="volVal">25%</span></div>
+      <div class="setting-row">
+        <label for="vol">Master volume</label>
         <input type="range" id="vol" min="0" max="100" value="25" step="1">
-        <div class="vol-caution" id="volCaution">High level. Long sessions this loud can harm hearing, especially on headphones; lower the volume if it feels loud.</div>
+        <span class="param-val" id="volVal">25%</span>
       </div>
+      <div class="vol-caution" id="volCaution">High level. Long sessions this loud can harm hearing, especially on headphones; lower the volume if it feels loud.</div>
 
-      <div class="stats">
-        <div class="stat"><div class="label">β</div><div class="value" id="betaStat">0.50</div></div>
-        <div class="stat"><div class="label">Base Hz</div><div class="value" id="baseStat">432</div></div>
-        <div class="stat"><div class="label">Beat Hz</div><div class="value" id="beatStat">1.618</div></div>
-        <div class="stat"><div class="label">Mode</div><div class="value" id="modeStat" style="font-size:0.95rem;">BINAURAL</div></div>
+      <div class="timer-head"><span>Timer</span><span class="timer-display" id="timer">00:00</span></div>
+      <div class="timer-buttons">
+        <button class="tbtn" data-time="0">∞</button>
+        <button class="tbtn" data-time="5">5m</button>
+        <button class="tbtn" data-time="15">15m</button>
+        <button class="tbtn" data-time="30">30m</button>
+        <button class="tbtn" data-time="45">45m</button>
+        <button class="tbtn" data-time="60">60m</button>
+        <button class="tbtn" data-time="90">90m</button>
+        <button class="tbtn" data-time="120">2h</button>
       </div>
+    </section>
+
+  </div>
+
+  <footer class="app-foot">
+    <a href="circumpunct_consciousness_theory.html">Consciousness Theory</a> ·
+    <a href="attune.html">Attune</a> ·
+    <a href="hemispheric_resonance.html">Hemispheric Resonance</a> ·
+    <a href="how_reality_is_built.html">How Reality Is Built</a>
+  </footer>
+</div>
+
+<!-- SETTINGS (the game's settings menu: sticky head, flat tabs, glass cards) -->
+<div class="overlay" id="settingsOverlay" role="dialog" aria-modal="true" aria-label="Settings">
+  <div class="overlay-head">
+    <h1><span class="lss-tag"><span class="lt-text">SETTINGS</span></span></h1>
+    <div class="settings-tabs" role="tablist">
+      <button class="settings-tab" data-tab="sound" type="button">Sound</button>
+      <button class="settings-tab" data-tab="layers" type="button">Layers</button>
+      <button class="settings-tab" data-tab="texture" type="button">Texture</button>
+      <button class="settings-tab" data-tab="tuning" type="button">Tuning</button>
+      <button class="settings-tab" data-tab="library" type="button">Library</button>
+      <button class="settings-tab" data-tab="visuals" type="button">Visuals</button>
+      <button class="settings-tab" data-tab="export" type="button">Export</button>
+      <button class="settings-tab" data-tab="about" type="button">About</button>
+    </div>
+    <button class="overlay-close" id="settingsClose" type="button" title="Close (Esc)" aria-label="Close settings">✕</button>
+  </div>
+
+  <!-- SOUND -->
+  <div class="settings-panel" data-panel="sound">
+    <div class="settings-section">
+      <h3>Engine</h3>
+      <div class="mode-tabs" id="modeTabs">
+        <button class="mode-tab active" data-mode="binaural">Binaural</button>
+        <button class="mode-tab" data-mode="isochronic">Isochronic</button>
+        <button class="mode-tab" data-mode="monaural">Monaural</button>
+        <button class="mode-tab" data-mode="drone">Drone</button>
+        <button class="mode-tab" data-mode="harmonic">Harmonic</button>
+        <button class="mode-tab" data-mode="cascade">φ-Cascade</button>
+        <button class="mode-tab" data-mode="noise">Noise</button>
+        <button class="mode-tab" data-mode="chord">Chord</button>
+      </div>
+      <div class="row-note" style="padding-top:10px;">Headphones for binaural and φ-cascade (each ear gets its own tone). The other modes play fine on a speaker.</div>
     </div>
 
-    <h2 style="margin-top:18px;">⊛ Timer</h2>
-    <div class="timer-display" id="timer">00:00</div>
-    <div class="timer-buttons">
-      <button class="tbtn" data-time="0">∞</button>
-      <button class="tbtn" data-time="5">5m</button>
-      <button class="tbtn" data-time="15">15m</button>
-      <button class="tbtn" data-time="30">30m</button>
-      <button class="tbtn" data-time="45">45m</button>
-      <button class="tbtn" data-time="60">60m</button>
-      <button class="tbtn" data-time="90">90m</button>
-      <button class="tbtn" data-time="120">2h</button>
-    </div>
-
-    <h2 style="margin-top:18px;">⟲ Saved States</h2>
-    <div class="save-row">
-      <input type="text" id="saveName" placeholder="Name this state..." maxlength="40" autocomplete="off" spellcheck="false">
-      <button id="saveBtn">Save</button>
-    </div>
-    <div class="saved-list" id="savedStates"></div>
-    <div class="io-row">
-      <button id="exportBtn">Export all (.json)</button>
-      <button id="importBtn">Import (.json)</button>
-      <input type="file" id="importFile" accept="application/json,.json" style="display:none;">
-    </div>
-
-    <h2 style="margin-top:18px;">Φ Presets</h2>
-    <div class="preset-grid" id="presetGrid"></div>
-
-    <h2 style="margin-top:18px;">⟳ Frequency Sets</h2>
-    <div class="chips" id="freqSets"></div>
-  </section>
-
-  <!-- CENTER / ENGINE + VISUALIZER -->
-  <section class="panel">
-    <h2>✹ Sound Engine</h2>
-    <div class="mode-tabs" id="modeTabs">
-      <button class="mode-tab active" data-mode="binaural">Binaural</button>
-      <button class="mode-tab" data-mode="isochronic">Isochronic</button>
-      <button class="mode-tab" data-mode="monaural">Monaural</button>
-      <button class="mode-tab" data-mode="drone">Drone</button>
-      <button class="mode-tab" data-mode="harmonic">Harmonic</button>
-      <button class="mode-tab" data-mode="cascade">φ-Cascade</button>
-      <button class="mode-tab" data-mode="noise">Noise</button>
-      <button class="mode-tab" data-mode="chord">Chord</button>
-    </div>
-
-    <canvas class="viz" id="viz"></canvas>
-
-    <div class="two-col" style="margin-top:12px;">
-      <div class="param">
-        <div class="param-row"><span>Base Frequency</span><span class="param-val" id="baseVal">432 Hz</span></div>
+    <div class="settings-section">
+      <h3>Frequency</h3>
+      <div class="setting-row">
+        <label for="base">Base frequency</label>
         <input type="range" id="base" min="40" max="1200" value="432" step="1">
+        <span class="param-val" id="baseVal">432 Hz</span>
       </div>
-      <div class="param">
-        <div class="param-row"><span>Beat / Pulse</span><span class="param-val" id="beatVal">1.618 Hz</span></div>
+      <div class="setting-row">
+        <label for="beat">Beat / pulse</label>
         <input type="range" id="beat" min="0.1" max="40" value="1.618" step="0.001">
+        <span class="param-val" id="beatVal">1.618 Hz</span>
       </div>
-    </div>
-
-    <div class="two-col">
-      <div class="param">
-        <div class="param-row"><span>Waveform</span></div>
+      <div class="setting-row sel">
+        <label for="wave">Waveform</label>
         <select id="wave">
           <option value="sine">Sine (pure)</option>
           <option value="triangle">Triangle (warm)</option>
@@ -991,345 +1291,409 @@
           <option value="bowed">Bowed (sawtooth+filter)</option>
         </select>
       </div>
-      <div class="param">
-        <div class="param-row"><span>Scale (detune)</span><span class="param-val" id="detuneVal">0 c</span></div>
+      <div class="setting-row">
+        <label for="detune">Fine tune (cents)</label>
         <input type="range" id="detune" min="-100" max="100" value="0" step="1">
+        <span class="param-val" id="detuneVal">0 c</span>
+      </div>
+      <div class="row-note">Tap any value to type an exact number.</div>
+    </div>
+  </div>
+
+  <!-- LAYERS -->
+  <div class="settings-panel" data-panel="layers">
+    <div class="settings-section">
+      <h3>Layers</h3>
+      <div class="setting-row">
+        <label for="layers">Layer count</label>
+        <input type="range" id="layers" min="1" max="9" value="6" step="1">
+        <span class="param-val" id="layersVal">6</span>
+      </div>
+      <div class="setting-row sel">
+        <label for="spacing">Layer spacing</label>
+        <select id="spacing">
+          <option value="phi">φ ratio (golden)</option>
+          <option value="octave">Octave (×2)</option>
+          <option value="fifth">Perfect 5th (3/2)</option>
+          <option value="fourth">Perfect 4th (4/3)</option>
+          <option value="major3">Major 3rd (5/4)</option>
+          <option value="minor3">Minor 3rd (6/5)</option>
+          <option value="semitone">Semitone (12-TET)</option>
+          <option value="harmonic">Harmonic (×n integer)</option>
+          <option value="subharmonic">Sub-harmonic (÷n)</option>
+          <option value="prime">Prime cascade</option>
+        </select>
+      </div>
+      <div class="setting-row">
+        <label for="stereo">Stereo width</label>
+        <input type="range" id="stereo" min="0" max="100" value="100" step="1">
+        <span class="param-val" id="stereoVal">100%</span>
+      </div>
+      <div class="setting-row">
+        <label for="beatStr">Beat strength</label>
+        <input type="range" id="beatStr" min="0" max="100" value="100" step="1">
+        <span class="param-val" id="beatStrVal">100%</span>
       </div>
     </div>
 
-    <details class="section" open>
-      <summary>∘ Layers &amp; Spacing</summary>
-      <div class="section-body">
-        <div class="two-col">
-          <div class="param">
-            <div class="param-row"><span>Layer Count</span><span class="param-val" id="layersVal">6</span></div>
-            <input type="range" id="layers" min="1" max="9" value="6" step="1">
-          </div>
-          <div class="param">
-            <div class="param-row"><span>Layer Spacing</span></div>
-            <select id="spacing">
-              <option value="phi">φ ratio (golden)</option>
-              <option value="octave">Octave (×2)</option>
-              <option value="fifth">Perfect 5th (3/2)</option>
-              <option value="fourth">Perfect 4th (4/3)</option>
-              <option value="major3">Major 3rd (5/4)</option>
-              <option value="minor3">Minor 3rd (6/5)</option>
-              <option value="semitone">Semitone (12-TET)</option>
-              <option value="harmonic">Harmonic (×n integer)</option>
-              <option value="subharmonic">Sub-harmonic (÷n)</option>
-              <option value="prime">Prime cascade</option>
-            </select>
-          </div>
-        </div>
-        <div class="two-col">
-          <div class="param">
-            <div class="param-row"><span>Stereo Width</span><span class="param-val" id="stereoVal">100%</span></div>
-            <input type="range" id="stereo" min="0" max="100" value="100" step="1">
-          </div>
-          <div class="param">
-            <div class="param-row"><span>Beat Strength</span><span class="param-val" id="beatStrVal">100%</span></div>
-            <input type="range" id="beatStr" min="0" max="100" value="100" step="1">
-          </div>
-        </div>
-      </div>
-    </details>
-
-    <details class="section">
-      <summary>Φ Modulation</summary>
-      <div class="section-body">
-        <div class="two-col">
-          <div class="param">
-            <div class="param-row"><span>LFO Depth</span><span class="param-val" id="lfoDepthVal">30%</span></div>
-            <input type="range" id="lfoDepth" min="0" max="100" value="30" step="1">
-          </div>
-          <div class="param">
-            <div class="param-row"><span>LFO Rate</span><span class="param-val" id="lfoRateVal">0.25 Hz</span></div>
-            <input type="range" id="lfoRate" min="0.01" max="10" value="0.25" step="0.01">
-          </div>
-        </div>
-        <div class="two-col">
-          <div class="param">
-            <div class="param-row"><span>Tremolo</span><span class="param-val" id="tremVal">0%</span></div>
-            <input type="range" id="trem" min="0" max="100" value="0" step="1">
-          </div>
-          <div class="param">
-            <div class="param-row"><span>Vibrato</span><span class="param-val" id="vibVal">0%</span></div>
-            <input type="range" id="vib" min="0" max="100" value="0" step="1">
-          </div>
-        </div>
-      </div>
-    </details>
-
-    <details class="section">
-      <summary>○ Filter &amp; Space</summary>
-      <div class="section-body">
-        <div class="param">
-          <div class="param-row"><span>Filter Type</span></div>
-          <select id="filterType">
-            <option value="none">None (open aperture)</option>
-            <option value="lowpass">Lowpass (dark)</option>
-            <option value="highpass">Highpass (airy)</option>
-            <option value="bandpass">Bandpass (focused)</option>
-            <option value="notch">Notch (shadow)</option>
-          </select>
-        </div>
-        <div class="two-col">
-          <div class="param">
-            <div class="param-row"><span>Cutoff</span><span class="param-val" id="cutoffVal">1500 Hz</span></div>
-            <input type="range" id="cutoff" min="80" max="12000" value="1500" step="10">
-          </div>
-          <div class="param">
-            <div class="param-row"><span>Resonance (Q)</span><span class="param-val" id="qVal">1.0</span></div>
-            <input type="range" id="q" min="0.1" max="20" value="1.0" step="0.1">
-          </div>
-        </div>
-        <div class="two-col">
-          <div class="param">
-            <div class="param-row"><span>Reverb</span><span class="param-val" id="revVal">20%</span></div>
-            <input type="range" id="rev" min="0" max="100" value="20" step="1">
-          </div>
-          <div class="param">
-            <div class="param-row"><span>Reverb Size</span><span class="param-val" id="revSzVal">2.5 s</span></div>
-            <input type="range" id="revSz" min="0.2" max="8" value="2.5" step="0.1">
-          </div>
-        </div>
-      </div>
-    </details>
-
-    <details class="section">
-      <summary>⎇ Noise Layer</summary>
-      <div class="section-body">
-        <div class="two-col">
-          <div class="param">
-            <div class="param-row"><span>Noise Type</span></div>
-            <select id="noiseType">
-              <option value="none">Off</option>
-              <option value="white">White (energetic)</option>
-              <option value="pink">Pink (balanced)</option>
-              <option value="brown">Brown (deep)</option>
-              <option value="rain">Rain (filtered)</option>
-              <option value="ocean">Ocean (slow modulated)</option>
-              <option value="wind">Wind (breath)</option>
-            </select>
-          </div>
-          <div class="param">
-            <div class="param-row"><span>Noise Level</span><span class="param-val" id="noiseLvlVal">20%</span></div>
-            <input type="range" id="noiseLvl" min="0" max="100" value="20" step="1">
-          </div>
-        </div>
-      </div>
-    </details>
-
-    <div class="info">
-      <strong>Framework mapping:</strong> in binaural mode, the left channel (•) holds the base tone; the right channel (○) holds the φ-offset tone. The interference pattern at the difference frequency is Φ (the beat). This is an acoustic mapping onto the circumpunct notation, not a medical claim.
+    <div class="settings-section">
+      <h3>Active layers</h3>
+      <div class="layer-list" id="layerList"></div>
     </div>
-  </section>
 
-  <!-- RIGHT / LAYERS + INFO -->
-  <section class="panel">
-    <h2>⟳ Active Layers</h2>
-    <div class="layer-list" id="layerList"></div>
-
-    <h2 style="margin-top:16px;">• Per-layer Mix</h2>
-    <div class="chips" id="layerMixChips"></div>
-
-    <details class="section" style="margin-top:14px;">
-      <summary>Solfeggio Frequencies</summary>
-      <div class="section-body">
-        <div class="chips" id="solfeggio"></div>
-      </div>
-    </details>
-
-    <details class="section">
-      <summary>Equal-Temperament Notes</summary>
-      <div class="section-body">
-        <div class="chips" id="notes"></div>
-      </div>
-    </details>
-
-    <details class="section">
-      <summary>Low Frequencies (beat rates)</summary>
-      <div class="section-body">
-        <div class="chips" id="lowfreqs"></div>
-      </div>
-    </details>
-
-    <details class="section">
-      <summary>Framework Ratios</summary>
-      <div class="section-body">
-        <div class="chips" id="ratios"></div>
-        <div class="info" style="margin-top:10px;">
-          These set the beat rate to framework integers: Φ = 2, T = 3, P = 4, (Φ+○) = 5, R = 7, SU(3) = 8, A(2) = 10, G = 12, V = 13, A(3) = 21, and the golden number φ ≈ 1.618.
-        </div>
-      </div>
-    </details>
-
-    <details class="section">
-      <summary>Serum 2 Export</summary>
-      <div class="section-body">
-        <div class="io-row" style="grid-template-columns:1fr;">
-          <button id="exportWT1">Single-cycle wavetable (.wav)</button>
-          <button id="exportWTmulti">Morph wavetable: 9 shapes × 32 frames (.wav)</button>
-          <button id="exportSerumSpec">Preset spec card (.txt)</button>
-        </div>
-        <div class="info" style="margin-top:10px;">
-          Drop the .wav files into Serum 2's oscillator (wavetable slot). The single-cycle file uses the current waveform; the morph file sweeps through sine, triangle, square, saw, FM, AM, organ, vocal, bowed across the wavetable-position knob. The .txt card lists every parameter in Serum 2 terms so you can rebuild the patch; Serum 2's native preset format is proprietary binary and can't be authored from a web page, so this is preset-building material rather than a ready-made preset.
-        </div>
-      </div>
-    </details>
-
-    <div class="info">
-      <strong>Headphones recommended</strong> for binaural and φ-cascade modes (stereo separation matters). Drone, harmonic, chord, monaural, and noise modes play fine on any speaker. Start at low volume and raise slowly; if anything becomes uncomfortable, lower the beat rate, reverb, and volume.
+    <div class="settings-section">
+      <h3>Per-layer mix</h3>
+      <div class="chips" id="layerMixChips"></div>
+      <div class="row-note">Tap a layer to mute or unmute it.</div>
     </div>
-  </section>
+  </div>
 
-  <!-- BREATH LEAD (full-width) -->
-  <section class="panel col-span-2 col-span-3">
-    <h2>— Breath Lead</h2>
+  <!-- TEXTURE -->
+  <div class="settings-panel" data-panel="texture">
+    <div class="settings-section">
+      <h3>Modulation</h3>
+      <div class="setting-row">
+        <label for="lfoDepth">LFO depth</label>
+        <input type="range" id="lfoDepth" min="0" max="100" value="30" step="1">
+        <span class="param-val" id="lfoDepthVal">30%</span>
+      </div>
+      <div class="setting-row">
+        <label for="lfoRate">LFO rate</label>
+        <input type="range" id="lfoRate" min="0.01" max="10" value="0.25" step="0.01">
+        <span class="param-val" id="lfoRateVal">0.25 Hz</span>
+      </div>
+      <div class="setting-row">
+        <label for="trem">Tremolo</label>
+        <input type="range" id="trem" min="0" max="100" value="0" step="1">
+        <span class="param-val" id="tremVal">0%</span>
+      </div>
+      <div class="setting-row">
+        <label for="vib">Vibrato</label>
+        <input type="range" id="vib" min="0" max="100" value="0" step="1">
+        <span class="param-val" id="vibVal">0%</span>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <h3>Filter &amp; space</h3>
+      <div class="setting-row sel">
+        <label for="filterType">Filter type</label>
+        <select id="filterType">
+          <option value="none">None (open aperture)</option>
+          <option value="lowpass">Lowpass (dark)</option>
+          <option value="highpass">Highpass (airy)</option>
+          <option value="bandpass">Bandpass (focused)</option>
+          <option value="notch">Notch (shadow)</option>
+        </select>
+      </div>
+      <div class="setting-row">
+        <label for="cutoff">Cutoff</label>
+        <input type="range" id="cutoff" min="80" max="12000" value="1500" step="10">
+        <span class="param-val" id="cutoffVal">1500 Hz</span>
+      </div>
+      <div class="setting-row">
+        <label for="q">Resonance (Q)</label>
+        <input type="range" id="q" min="0.1" max="20" value="1.0" step="0.1">
+        <span class="param-val" id="qVal">1.0</span>
+      </div>
+      <div class="setting-row">
+        <label for="rev">Reverb</label>
+        <input type="range" id="rev" min="0" max="100" value="20" step="1">
+        <span class="param-val" id="revVal">20%</span>
+      </div>
+      <div class="setting-row">
+        <label for="revSz">Reverb size</label>
+        <input type="range" id="revSz" min="0.2" max="8" value="2.5" step="0.1">
+        <span class="param-val" id="revSzVal">2.5 s</span>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <h3>Noise layer</h3>
+      <div class="setting-row sel">
+        <label for="noiseType">Noise type</label>
+        <select id="noiseType">
+          <option value="none">Off</option>
+          <option value="white">White (energetic)</option>
+          <option value="pink">Pink (balanced)</option>
+          <option value="brown">Brown (deep)</option>
+          <option value="rain">Rain (filtered)</option>
+          <option value="ocean">Ocean (slow modulated)</option>
+          <option value="wind">Wind (breath)</option>
+        </select>
+      </div>
+      <div class="setting-row">
+        <label for="noiseLvl">Noise level</label>
+        <input type="range" id="noiseLvl" min="0" max="100" value="20" step="1">
+        <span class="param-val" id="noiseLvlVal">20%</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- TUNING -->
+  <div class="settings-panel" data-panel="tuning">
+    <div class="settings-section">
+      <h3>Base frequency sets</h3>
+      <div class="chips" id="freqSets"></div>
+    </div>
+    <div class="settings-section">
+      <h3>Solfeggio</h3>
+      <div class="chips" id="solfeggio"></div>
+    </div>
+    <div class="settings-section">
+      <h3>Equal temperament</h3>
+      <div class="chips" id="notes"></div>
+    </div>
+    <div class="settings-section">
+      <h3>Beat rates</h3>
+      <div class="chips" id="lowfreqs"></div>
+    </div>
+    <div class="settings-section">
+      <h3>Framework ratios</h3>
+      <div class="chips" id="ratios"></div>
+      <div class="row-note">These set the beat rate to framework integers: Φ = 2, T = 3, P = 4, (Φ+○) = 5, R = 7, SU(3) = 8, A(2) = 10, G = 12, V = 13, A(3) = 21, and the golden number φ ≈ 1.618.</div>
+    </div>
+  </div>
+
+  <!-- LIBRARY -->
+  <div class="settings-panel" data-panel="library">
+    <div class="settings-section">
+      <h3>Presets</h3>
+      <div class="preset-grid" id="presetGrid"></div>
+    </div>
+    <div class="settings-section">
+      <h3>Saved states</h3>
+      <div class="save-row">
+        <input type="text" id="saveName" placeholder="Name this state..." maxlength="40" autocomplete="off" spellcheck="false">
+        <button id="saveBtn">Save</button>
+      </div>
+      <div class="saved-list" id="savedStates"></div>
+      <div class="io-row">
+        <button id="exportBtn">Export all (.json)</button>
+        <button id="importBtn">Import (.json)</button>
+        <input type="file" id="importFile" accept="application/json,.json" style="display:none;">
+      </div>
+    </div>
+  </div>
+
+  <!-- VISUALS -->
+  <div class="settings-panel" data-panel="visuals">
+    <div class="settings-section">
+      <h3>Breath guide</h3>
+      <div class="row-note">A dot that rises as you breathe in and falls as you breathe out. It has its own view, and it can also sit on the main screen and ride over the flashes, all on one breath.</div>
+      <div class="setting-row check">
+        <span class="lbl">On the main screen</span>
+        <button class="toggle" type="button" data-breath-where="stage" aria-pressed="false">OFF</button>
+      </div>
+      <div class="setting-row check">
+        <span class="lbl">Over the flashes</span>
+        <button class="toggle" type="button" data-breath-where="flash" aria-pressed="false">OFF</button>
+      </div>
+      <button class="btn amber" id="openBreath2" type="button" style="width:100%; margin:8px 0 6px;">◠ Open the breath guide</button>
+    </div>
+
+    <div class="settings-section">
+      <h3>Visual beat</h3>
+      <div class="vbeat-row">
+        <div class="vbeat-swatch" id="vbeatSwatch" style="--swatch: #ff3030;">
+          <span id="vbeatNote">C</span>
+        </div>
+        <div class="vbeat-info">
+          <div>Note: <strong id="vbeatNoteName">C</strong></div>
+          <div>Color: <strong id="vbeatColorName">Red</strong></div>
+          <div>Flash rate: <strong id="vbeatRate">1.618 Hz</strong></div>
+        </div>
+      </div>
+      <div class="row-note">Notes map to the rainbow across the octave: C is red, E yellow, G blue, B violet, and the semitones in between.</div>
+
+      <div class="setting-row sel">
+        <label for="vbeatShape">Flash shape <span class="param-val" id="vbeatShapeVal">pulse</span></label>
+        <select id="vbeatShape">
+          <option value="pulse">Pulse (soft fade)</option>
+          <option value="strobe">Strobe (hard on/off)</option>
+          <option value="radial">Radial (center → edge)</option>
+          <option value="ring">Ring (expanding)</option>
+          <option value="split">Split (two colors)</option>
+        </select>
+      </div>
+      <div class="setting-row">
+        <label for="vbeatInt">Intensity</label>
+        <input type="range" id="vbeatInt" min="10" max="100" value="80" step="5">
+        <span class="param-val" id="vbeatIntVal">80%</span>
+      </div>
+      <div class="setting-row sel">
+        <label for="vbeatSrc">Color source <span class="param-val" id="vbeatSrcVal">base note</span></label>
+        <select id="vbeatSrc">
+          <option value="base">Base note → color</option>
+          <option value="beat">Beat rate → color</option>
+          <option value="sweep">Auto-sweep (rainbow)</option>
+          <option value="manual">Manual (pick color)</option>
+        </select>
+      </div>
+      <div id="vbeatManualRow">
+        <div class="setting-row">
+          <label for="vbeatHue">Manual color</label>
+          <div class="ctl" style="display:grid; grid-template-columns: 48px 1fr; gap:10px; align-items:center;">
+            <input type="color" id="vbeatPicker" value="#ff3030" style="width:48px; height:40px; padding:0; border:1px solid var(--card-edge); border-radius:6px; background:transparent; cursor:pointer;">
+            <input type="range" id="vbeatHue" min="0" max="359" value="0" step="1">
+          </div>
+          <span class="param-val" id="vbeatHueVal">0°</span>
+        </div>
+      </div>
+      <div class="setting-row sel">
+        <label for="vbeatSync">Audio → visual sync <span class="param-val" id="vbeatSyncVal">1 : 1 (match beat)</span></label>
+        <select id="vbeatSync">
+          <optgroup label="Direct ratios">
+            <option value="1:1">1 : 1 (match beat exactly)</option>
+            <option value="2:1">2 : 1 (double: 2 flashes per beat)</option>
+            <option value="4:1">4 : 1 (quadruple)</option>
+            <option value="8:1">8 : 1 (octuple)</option>
+            <option value="1:2">1 : 2 (half time)</option>
+            <option value="1:4">1 : 4 (quarter time)</option>
+            <option value="1:8">1 : 8 (eighth time)</option>
+          </optgroup>
+          <optgroup label="Polyrhythm">
+            <option value="3:2">3 : 2 (dotted)</option>
+            <option value="2:3">2 : 3 (triplet feel)</option>
+            <option value="5:4">5 : 4 (quintuplet)</option>
+            <option value="7:4">7 : 4 (septuplet)</option>
+          </optgroup>
+          <optgroup label="Framework ratios">
+            <option value="phi">φ : 1 (golden; ~1.618× beat)</option>
+            <option value="invphi">1 : φ (~0.618× beat)</option>
+            <option value="phisq">φ² : 1 (~2.618× beat)</option>
+          </optgroup>
+          <optgroup label="Coupled sources">
+            <option value="breath">Follow the breath guide (one per breath)</option>
+            <option value="base-div">Base frequency ÷ divisor</option>
+          </optgroup>
+          <optgroup label="Custom">
+            <option value="custom-hz">Custom Hz (free rate)</option>
+            <option value="custom-ratio">Custom ratio (visual : beat)</option>
+          </optgroup>
+        </select>
+      </div>
+      <div id="vbeatDivisorRow" style="display:none;">
+        <div class="setting-row">
+          <label for="vbeatDivisor">Base divisor</label>
+          <input type="range" id="vbeatDivisor" min="10" max="10000" value="1000" step="10">
+          <span class="param-val" id="vbeatDivisorVal">1000</span>
+        </div>
+        <div class="row-note">Flash rate = base frequency ÷ divisor. At 432 Hz and 1000, the flash is 0.432 Hz.</div>
+      </div>
+      <div id="vbeatCustomHzRow" style="display:none;">
+        <div class="setting-row">
+          <label for="vbeatCustomHz">Custom rate</label>
+          <input type="range" id="vbeatCustomHz" min="0.05" max="40" value="1" step="0.01">
+          <span class="param-val" id="vbeatCustomHzVal">1.000 Hz</span>
+        </div>
+      </div>
+      <div id="vbeatCustomRatioRow" style="display:none;">
+        <div class="setting-row">
+          <label for="vbeatCustomRatio">Custom ratio (visual : beat)</label>
+          <input type="range" id="vbeatCustomRatio" min="0.05" max="16" value="1" step="0.01">
+          <span class="param-val" id="vbeatCustomRatioVal">1.000</span>
+        </div>
+      </div>
+      <div class="setting-row">
+        <label for="vbeatPhase">Phase offset</label>
+        <input type="range" id="vbeatPhase" min="0" max="360" value="0" step="1">
+        <span class="param-val" id="vbeatPhaseVal">0°</span>
+      </div>
+      <div class="setting-row check">
+        <span class="lbl">Effective flash rate</span>
+        <span class="param-val" id="vbeatEffective">1.618 Hz</span>
+      </div>
+
+      <div class="setting-row sel">
+        <span class="lbl">Show the flashes</span>
+        <span class="ctl seg" role="group" aria-label="Where the flashes show">
+          <button class="seg-btn" type="button" data-flash-where="full" aria-pressed="true">Full screen</button>
+          <button class="seg-btn" type="button" data-flash-where="stage" aria-pressed="false">Main window</button>
+        </span>
+      </div>
+      <button class="btn amber" id="vbeatLaunch" type="button" style="width:100%; margin-top:8px;">▣ Launch full-screen</button>
+      <div class="vbeat-warn">
+        <strong>Photosensitivity warning.</strong> Flashing light between about 3 Hz and 60 Hz can trigger seizures in people with photosensitive epilepsy, and may cause migraines or nausea. If you have any history of seizures, do not launch this view. If you feel dizzy, close it at once (tap anywhere, press Esc, or use the × button; in the main window, the ✕ Flash button). Start at low intensity and low beat rates (below 3 Hz) and increase slowly.
+      </div>
+    </div>
+  </div>
+
+  <!-- EXPORT -->
+  <div class="settings-panel" data-panel="export">
+    <div class="settings-section">
+      <h3>Serum 2</h3>
+      <div class="io-row" style="grid-template-columns:1fr;">
+        <button id="exportWT1">Single-cycle wavetable (.wav)</button>
+        <button id="exportWTmulti">Morph wavetable: 9 shapes × 32 frames (.wav)</button>
+        <button id="exportSerumSpec">Preset spec card (.txt)</button>
+      </div>
+      <div class="row-note" style="padding-top:10px;">Drop the .wav files into Serum 2's oscillator (wavetable slot). The single-cycle file uses the current waveform; the morph file sweeps through sine, triangle, square, saw, FM, AM, organ, vocal and bowed across the wavetable-position knob. The .txt card lists every parameter in Serum 2 terms so you can rebuild the patch (Serum 2's own preset format is proprietary binary, so this is building material rather than a ready-made preset).</div>
+    </div>
+  </div>
+
+  <!-- ABOUT -->
+  <div class="settings-panel" data-panel="about">
+    <div class="settings-section">
+      <h3>Listening safely</h3>
+      <div class="row-note"><strong style="color:var(--amber-hi);">Headphones</strong> for binaural and φ-cascade modes (stereo separation matters). Drone, harmonic, chord, monaural and noise modes play fine on any speaker. Start at a low volume and raise it slowly; if anything becomes uncomfortable, lower the beat rate, the reverb and the volume. This is a sound tool for relaxation and exploration, not a medical treatment.</div>
+    </div>
+    <div class="settings-section">
+      <h3>Framework mapping</h3>
+      <div class="row-note">In binaural mode the left channel (•) holds the base tone and the right channel (○) holds the φ-offset tone. The interference pattern at the difference frequency is Φ, the beat. This is an acoustic mapping onto the circumpunct notation, not a medical claim.</div>
+    </div>
+    <div class="settings-section">
+      <h3>More</h3>
+      <div class="row-note">
+        <a href="circumpunct_consciousness_theory.html" style="color:var(--chip);">Consciousness Theory</a> ·
+        <a href="attune.html" style="color:var(--chip);">Attune</a> ·
+        <a href="hemispheric_resonance.html" style="color:var(--chip);">Hemispheric Resonance</a> ·
+        <a href="how_reality_is_built.html" style="color:var(--chip);">How Reality Is Built</a><br>
+        The Circumpunct Framework · Ashman Roonz · 2026
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- BREATH GUIDE (its own full-screen view; runs alongside a session) -->
+<div class="overlay" id="breathOverlay" role="dialog" aria-modal="true" aria-label="Breath guide">
+  <div class="overlay-head">
+    <h1><span class="lss-tag"><span class="lt-text">BREATHE</span></span></h1>
+    <button class="overlay-close" id="breathClose" type="button" title="Close (Esc)" aria-label="Close the breath guide">✕</button>
+  </div>
+  <div class="breath-wrap">
     <div class="breath-stage">
       <canvas id="breathCanvas"></canvas>
       <div class="breath-phase" id="breathPhase">READY</div>
     </div>
-
-    <div class="param">
-      <div class="param-row"><span>Breaths per minute</span><span class="param-val" id="breathRateVal">6.0 bpm</span></div>
-      <input type="range" id="breathRate" min="3" max="12" value="6" step="0.5">
-    </div>
-
-    <div class="breath-controls">
-      <button class="breath-play" id="breathPlay">▶ START</button>
-      <div style="color: var(--muted); font-size: 0.8rem; flex: 1;">
-        Follow the dot. Breathe <strong style="color:#8fd3ff;">IN</strong> as it rises, <strong style="color:#ffb08f;">OUT</strong> as it falls. The dot travels left to right per breath, then resets. Coherent breathing (about 5.5–6 bpm) aligns HRV with the φ-coherence peak; slower (3–4 bpm) is deeper practice.
+    <div class="settings-section" style="margin:0;">
+      <div class="setting-row">
+        <label for="breathRate">Breaths per minute</label>
+        <input type="range" id="breathRate" min="3" max="12" value="6" step="0.5">
+        <span class="param-val" id="breathRateVal">6.0 bpm</span>
+      </div>
+      <div class="setting-row check">
+        <span class="lbl">On the main screen</span>
+        <button class="toggle" type="button" data-breath-where="stage" aria-pressed="false">OFF</button>
+      </div>
+      <div class="setting-row check">
+        <span class="lbl">Over the flashes</span>
+        <button class="toggle" type="button" data-breath-where="flash" aria-pressed="false">OFF</button>
       </div>
     </div>
-  </section>
-
-  <!-- VISUAL BEAT (full-width at the bottom) -->
-  <section class="panel col-span-2 col-span-3">
-    <h2>⟳ Visual Beat</h2>
-    <div class="vbeat-row">
-      <div class="vbeat-swatch" id="vbeatSwatch" style="--swatch: #ff3030;">
-        <span id="vbeatNote">C</span>
-      </div>
-      <div class="vbeat-info">
-        <div>Note: <strong id="vbeatNoteName">C</strong></div>
-        <div>Color: <strong id="vbeatColorName">Red</strong></div>
-        <div>Flash rate: <strong id="vbeatRate">1.618 Hz</strong> (= current beat)</div>
-        <div style="color: var(--muted); font-size:0.75rem;">Notes (chromatic) map to ROYGBIV across the octave; C = Red, E = Yellow, G = Blue, B = Violet, and the semitones in between.</div>
-      </div>
-    </div>
-
-    <div class="param">
-      <div class="param-label"><span>Flash shape</span><span id="vbeatShapeVal">pulse</span></div>
-      <select id="vbeatShape">
-        <option value="pulse">Pulse (soft fade)</option>
-        <option value="strobe">Strobe (hard on/off)</option>
-        <option value="radial">Radial (center → edge)</option>
-        <option value="ring">Ring (expanding)</option>
-        <option value="split">Split (two colors)</option>
-      </select>
-    </div>
-
-    <div class="param">
-      <div class="param-label"><span>Intensity</span><span id="vbeatIntVal">80%</span></div>
-      <input type="range" id="vbeatInt" min="10" max="100" value="80" step="5">
-    </div>
-
-    <div class="param">
-      <div class="param-label"><span>Color source</span><span id="vbeatSrcVal">base note</span></div>
-      <select id="vbeatSrc">
-        <option value="base">Base note → color</option>
-        <option value="beat">Beat rate → color</option>
-        <option value="sweep">Auto-sweep (rainbow)</option>
-        <option value="manual">Manual (pick color)</option>
-      </select>
-    </div>
-
-    <div class="param" id="vbeatManualRow">
-      <div class="param-row"><span>Manual color</span><span class="param-val" id="vbeatHueVal">0°</span></div>
-      <div style="display:grid; grid-template-columns: 54px 1fr; gap:10px; align-items:center;">
-        <input type="color" id="vbeatPicker" value="#ff3030" style="width:54px; height:44px; padding:0; border:1px solid var(--panel-b); border-radius:8px; background:transparent; cursor:pointer;">
-        <input type="range" id="vbeatHue" min="0" max="359" value="0" step="1">
-      </div>
-      <div style="color: var(--muted); font-size:0.75rem; margin-top:6px;">
-        Drag the hue slider or tap the color square. Saturation and lightness are fixed to framework defaults; set "Color source" to Manual above to use this color for the flash.
-      </div>
-    </div>
-
-    <div class="param">
-      <div class="param-row"><span>Audio → Visual sync</span><span class="param-val" id="vbeatSyncVal">1 : 1 (match beat)</span></div>
-      <select id="vbeatSync">
-        <optgroup label="Direct ratios">
-          <option value="1:1">1 : 1 (match beat exactly)</option>
-          <option value="2:1">2 : 1 (double — 2 flashes per beat)</option>
-          <option value="4:1">4 : 1 (quadruple)</option>
-          <option value="8:1">8 : 1 (octuple)</option>
-          <option value="1:2">1 : 2 (half time)</option>
-          <option value="1:4">1 : 4 (quarter time)</option>
-          <option value="1:8">1 : 8 (eighth time)</option>
-        </optgroup>
-        <optgroup label="Polyrhythm">
-          <option value="3:2">3 : 2 (dotted)</option>
-          <option value="2:3">2 : 3 (triplet feel)</option>
-          <option value="5:4">5 : 4 (quintuplet)</option>
-          <option value="7:4">7 : 4 (septuplet)</option>
-        </optgroup>
-        <optgroup label="Framework ratios">
-          <option value="phi">φ : 1 (golden; ~1.618× beat)</option>
-          <option value="invphi">1 : φ (~0.618× beat)</option>
-          <option value="phisq">φ² : 1 (~2.618× beat)</option>
-        </optgroup>
-        <optgroup label="Coupled sources">
-          <option value="breath">Follow breath lead (bpm → Hz)</option>
-          <option value="base-div">Base frequency ÷ divisor</option>
-        </optgroup>
-        <optgroup label="Custom">
-          <option value="custom-hz">Custom Hz (free rate)</option>
-          <option value="custom-ratio">Custom ratio (visual : beat)</option>
-        </optgroup>
-      </select>
-    </div>
-
-    <div class="param" id="vbeatDivisorRow" style="display:none;">
-      <div class="param-row"><span>Base divisor</span><span class="param-val" id="vbeatDivisorVal">1000</span></div>
-      <input type="range" id="vbeatDivisor" min="10" max="10000" value="1000" step="10">
-      <div style="color: var(--muted); font-size:0.72rem; margin-top:4px;">Flash rate = base frequency ÷ divisor. At base = 432 Hz and divisor = 1000, flash = 0.432 Hz.</div>
-    </div>
-
-    <div class="param" id="vbeatCustomHzRow" style="display:none;">
-      <div class="param-row"><span>Custom Hz</span><span class="param-val" id="vbeatCustomHzVal">1.000 Hz</span></div>
-      <input type="range" id="vbeatCustomHz" min="0.05" max="40" value="1" step="0.01">
-    </div>
-
-    <div class="param" id="vbeatCustomRatioRow" style="display:none;">
-      <div class="param-row"><span>Custom ratio (visual : beat)</span><span class="param-val" id="vbeatCustomRatioVal">1.000</span></div>
-      <input type="range" id="vbeatCustomRatio" min="0.05" max="16" value="1" step="0.01">
-    </div>
-
-    <div class="param">
-      <div class="param-row"><span>Phase offset</span><span class="param-val" id="vbeatPhaseVal">0°</span></div>
-      <input type="range" id="vbeatPhase" min="0" max="360" value="0" step="1">
-      <div style="color: var(--muted); font-size:0.72rem; margin-top:4px;">Shift the flash relative to the audio beat (0° = aligned; 180° = off-beat / inverted).</div>
-    </div>
-
-    <div class="param">
-      <div class="param-row"><span>Effective flash rate</span><span class="param-val" id="vbeatEffective">1.618 Hz</span></div>
-      <div style="color: var(--muted); font-size:0.72rem;">Live computed from audio beat + sync ratio; also visible on the full-screen HUD.</div>
-    </div>
-
-    <button class="vbeat-launch" id="vbeatLaunch">▣ LAUNCH FULL-SCREEN</button>
-
-    <div class="vbeat-warn">
-      <strong>Photosensitivity warning.</strong> Flashing light between about 3 Hz and 60 Hz can trigger seizures in people with photosensitive epilepsy, and may cause migraines or nausea. If you have any history of seizures, do not launch this view. If you feel dizzy, close immediately (tap anywhere, press Esc, or use the × button). Start at low intensity and low beat rates (below 3 Hz); increase slowly.
-    </div>
-  </section>
-
+    <button class="breath-play" id="breathPlay" type="button">▶ START</button>
+    <div class="row-note" style="text-align:center;">Follow the dot. Breathe <strong style="color:#8fd3ff;">in</strong> as it rises, <strong style="color:#ffb08f;">out</strong> as it falls. About 5.5 to 6 breaths a minute is coherent breathing; 3 to 4 is deeper practice.</div>
+  </div>
 </div>
 
 <!-- Full-screen flash overlay (hidden by default) -->
 <div id="flashOverlay" role="dialog" aria-label="Full-screen visual beat">
   <div id="flashPanel"></div>
   <canvas id="flashCanvas" style="position:absolute; inset:0; width:100%; height:100%; display:none;"></canvas>
+  <div class="flash-breath" id="flashBreath" aria-hidden="true">
+    <canvas id="flashBreathCanvas"></canvas>
+    <div class="flash-breath-phase" id="flashBreathPhase"></div>
+  </div>
   <button id="flashClose" aria-label="Close full-screen">×</button>
   <div id="flashHUD">
     <span id="flashHUDNote">C · Red</span>
@@ -1355,17 +1719,6 @@
     </div>
   </div>
 </div>
-
-<footer>
-  <div style="font-size:1.4rem; color:var(--gold);">⊙</div>
-  <p style="margin-top:8px;">
-    <a href="circumpunct_consciousness_theory.html">Consciousness Theory</a> ·
-    <a href="attune.html">Attune</a> ·
-    <a href="hemispheric_resonance.html">Hemispheric Resonance</a> ·
-    <a href="how_reality_is_built.html">How Reality Is Built</a>
-  </p>
-  <p style="margin-top:6px; color:#666;">The Circumpunct Framework · Ashman Roonz · 2026</p>
-</footer>
 
 <script>
 (() => {
@@ -2090,7 +2443,7 @@
     unlockLoopElement();
     loopState.liveUntil = performance.now() + FADE_IN * 1000;
     state.playing = true;
-    $('playBtn').textContent = '⬛ STOP SESSION';
+    $('playBtn').textContent = '■ STOP SESSION';
     $('playBtn').classList.add('playing');
     renderLayers();
     renderLayerMixChips();
@@ -2734,6 +3087,7 @@
       btn.addEventListener('click', () => applyPreset(pr.id));
       grid.appendChild(btn);
     });
+    updatePresetPicker();
   }
 
   function renderChips(id, items, onClick) {
@@ -2843,12 +3197,21 @@
 
   function drawBG() {
     const t = Date.now() / 1000;
-    const cx = bg.width / 2, cy = bg.height / 2;
+    // the field radiates from the stage's circumpunct (the screen centre if it
+    // is not laid out); the canvas is fixed, so the rings follow a scroll
+    const orbEl = document.getElementById('stageOrb');
+    const orbBox = orbEl ? orbEl.getBoundingClientRect() : null;
+    const cx = orbBox && orbBox.width ? orbBox.left + orbBox.width / 2 : bg.width / 2;
+    const cy = orbBox && orbBox.height ? orbBox.top + orbBox.height / 2 : bg.height / 2;
+    // trails fade toward transparent (not black) so the backdrop shows through
+    bctx.save();
+    bctx.globalCompositeOperation = 'destination-out';
     bctx.fillStyle = 'rgba(0,0,0,0.05)';
     bctx.fillRect(0, 0, bg.width, bg.height);
+    bctx.restore();
 
     if (!state.playing) {
-      bctx.strokeStyle = 'rgba(255,215,0,0.06)';
+      bctx.strokeStyle = 'rgba(255,170,0,0.06)';
       bctx.lineWidth = 1;
       bctx.beginPath();
       for (let a = 0; a < 10*Math.PI; a += 0.02) {
@@ -2860,19 +3223,24 @@
       }
       bctx.stroke();
     } else {
-      // gentle pulsing rings per layer
+      // one ring per layer around the circumpunct, swelling at its beat
+      // (folded by octaves into 0.5 to 2 Hz, as the orb is); thin lines whose
+      // trails fade, so the field glows without flooding the screen
+      const glyph = orbEl && orbEl.firstElementChild;
+      const gr = glyph ? glyph.getBoundingClientRect().width / 2 : 60;
+      const r0 = Math.max(50, gr * 1.15), step = Math.max(46, gr * 0.75);
       state.nodes.forEach((n, idx) => {
         if (!n) return;
-        const phase = n.beat ? (t * n.beat * 0.5) : (t * 0.2 + idx*0.4);
+        let rate = n.beat || 0;
+        if (rate > 0) { while (rate > 2) rate /= 2; while (rate < 0.5) rate *= 2; }
+        const phase = rate ? t * rate : (t * 0.2 + idx * 0.4);
         const intensity = 0.5 + 0.5 * Math.sin(phase * TWO_PI);
-        const r = 60 + idx * 70 + intensity * 30;
-        const g = bctx.createRadialGradient(cx, cy, r*0.2, cx, cy, r);
-        g.addColorStop(0, 'rgba(255,215,0,' + (0.12 * intensity) + ')');
-        g.addColorStop(1, 'rgba(255,215,0,0)');
-        bctx.fillStyle = g;
+        const r = r0 + idx * step + intensity * step * 0.4;
+        bctx.strokeStyle = 'rgba(255,170,0,' + (0.04 + 0.1 * intensity).toFixed(3) + ')';
+        bctx.lineWidth = 1.5;
         bctx.beginPath();
         bctx.arc(cx, cy, r, 0, TWO_PI);
-        bctx.fill();
+        bctx.stroke();
       });
     }
     requestAnimationFrame(drawBG);
@@ -2880,8 +3248,11 @@
 
   function drawViz() {
     const w = viz.width, h = viz.height;
+    vctx.save();
+    vctx.globalCompositeOperation = 'destination-out';
     vctx.fillStyle = 'rgba(0,0,0,0.12)';
     vctx.fillRect(0, 0, w, h);
+    vctx.restore();
     const t = Date.now() / 1000;
     const cy = h/2;
 
@@ -2901,7 +3272,7 @@
         vctx.stroke();
       });
       // composite
-      vctx.strokeStyle = 'rgba(255,215,0,0.85)';
+      vctx.strokeStyle = 'rgba(255,170,0,0.85)';
       vctx.lineWidth = 2.2;
       vctx.beginPath();
       for (let x = 0; x < w; x += 2) {
@@ -2918,15 +3289,14 @@
       }
       vctx.stroke();
     } else {
-      vctx.strokeStyle = 'rgba(255,215,0,0.25)';
+      // at rest: the waveform breathes slowly along the strip, fading at the ends
+      vctx.strokeStyle = 'rgba(255,170,0,0.28)';
       vctx.lineWidth = 1;
       vctx.beginPath();
-      for (let a = 0; a < 8*Math.PI; a += 0.05) {
-        const r = 3 * Math.pow(PHI, a / TWO_PI);
-        const x = w/2 + r * Math.cos(a + t/3);
-        const y = cy + r * Math.sin(a + t/3);
-        if (a === 0) vctx.moveTo(x,y); else vctx.lineTo(x,y);
-        if (r > Math.max(w, h)) break;
+      for (let x = 0; x <= w; x += 2) {
+        const env = Math.sin(Math.PI * x / w);
+        const y = cy + Math.sin(x / w * TWO_PI * PHI + t * 0.5) * h * 0.08 * env;
+        if (x === 0) vctx.moveTo(x, y); else vctx.lineTo(x, y);
       }
       vctx.stroke();
     }
@@ -3650,7 +4020,8 @@
     customHz: 1.0,
     customRatio: 1.0,
     phaseOffset: 0,       // degrees
-    baseDivisor: 1000
+    baseDivisor: 1000,
+    where: 'full'         // 'full' screen, or 'stage': inside the main window
   };
 
   // Compute the effective flash rate in Hz from current audio beat + sync selection.
@@ -3687,7 +4058,12 @@
     const elapsed = (now - state.vbeat.t0) / 1000; // seconds
     const rate = Math.max(0.01, effectiveFlashRate()); // Hz, sync-aware
     const offsetPhase = ((state.vbeat.phaseOffset || 0) / 360);
-    const phase = ((elapsed * rate) + offsetPhase) % 1;  // 0..1 per flash cycle
+    let phase = ((elapsed * rate) + offsetPhase) % 1;  // 0..1 per flash cycle
+    // Following the breath guide while it breathes: one flash per breath,
+    // locked to it, brightest at the top of the inhale, darkest when empty
+    if (state.vbeat.sync === 'breath' && state.breath && state.breath.playing) {
+      phase = (breathU(now) + 0.5 + offsetPhase) % 1;
+    }
 
     // Color source
     let hz;
@@ -3734,15 +4110,18 @@
     }
     const I = state.vbeat.intensity * bright;
 
-    // Render
-    const panel = $('flashPanel');
-    const canvas = $('flashCanvas');
+    // Render: full screen, or behind everything on the main window's stage
+    const inStage = state.vbeat.where === 'stage';
+    const panel = inStage ? $('stageFlash') : $('flashPanel');
+    const canvas = inStage ? $('stageFlashCanvas') : $('flashCanvas');
     if (state.vbeat.shape === 'radial' || state.vbeat.shape === 'ring' || state.vbeat.shape === 'split') {
       panel.style.background = '#000';
       canvas.style.display = 'block';
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      const w = canvas.width = Math.floor(window.innerWidth * dpr);
-      const h = canvas.height = Math.floor(window.innerHeight * dpr);
+      const box = inStage ? panel.getBoundingClientRect() : { width: window.innerWidth, height: window.innerHeight };
+      const w = Math.floor(box.width * dpr), h = Math.floor(box.height * dpr);
+      if (canvas.width !== w) canvas.width = w;
+      if (canvas.height !== h) canvas.height = h;
       const ctx = canvas.getContext('2d');
       ctx.clearRect(0, 0, w, h);
       if (state.vbeat.shape === 'radial') {
@@ -3790,18 +4169,28 @@
 
   function openFlash() {
     const overlay = $('flashOverlay');
-    overlay.classList.add('active');
     state.vbeat.active = true;
     state.vbeat.t0 = 0;
     state.vbeat.shape = $('vbeatShape').value;
     state.vbeat.intensity = parseInt($('vbeatInt').value, 10) / 100;
     state.vbeat.src = $('vbeatSrc').value;
-    // Request fullscreen (best effort; silently falls back to fixed overlay)
-    if (overlay.requestFullscreen) {
-      overlay.requestFullscreen().catch(() => {});
-    } else if (overlay.webkitRequestFullscreen) {
-      overlay.webkitRequestFullscreen();
+    // the breath guide rides over the flashes when asked to, breathing
+    if (state.breath.onFlash && !state.breath.playing) startBreath();
+    if (state.vbeat.where === 'stage') {
+      // in the main window the stage flashes behind the circumpunct
+      closeOverlay($('settingsOverlay'));
+      $('stage').classList.add('flashing');
+      $('stageFlashStop').hidden = false;
+    } else {
+      overlay.classList.add('active');
+      // Request fullscreen (best effort; silently falls back to fixed overlay)
+      if (overlay.requestFullscreen) {
+        overlay.requestFullscreen().catch(() => {});
+      } else if (overlay.webkitRequestFullscreen) {
+        overlay.webkitRequestFullscreen();
+      }
     }
+    syncFlashControls();
     cancelAnimationFrame(state.vbeat.raf);
     state.vbeat.raf = requestAnimationFrame(flashLoop);
   }
@@ -3809,12 +4198,18 @@
   function closeFlash() {
     state.vbeat.active = false;
     cancelAnimationFrame(state.vbeat.raf);
-    $('flashOverlay').classList.remove('active');
-    if (document.fullscreenElement) {
+    const overlay = $('flashOverlay');
+    overlay.classList.remove('active');
+    $('stage').classList.remove('flashing');
+    $('stageFlashStop').hidden = true;
+    $('stageFlash').style.background = '';
+    // leave the app's own full screen alone; only the flash view's ends here
+    if (document.fullscreenElement === overlay) {
       document.exitFullscreen().catch(() => {});
-    } else if (document.webkitFullscreenElement && document.webkitExitFullscreen) {
+    } else if (document.webkitFullscreenElement === overlay && document.webkitExitFullscreen) {
       document.webkitExitFullscreen();
     }
+    syncFlashControls();
   }
 
   // Controls
@@ -3929,7 +4324,7 @@
   // Keep the effective rate readout live as the audio beat / base change underneath
   setInterval(updateEffectiveDisplay, 250);
   updateEffectiveDisplay();
-  $('vbeatLaunch').addEventListener('click', openFlash);
+  $('vbeatLaunch').addEventListener('click', () => { if (state.vbeat.active) closeFlash(); else openFlash(); });
   $('flashOverlay').addEventListener('click', (e) => {
     // Click anywhere except the close button still closes (cursor is pointer)
     closeFlash();
@@ -3940,7 +4335,7 @@
   });
   document.addEventListener('fullscreenchange', () => {
     // If user exits fullscreen via browser chrome, also close the overlay
-    if (!document.fullscreenElement && state.vbeat.active) closeFlash();
+    if (!document.fullscreenElement && state.vbeat.active && state.vbeat.where !== 'stage') closeFlash();
   });
 
   // Keep the inline swatch live with whatever beat/base values are set
@@ -3950,157 +4345,202 @@
   setInterval(updateVBeatSwatch, 250);
   updateVBeatSwatch();
 
-  // ============= BREATH LEAD (dot on a half sine; 3 - 12 bpm) =============
-  // One full traversal left-to-right = one breath (inhale on rise, exhale on fall).
-  // At breath end the dot snaps back to the left.
+  // ============= BREATH GUIDE (dot on a half sine; 3 - 12 bpm) =============
+  // One full traversal left-to-right = one breath (inhale on rise, exhale on
+  // fall); at the breath's end the dot snaps back to the left. One clock drives
+  // every view of it (owner: "the breathing bar should be able to be paired
+  // with flashing visuals"): its own popup, a lane on the main screen, and a
+  // layer over the flashes, wherever they run.
+  const BREATH_WHERE_KEY = 'phi_resonance_breath_where';
 
   state.breath = {
     playing: false,
     raf: 0,
-    t0: 0,      // epoch ms of the current breath's start
-    rate: 6.0   // breaths per minute
+    t0: 0,           // timestamp (ms) of the current breath's start
+    rate: 6.0,       // breaths per minute
+    onStage: false,  // shown on the main screen
+    onFlash: false   // shown over the flashes
   };
+  try {
+    const saved = JSON.parse(localStorage.getItem(BREATH_WHERE_KEY) || '{}');
+    state.breath.onStage = !!saved.stage;
+    state.breath.onFlash = !!saved.flash;
+  } catch (e) {}
 
-  const breathCanvas = $('breathCanvas');
-  const breathPhase = $('breathPhase');
   const breathPlay = $('breathPlay');
   const breathRate = $('breathRate');
   const breathRateVal = $('breathRateVal');
+  const stageEl = $('stage');
 
-  function drawBreath(tNow) {
-    const c = breathCanvas;
+  // Are the flashes running, and in which place ('full' or 'stage')?
+  function flashIn(where) {
+    if (!state.vbeat || !state.vbeat.active) return false;
+    return (state.vbeat.where === 'stage') === (where === 'stage');
+  }
+
+  // The views. Over flashing colour the lines carry a dark edge so they read.
+  const breathViews = [
+    { canvas: $('breathCanvas'), label: $('breathPhase'), cls: 'breath-phase', idle: 'READY',
+      padX: 26, padTop: 28, padBot: 24, dot: 9 },
+    { canvas: $('stageBreathCanvas'), label: $('stageBreathPhase'), cls: 'stage-breath-phase', idle: 'TAP TO BREATHE',
+      padX: 24, padTop: 14, padBot: 18, dot: 7,
+      edge: () => flashIn('stage'), show: () => stageEl.classList.contains('breath-on') },
+    { canvas: $('flashBreathCanvas'), label: $('flashBreathPhase'), cls: 'flash-breath-phase', idle: 'READY',
+      padX: 36, padTop: 20, padBot: 20, dot: 11,
+      edge: () => true, show: () => state.breath.onFlash && flashIn('full') }
+  ];
+
+  // Where the breath is: u in [0, 1), 0 at the start of the inhale
+  function breathU(tNow) {
+    if (!state.breath.playing) return 0;
+    if (!state.breath.t0) state.breath.t0 = tNow;
+    const periodSec = 60 / state.breath.rate;   // seconds per breath
+    const elapsed = Math.max(0, (tNow - state.breath.t0) / 1000);
+    return (elapsed / periodSec) % 1;
+  }
+
+  function paintBreath(view, u) {
+    const c = view.canvas;
+    const W = c.clientWidth, H = c.clientHeight;
+    if (!W || !H) return;   // its view is closed
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    const W = c.clientWidth;
-    const H = c.clientHeight;
-    if (c.width !== W * dpr || c.height !== H * dpr) {
-      c.width = W * dpr; c.height = H * dpr;
-    }
+    const cw = Math.round(W * dpr), ch = Math.round(H * dpr);
+    if (c.width !== cw || c.height !== ch) { c.width = cw; c.height = ch; }
     const ctx = c.getContext('2d');
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, W, H);
+    const edge = view.edge ? view.edge() : false;
 
-    // Layout: arch spans with margins
-    const padX = 26, padTop = 28, padBot = 24;
-    const x0 = padX, x1 = W - padX;
-    const yBase = H - padBot;
-    const yTop = padTop;
-    const archW = x1 - x0;
-    const archH = yBase - yTop;
-
-    // Draw the arch path (half sine from (x0, yBase) to (x1, yBase), peak at mid-top)
-    ctx.beginPath();
-    const steps = 64;
-    for (let i = 0; i <= steps; i++) {
-      const u = i / steps;                           // 0..1 along x
-      const px = x0 + u * archW;
-      const py = yBase - Math.sin(u * Math.PI) * archH;
-      if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+    // Layout: the arch spans the view inside its margins
+    const x0 = view.padX, x1 = W - view.padX;
+    const yBase = H - view.padBot, yTop = view.padTop;
+    const archW = x1 - x0, archH = yBase - yTop;
+    const at = (tu) => [x0 + tu * archW, yBase - Math.sin(tu * Math.PI) * archH];
+    function trace(n) {                   // the arch from its start to step n of 64
+      ctx.beginPath();
+      for (let i = 0; i <= n; i++) {
+        const p = at(i / 64);
+        if (i === 0) ctx.moveTo(p[0], p[1]); else ctx.lineTo(p[0], p[1]);
+      }
     }
-    ctx.strokeStyle = 'rgba(255, 215, 0, 0.35)';
-    ctx.lineWidth = 2;
-    ctx.stroke();
+    function line(color, width) {         // over flashing colour, a dark edge first
+      if (edge) { ctx.strokeStyle = 'rgba(0, 0, 0, 0.55)'; ctx.lineWidth = width + 4; ctx.stroke(); }
+      ctx.strokeStyle = color;
+      ctx.lineWidth = width;
+      ctx.stroke();
+    }
+
+    // The arch (half sine from (x0, yBase) to (x1, yBase), peak at mid-top)
+    trace(64);
+    line(edge ? 'rgba(255, 255, 255, 0.5)' : 'rgba(255, 170, 0, 0.35)', 2);
 
     // Baseline (ground)
     ctx.beginPath();
     ctx.moveTo(x0 - 8, yBase);
     ctx.lineTo(x1 + 8, yBase);
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
-    ctx.lineWidth = 1;
-    ctx.stroke();
+    line(edge ? 'rgba(255, 255, 255, 0.35)' : 'rgba(255, 255, 255, 0.12)', 1);
 
-    // Compute breath phase u in [0, 1) where u is horizontal progress
-    let u = 0;
-    if (state.breath.playing) {
-      if (!state.breath.t0) state.breath.t0 = tNow;
-      const periodSec = 60 / state.breath.rate;   // seconds per breath
-      const elapsed = (tNow - state.breath.t0) / 1000;
-      u = (elapsed / periodSec) % 1;
-    } else {
-      // Dot rests at the start when paused
-      u = 0;
+    // Trail (the arch from the start to the dot)
+    trace(Math.max(2, Math.floor(u * 64)));
+    line(edge ? 'rgba(255, 255, 255, 0.92)' : 'rgba(255, 170, 0, 0.75)', 3);
+
+    // The dot and its halo
+    const [dx, dy] = at(u);
+    const dotColor = u < 0.5 ? '#8fd3ff' : '#ffb08f';
+    const halo = view.dot * 2.4;
+    if (edge) {
+      ctx.beginPath();
+      ctx.arc(dx, dy, view.dot + 3, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
+      ctx.fill();
     }
-
-    // Dot position
-    const dx = x0 + u * archW;
-    const dy = yBase - Math.sin(u * Math.PI) * archH;
-
-    // Trail (faint arch from start to current)
     ctx.beginPath();
-    const trailSteps = Math.max(2, Math.floor(u * 64));
-    for (let i = 0; i <= trailSteps; i++) {
-      const tu = (i / 64);
-      const px = x0 + tu * archW;
-      const py = yBase - Math.sin(tu * Math.PI) * archH;
-      if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
-    }
-    ctx.strokeStyle = 'rgba(255, 215, 0, 0.75)';
-    ctx.lineWidth = 3;
-    ctx.stroke();
-
-    // Glow halo behind dot
-    const isInhale = u < 0.5;
-    const dotColor = isInhale ? '#8fd3ff' : '#ffb08f';
-    ctx.beginPath();
-    ctx.arc(dx, dy, 22, 0, Math.PI * 2);
-    const grad = ctx.createRadialGradient(dx, dy, 0, dx, dy, 22);
+    ctx.arc(dx, dy, halo, 0, Math.PI * 2);
+    const grad = ctx.createRadialGradient(dx, dy, 0, dx, dy, halo);
     grad.addColorStop(0, dotColor + 'cc');
     grad.addColorStop(1, dotColor + '00');
     ctx.fillStyle = grad;
     ctx.fill();
-
-    // The dot itself
     ctx.beginPath();
-    ctx.arc(dx, dy, 9, 0, Math.PI * 2);
+    ctx.arc(dx, dy, view.dot, 0, Math.PI * 2);
     ctx.fillStyle = dotColor;
     ctx.shadowColor = dotColor;
     ctx.shadowBlur = 16;
     ctx.fill();
     ctx.shadowBlur = 0;
 
-    // Tick markers for in/hold/out positions
+    // Tick markers for the in, turn and out positions
     [0, 0.5, 1].forEach(pos => {
       const tx = x0 + pos * archW;
       ctx.beginPath();
       ctx.moveTo(tx, yBase);
       ctx.lineTo(tx, yBase + 6);
-      ctx.strokeStyle = 'rgba(255,255,255,0.35)';
-      ctx.lineWidth = 1;
-      ctx.stroke();
+      line(edge ? 'rgba(255, 255, 255, 0.6)' : 'rgba(255, 255, 255, 0.35)', 1);
     });
+  }
 
-    // Phase label
+  function labelBreath(view, u) {
+    let text = view.idle, cls = view.cls;
     if (state.breath.playing) {
-      if (isInhale) {
-        breathPhase.textContent = 'INHALE';
-        breathPhase.className = 'breath-phase inhale';
-      } else {
-        breathPhase.textContent = 'EXHALE';
-        breathPhase.className = 'breath-phase exhale';
-      }
-    } else {
-      breathPhase.textContent = 'READY';
-      breathPhase.className = 'breath-phase';
+      const isInhale = u < 0.5;
+      text = isInhale ? 'INHALE' : 'EXHALE';
+      cls += isInhale ? ' inhale' : ' exhale';
     }
+    if (view.label.textContent !== text) view.label.textContent = text;
+    if (view.label.className !== cls) view.label.className = cls;
   }
 
+  // One loop paints every open view, so they all share one breath
   function breathLoop(now) {
-    drawBreath(now);
     state.breath.raf = requestAnimationFrame(breathLoop);
+    const u = breathU(now);
+    breathViews.forEach(v => {
+      if (v.show && !v.show()) return;
+      paintBreath(v, u);
+      labelBreath(v, u);
+    });
   }
 
+  // Every control and view follows the breath's state
+  function syncBreathControls() {
+    breathPlay.textContent = state.breath.playing ? '■ STOP' : '▶ START';
+    breathPlay.classList.toggle('playing', state.breath.playing);
+    document.querySelectorAll('[data-breath-where]').forEach(b => {
+      const on = b.dataset.breathWhere === 'stage' ? state.breath.onStage : state.breath.onFlash;
+      b.setAttribute('aria-pressed', String(on));
+      b.textContent = on ? 'ON' : 'OFF';
+    });
+    // The lane shows when it is asked for on the main screen, or when the
+    // flashes run there with the breath riding over them
+    stageEl.classList.toggle('breath-on', state.breath.onStage || (state.breath.onFlash && flashIn('stage')));
+    $('flashOverlay').classList.toggle('with-breath', state.breath.onFlash);
+    $('stageBreath').setAttribute('aria-pressed', String(state.breath.playing));
+  }
   function startBreath() {
     state.breath.playing = true;
     state.breath.t0 = 0;
-    breathPlay.textContent = '■ STOP';
-    breathPlay.classList.add('playing');
+    syncBreathControls();
   }
   function stopBreath() {
     state.breath.playing = false;
-    breathPlay.textContent = '▶ START';
-    breathPlay.classList.remove('playing');
+    syncBreathControls();
   }
-  breathPlay.addEventListener('click', () => {
+  function toggleBreath() {
     if (state.breath.playing) stopBreath(); else startBreath();
+  }
+  breathPlay.addEventListener('click', toggleBreath);
+  $('stageBreath').addEventListener('click', toggleBreath);
+  document.querySelectorAll('[data-breath-where]').forEach(b => {
+    b.addEventListener('click', () => {
+      const key = b.dataset.breathWhere === 'stage' ? 'onStage' : 'onFlash';
+      state.breath[key] = !state.breath[key];
+      // putting the guide somewhere new starts it breathing
+      if (state.breath[key] && !state.breath.playing) startBreath();
+      try {
+        localStorage.setItem(BREATH_WHERE_KEY, JSON.stringify({ stage: state.breath.onStage, flash: state.breath.onFlash }));
+      } catch (e) {}
+      syncBreathControls();
+    });
   });
   breathRate.addEventListener('input', (e) => {
     const v = parseFloat(e.target.value);
@@ -4109,8 +4549,145 @@
     // Reset phase so the new rate starts cleanly (no mid-breath jump)
     state.breath.t0 = 0;
   });
-  // Initialize RAF loop so the canvas draws the static arch even while paused
+  syncBreathControls();
   state.breath.raf = requestAnimationFrame(breathLoop);
+
+  // ============= THE SHELL: settings, breath guide, preset picker, stage =============
+  // The Last Ship Sailing layout (owner: "last ship sailing has a nice interface,
+  // and the settings menu is nice too"): the main screen is a player, and every
+  // other control lives in a Settings overlay with tabs. Esc or ✕ closes.
+  const SETTINGS_TAB_KEY = 'phi_resonance_settings_tab';
+
+  function anyOverlayOpen() { return !!document.querySelector('.overlay.open'); }
+  function openOverlay(el) {
+    el.classList.add('open');
+    el.scrollTop = 0;
+    document.body.classList.add('overlay-open');
+  }
+  function closeOverlay(el) {
+    el.classList.remove('open');
+    if (!anyOverlayOpen()) document.body.classList.remove('overlay-open');
+  }
+
+  function selectSettingsTab(name) {
+    const ov = $('settingsOverlay');
+    ov.querySelectorAll('.settings-tab').forEach(b => {
+      const on = b.dataset.tab === name;
+      b.dataset.active = on ? '1' : '';
+      b.setAttribute('aria-selected', String(on));
+    });
+    ov.querySelectorAll('.settings-panel').forEach(p => { p.dataset.active = p.dataset.panel === name ? '1' : ''; });
+    ov.scrollTop = 0;
+    const tab = ov.querySelector('.settings-tab[data-tab="' + name + '"]');
+    if (tab && tab.scrollIntoView) tab.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+    try { localStorage.setItem(SETTINGS_TAB_KEY, name); } catch (e) {}
+  }
+
+  // Opens on the tab you used last (or the one asked for)
+  function openSettings(tab) {
+    let name = tab;
+    if (!name) { try { name = localStorage.getItem(SETTINGS_TAB_KEY); } catch (e) {} }
+    if (!name || !document.querySelector('#settingsOverlay [data-panel="' + name + '"]')) name = 'sound';
+    openOverlay($('settingsOverlay'));
+    selectSettingsTab(name);
+  }
+
+  $('openSettings').addEventListener('click', () => openSettings());
+  $('settingsClose').addEventListener('click', () => closeOverlay($('settingsOverlay')));
+  document.querySelectorAll('#settingsOverlay .settings-tab').forEach(b => {
+    b.addEventListener('click', () => selectSettingsTab(b.dataset.tab));
+  });
+
+  const openBreathGuide = () => { closeOverlay($('settingsOverlay')); openOverlay($('breathOverlay')); };
+  $('openBreath').addEventListener('click', openBreathGuide);
+  $('openBreath2').addEventListener('click', openBreathGuide);
+  $('breathClose').addEventListener('click', () => closeOverlay($('breathOverlay')));
+
+  // (capture phase: this runs before the safety notice's and the flashes' own
+  // Esc handlers, so it can leave them their Esc and one press closes one thing)
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape') return;
+    // the safety notice and the flash view handle their own Esc
+    if ($('safetyNotice').classList.contains('active') || (state.vbeat && state.vbeat.active)) return;
+    const open = [$('breathOverlay'), $('settingsOverlay')].find(el => el.classList.contains('open'));
+    if (open) { e.preventDefault(); closeOverlay(open); }
+  }, true);
+
+  // Fullscreen for the whole app (iPhone Safari has no element fullscreen, so
+  // the button hides there)
+  const rootEl = document.documentElement;
+  const fsRequest = rootEl.requestFullscreen || rootEl.webkitRequestFullscreen;
+  if (!fsRequest) $('fullscreenBtn').style.display = 'none';
+  $('fullscreenBtn').addEventListener('click', () => {
+    if (document.fullscreenElement || document.webkitFullscreenElement) {
+      const exit = document.exitFullscreen || document.webkitExitFullscreen;
+      if (exit) { const p = exit.call(document); if (p && p.catch) p.catch(() => {}); }
+    } else if (fsRequest) {
+      const p = fsRequest.call(rootEl);
+      if (p && p.catch) p.catch(() => {});
+    }
+  });
+
+  // The flashes run full screen, or inside the main window where the
+  // circumpunct and the breath lane stay in view
+  const FLASH_WHERE_KEY = 'phi_resonance_flash_where';
+  try { if (localStorage.getItem(FLASH_WHERE_KEY) === 'stage') state.vbeat.where = 'stage'; } catch (e) {}
+  function syncFlashControls() {
+    document.querySelectorAll('[data-flash-where]').forEach(b => {
+      b.setAttribute('aria-pressed', String(b.dataset.flashWhere === state.vbeat.where));
+    });
+    $('vbeatLaunch').textContent = state.vbeat.active ? '■ Stop the flashes'
+      : (state.vbeat.where === 'stage' ? '▣ Start in the main window' : '▣ Launch full-screen');
+    syncBreathControls();
+  }
+  document.querySelectorAll('[data-flash-where]').forEach(b => {
+    b.addEventListener('click', () => {
+      const where = b.dataset.flashWhere;
+      if (where === state.vbeat.where) return;
+      const wasActive = state.vbeat.active;
+      if (wasActive) closeFlash();
+      state.vbeat.where = where;
+      try { localStorage.setItem(FLASH_WHERE_KEY, where); } catch (e) {}
+      if (wasActive) openFlash(); else syncFlashControls();
+    });
+  });
+  $('stageFlashStop').addEventListener('click', () => closeFlash());
+  syncFlashControls();
+
+  // The preset picker on the main screen: ◀ name ▶ (the game's map selector)
+  function presetIndex() { return Math.max(0, PRESETS.findIndex(p => p.id === state.currentPreset)); }
+  function stepPreset(d) {
+    const i = presetIndex();
+    applyPreset(PRESETS[(i + d + PRESETS.length) % PRESETS.length].id);
+  }
+  function updatePresetPicker() {
+    const pr = PRESETS.find(p => p.id === state.currentPreset);
+    $('presetName').textContent = pr ? pr.name : 'CUSTOM';
+    $('presetDesc').textContent = pr ? pr.desc : 'Your own settings';
+  }
+  $('presetPrev').addEventListener('click', () => stepPreset(-1));
+  $('presetNext').addEventListener('click', () => stepPreset(1));
+  $('presetName').addEventListener('click', () => openSettings('library'));
+  updatePresetPicker();
+
+  // The stage's circumpunct beats with the session: a gentle swell at the beat
+  // folded by octaves into 0.5 to 2 Hz (a 40 Hz beat would only flicker), still
+  // when idle and for anyone who asks the system for reduced motion
+  const stageOrb = $('stageOrb');
+  const reduceMotion = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  function orbFrame(now) {
+    requestAnimationFrame(orbFrame);
+    if (reduceMotion) return;
+    let s = 1;
+    if (state.playing) {
+      let b = Math.max(0.01, +state.params.beat || 1);
+      while (b > 2) b /= 2;
+      while (b < 0.5) b *= 2;
+      s = 1 + 0.045 * Math.sin(now / 1000 * b * TWO_PI);
+    }
+    stageOrb.style.transform = 'scale(' + s.toFixed(4) + ')';
+  }
+  requestAnimationFrame(orbFrame);
 
   // ============= CLICK-TO-EDIT SLIDER VALUES =============
   // Every range slider has a value readout with id = slider.id + 'Val'.
