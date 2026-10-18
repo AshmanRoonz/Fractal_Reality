@@ -153,7 +153,7 @@
     .main { grid-template-columns: minmax(0, 1fr) 390px; align-items: start; }
   }
 
-  /* ── the stage: the field, a beating circumpunct, the waveform ── */
+  /* ── the stage: the field, the breath lane, the waveform ── */
   .stage {
     position: relative;
     display: flex;
@@ -173,15 +173,6 @@
     align-items: center;
     justify-content: center;
     pointer-events: none;
-    will-change: transform;
-  }
-  .stage-orb .orb-glyph {
-    display: inline-block;
-    font-size: clamp(5.5rem, 26vw, 12rem);
-    line-height: 1;
-    color: var(--amber);
-    text-shadow: 0 0 34px rgba(255, 170, 0, 0.5), 0 0 80px rgba(255, 170, 0, 0.18);
-    animation: spin 30s linear infinite;
   }
   .stage-now {
     position: absolute;
@@ -1267,7 +1258,7 @@
   details.section > .section-body { padding: 10px 12px 12px; border-top: 1px solid var(--card-edge); }
 
   @media (prefers-reduced-motion: reduce) {
-    .lss-tag, .stage-orb .orb-glyph, .dot { animation: none; }
+    .lss-tag, .dot { animation: none; }
   }
 </style>
 </head>
@@ -1289,7 +1280,7 @@
       <button class="settings-tab" data-tab="tuning" type="button" role="tab" aria-selected="false">Tuning</button>
       <button class="settings-tab" data-tab="library" type="button" role="tab" aria-selected="false">Library</button>
       <button class="settings-tab" data-tab="visuals" type="button" role="tab" aria-selected="false">Visuals</button>
-      <button class="settings-tab" data-tab="export" type="button" role="tab" aria-selected="false">Export</button>
+      <button class="settings-tab" data-tab="file" type="button" role="tab" aria-selected="false">File</button>
       <button class="settings-tab" data-tab="about" type="button" role="tab" aria-selected="false">About</button>
     </nav>
   </div>
@@ -1298,7 +1289,7 @@
 
     <div class="main-col">
 
-    <!-- THE STAGE: the field behind, a circumpunct that beats with the session, the waveform -->
+    <!-- THE STAGE: the field behind, the breath lane, the waveform -->
     <section class="stage" id="stage" aria-label="The field">
       <div class="stage-flash" id="stageFlash" aria-hidden="true"><canvas id="stageFlashCanvas"></canvas></div>
       <div class="stage-now">
@@ -1308,7 +1299,7 @@
           <button class="stage-chip" id="openBreath" type="button" title="Breath guide">◠ Breathe</button>
         </span>
       </div>
-      <div class="stage-orb" id="stageOrb"><span class="orb-glyph">⊙</span></div>
+      <div class="stage-orb" id="stageOrb" aria-hidden="true"></div>
       <button class="stage-breath" id="stageBreath" type="button" aria-label="Breath guide: tap to start or pause">
         <canvas id="stageBreathCanvas"></canvas>
         <span class="stage-breath-phase" id="stageBreathPhase">TAP TO BREATHE</span>
@@ -1536,19 +1527,6 @@
       <h3>Presets</h3>
       <div class="preset-grid" id="presetGrid"></div>
     </div>
-    <div class="settings-section">
-      <h3>Saved states</h3>
-      <div class="save-row">
-        <input type="text" id="saveName" placeholder="Name this state..." maxlength="40" autocomplete="off" spellcheck="false">
-        <button id="saveBtn">Save</button>
-      </div>
-      <div class="saved-list" id="savedStates"></div>
-      <div class="io-row">
-        <button id="exportBtn">Export all (.json)</button>
-        <button id="importBtn">Import (.json)</button>
-        <input type="file" id="importFile" accept="application/json,.json" style="display:none;">
-      </div>
-    </div>
   </div>
 
   <!-- VISUALS -->
@@ -1694,16 +1672,28 @@
     </div>
   </div>
 
-  <!-- EXPORT -->
-  <div class="settings-panel" data-panel="export">
+  <!-- FILE: save and load your settings -->
+  <div class="settings-panel" data-panel="file">
     <div class="settings-section">
-      <h3>Serum 2</h3>
-      <div class="io-row" style="grid-template-columns:1fr;">
-        <button id="exportWT1">Single-cycle wavetable (.wav)</button>
-        <button id="exportWTmulti">Morph wavetable: 9 shapes × 32 frames (.wav)</button>
-        <button id="exportSerumSpec">Preset spec card (.txt)</button>
+      <h3>Save your settings</h3>
+      <div class="row-note" style="padding-top:0;">Everything you have set, kept under a name you choose, on this device.</div>
+      <div class="save-row">
+        <input type="text" id="saveName" placeholder="Name these settings..." maxlength="40" autocomplete="off" spellcheck="false">
+        <button id="saveBtn">Save</button>
       </div>
-      <div class="row-note" style="padding-top:10px;">Drop the .wav files into Serum 2's oscillator (wavetable slot). The single-cycle file uses the current waveform; the morph file sweeps through sine, triangle, square, saw, FM, AM, organ, vocal and bowed across the wavetable-position knob. The .txt card lists every parameter in Serum 2 terms so you can rebuild the patch (Serum 2's own preset format is proprietary binary, so this is building material rather than a ready-made preset).</div>
+    </div>
+    <div class="settings-section">
+      <h3>Load saved settings</h3>
+      <div class="saved-list" id="savedStates"></div>
+    </div>
+    <div class="settings-section">
+      <h3>Back up or move</h3>
+      <div class="row-note" style="padding-top:0;">Put all your saved settings in a file, or bring them in from one, to keep a copy or carry them to another device.</div>
+      <div class="io-row">
+        <button id="exportBtn">Save to a file (.json)</button>
+        <button id="importBtn">Load from a file (.json)</button>
+        <input type="file" id="importFile" accept="application/json,.json" style="display:none;">
+      </div>
     </div>
   </div>
 
@@ -3365,7 +3355,7 @@
 
   function drawBG() {
     const t = Date.now() / 1000;
-    // the field radiates from the stage's circumpunct (the screen centre if it
+    // the field radiates from the centre of the stage (the screen centre if it
     // is not laid out); the canvas is fixed, so the rings follow a scroll
     const orbEl = document.getElementById('stageOrb');
     const orbBox = orbEl ? orbEl.getBoundingClientRect() : null;
@@ -3391,11 +3381,10 @@
       }
       bctx.stroke();
     } else {
-      // one ring per layer around the circumpunct, swelling at its beat
-      // (folded by octaves into 0.5 to 2 Hz, as the orb is); thin lines whose
-      // trails fade, so the field glows without flooding the screen
-      const glyph = orbEl && orbEl.firstElementChild;
-      const gr = glyph ? glyph.getBoundingClientRect().width / 2 : 60;
+      // one ring per layer around the stage's centre, swelling at its beat
+      // (folded by octaves into 0.5 to 2 Hz); thin lines whose trails fade,
+      // so the field glows without flooding the screen
+      const gr = orbBox && orbBox.height ? Math.min(orbBox.width, orbBox.height) * 0.18 : 60;
       const r0 = Math.max(50, gr * 1.15), step = Math.max(46, gr * 0.75);
       state.nodes.forEach((n, idx) => {
         if (!n) return;
@@ -3751,7 +3740,7 @@
     if (!names.length) {
       const empty = document.createElement('div');
       empty.style.cssText = 'color:var(--muted); font-size:0.8rem; padding:4px 2px;';
-      empty.textContent = 'No saved states yet. Dial in your settings, give them a name, save.';
+      empty.textContent = 'Nothing saved yet. Set things the way you like, give them a name, and save.';
       box.appendChild(empty);
       return;
     }
@@ -3761,7 +3750,7 @@
       const loadB = document.createElement('button');
       loadB.className = 'saved-load';
       loadB.textContent = name;
-      loadB.title = 'Load this state';
+      loadB.title = 'Load these settings';
       loadB.addEventListener('click', () => loadSaved(name));
       const delB = document.createElement('button');
       delB.className = 'saved-del';
@@ -3825,218 +3814,6 @@
     if (f) importStates(f);
     e.target.value = '';
   });
-
-  // ============= SERUM 2 EXPORT =============
-  // Generates single-cycle wavetables (2048 samples per frame; Serum 2 default).
-  // Writes 16-bit PCM mono WAV; drop into Serum 2's oscillator wavetable slot.
-  // Serum 2's .serumpreset format is proprietary binary; a text spec card covers the rest.
-
-  const WT_N = 2048;           // samples per single-cycle frame (Serum 2 standard)
-  const WT_FRAMES = 32;        // frames per morph slot (common wavetable length)
-  const WT_SHAPES = ['sine','triangle','square','sawtooth','fm','am','organ','vocal','bowed'];
-
-  // Single-cycle generator. phase is t in [0, 1).
-  function genWaveCycle(type, N) {
-    const out = new Float32Array(N);
-    for (let i = 0; i < N; i++) {
-      const t = i / N;                 // 0..1
-      const x = t * TWO_PI;            // 0..2pi
-      let v = 0;
-      switch (type) {
-        case 'sine':
-          v = Math.sin(x); break;
-        case 'triangle':
-          v = 2 * Math.abs(2 * (t - Math.floor(t + 0.5))) - 1; break;
-        case 'square':
-          v = t < 0.5 ? 1 : -1; break;
-        case 'sawtooth':
-          v = 2 * t - 1; break;
-        case 'fm': {
-          // carrier modulated by a second sine at ratio 2, index ~ phi
-          const mod = Math.sin(x * 2) * PHI;
-          v = Math.sin(x + mod);
-          break;
-        }
-        case 'am': {
-          // carrier * (1 + 0.8 * sin(x*2)) / 1.8 so peak stays bounded
-          v = Math.sin(x) * (1 + 0.8 * Math.sin(x * 2)) / 1.8;
-          break;
-        }
-        case 'organ': {
-          // drawbar-style: partials 1,2,3,4 with decreasing amplitudes
-          v = (Math.sin(x) + 0.6 * Math.sin(x * 2) + 0.4 * Math.sin(x * 3) + 0.25 * Math.sin(x * 4)) / 2.25;
-          break;
-        }
-        case 'vocal': {
-          // formant-ish: three fixed partials with uneven spacing
-          v = (Math.sin(x) + 0.7 * Math.sin(x * 3) + 0.5 * Math.sin(x * 5) + 0.3 * Math.sin(x * 7)) / 2.5;
-          break;
-        }
-        case 'bowed': {
-          // bandlimited saw-like: first 8 partials summed with 1/n
-          let s = 0;
-          for (let k = 1; k <= 8; k++) s += Math.sin(x * k) / k;
-          v = s * (2 / Math.PI);
-          break;
-        }
-        default:
-          v = Math.sin(x);
-      }
-      out[i] = v;
-    }
-    // Normalize to +-0.98
-    let peak = 0;
-    for (let i = 0; i < N; i++) if (Math.abs(out[i]) > peak) peak = Math.abs(out[i]);
-    if (peak > 0) {
-      const g = 0.98 / peak;
-      for (let i = 0; i < N; i++) out[i] *= g;
-    }
-    return out;
-  }
-
-  // 16-bit PCM mono WAV. sampleRate chosen so 2048 samples = one cycle at ~21.5 Hz,
-  // which Serum 2 interprets as one wavetable frame regardless of rate.
-  function encodeWAV(float32, sampleRate) {
-    const numSamples = float32.length;
-    const byteLength = 44 + numSamples * 2;
-    const buf = new ArrayBuffer(byteLength);
-    const view = new DataView(buf);
-    const writeStr = (off, s) => { for (let i = 0; i < s.length; i++) view.setUint8(off + i, s.charCodeAt(i)); };
-    // RIFF header
-    writeStr(0, 'RIFF');
-    view.setUint32(4, byteLength - 8, true);
-    writeStr(8, 'WAVE');
-    // fmt chunk
-    writeStr(12, 'fmt ');
-    view.setUint32(16, 16, true);            // PCM chunk size
-    view.setUint16(20, 1, true);             // format = 1 (PCM)
-    view.setUint16(22, 1, true);             // channels = 1
-    view.setUint32(24, sampleRate, true);
-    view.setUint32(28, sampleRate * 2, true); // byte rate
-    view.setUint16(32, 2, true);              // block align
-    view.setUint16(34, 16, true);             // bits per sample
-    // data chunk
-    writeStr(36, 'data');
-    view.setUint32(40, numSamples * 2, true);
-    // samples
-    let off = 44;
-    for (let i = 0; i < numSamples; i++, off += 2) {
-      let s = Math.max(-1, Math.min(1, float32[i]));
-      s = s < 0 ? s * 0x8000 : s * 0x7FFF;
-      view.setInt16(off, s, true);
-    }
-    return new Blob([buf], { type: 'audio/wav' });
-  }
-
-  function downloadBlob(blob, filename) {
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(url); }, 100);
-  }
-
-  function exportSingleCycleWT() {
-    const wave = state.params.wave || 'sine';
-    const samples = genWaveCycle(wave, WT_N);
-    // 44100 Hz sample rate; single frame of 2048 samples. Serum 2 auto-detects frame size.
-    const blob = encodeWAV(samples, 44100);
-    const stamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
-    downloadBlob(blob, `phi-wt-${wave}-${stamp}.wav`);
-  }
-
-  function exportMorphWT() {
-    // 9 shapes, 32 frames total; each pair of adjacent shapes gets WT_FRAMES/(WT_SHAPES.length-1) frames.
-    // With 9 shapes and 32 frames, we linearly interpolate across positions 0..8 mapped to frames 0..31.
-    const cycles = WT_SHAPES.map(s => genWaveCycle(s, WT_N));
-    const total = new Float32Array(WT_N * WT_FRAMES);
-    for (let f = 0; f < WT_FRAMES; f++) {
-      // position in shape-space: 0..(numShapes-1)
-      const pos = (f / (WT_FRAMES - 1)) * (WT_SHAPES.length - 1);
-      const a = Math.floor(pos);
-      const b = Math.min(a + 1, WT_SHAPES.length - 1);
-      const mix = pos - a;
-      const frameOff = f * WT_N;
-      for (let i = 0; i < WT_N; i++) {
-        total[frameOff + i] = cycles[a][i] * (1 - mix) + cycles[b][i] * mix;
-      }
-    }
-    // Re-normalize whole buffer to +-0.98
-    let peak = 0;
-    for (let i = 0; i < total.length; i++) if (Math.abs(total[i]) > peak) peak = Math.abs(total[i]);
-    if (peak > 0) { const g = 0.98 / peak; for (let i = 0; i < total.length; i++) total[i] *= g; }
-    const blob = encodeWAV(total, 44100);
-    const stamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
-    downloadBlob(blob, `phi-wt-morph-9shapes-32frames-${stamp}.wav`);
-  }
-
-  function exportSerumSpec() {
-    const p = state.params;
-    const mode = state.mode;
-    const preset = state.currentPreset || '(custom)';
-    // Rough mapping guide for Serum 2 knob names.
-    const lines = [];
-    const hr = '-'.repeat(48);
-    lines.push('Phi-Resonance Preset Spec Card');
-    lines.push('Target: Serum 2 (Xfer Records)');
-    lines.push('Generated: ' + new Date().toISOString());
-    lines.push(hr);
-    lines.push('MODE: ' + mode.toUpperCase());
-    lines.push('Source preset: ' + preset);
-    lines.push(hr);
-    lines.push('OSC A (wavetable)');
-    lines.push('  Wavetable: load the companion .wav (single-cycle or morph)');
-    lines.push('  Waveform at time of export: ' + (p.wave || 'sine'));
-    lines.push('  Base tune: ' + Math.round(p.base) + ' Hz');
-    lines.push('  (Serum 2 tunes by semitones/cents from A4 = 440 Hz; convert as needed)');
-    lines.push('  Detune: ' + p.detune + ' cents');
-    lines.push('  Unison / Layer count: ' + state.layerCount);
-    lines.push('  Layer spacing: ' + p.spacing);
-    lines.push('  Stereo spread: ' + p.stereo + '%');
-    lines.push(hr);
-    lines.push('BEAT / MODULATION (re-create in Serum 2 LFO)');
-    lines.push('  Beat / LFO rate: ' + p.beat.toFixed(3) + ' Hz');
-    lines.push('  Beat strength / amount: ' + p.beatStr + '%');
-    lines.push('  LFO rate (aux): ' + p.lfoRate + ' Hz');
-    lines.push('  LFO depth: ' + p.lfoDepth + '%');
-    lines.push('  Tremolo (amp mod): ' + p.trem + '%');
-    lines.push('  Vibrato (pitch mod): ' + p.vib + ' cents');
-    lines.push('  Suggested LFO shape: sine for binaural/monaural; square for isochronic');
-    lines.push(hr);
-    lines.push('FILTER');
-    lines.push('  Type: ' + p.filterType);
-    lines.push('  Cutoff: ' + p.cutoff + ' Hz');
-    lines.push('  Q / resonance: ' + p.q);
-    lines.push(hr);
-    lines.push('FX');
-    lines.push('  Reverb mix: ' + p.rev + '%');
-    lines.push('  Reverb size (decay): ' + p.revSz + ' s');
-    lines.push('  Noise bed type: ' + p.noiseType);
-    lines.push('  Noise bed level: ' + p.noiseLvl + '%');
-    lines.push(hr);
-    lines.push('MASTER');
-    lines.push('  Volume: ' + p.vol + '%');
-    lines.push(hr);
-    lines.push('NOTES FOR SERUM 2 REBUILD');
-    lines.push('  1. Load the .wav into Osc A as a wavetable. The morph file sweeps the');
-    lines.push('     wavetable-position knob across 9 shapes; the single-cycle file is fixed.');
-    lines.push('  2. For binaural-style separation in Serum 2, duplicate Osc A on Osc B,');
-    lines.push('     set one side pan = -100, other = +100, and detune one side by');
-    lines.push('     approximately ' + p.beat.toFixed(3) + ' Hz expressed in cents at the base frequency');
-    lines.push('     (cents = 1200 * log2(1 + beat/base) ~= ' + (1200 * Math.log2(1 + p.beat / p.base)).toFixed(2) + ').');
-    lines.push('  3. For isochronic pulses, assign LFO1 to Osc A Level with Square shape at the beat rate.');
-    lines.push('  4. Serum 2 native preset files (.serumpreset) are proprietary binary and cannot be');
-    lines.push('     written from a web page; this card is the blueprint, not the patch itself.');
-    const blob = new Blob([lines.join('\n')], { type: 'text/plain;charset=utf-8' });
-    const stamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
-    downloadBlob(blob, `phi-serum2-spec-${preset}-${stamp}.txt`);
-  }
-
-  $('exportWT1').addEventListener('click', exportSingleCycleWT);
-  $('exportWTmulti').addEventListener('click', exportMorphWT);
-  $('exportSerumSpec').addEventListener('click', exportSerumSpec);
 
   // Chips: solfeggio, chakras, brainwaves, ratios, freq sets
   renderChips('solfeggio', SOLFEGGIO, (it) => {
@@ -4902,24 +4679,6 @@
   $('presetName').addEventListener('click', () => showTab('library'));
   updatePresetPicker();
 
-  // The stage's circumpunct beats with the session: a gentle swell at the beat
-  // folded by octaves into 0.5 to 2 Hz (a 40 Hz beat would only flicker), still
-  // when idle and for anyone who asks the system for reduced motion
-  const stageOrb = $('stageOrb');
-  const reduceMotion = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
-  function orbFrame(now) {
-    requestAnimationFrame(orbFrame);
-    if (reduceMotion) return;
-    let s = 1;
-    if (state.playing) {
-      let b = Math.max(0.01, +state.params.beat || 1);
-      while (b > 2) b /= 2;
-      while (b < 0.5) b *= 2;
-      s = 1 + 0.045 * Math.sin(now / 1000 * b * TWO_PI);
-    }
-    stageOrb.style.transform = 'scale(' + s.toFixed(4) + ')';
-  }
-  requestAnimationFrame(orbFrame);
 
   // ============= CLICK-TO-EDIT SLIDER VALUES =============
   // Every range slider has a value readout with id = slider.id + 'Val'.
