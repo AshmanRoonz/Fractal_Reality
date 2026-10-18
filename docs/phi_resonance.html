@@ -1498,19 +1498,21 @@
       layerGain.gain.value = 1 / N;
       layerGain.connect(filterInput);
 
+      // Beat Strength is modulation depth, never frequency: the beat
+      // always runs at the displayed rate (cascade scales it by PHI^-i by design)
       let node;
       if (state.mode === 'binaural') {
-        node = buildBinaural(freq, p.beat * (p.beatStr/100), i, layerGain);
+        node = buildBinaural(freq, p.beat, i, layerGain);
       } else if (state.mode === 'isochronic') {
-        node = buildIsochronic(freq, p.beat * (p.beatStr/100), i, layerGain);
+        node = buildIsochronic(freq, p.beat, i, layerGain);
       } else if (state.mode === 'monaural') {
-        node = buildMonaural(freq, p.beat * (p.beatStr/100), i, layerGain);
+        node = buildMonaural(freq, p.beat, i, layerGain);
       } else if (state.mode === 'drone') {
         node = buildDrone(freq, i, layerGain);
       } else if (state.mode === 'harmonic') {
         node = buildHarmonic(freq, i, layerGain);
       } else if (state.mode === 'cascade') {
-        node = buildBinaural(freq, p.beat * Math.pow(PHI, -i) * (p.beatStr/100), i, layerGain);
+        node = buildBinaural(freq, p.beat * Math.pow(PHI, -i), i, layerGain);
       } else if (state.mode === 'noise') {
         node = buildNoiseLayer(freq, i, layerGain);
       } else if (state.mode === 'chord') {
@@ -1688,18 +1690,23 @@
     const p = state.params;
     const panner = ctx.createStereoPanner();
     panner.pan.value = panVal;
-    gainNode.connect(panner);
+    // Dedicated modulation stage with unity base gain, so the LFO works even
+    // when gainNode's own gain is driven by something else (the isochronic gate)
+    const modStage = ctx.createGain();
+    modStage.gain.value = 1;
+    gainNode.connect(modStage);
+    modStage.connect(panner);
 
     const extras = [];
-    // LFO to volume (tremolo + layer lfo depth)
+    // LFO to volume (tremolo + layer lfo depth); one shared rate across layers
     if (p.lfoDepth > 0 || p.trem > 0) {
       const lfo = ctx.createOscillator();
-      lfo.frequency.value = p.lfoRate / Math.max(1, i * 0.5 + 1);
+      lfo.frequency.value = p.lfoRate;
       const lfoGain = ctx.createGain();
       const depth = (p.lfoDepth/100) * 0.4 + (p.trem/100) * 0.4;
-      lfoGain.gain.value = depth * gainNode.gain.value;
+      lfoGain.gain.value = depth;
       lfo.connect(lfoGain);
-      lfoGain.connect(gainNode.gain);
+      lfoGain.connect(modStage.gain);
       lfo.start();
       extras.push(lfo);
     }
@@ -1711,8 +1718,13 @@
     const p = state.params;
     const stereo = p.stereo / 100;
 
+    const strength = p.beatStr / 100;
+
     const leftOsc = makeOscillator(freq, p.wave);
     const rightOsc = makeOscillator(freq + beat, p.wave);
+    // Strength crossfades the right ear from the carrier (no beat) to the
+    // offset tone (full beat); the beat frequency itself never changes
+    const rightCarrier = strength < 1 ? makeOscillator(freq, p.wave) : null;
 
     const leftGain = ctx.createGain();
     leftGain.gain.value = 0.5;
@@ -1720,7 +1732,16 @@
     rightGain.gain.value = 0.5;
 
     leftOsc.primary.connect(leftGain);
-    rightOsc.primary.connect(rightGain);
+    const rightBeatGain = ctx.createGain();
+    rightBeatGain.gain.value = strength;
+    rightOsc.primary.connect(rightBeatGain);
+    rightBeatGain.connect(rightGain);
+    if (rightCarrier) {
+      const rightCarrierGain = ctx.createGain();
+      rightCarrierGain.gain.value = 1 - strength;
+      rightCarrier.primary.connect(rightCarrierGain);
+      rightCarrierGain.connect(rightGain);
+    }
 
     const leftMod = applyCommonMod(leftGain, -stereo, i);
     const rightMod = applyCommonMod(rightGain, stereo, i);
@@ -1730,6 +1751,7 @@
 
     leftOsc.startAll();
     rightOsc.startAll();
+    if (rightCarrier) rightCarrier.startAll();
 
     // vibrato to pitch
     let vib;
@@ -1741,6 +1763,7 @@
       vib.connect(vibGain);
       leftOsc.inputs.forEach(o => { if (o.frequency) vibGain.connect(o.frequency); });
       rightOsc.inputs.forEach(o => { if (o.frequency) vibGain.connect(o.frequency); });
+      if (rightCarrier) rightCarrier.inputs.forEach(o => { if (o.frequency) vibGain.connect(o.frequency); });
       vib.start();
     }
 
@@ -1749,6 +1772,7 @@
       stopAll: () => {
         leftOsc.stopAll();
         rightOsc.stopAll();
+        if (rightCarrier) rightCarrier.stopAll();
         leftMod.extras.forEach(n => { try{n.stop();}catch(e){} });
         rightMod.extras.forEach(n => { try{n.stop();}catch(e){} });
         if (vib) { try{vib.stop();}catch(e){} }
@@ -1770,11 +1794,13 @@
     const pulse = ctx.createOscillator();
     pulse.type = 'square';
     pulse.frequency.value = beat;
+    // Strength is pulse depth: the gate swings between 1 - strength and 1
+    const strength = p.beatStr / 100;
     const pulseGain = ctx.createGain();
-    pulseGain.gain.value = 0.5;
-    // Shift from +/-1 to 0..1 by adding a constant via ConstantSourceNode
+    pulseGain.gain.value = strength / 2;
+    // Shift the +/-1 square into that range via ConstantSourceNode
     const dc = ctx.createConstantSource();
-    dc.offset.value = 0.5;
+    dc.offset.value = 1 - strength / 2;
     dc.connect(gate.gain);
     pulse.connect(pulseGain);
     pulseGain.connect(gate.gain);
@@ -1804,7 +1830,11 @@
     const mix = ctx.createGain();
     mix.gain.value = 0.5;
     osc1.primary.connect(mix);
-    osc2.primary.connect(mix);
+    // Strength sets the beating tone's level, i.e. the depth of the beat envelope
+    const osc2Gain = ctx.createGain();
+    osc2Gain.gain.value = state.params.beatStr / 100;
+    osc2.primary.connect(osc2Gain);
+    osc2Gain.connect(mix);
     const mod = applyCommonMod(mix, 0, i);
     mod.panner.connect(layerGain);
     osc1.startAll();
