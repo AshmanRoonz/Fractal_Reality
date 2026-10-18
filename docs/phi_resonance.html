@@ -722,6 +722,37 @@
   .bg-status.ready { color: #8fe3a8; }
   .bg-status.warn { color: #ffb08f; }
 
+  /* Prepare-for-lock button: fills with progress, turns green when ready */
+  .lock-btn {
+    width: 100%;
+    min-height: 48px;
+    padding: 12px 10px;
+    border-radius: 10px;
+    border: 1px solid var(--gold-dim);
+    background: rgba(255, 215, 0, 0.05);
+    color: var(--gold);
+    font-family: inherit;
+    font-size: 0.85rem;
+    font-weight: bold;
+    letter-spacing: 1px;
+    cursor: pointer;
+  }
+  .lock-btn:active { transform: translateY(1px); }
+  .lock-btn.preparing {
+    background: linear-gradient(90deg, rgba(255, 215, 0, 0.3) var(--p, 0%), rgba(255, 215, 0, 0.05) var(--p, 0%));
+    cursor: progress;
+  }
+  .lock-btn.ready {
+    background: rgba(70, 200, 120, 0.18);
+    border-color: #8fe3a8;
+    color: #8fe3a8;
+  }
+  .lock-btn.warn {
+    border-color: rgba(255, 176, 143, 0.6);
+    color: #ffb08f;
+    cursor: default;
+  }
+
   /* Safety notice (shown once, before the first session) */
   #safetyNotice {
     position: fixed;
@@ -869,6 +900,7 @@
     <h2>⊙ Transport</h2>
     <div class="transport">
       <button class="play-btn" id="playBtn">▶ BEGIN SESSION</button>
+      <button class="lock-btn" id="lockBtn" type="button">🔒 PLAY WITH SCREEN OFF</button>
       <div class="bg-status" id="bgStatus" aria-live="polite"></div>
 
       <div class="param">
@@ -1487,7 +1519,15 @@
   const RENDER_DELAY = 1200;    // ms of stillness before a loop renders
   const loopState = {
     el: null, active: false, disabled: false, url: null,
-    silentUrl: null, version: 0, timer: null, liveUntil: 0
+    silentUrl: null, version: 0, timer: null, liveUntil: 0,
+    // The app cannot see the lock coming (once the screen is off it gets no
+    // time to run), so readiness is made visible: a loop is "preparing" from
+    // the moment it is scheduled, "started" once it actually renders
+    preparing: false, started: false, progress: 0,
+    asked: false,       // the lock button was pressed: confirm readiness with a buzz
+    pending: null,      // a finished loop waiting out the fade-in: () => switch
+    pendingTimer: null,
+    cache: null         // { key, url, musicLoop }: the last loop, reused for the same settings
   };
 
   function encodeWav(chans, rate) {
@@ -1536,7 +1576,8 @@
     const el = loopElement();
     el.src = silentUrl();
     const pr = el.play();
-    if (pr && pr.catch) pr.catch(() => { loopState.disabled = true; updateBgStatus(); });
+    // an interrupted play (a newer src took over) is not a refusal
+    if (pr && pr.catch) pr.catch((e) => { if (!e || e.name !== 'AbortError') loopFailed(); });
   }
 
   // Snap every oscillator so it completes whole cycles in the loop length
@@ -1564,21 +1605,107 @@
     state.dryGain = g.dryGain; state.fade = g.fade;
   }
 
-  function scheduleLoopRender() {
+  // Everything a rendered loop depends on: the same key means the same
+  // sound, so the kept loop can be reused instead of rendered again
+  function loopKey() {
+    return JSON.stringify([state.mode, state.layerCount, state.layerMute, state.params]);
+  }
+
+  // Can this browser pause an offline render? That is how a render reports
+  // its progress (and how the composer edition feeds notes in windows).
+  let _suspendOk = null;
+  async function offlineSuspendWorks() {
+    if (_suspendOk != null) return _suspendOk;
+    try {
+      const probe = new OfflineAudioContext(1, 1024, 44100);
+      const paused = probe.suspend(512 / 44100);
+      const done = probe.startRendering();
+      await paused;
+      probe.resume();
+      await done;
+      _suspendOk = true;
+    } catch (e) {
+      _suspendOk = false;
+    }
+    return _suspendOk;
+  }
+
+  // Report a render's progress in tenths
+  function watchProgress(off, v, total) {
+    for (let k = 1; k < 10; k++) {
+      off.suspend(total * k / 10).then(() => {
+        if (v === loopState.version) { loopState.progress = k / 10; updateBgStatus(); }
+        off.resume();
+      }).catch(() => {});
+    }
+  }
+
+  function loopFailed() {
+    loopState.disabled = true;
+    loopState.preparing = false;
+    updateBgStatus();
+  }
+
+  // A loop URL that will not be used: free it, unless it is the kept loop
+  function dropLoopUrl(url) {
+    if (!loopState.cache || loopState.cache.url !== url) URL.revokeObjectURL(url);
+  }
+
+  function clearPendingSwitch() {
+    clearTimeout(loopState.pendingTimer);
+    loopState.pending = null;
+  }
+
+  // A finished loop waits out the session's fade-in (the element cannot fade
+  // on iOS); if the page is being hidden first, it switches at once
+  function queueSwitch(v, url, musicLoop, key) {
+    clearPendingSwitch();
+    const go = () => { loopState.pending = null; switchToLoop(v, url, musicLoop, key); };
+    loopState.pending = go;
+    loopState.pendingTimer = setTimeout(go, Math.max(0, loopState.liveUntil - performance.now()));
+  }
+
+  function scheduleLoopRender(delay) {
     if (!state.playing || loopState.disabled || !window.OfflineAudioContext) return;
     clearTimeout(loopState.timer);
+    clearPendingSwitch();
     const v = ++loopState.version;
-    loopState.timer = setTimeout(() => renderLoop(v), RENDER_DELAY);
+    loopState.preparing = true;
+    loopState.started = false;
+    loopState.progress = 0;
+    const c = loopState.cache;
+    if (c && c.key === loopKey()) {
+      // Same settings as the kept loop: nothing to render
+      loopState.started = true;
+      loopState.progress = 1;
+      queueSwitch(v, c.url, c.musicLoop, c.key);
+    } else {
+      loopState.timer = setTimeout(() => renderLoop(v), delay == null ? RENDER_DELAY : delay);
+    }
+    updateBgStatus();
   }
 
   async function renderLoop(v) {
+    loopState.started = true;
+    updateBgStatus();
+    const progressive = await offlineSuspendWorks();
+    if (v !== loopState.version || !state.playing) return;
+    const key = loopKey();
+    const c = loopState.cache;
+    if (c && c.key === key) {
+      loopState.progress = 1;
+      updateBgStatus();
+      queueSwitch(v, c.url, c.musicLoop, key);
+      return;
+    }
     const live = state.ctx;
     const rate = live.sampleRate;
     // Render a lead-in as long as the reverb, then keep one steady-state period
     const lead = state.params.revSz + 0.25;
+    const total = LOOP_SEC + lead;
     let off;
-    try { off = new OfflineAudioContext(2, Math.ceil(rate * (LOOP_SEC + lead)), rate); }
-    catch (e) { loopState.disabled = true; updateBgStatus(); return; }
+    try { off = new OfflineAudioContext(2, Math.ceil(rate * total), rate); }
+    catch (e) { loopFailed(); return; }
     snapOscillators(off, LOOP_SEC);
 
     const liveGraph = detachGraph();
@@ -1591,32 +1718,46 @@
       state.rendering = false;
       restoreGraph(liveGraph);
     }
+    if (progressive) watchProgress(off, v, total);
 
     let rendered;
-    try { rendered = await off.startRendering(); } catch (e) { return; }
+    try { rendered = await off.startRendering(); }
+    catch (e) { if (v === loopState.version) loopFailed(); return; }
     if (v !== loopState.version || !state.playing) return;
     const a = Math.round(lead * rate), n = Math.round(LOOP_SEC * rate);
     const url = URL.createObjectURL(encodeWav([
       rendered.getChannelData(0).subarray(a, a + n),
       rendered.getChannelData(1).subarray(a, a + n)
     ], rate));
-    // Never cut a fade-in short
-    setTimeout(() => switchToLoop(v, url), Math.max(0, loopState.liveUntil - performance.now()));
+    loopState.progress = 1;
+    updateBgStatus();
+    queueSwitch(v, url, false, key);
   }
 
-  function switchToLoop(v, url) {
-    if (v !== loopState.version || !state.playing) { URL.revokeObjectURL(url); return; }
+  function switchToLoop(v, url, musicLoop, key) {
+    if (v !== loopState.version || !state.playing) { dropLoopUrl(url); return; }
     const el = loopElement();
-    const prev = loopState.url;
     loopState.url = url;
     el.src = url;
     el.play().then(() => {
-      if (v !== loopState.version || !state.playing) return;
+      if (v !== loopState.version || !state.playing) {
+        // A newer change (or stop) overtook this switch: the live synth owns
+        // the sound again, so the element goes back to silence
+        if (el.src === url) {
+          el.src = silentUrl();
+          if (state.playing) el.play().catch(() => {}); else el.pause();
+        }
+        return;
+      }
       loopState.active = true;
+      loopState.preparing = false;
+      // Keep this loop for reuse (one at a time) and free the one it replaces
+      const old = loopState.cache;
+      loopState.cache = { key, url, musicLoop: !!musicLoop };
+      if (old && old.url !== url) URL.revokeObjectURL(old.url);
       const g = detachGraph();
       fadeOutGraph(g, 0.2);
       state.nodes = g.nodes;   // keep the layer descriptors for the visuals
-      if (prev) URL.revokeObjectURL(prev);
       // Then pause the live engine entirely: an idle but running
       // AudioContext underruns when the phone locks (the crackle) and can
       // take the element down with it. With it paused, the page is just a
@@ -1624,27 +1765,46 @@
       setTimeout(() => {
         if (loopState.active && state.ctx && state.ctx.state === 'running') state.ctx.suspend();
       }, 400);
+      if (loopState.asked) {
+        loopState.asked = false;
+        try { if (navigator.vibrate) navigator.vibrate(40); } catch (e) {}
+      }
       updateBgStatus();
-    }).catch(() => { loopState.disabled = true; updateBgStatus(); });
+    }).catch((e) => {
+      // An interrupted play (a newer change took over) is not a failure
+      if (e && e.name === 'AbortError') return;
+      loopFailed();
+    });
   }
 
+  // The lock button is the readiness display: it says what to do next
   function updateBgStatus() {
-    const el = $('bgStatus');
-    if (!el) return;
-    let text = '', cls = '';
-    if (state.playing) {
-      if (loopState.disabled || !window.OfflineAudioContext) {
-        text = 'Keep the screen on: this browser cannot play in the background';
-        cls = 'warn';
-      } else if (loopState.active) {
-        text = '✓ Background ready: you can lock the screen';
-        cls = 'ready';
-      } else {
-        text = 'Preparing background audio… keep the screen on';
-      }
+    const btn = $('lockBtn'), el = $('bgStatus');
+    if (!btn || !el) return;
+    let label, cls = '', hint = '', pct = 0;
+    if (!state.playing) {
+      label = '🔒 PLAY WITH SCREEN OFF';
+    } else if (loopState.disabled || !window.OfflineAudioContext) {
+      label = 'KEEP THE SCREEN ON';
+      cls = 'warn';
+      hint = 'This browser cannot keep playing with the screen locked';
+    } else if (loopState.active) {
+      label = '✓ READY: LOCK YOUR SCREEN';
+      cls = 'ready';
+      hint = 'Changing a setting prepares it again';
+    } else if (loopState.preparing) {
+      pct = Math.round(loopState.progress * 100);
+      label = '⏳ PREPARING FOR LOCK' + (loopState.started && pct > 0 ? '  ' + pct + '%' : '…');
+      cls = 'preparing';
+      hint = 'Keep the screen on until it says Ready';
+    } else {
+      label = '🔒 PREPARE FOR SCREEN LOCK';
     }
-    el.textContent = text;
-    el.className = 'bg-status' + (cls ? ' ' + cls : '');
+    btn.textContent = label;
+    btn.className = 'lock-btn' + (cls ? ' ' + cls : '');
+    btn.style.setProperty('--p', pct + '%');
+    el.textContent = hint;
+    el.className = 'bg-status' + (cls === 'warn' ? ' warn' : cls === 'ready' ? ' ready' : '');
   }
 
   // Hand the sound back to the live synth; the element keeps playing
@@ -1805,7 +1965,9 @@
     startTimer();
     acquireWakeLock();
     updateMediaSession();
-    scheduleLoopRender();
+    // nothing is being dragged at the start: prepare the first loop right away
+    scheduleLoopRender(400);
+    if (lockAfterStart) { lockAfterStart = false; prepareForLockNow(); }
     updateBgStatus();
   }
 
@@ -1813,6 +1975,9 @@
     clearTimeout(restartTimer);
     clearTimeout(loopState.timer);
     loopState.version++;
+    clearPendingSwitch();
+    loopState.preparing = false;
+    loopState.progress = 0;
     if (state.ctx) {
       if (loopState.active) {
         // The element can't fade on iOS, so the live synth takes the fade
@@ -2667,7 +2832,7 @@
     hideSafetyNotice();
     startSession();
   });
-  $('safetyCancel').addEventListener('click', hideSafetyNotice);
+  $('safetyCancel').addEventListener('click', () => { lockAfterStart = false; hideSafetyNotice(); });
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && $('safetyNotice').classList.contains('active')) hideSafetyNotice();
   });
@@ -2693,12 +2858,36 @@
     if (wakeLock) { try { wakeLock.release(); } catch (e) {} wakeLock = null; }
   }
   document.addEventListener('visibilitychange', () => {
+    // Being hidden (often the screen locking): a loop that is rendered but
+    // still waiting out the fade-in switches now, while the page can still act
+    if (document.visibilityState === 'hidden' && loopState.pending) {
+      clearTimeout(loopState.pendingTimer);
+      loopState.pending();
+    }
     if (document.visibilityState === 'visible' && state.playing) {
       acquireWakeLock();
       // While the loop plays, the live engine stays paused on purpose
       if (state.ctx && state.ctx.state !== 'running' && !loopState.active) state.ctx.resume();
     }
   });
+
+  // Lock button: prepare now instead of after the settle delay. Before a
+  // session it starts one and prepares straight away.
+  let lockAfterStart = false;
+  function prepareForLockNow() {
+    if (!state.playing || loopState.active || loopState.disabled || !window.OfflineAudioContext) {
+      updateBgStatus();
+      return;
+    }
+    if (loopState.preparing && loopState.started) return;   // already rendering
+    scheduleLoopRender(0);
+  }
+  $('lockBtn').addEventListener('click', () => {
+    loopState.asked = true;
+    if (!state.playing) { lockAfterStart = true; startSession(); return; }
+    prepareForLockNow();
+  });
+  updateBgStatus();
 
   // Play
   $('playBtn').addEventListener('click', () => {
