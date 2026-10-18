@@ -703,6 +703,60 @@
     line-height: 1.5;
   }
 
+  .vol-caution {
+    display: none;
+    margin-top: 6px;
+    color: #ffb08f;
+    font-size: 0.75rem;
+    line-height: 1.4;
+  }
+  .vol-caution.show { display: block; }
+
+  /* Safety notice (shown once, before the first session) */
+  #safetyNotice {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    background: rgba(0, 0, 0, 0.78);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+  }
+  #safetyNotice.active { display: flex; }
+  #safetyNotice .card {
+    max-width: 440px;
+    width: 100%;
+    max-height: 100%;
+    overflow-y: auto;
+    background: var(--bg-1);
+    border: 1px solid var(--panel-edge);
+    border-radius: 14px;
+    padding: 20px 18px;
+    color: var(--text);
+    font-size: 0.88rem;
+    line-height: 1.55;
+  }
+  #safetyNotice h3 {
+    color: var(--gold);
+    font-size: 1rem;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+  }
+  #safetyNotice ul { padding-left: 18px; margin: 8px 0 16px; }
+  #safetyNotice li { margin-bottom: 6px; }
+  #safetyNotice .actions { display: grid; grid-template-columns: 1fr 2fr; gap: 10px; }
+  #safetyNotice button {
+    min-height: 48px;
+    border-radius: 10px;
+    font-family: inherit;
+    font-weight: bold;
+    font-size: 0.9rem;
+    cursor: pointer;
+  }
+  #safetyCancel { background: transparent; color: var(--muted); border: 1px solid var(--panel-edge); }
+  #safetyOk { background: var(--gold); color: #111; border: none; }
+
   /* Flash overlay (full-screen) */
   #flashOverlay {
     position: fixed;
@@ -809,6 +863,7 @@
       <div class="param">
         <div class="param-row"><span>Master Volume</span><span class="param-val" id="volVal">25%</span></div>
         <input type="range" id="vol" min="0" max="100" value="25" step="1">
+        <div class="vol-caution" id="volCaution">High level. Long sessions this loud can harm hearing, especially on headphones; lower the volume if it feels loud.</div>
       </div>
 
       <div class="stats">
@@ -1240,6 +1295,24 @@
   </div>
 </div>
 
+<!-- Safety notice (once per device, before the first session) -->
+<div id="safetyNotice" role="dialog" aria-modal="true" aria-labelledby="safetyTitle">
+  <div class="card">
+    <h3 id="safetyTitle">Before you begin</h3>
+    <ul>
+      <li><strong>Turn your device volume down first.</strong> Sessions fade in over a few seconds; raise the level slowly to a comfortable, quiet volume.</li>
+      <li>Use headphones for binaural and φ-cascade modes, at a low level. Long, loud listening can harm hearing.</li>
+      <li>Do not listen while driving, operating machinery, or doing anything that needs your full attention.</li>
+      <li>If you have epilepsy or a history of seizures, avoid fast pulses and the visual flash, and talk to your doctor first.</li>
+      <li>This is a sound tool for relaxation and exploration, not a medical treatment. Stop if you feel unwell.</li>
+    </ul>
+    <div class="actions">
+      <button id="safetyCancel" type="button">Not now</button>
+      <button id="safetyOk" type="button">I understand, begin</button>
+    </div>
+  </div>
+</div>
+
 <footer>
   <div style="font-size:1.4rem; color:var(--gold);">⊙</div>
   <p style="margin-top:8px;">
@@ -1358,8 +1431,10 @@
     wetGain: null,
     dryGain: null,
     filter: null,
+    fade: null,
     timer: 0,
     timerInt: null,
+    timerStart: 0,
     timerTarget: 0,
     currentPreset: 'phibeat',
     mode: 'binaural',
@@ -1452,10 +1527,89 @@
   }
 
   // ============= SOUND ENGINE =============
+  // Fade times (seconds): sessions breathe in and out; parameter changes crossfade
+  const FADE_IN = 3, FADE_OUT = 1.5, FADE_TIMER_END = 8, FADE_CHANGE = 0.35;
+
+  function rampGain(param, target, sec) {
+    const now = state.ctx.currentTime;
+    param.cancelScheduledValues(now);
+    param.setValueAtTime(param.value, now);
+    param.linearRampToValueAtTime(target, now + sec);
+  }
+
+  // Snapshot the live graph and clear the state refs, so a new graph can be
+  // built while this one fades out
+  function detachGraph() {
+    const g = {
+      nodes: state.nodes, noiseNodes: state.noiseNodes, masterGain: state.masterGain,
+      filter: state.filter, convolver: state.convolver, wetGain: state.wetGain,
+      dryGain: state.dryGain, fade: state.fade
+    };
+    state.nodes = []; state.noiseNodes = null; state.masterGain = null; state.filter = null;
+    state.convolver = null; state.wetGain = null; state.dryGain = null; state.fade = null;
+    return g;
+  }
+
+  function teardownGraph(g) {
+    (g.nodes || []).forEach(n => { if (n) { try { n.stopAll && n.stopAll(); } catch(e){} } });
+    if (g.noiseNodes) {
+      try { g.noiseNodes.source && g.noiseNodes.source.stop(); } catch(e){}
+      (g.noiseNodes.extras || []).forEach(n => { try { n.stop && n.stop(); } catch(e){} });
+    }
+    ['masterGain','filter','convolver','wetGain','dryGain','fade'].forEach(k => {
+      if (g[k]) { try { g[k].disconnect(); } catch(e){} }
+    });
+  }
+
+  function fadeOutGraph(g, sec) {
+    if (!g.fade) { teardownGraph(g); return; }
+    rampGain(g.fade.gain, 0, sec);
+    setTimeout(() => teardownGraph(g), sec * 1000 + 80);
+  }
+
+  // User-facing start: safety notice, fade in, timer, screen wake
   function startSession() {
-    stopSession();
+    if (state.playing) return;
+    if (!safetyAcknowledged()) { showSafetyNotice(); return; }
+    buildGraph(FADE_IN);
+    state.playing = true;
+    $('playBtn').textContent = '⬛ STOP SESSION';
+    $('playBtn').classList.add('playing');
+    renderLayers();
+    renderLayerMixChips();
+    startTimer();
+    acquireWakeLock();
+  }
+
+  function stopSession(fadeSec = FADE_OUT) {
+    clearTimeout(restartTimer);
+    if (state.ctx) fadeOutGraph(detachGraph(), fadeSec);
+    state.playing = false;
+    $('playBtn').textContent = '▶ BEGIN SESSION';
+    $('playBtn').classList.remove('playing');
+    stopTimer();
+    releaseWakeLock();
+  }
+
+  // Parameter change while playing: crossfade into a rebuilt graph; the
+  // timer and the session itself keep running
+  function rebuildSession() {
+    if (!state.playing) return;
+    const old = detachGraph();
+    buildGraph(FADE_CHANGE);
+    fadeOutGraph(old, FADE_CHANGE);
+    renderLayers();
+  }
+
+  function buildGraph(fadeInSec) {
     const ctx = ensureAudio();
     const p = state.params;
+
+    // Per-graph fade stage: dry + wet -> fade -> destination
+    state.fade = ctx.createGain();
+    state.fade.gain.setValueAtTime(0, ctx.currentTime);
+    state.fade.gain.linearRampToValueAtTime(1, ctx.currentTime + fadeInSec);
+    state.fade.connect(ctx.destination);
 
     // master + effects chain: [sources] -> filter? -> master -> (dry + wet via convolver) -> destination
     state.masterGain = ctx.createGain();
@@ -1482,8 +1636,8 @@
     state.masterGain.connect(state.dryGain);
     state.masterGain.connect(state.convolver);
     state.convolver.connect(state.wetGain);
-    state.dryGain.connect(ctx.destination);
-    state.wetGain.connect(ctx.destination);
+    state.dryGain.connect(state.fade);
+    state.wetGain.connect(state.fade);
 
     // Build layers based on mode
     const N = state.layerCount;
@@ -1523,38 +1677,6 @@
 
     // Noise bed
     if (p.noiseType !== 'none') startNoiseBed();
-
-    state.playing = true;
-    $('playBtn').textContent = '⬛ STOP SESSION';
-    $('playBtn').classList.add('playing');
-    state.timer = 0;
-    renderLayers();
-    renderLayerMixChips();
-    startTimer();
-  }
-
-  function stopSession() {
-    if (state.nodes && state.nodes.length) {
-      state.nodes.forEach(n => {
-        if (!n) return;
-        try { n.stopAll && n.stopAll(); } catch(e){}
-      });
-    }
-    state.nodes = [];
-    if (state.noiseNodes) {
-      try { state.noiseNodes.source && state.noiseNodes.source.stop(); } catch(e){}
-      state.noiseNodes = null;
-    }
-    if (state.masterGain) { try { state.masterGain.disconnect(); } catch(e){} state.masterGain = null; }
-    if (state.filter) { try { state.filter.disconnect(); } catch(e){} state.filter = null; }
-    if (state.convolver) { try { state.convolver.disconnect(); } catch(e){} state.convolver = null; }
-    if (state.wetGain) { try { state.wetGain.disconnect(); } catch(e){} state.wetGain = null; }
-    if (state.dryGain) { try { state.dryGain.disconnect(); } catch(e){} state.dryGain = null; }
-
-    state.playing = false;
-    $('playBtn').textContent = '▶ BEGIN SESSION';
-    $('playBtn').classList.remove('playing');
-    stopTimer();
   }
 
   // ----- waveform builders -----
@@ -2001,14 +2123,19 @@
   function startTimer() {
     stopTimer();
     state.timer = 0;
+    // Wall-clock based, so throttled background tabs still keep true time
+    state.timerStart = Date.now();
     updateTimerDisplay();
     state.timerInt = setInterval(() => {
-      state.timer++;
+      state.timer = Math.floor((Date.now() - state.timerStart) / 1000);
       updateTimerDisplay();
-      if (state.timerTarget > 0 && state.timer >= state.timerTarget * 60) {
-        stopSession();
+      // Begin the closing fade early so the sound reaches silence at the target
+      if (state.timerTarget > 0 && state.timer >= state.timerTarget * 60 - FADE_TIMER_END) {
+        stopSession(FADE_TIMER_END);
+        state.timer = state.timerTarget * 60;
+        updateTimerDisplay();
       }
-    }, 1000);
+    }, 250);
   }
 
   function stopTimer() {
@@ -2082,7 +2209,7 @@
       b.addEventListener('click', () => {
         state.layerMute[i] = !state.layerMute[i];
         renderLayerMixChips();
-        if (state.playing) { stopSession(); setTimeout(startSession, 80); }
+        if (state.playing) debouncedRestart();
       });
       box.appendChild(b);
     }
@@ -2105,14 +2232,14 @@
     updateStatsFromParams();
     renderPresets();
     setMode(pr.mode);
-    if (state.playing) { stopSession(); setTimeout(startSession, 80); }
+    if (state.playing) debouncedRestart();
   }
 
   function setMode(m) {
     state.mode = m;
     document.querySelectorAll('.mode-tab').forEach(t => t.classList.toggle('active', t.dataset.mode === m));
     $('modeStat').textContent = m.toUpperCase();
-    if (state.playing) { stopSession(); setTimeout(startSession, 80); }
+    if (state.playing) debouncedRestart();
   }
 
   function updateStatsFromParams() {
@@ -2234,23 +2361,79 @@
   }
 
   // ============= WIRE UI =============
-  function bindSlider(id, valId, transform, onChange) {
+  // live = the change is applied directly to running nodes, so no rebuild
+  function bindSlider(id, valId, transform, onChange, live) {
     const el = $(id);
     el.addEventListener('input', (e) => {
       const v = parseFloat(e.target.value);
       if (valId) $(valId).textContent = transform ? transform(v) : v;
       if (onChange) onChange(v);
-      if (state.playing) debouncedRestart();
+      if (state.playing && !live) debouncedRestart();
     });
+  }
+
+  // Glide a live parameter instead of jumping (avoids zipper clicks)
+  function glide(param, v) {
+    if (param && state.ctx) param.setTargetAtTime(v, state.ctx.currentTime, 0.04);
   }
 
   let restartTimer = null;
   function debouncedRestart() {
     clearTimeout(restartTimer);
     restartTimer = setTimeout(() => {
-      if (state.playing) { stopSession(); setTimeout(startSession, 40); }
+      rebuildSession();
     }, 180);
   }
+
+  // ============= SAFETY NOTICE + VOLUME CAUTION =============
+  const SAFETY_KEY = 'phi_resonance_safety_ack_v1';
+  let safetyAckSession = false;   // fallback when storage is unavailable
+  function safetyAcknowledged() {
+    if (safetyAckSession) return true;
+    try { return localStorage.getItem(SAFETY_KEY) === '1'; } catch (e) { return false; }
+  }
+  function showSafetyNotice() {
+    $('safetyNotice').classList.add('active');
+    $('safetyOk').focus();
+  }
+  function hideSafetyNotice() { $('safetyNotice').classList.remove('active'); }
+  $('safetyOk').addEventListener('click', () => {
+    safetyAckSession = true;
+    try { localStorage.setItem(SAFETY_KEY, '1'); } catch (e) {}
+    hideSafetyNotice();
+    startSession();
+  });
+  $('safetyCancel').addEventListener('click', hideSafetyNotice);
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && $('safetyNotice').classList.contains('active')) hideSafetyNotice();
+  });
+
+  const VOL_CAUTION_AT = 60;
+  function updateVolumeCaution(v) {
+    $('volCaution').classList.toggle('show', v >= VOL_CAUTION_AT);
+  }
+
+  // ============= SCREEN WAKE =============
+  // Keep the screen on during a session; the OS releases the lock when the
+  // page is hidden, so take it again on return
+  let wakeLock = null;
+  async function acquireWakeLock() {
+    if (!('wakeLock' in navigator) || wakeLock) return;
+    try {
+      wakeLock = await navigator.wakeLock.request('screen');
+      wakeLock.addEventListener('release', () => { wakeLock = null; });
+      if (!state.playing) releaseWakeLock();
+    } catch (e) { wakeLock = null; }
+  }
+  function releaseWakeLock() {
+    if (wakeLock) { try { wakeLock.release(); } catch (e) {} wakeLock = null; }
+  }
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible' && state.playing) {
+      acquireWakeLock();
+      if (state.ctx && state.ctx.state !== 'running') state.ctx.resume();
+    }
+  });
 
   // Play
   $('playBtn').addEventListener('click', () => {
@@ -2266,8 +2449,9 @@
   // Sliders
   bindSlider('vol',    'volVal',    v => v + '%',                (v) => {
     state.params.vol = v;
-    if (state.masterGain) state.masterGain.gain.setValueAtTime(v/100, state.ctx.currentTime);
-  });
+    if (state.masterGain) glide(state.masterGain.gain, v/100);
+    updateVolumeCaution(v);
+  }, true);
   bindSlider('base',   'baseVal',   v => Math.round(v) + ' Hz', (v) => { state.params.base = v; $('baseStat').textContent = Math.round(v); });
   bindSlider('beat',   'beatVal',   v => v.toFixed(3) + ' Hz',  (v) => { state.params.beat = v; $('beatStat').textContent = v.toFixed(3); });
   bindSlider('detune', 'detuneVal', v => v + ' c',              (v) => { state.params.detune = v; });
@@ -2277,9 +2461,9 @@
   bindSlider('lfoRate','lfoRateVal', v => v.toFixed(2) + ' Hz', (v) => { state.params.lfoRate = v; });
   bindSlider('trem',   'tremVal',   v => v + '%',               (v) => { state.params.trem = v; });
   bindSlider('vib',    'vibVal',    v => v + '%',               (v) => { state.params.vib = v; });
-  bindSlider('cutoff', 'cutoffVal', v => Math.round(v) + ' Hz', (v) => { state.params.cutoff = v; if (state.filter) state.filter.frequency.setValueAtTime(v, state.ctx.currentTime); });
-  bindSlider('q',      'qVal',      v => v.toFixed(1),          (v) => { state.params.q = v; if (state.filter) state.filter.Q.setValueAtTime(v, state.ctx.currentTime); });
-  bindSlider('rev',    'revVal',    v => v + '%',               (v) => { state.params.rev = v; if (state.wetGain) state.wetGain.gain.setValueAtTime(v/100, state.ctx.currentTime); });
+  bindSlider('cutoff', 'cutoffVal', v => Math.round(v) + ' Hz', (v) => { state.params.cutoff = v; if (state.filter) glide(state.filter.frequency, v); }, true);
+  bindSlider('q',      'qVal',      v => v.toFixed(1),          (v) => { state.params.q = v; if (state.filter) glide(state.filter.Q, v); }, true);
+  bindSlider('rev',    'revVal',    v => v + '%',               (v) => { state.params.rev = v; if (state.wetGain) glide(state.wetGain.gain, v/100); }, true);
   bindSlider('revSz',  'revSzVal',  v => v.toFixed(1) + ' s',   (v) => { state.params.revSz = v; });
   bindSlider('noiseLvl','noiseLvlVal', v => v + '%',            (v) => { state.params.noiseLvl = v; });
   bindSlider('layers', 'layersVal', v => Math.round(v),         (v) => { state.layerCount = Math.round(v); renderLayerMixChips(); });
@@ -2329,7 +2513,7 @@
     const p = state.params;
     $('base').value = p.base;
     $('beat').value = p.beat;
-    $('vol').value = p.vol;
+    $('vol').value = p.vol; updateVolumeCaution(p.vol);
     $('wave').value = p.wave;
     $('detune').value = p.detune;
     $('spacing').value = p.spacing;
@@ -2399,7 +2583,7 @@
     document.querySelectorAll('.mode-tab').forEach(t => t.classList.toggle('active', t.dataset.mode === state.mode));
     $('modeStat').textContent = state.mode.toUpperCase();
     document.querySelectorAll('.tbtn').forEach(x => x.classList.toggle('active', parseInt(x.dataset.time,10) === state.timerTarget));
-    if (state.playing) { stopSession(); setTimeout(startSession, 80); }
+    if (state.playing) debouncedRestart();
   }
 
   function deleteSaved(name) {
