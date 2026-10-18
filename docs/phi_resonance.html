@@ -1432,6 +1432,8 @@
     dryGain: null,
     filter: null,
     fade: null,
+    streamOut: null,      // { dest, el } | false when unavailable
+    outPauseTimer: null,
     timer: 0,
     timerInt: null,
     timerStart: 0,
@@ -1455,10 +1457,89 @@
 
   function ensureAudio() {
     if (!state.ctx) {
+      // Safari 16.4+: declare this as media playback, so it ignores the
+      // silent switch and is allowed to keep going on a locked screen
+      try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch (e) {}
       state.ctx = new (window.AudioContext || window.webkitAudioContext)();
     }
-    if (state.ctx.state === 'suspended') state.ctx.resume();
+    if (state.ctx.state !== 'running') state.ctx.resume();
     return state.ctx;
+  }
+
+  // ----- background playback -----
+  // Phones suspend raw Web Audio when the screen locks but keep media
+  // elements playing (that is why an MP3 survives the lock). So the synth's
+  // output is streamed into a hidden <audio> element, which the OS treats
+  // as ordinary media playback. If the element cannot play, output falls
+  // back to the context's own destination.
+  function outputNode() {
+    const ctx = state.ctx;
+    if (state.streamOut === false) return ctx.destination;
+    if (!state.streamOut) {
+      try {
+        const dest = ctx.createMediaStreamDestination();
+        const el = document.createElement('audio');
+        el.setAttribute('playsinline', '');
+        el.srcObject = dest.stream;
+        state.streamOut = { dest, el };
+      } catch (e) {
+        state.streamOut = false;
+        return ctx.destination;
+      }
+    }
+    return state.streamOut.dest;
+  }
+
+  // Must run inside the user's tap, so the element is allowed to play
+  function startOutputElement() {
+    const so = state.streamOut;
+    if (!so) return;
+    clearTimeout(state.outPauseTimer);
+    const pr = so.el.play();
+    if (pr && pr.catch) pr.catch(() => {
+      // Blocked: send the live graph straight to the speakers instead
+      state.streamOut = false;
+      if (state.fade) {
+        try { state.fade.disconnect(); } catch (e) {}
+        state.fade.connect(state.ctx.destination);
+      }
+    });
+  }
+
+  function pauseOutputElementAfter(sec) {
+    const so = state.streamOut;
+    if (!so) return;
+    clearTimeout(state.outPauseTimer);
+    state.outPauseTimer = setTimeout(() => {
+      if (!state.playing) so.el.pause();
+    }, sec * 1000 + 150);
+  }
+
+  // Lock-screen and notification controls
+  function updateMediaSession() {
+    if (!('mediaSession' in navigator)) return;
+    const ms = navigator.mediaSession;
+    try {
+      if (state.playing && window.MediaMetadata) {
+        ms.metadata = new MediaMetadata({
+          title: state.mode.charAt(0).toUpperCase() + state.mode.slice(1) + ' · ' +
+                 Math.round(state.params.base) + ' Hz',
+          artist: 'φ-Entrainment',
+          album: 'Fractal Reality'
+        });
+      }
+      ms.playbackState = state.playing ? 'playing' : 'paused';
+    } catch (e) {}
+  }
+  if ('mediaSession' in navigator) {
+    const handlers = {
+      play: () => startSession(),
+      pause: () => stopSession(),
+      stop: () => stopSession()
+    };
+    Object.keys(handlers).forEach(a => {
+      try { navigator.mediaSession.setActionHandler(a, handlers[a]); } catch (e) {}
+    });
   }
 
   function createNoise(type, durationSec = 4) {
@@ -1572,6 +1653,7 @@
     if (state.playing) return;
     if (!safetyAcknowledged()) { showSafetyNotice(); return; }
     buildGraph(FADE_IN);
+    startOutputElement();
     state.playing = true;
     $('playBtn').textContent = '⬛ STOP SESSION';
     $('playBtn').classList.add('playing');
@@ -1579,6 +1661,7 @@
     renderLayerMixChips();
     startTimer();
     acquireWakeLock();
+    updateMediaSession();
   }
 
   function stopSession(fadeSec = FADE_OUT) {
@@ -1589,6 +1672,8 @@
     $('playBtn').classList.remove('playing');
     stopTimer();
     releaseWakeLock();
+    pauseOutputElementAfter(fadeSec);
+    updateMediaSession();
   }
 
   // Parameter change while playing: crossfade into a rebuilt graph; the
@@ -1599,6 +1684,7 @@
     buildGraph(FADE_CHANGE);
     fadeOutGraph(old, FADE_CHANGE);
     renderLayers();
+    updateMediaSession();
   }
 
   function buildGraph(fadeInSec) {
@@ -1609,7 +1695,7 @@
     state.fade = ctx.createGain();
     state.fade.gain.setValueAtTime(0, ctx.currentTime);
     state.fade.gain.linearRampToValueAtTime(1, ctx.currentTime + fadeInSec);
-    state.fade.connect(ctx.destination);
+    state.fade.connect(outputNode());
 
     // master + effects chain: [sources] -> filter? -> master -> (dry + wet via convolver) -> destination
     state.masterGain = ctx.createGain();
