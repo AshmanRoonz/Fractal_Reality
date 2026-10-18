@@ -1852,7 +1852,12 @@
     asked: false,       // the lock button was pressed: confirm readiness with a buzz
     pending: null,      // a finished loop waiting out the fade-in: () => switch
     pendingTimer: null,
-    cache: null         // { key, url, musicLoop }: the last loop, reused for the same settings
+    cache: null,        // { key, url, musicLoop }: the last loop, reused for the same settings
+    // Preparing is heavy work (it was an audible hitch when it ran by itself
+    // at every start), so it only happens on request: "requested" holds from
+    // the lock button until the loop is ready
+    requested: false,
+    ramp: null          // a running volume fade on the element (where volume works)
   };
 
   function encodeWav(chans, rate) {
@@ -1874,6 +1879,41 @@
       }
     }
     return new Blob([buf], { type: 'audio/wav' });
+  }
+
+  // The same WAV, encoded in time slices so the page keeps running (visuals,
+  // the composer's clock): one long encode froze phones for a second or more
+  async function encodeWavAsync(chans, rate) {
+    const nCh = chans.length, n = chans[0].length;
+    const header = new ArrayBuffer(44);
+    const v = new DataView(header);
+    const w = (o, str) => { for (let i = 0; i < str.length; i++) v.setUint8(o + i, str.charCodeAt(i)); };
+    w(0, 'RIFF'); v.setUint32(4, 36 + n * nCh * 2, true); w(8, 'WAVE');
+    w(12, 'fmt '); v.setUint32(16, 16, true); v.setUint16(20, 1, true);
+    v.setUint16(22, nCh, true); v.setUint32(24, rate, true);
+    v.setUint32(28, rate * nCh * 2, true); v.setUint16(32, nCh * 2, true); v.setUint16(34, 16, true);
+    w(36, 'data'); v.setUint32(40, n * nCh * 2, true);
+    const parts = [header];
+    const SLICE = 32768;    // frames per part
+    let t0 = performance.now();
+    for (let i = 0; i < n; i += SLICE) {
+      const m = Math.min(SLICE, n - i);
+      const pcm = new Int16Array(m * nCh);    // little-endian on every platform that runs this
+      for (let c = 0; c < nCh; c++) {
+        const src = chans[c];
+        for (let k = 0, j = c; k < m; k++, j += nCh) {
+          let x = src[i + k];
+          x = x > 1 ? 1 : x < -1 ? -1 : x;
+          pcm[j] = x < 0 ? x * 0x8000 : x * 0x7fff;
+        }
+      }
+      parts.push(pcm);
+      if (performance.now() - t0 > 8) {
+        await new Promise(r => setTimeout(r, 0));
+        t0 = performance.now();
+      }
+    }
+    return new Blob(parts, { type: 'audio/wav' });
   }
 
   function silentUrl() {
@@ -1899,6 +1939,8 @@
   // gesture, later play() calls on it are allowed without one
   function unlockLoopElement() {
     const el = loopElement();
+    stopElementRamp();
+    try { el.volume = 1; } catch (e) {}
     el.src = silentUrl();
     const pr = el.play();
     // an interrupted play (a newer src took over) is not a refusal
@@ -1968,6 +2010,7 @@
   function loopFailed() {
     loopState.disabled = true;
     loopState.preparing = false;
+    loopState.requested = false;
     updateBgStatus();
   }
 
@@ -1985,7 +2028,7 @@
   // on iOS); if the page is being hidden first, it switches at once
   function queueSwitch(v, url, musicLoop, key) {
     clearPendingSwitch();
-    const go = () => { loopState.pending = null; switchToLoop(v, url, musicLoop, key); };
+    const go = (immediate) => { loopState.pending = null; switchToLoop(v, url, musicLoop, key, immediate); };
     loopState.pending = go;
     loopState.pendingTimer = setTimeout(go, Math.max(0, loopState.liveUntil - performance.now()));
   }
@@ -2010,6 +2053,64 @@
     updateBgStatus();
   }
 
+  // Changes re-prepare only while a requested loop is still on its way;
+  // otherwise preparing waits for the lock button
+  function maybePrepare(delay) {
+    if (loopState.requested) scheduleLoopRender(delay);
+    else updateBgStatus();
+  }
+
+  // The page is being hidden with no loop playing: a kept loop that matches
+  // the current sound takes over at once (no render, nothing to hitch), a
+  // free safety net for locking without a tap
+  function useKeptLoopNow() {
+    const c = loopState.cache;
+    if (!c || c.key !== loopKey()) return;
+    clearTimeout(loopState.timer);
+    clearPendingSwitch();
+    const v = ++loopState.version;
+    switchToLoop(v, c.url, c.musicLoop, c.key, true);
+  }
+
+  // Element volume: Android and desktop browsers let a page set it, so the
+  // handover between the live synth and the loop can crossfade. iOS ignores
+  // it (always 1), and there the loop simply starts as the live sound fades.
+  const XFADE_SEC = 0.4;
+  let _volOk = null;
+  function elementVolumeWorks() {
+    if (_volOk != null) return _volOk;
+    try {
+      const a = document.createElement('audio');
+      a.volume = 0.5;
+      _volOk = Math.abs(a.volume - 0.5) < 0.01;
+    } catch (e) { _volOk = false; }
+    return _volOk;
+  }
+  function stopElementRamp() {
+    if (loopState.ramp) { clearInterval(loopState.ramp.timer); loopState.ramp = null; }
+  }
+  // Timers stall in a hidden page, so a fade in progress jumps to its end
+  function finishElementRamp() {
+    const r = loopState.ramp;
+    if (!r) return;
+    stopElementRamp();
+    try { r.el.volume = r.to; } catch (e) {}
+    if (r.done) r.done();
+  }
+  // Equal-power ramp, stepped from the main thread
+  function rampElementVolume(el, to, sec, done) {
+    stopElementRamp();
+    const from = el.volume, t0 = performance.now(), dur = Math.max(10, sec * 1000);
+    const r = { el, to, done, timer: 0 };
+    r.timer = setInterval(() => {
+      const x = Math.min(1, (performance.now() - t0) / dur);
+      const shape = to > from ? Math.sin(x * Math.PI / 2) : 1 - Math.cos(x * Math.PI / 2);
+      try { el.volume = Math.max(0, Math.min(1, from + (to - from) * shape)); } catch (e) {}
+      if (x >= 1) { stopElementRamp(); if (done) done(); }
+    }, 16);
+    loopState.ramp = r;
+  }
+
   async function renderLoop(v) {
     // A new piece enters at the next bar line; render it once it is playing
     if (composer.pending) { scheduleLoopRender(400); return; }
@@ -2029,7 +2130,7 @@
     const piece = (state.music.on && composer.running && composer.piece) ? composer.piece : null;
     // Music loops render at 32 kHz: a third less work and a third smaller,
     // with everything the music holds still well under its 16 kHz ceiling
-    const rate = piece ? Math.min(live.sampleRate, 32000) : live.sampleRate;
+    const rate = Math.min(live.sampleRate, 32000);
     const sd = composer.sd;
     // With music the loop is exactly one cycle of the piece; without, 48 s of field
     const loopLen = piece ? piece.steps * sd : LOOP_SEC;
@@ -2071,66 +2172,83 @@
     catch (e) { if (v === loopState.version) loopFailed(); return; }
     if (v !== loopState.version || !state.playing) return;
     const a = Math.round(lead * rate), n = Math.round(loopLen * rate);
-    const url = URL.createObjectURL(encodeWav([
+    const wav = await encodeWavAsync([
       rendered.getChannelData(0).subarray(a, a + n),
       rendered.getChannelData(1).subarray(a, a + n)
-    ], rate));
+    ], rate);
+    if (v !== loopState.version || !state.playing) return;
+    const url = URL.createObjectURL(wav);
     loopState.progress = 1;
     updateBgStatus();
     queueSwitch(v, url, !!piece, key);
   }
 
-  function switchToLoop(v, url, musicLoop, key) {
+  function switchToLoop(v, url, musicLoop, key, immediate) {
     if (v !== loopState.version || !state.playing) { dropLoopUrl(url); return; }
     const el = loopElement();
     loopState.url = url;
+    stopElementRamp();
+    const crossfade = !immediate && elementVolumeWorks();
+    try { el.volume = crossfade ? 0 : 1; } catch (e) {}
     el.src = url;
     // A music loop starts where the live music is in the cycle, so the
     // handover is a continuation, not a restart
     const pos = musicLoop ? composerPos() : null;
     if (pos != null) { try { el.currentTime = pos; } catch (e) {} }
-    el.play().then(() => {
+    const played = el.play();
+    // Hiding: take over now, while the page can still act
+    if (immediate) adoptLoop(el, url, musicLoop, key, 0, false);
+    played.then(() => {
       if (v !== loopState.version || !state.playing) {
         // A newer change (or stop) overtook this switch: the live synth owns
         // the sound again, so the element goes back to silence
-        if (el.src === url) {
+        if (!immediate && el.src === url) {
           el.src = silentUrl();
+          try { el.volume = 1; } catch (e) {}
           if (state.playing) el.play().catch(() => {}); else el.pause();
         }
         return;
       }
-      if (musicLoop) {
-        const p2 = composerPos();
-        if (p2 != null && Math.abs(el.currentTime - p2) > 0.06) { try { el.currentTime = p2; } catch (e) {} }
-        composerRetireChain(0.2);
-      }
-      loopState.active = true;
-      loopState.musicLoop = !!musicLoop;
-      loopState.preparing = false;
-      // Keep this loop for reuse (one at a time) and free the one it replaces
-      const old = loopState.cache;
-      loopState.cache = { key, url, musicLoop: !!musicLoop };
-      if (old && old.url !== url) URL.revokeObjectURL(old.url);
-      const g = detachGraph();
-      fadeOutGraph(g, 0.2);
-      state.nodes = g.nodes;   // keep the layer descriptors for the visuals
-      // Then pause the live engine entirely: an idle but running
-      // AudioContext underruns when the phone locks (the crackle) and can
-      // take the element down with it. With it paused, the page is just a
-      // media element, like an MP3 player.
-      setTimeout(() => {
-        if (loopState.active && state.ctx && state.ctx.state === 'running') state.ctx.suspend();
-      }, 400);
-      if (loopState.asked) {
-        loopState.asked = false;
-        try { if (navigator.vibrate) navigator.vibrate(40); } catch (e) {}
-      }
-      updateBgStatus();
+      if (!immediate) adoptLoop(el, url, musicLoop, key, crossfade ? XFADE_SEC : 0.2, crossfade);
     }).catch((e) => {
       // An interrupted play (a newer change took over) is not a failure
       if (e && e.name === 'AbortError') return;
       loopFailed();
     });
+  }
+
+  // The loop takes over: keep it, fade the live synth out (crossfading where
+  // the element's volume works), then pause the live engine entirely. An idle
+  // but running AudioContext underruns when the phone locks (the crackle) and
+  // can take the element down with it; paused, the page is just a media
+  // element, like an MP3 player.
+  function adoptLoop(el, url, musicLoop, key, fadeSec, crossfade) {
+    if (musicLoop) {
+      const p2 = composerPos();
+      if (p2 != null && Math.abs(el.currentTime - p2) > 0.06) { try { el.currentTime = p2; } catch (e) {} }
+      composerRetireChain(fadeSec > 0 ? fadeSec : 0.02);
+    }
+    loopState.musicLoop = !!musicLoop;
+    loopState.active = true;
+    loopState.preparing = false;
+    loopState.requested = false;
+    // Keep this loop for reuse (one at a time) and free the one it replaces
+    const old = loopState.cache;
+    loopState.cache = { key, url, musicLoop: !!musicLoop };
+    if (old && old.url !== url) URL.revokeObjectURL(old.url);
+    const g = detachGraph();
+    if (fadeSec > 0) fadeOutGraph(g, fadeSec); else teardownGraph(g);
+    state.nodes = g.nodes;   // keep the layer descriptors for the visuals
+    if (crossfade) rampElementVolume(el, 1, fadeSec);
+    const sleep = () => {
+      if (loopState.active && state.ctx && state.ctx.state === 'running') state.ctx.suspend();
+    };
+    if (fadeSec > 0) setTimeout(sleep, fadeSec * 1000 + 200); else sleep();
+    if (loopState.asked) {
+      loopState.asked = false;
+      try { if (navigator.vibrate) navigator.vibrate(40); } catch (e) {}
+    }
+    updateBgStatus();
   }
 
   // The lock button is the readiness display: it says what to do next
@@ -2147,7 +2265,7 @@
     } else if (loopState.active) {
       label = '✓ READY: LOCK YOUR SCREEN';
       cls = 'ready';
-      hint = 'Changing a setting prepares it again';
+      hint = 'A setting change undoes this; tap again before locking';
     } else if (loopState.preparing) {
       pct = Math.round(loopState.progress * 100);
       label = '⏳ PREPARING FOR LOCK' + (loopState.started && pct > 0 ? '  ' + pct + '%' : '…');
@@ -2155,6 +2273,7 @@
       hint = 'Keep the screen on until it says Ready';
     } else {
       label = '🔒 PREPARE FOR SCREEN LOCK';
+      hint = 'Tap this before you lock the screen';
     }
     btn.textContent = label;
     btn.className = 'lock-btn' + (cls ? ' ' + cls : '');
@@ -2165,14 +2284,24 @@
 
   // Hand the sound back to the live synth; the element keeps playing
   // silence so it stays unlocked and the lock-screen controls stay up
-  function leaveLoop() {
+  function leaveLoop(fadeSec) {
     if (!loopState.active) return;
     loopState.active = false;
     const el = loopElement();
     const pos = el.currentTime;
-    el.src = silentUrl();
-    el.play().catch(() => {});
-    if (loopState.musicLoop) composerResumeFromLoop(pos);
+    stopElementRamp();
+    const toSilence = () => {
+      el.src = silentUrl();
+      try { el.volume = 1; } catch (e) {}
+      if (state.playing) el.play().catch(() => {}); else el.pause();
+    };
+    if (fadeSec > 0 && elementVolumeWorks()) {
+      // the loop fades out while the live synth fades in
+      rampElementVolume(el, 0, fadeSec, () => { if (!loopState.active) toSilence(); });
+    } else {
+      toSilence();
+    }
+    if (loopState.musicLoop) composerResumeFromLoop(pos, fadeSec);
     loopState.musicLoop = false;
   }
 
@@ -3193,11 +3322,14 @@
 
   // The loop element played the music while the engine slept: pick the live
   // timeline up at the element's position, so the music simply carries on
-  function composerResumeFromLoop(posSec) {
+  function composerResumeFromLoop(posSec, fadeIn) {
     if (!composer.running || !state.music.on || !composer.piece) return;
     const ctx = ensureAudio();
     if (composer.chain) chainRetire(composer.chain, 0.02);
-    composer.chain = makeMusicChain(ctx, ctx.destination, 1);
+    // a crossfade back (Android, desktop) fades the live music in under the
+    // fading loop; otherwise it takes over at full level
+    composer.chain = makeMusicChain(ctx, ctx.destination, fadeIn > 0 ? 0 : 1);
+    if (fadeIn > 0) chainFade(composer.chain, 1, fadeIn);
     composer.sd = stepDur();
     const C = composer.piece.steps * composer.sd;
     const pos = ((posSec % C) + C) % C;
@@ -3311,8 +3443,8 @@
     startTimer();
     acquireWakeLock();
     updateMediaSession();
-    // nothing is being dragged at the start: prepare the first loop right away
-    scheduleLoopRender(400);
+    // Preparing a lock loop is heavy work, so it only happens on request
+    // (the lock button), never by itself at the start
     if (lockAfterStart) { lockAfterStart = false; prepareForLockNow(); }
     updateBgStatus();
   }
@@ -3324,8 +3456,22 @@
     clearPendingSwitch();
     loopState.preparing = false;
     loopState.progress = 0;
+    loopState.requested = false;
     if (state.ctx) {
-      if (loopState.active) {
+      if (loopState.active && elementVolumeWorks()) {
+        // The loop fades itself out (Android, desktop): nothing live has to
+        // come back just to fade
+        loopState.active = false;
+        loopState.musicLoop = false;
+        teardownGraph(detachGraph());
+        const el = loopState.el;
+        rampElementVolume(el, 0, fadeSec, () => {
+          if (state.playing) return;   // restarted meanwhile
+          el.pause();
+          el.src = silentUrl();
+          try { el.volume = 1; } catch (e) {}
+        });
+      } else if (loopState.active) {
         // The element can't fade on iOS, so the live synth takes the fade
         // out, starting from full level where the loop leaves off
         teardownGraph(detachGraph());
@@ -3362,14 +3508,16 @@
   function rebuildSession() {
     if (!state.playing) return;
     const fromLoop = loopState.active;
+    // from the loop: crossfade back where the element's volume works
+    const xf = fromLoop && elementVolumeWorks() ? XFADE_SEC : 0;
     const old = detachGraph();
-    leaveLoop();
-    buildGraph(fromLoop ? 0.02 : FADE_CHANGE);
+    leaveLoop(xf);
+    buildGraph(fromLoop ? (xf || 0.02) : FADE_CHANGE);
     fadeOutGraph(old, FADE_CHANGE);
     loopState.liveUntil = performance.now() + FADE_CHANGE * 1000;
     renderLayers();
     updateMediaSession();
-    scheduleLoopRender();
+    maybePrepare();
     updateBgStatus();
   }
 
@@ -4148,7 +4296,7 @@
       if (state.playing) {
         // A loop has these values baked in, so hand back to the live synth
         if (!live || loopState.active) debouncedRestart();
-        else scheduleLoopRender();
+        else maybePrepare();
       }
     });
   }
@@ -4210,11 +4358,20 @@
     if (wakeLock) { try { wakeLock.release(); } catch (e) {} wakeLock = null; }
   }
   document.addEventListener('visibilitychange', () => {
-    // Being hidden (often the screen locking): a loop that is rendered but
-    // still waiting out the fade-in switches now, while the page can still act
-    if (document.visibilityState === 'hidden' && loopState.pending) {
-      clearTimeout(loopState.pendingTimer);
-      loopState.pending();
+    if (document.visibilityState === 'hidden') {
+      finishElementRamp();
+      // Being hidden (often the screen locking): use whatever is ready, now,
+      // while the page can still act. A loop rendered but still waiting out
+      // the fade-in switches at once; otherwise a kept loop that matches the
+      // current sound takes over.
+      if (state.playing && !loopState.active && !loopState.disabled) {
+        if (loopState.pending) {
+          clearTimeout(loopState.pendingTimer);
+          loopState.pending(true);
+        } else {
+          useKeptLoopNow();
+        }
+      }
     }
     if (document.visibilityState === 'visible' && state.playing) {
       acquireWakeLock();
@@ -4223,14 +4380,15 @@
     }
   });
 
-  // Lock button: prepare now instead of after the settle delay. Before a
-  // session it starts one and prepares straight away.
+  // Lock button: the one place preparing starts. Before a session it starts
+  // one and prepares straight away.
   let lockAfterStart = false;
   function prepareForLockNow() {
     if (!state.playing || loopState.active || loopState.disabled || !window.OfflineAudioContext) {
       updateBgStatus();
       return;
     }
+    loopState.requested = true;
     if (loopState.preparing && loopState.started) return;   // already rendering
     scheduleLoopRender(0);
   }
@@ -5341,7 +5499,7 @@
     renderComposerForm();
     renderPieceInfo();
     if (state.playing && state.music.on) {
-      if (loopState.active) debouncedRestart(); else scheduleLoopRender();
+      if (loopState.active) debouncedRestart(); else maybePrepare();
     }
   }
 
@@ -5355,7 +5513,7 @@
     }
     if (state.bedBus) glide(state.bedBus.gain, bedLevel());
     if (state.playing && state.music.on) {
-      if (loopState.active) debouncedRestart(); else scheduleLoopRender();
+      if (loopState.active) debouncedRestart(); else maybePrepare();
     }
   }
 
@@ -5541,7 +5699,7 @@
   });
   bindMusicSlider('mBpm', v => Math.round(v) + ' BPM', v => {
     state.music.bpm = v;
-    if (state.playing && state.music.on) { if (loopState.active) debouncedRestart(); else scheduleLoopRender(); }
+    if (state.playing && state.music.on) { if (loopState.active) debouncedRestart(); else maybePrepare(); }
   });
   let _densityTimer = null;
   bindMusicSlider('mDensity', v => Math.round(v) + '%', v => {
@@ -5551,7 +5709,7 @@
   });
   $('binPads').addEventListener('change', e => {
     state.music.binPads = e.target.checked;
-    if (state.playing && state.music.on) { if (loopState.active) debouncedRestart(); else scheduleLoopRender(); }
+    if (state.playing && state.music.on) { if (loopState.active) debouncedRestart(); else maybePrepare(); }
   });
   $('seedInput').addEventListener('change', e => {
     const v = parseInt(String(e.target.value).trim(), 16);
@@ -5644,7 +5802,8 @@
     let buf;
     try { buf = await off.startRendering(); }
     catch (e) { setExportStatus('Rendering failed: ' + e.message); finish(); return; }
-    const blob = encodeWav([buf.getChannelData(0), buf.getChannelData(1)], rate);
+    setExportStatus('Encoding…');
+    const blob = await encodeWavAsync([buf.getChannelData(0), buf.getChannelData(1)], rate);
     const name = 'phi-' + (piece
       ? 'composer-' + piece.style + '-' + seedHex(piece.seed)
       : 'field-' + state.mode) + '-' + Math.round(state.params.base) + 'hz.wav';
