@@ -1432,8 +1432,7 @@
     dryGain: null,
     filter: null,
     fade: null,
-    streamOut: null,      // { dest, el } | false when unavailable
-    outPauseTimer: null,
+    rendering: false,     // true while a graph is built into an offline context
     timer: 0,
     timerInt: null,
     timerStart: 0,
@@ -1456,6 +1455,7 @@
   const $ = (id) => document.getElementById(id);
 
   function ensureAudio() {
+    if (state.rendering) return state.ctx;
     if (!state.ctx) {
       // Safari 16.4+: declare this as media playback, so it ignores the
       // silent switch and is allowed to keep going on a locked screen
@@ -1467,52 +1467,156 @@
   }
 
   // ----- background playback -----
-  // Phones suspend raw Web Audio when the screen locks but keep media
-  // elements playing (that is why an MP3 survives the lock). So the synth's
-  // output is streamed into a hidden <audio> element, which the OS treats
-  // as ordinary media playback. If the element cannot play, output falls
-  // back to the context's own destination.
-  function outputNode() {
-    const ctx = state.ctx;
-    if (state.streamOut === false) return ctx.destination;
-    if (!state.streamOut) {
-      try {
-        const dest = ctx.createMediaStreamDestination();
-        const el = document.createElement('audio');
-        el.setAttribute('playsinline', '');
-        el.srcObject = dest.stream;
-        state.streamOut = { dest, el };
-      } catch (e) {
-        state.streamOut = false;
-        return ctx.destination;
+  // Phones freeze Web Audio when the screen locks but keep media elements
+  // playing (that is why an MP3 survives the lock). So once the settings have
+  // been still for a moment, the session is rendered offline into a seamless
+  // loop and played from a looping <audio> element. While settings change,
+  // the live synth plays (instant response) and a new loop renders behind it.
+  const LOOP_SEC = 48;          // a multiple of the 4 s and 6 s noise buffers
+  const RENDER_DELAY = 1200;    // ms of stillness before a loop renders
+  const loopState = {
+    el: null, active: false, disabled: false, url: null,
+    silentUrl: null, version: 0, timer: null, liveUntil: 0
+  };
+
+  function encodeWav(chans, rate) {
+    const nCh = chans.length, n = chans[0].length;
+    const buf = new ArrayBuffer(44 + n * nCh * 2);
+    const v = new DataView(buf);
+    const w = (o, str) => { for (let i = 0; i < str.length; i++) v.setUint8(o + i, str.charCodeAt(i)); };
+    w(0, 'RIFF'); v.setUint32(4, 36 + n * nCh * 2, true); w(8, 'WAVE');
+    w(12, 'fmt '); v.setUint32(16, 16, true); v.setUint16(20, 1, true);
+    v.setUint16(22, nCh, true); v.setUint32(24, rate, true);
+    v.setUint32(28, rate * nCh * 2, true); v.setUint16(32, nCh * 2, true); v.setUint16(34, 16, true);
+    w(36, 'data'); v.setUint32(40, n * nCh * 2, true);
+    let o = 44;
+    for (let i = 0; i < n; i++) {
+      for (let c = 0; c < nCh; c++) {
+        const x = Math.max(-1, Math.min(1, chans[c][i]));
+        v.setInt16(o, x < 0 ? x * 0x8000 : x * 0x7fff, true);
+        o += 2;
       }
     }
-    return state.streamOut.dest;
+    return new Blob([buf], { type: 'audio/wav' });
   }
 
-  // Must run inside the user's tap, so the element is allowed to play
-  function startOutputElement() {
-    const so = state.streamOut;
-    if (!so) return;
-    clearTimeout(state.outPauseTimer);
-    const pr = so.el.play();
-    if (pr && pr.catch) pr.catch(() => {
-      // Blocked: send the live graph straight to the speakers instead
-      state.streamOut = false;
-      if (state.fade) {
-        try { state.fade.disconnect(); } catch (e) {}
-        state.fade.connect(state.ctx.destination);
-      }
-    });
+  function silentUrl() {
+    if (!loopState.silentUrl) {
+      const z = new Float32Array(22050);
+      loopState.silentUrl = URL.createObjectURL(encodeWav([z, z], 44100));
+    }
+    return loopState.silentUrl;
   }
 
-  function pauseOutputElementAfter(sec) {
-    const so = state.streamOut;
-    if (!so) return;
-    clearTimeout(state.outPauseTimer);
-    state.outPauseTimer = setTimeout(() => {
-      if (!state.playing) so.el.pause();
-    }, sec * 1000 + 150);
+  function loopElement() {
+    if (!loopState.el) {
+      const el = document.createElement('audio');
+      el.setAttribute('playsinline', '');
+      el.loop = true;
+      el.preload = 'auto';
+      loopState.el = el;
+    }
+    return loopState.el;
+  }
+
+  // Must run inside the user's tap: once the element has played from a
+  // gesture, later play() calls on it are allowed without one
+  function unlockLoopElement() {
+    const el = loopElement();
+    el.src = silentUrl();
+    const pr = el.play();
+    if (pr && pr.catch) pr.catch(() => { loopState.disabled = true; });
+  }
+
+  // Snap every oscillator so it completes whole cycles in the loop length
+  // (at most 1/(2L) Hz off, about 0.01 Hz), which makes the loop seamless
+  function snapOscillators(ctx, L) {
+    const desc = Object.getOwnPropertyDescriptor(AudioParam.prototype, 'value');
+    const make = ctx.createOscillator.bind(ctx);
+    ctx.createOscillator = () => {
+      const o = make();
+      let hz = o.frequency.value, cents = 0;
+      const apply = () => {
+        const f = hz * Math.pow(2, cents / 1200);
+        desc.set.call(o.frequency, f > 0 ? Math.max(1, Math.round(f * L)) / L : 0);
+      };
+      Object.defineProperty(o.frequency, 'value', { configurable: true, get: () => hz, set: (x) => { hz = x; apply(); } });
+      Object.defineProperty(o.detune, 'value', { configurable: true, get: () => cents, set: (x) => { cents = x; apply(); } });
+      apply();
+      return o;
+    };
+  }
+
+  function restoreGraph(g) {
+    state.nodes = g.nodes; state.noiseNodes = g.noiseNodes; state.masterGain = g.masterGain;
+    state.filter = g.filter; state.convolver = g.convolver; state.wetGain = g.wetGain;
+    state.dryGain = g.dryGain; state.fade = g.fade;
+  }
+
+  function scheduleLoopRender() {
+    if (!state.playing || loopState.disabled || !window.OfflineAudioContext) return;
+    clearTimeout(loopState.timer);
+    const v = ++loopState.version;
+    loopState.timer = setTimeout(() => renderLoop(v), RENDER_DELAY);
+  }
+
+  async function renderLoop(v) {
+    const live = state.ctx;
+    const rate = live.sampleRate;
+    // Render a lead-in as long as the reverb, then keep one steady-state period
+    const lead = state.params.revSz + 0.25;
+    let off;
+    try { off = new OfflineAudioContext(2, Math.ceil(rate * (LOOP_SEC + lead)), rate); }
+    catch (e) { loopState.disabled = true; return; }
+    snapOscillators(off, LOOP_SEC);
+
+    const liveGraph = detachGraph();
+    state.ctx = off;
+    state.rendering = true;
+    try { buildGraph(0, off.destination); }
+    finally {
+      detachGraph();
+      state.ctx = live;
+      state.rendering = false;
+      restoreGraph(liveGraph);
+    }
+
+    let rendered;
+    try { rendered = await off.startRendering(); } catch (e) { return; }
+    if (v !== loopState.version || !state.playing) return;
+    const a = Math.round(lead * rate), n = Math.round(LOOP_SEC * rate);
+    const url = URL.createObjectURL(encodeWav([
+      rendered.getChannelData(0).subarray(a, a + n),
+      rendered.getChannelData(1).subarray(a, a + n)
+    ], rate));
+    // Never cut a fade-in short
+    setTimeout(() => switchToLoop(v, url), Math.max(0, loopState.liveUntil - performance.now()));
+  }
+
+  function switchToLoop(v, url) {
+    if (v !== loopState.version || !state.playing) { URL.revokeObjectURL(url); return; }
+    const el = loopElement();
+    const prev = loopState.url;
+    loopState.url = url;
+    el.src = url;
+    el.play().then(() => {
+      if (v !== loopState.version || !state.playing) return;
+      loopState.active = true;
+      const g = detachGraph();
+      fadeOutGraph(g, 0.2);
+      state.nodes = g.nodes;   // keep the layer descriptors for the visuals
+      if (prev) URL.revokeObjectURL(prev);
+    }).catch(() => { loopState.disabled = true; });
+  }
+
+  // Hand the sound back to the live synth; the element keeps playing
+  // silence so it stays unlocked and the lock-screen controls stay up
+  function leaveLoop() {
+    if (!loopState.active) return;
+    loopState.active = false;
+    const el = loopElement();
+    el.src = silentUrl();
+    el.play().catch(() => {});
   }
 
   // Lock-screen and notification controls
@@ -1653,7 +1757,8 @@
     if (state.playing) return;
     if (!safetyAcknowledged()) { showSafetyNotice(); return; }
     buildGraph(FADE_IN);
-    startOutputElement();
+    unlockLoopElement();
+    loopState.liveUntil = performance.now() + FADE_IN * 1000;
     state.playing = true;
     $('playBtn').textContent = '⬛ STOP SESSION';
     $('playBtn').classList.add('playing');
@@ -1662,17 +1767,30 @@
     startTimer();
     acquireWakeLock();
     updateMediaSession();
+    scheduleLoopRender();
   }
 
   function stopSession(fadeSec = FADE_OUT) {
     clearTimeout(restartTimer);
-    if (state.ctx) fadeOutGraph(detachGraph(), fadeSec);
+    clearTimeout(loopState.timer);
+    loopState.version++;
+    if (state.ctx) {
+      if (loopState.active) {
+        // The element can't fade on iOS, so the live synth takes the fade out
+        teardownGraph(detachGraph());
+        leaveLoop();
+        buildGraph(0.02);
+      }
+      fadeOutGraph(detachGraph(), fadeSec);
+    }
     state.playing = false;
     $('playBtn').textContent = '▶ BEGIN SESSION';
     $('playBtn').classList.remove('playing');
     stopTimer();
     releaseWakeLock();
-    pauseOutputElementAfter(fadeSec);
+    setTimeout(() => {
+      if (!state.playing && loopState.el) loopState.el.pause();
+    }, fadeSec * 1000 + 150);
     updateMediaSession();
   }
 
@@ -1680,14 +1798,18 @@
   // timer and the session itself keep running
   function rebuildSession() {
     if (!state.playing) return;
+    const fromLoop = loopState.active;
     const old = detachGraph();
-    buildGraph(FADE_CHANGE);
+    leaveLoop();
+    buildGraph(fromLoop ? 0.02 : FADE_CHANGE);
     fadeOutGraph(old, FADE_CHANGE);
+    loopState.liveUntil = performance.now() + FADE_CHANGE * 1000;
     renderLayers();
     updateMediaSession();
+    scheduleLoopRender();
   }
 
-  function buildGraph(fadeInSec) {
+  function buildGraph(fadeInSec, dest) {
     const ctx = ensureAudio();
     const p = state.params;
 
@@ -1695,7 +1817,7 @@
     state.fade = ctx.createGain();
     state.fade.gain.setValueAtTime(0, ctx.currentTime);
     state.fade.gain.linearRampToValueAtTime(1, ctx.currentTime + fadeInSec);
-    state.fade.connect(outputNode());
+    state.fade.connect(dest || ctx.destination);
 
     // master + effects chain: [sources] -> filter? -> master -> (dry + wet via convolver) -> destination
     state.masterGain = ctx.createGain();
@@ -2454,7 +2576,11 @@
       const v = parseFloat(e.target.value);
       if (valId) $(valId).textContent = transform ? transform(v) : v;
       if (onChange) onChange(v);
-      if (state.playing && !live) debouncedRestart();
+      if (state.playing) {
+        // A loop has these values baked in, so hand back to the live synth
+        if (!live || loopState.active) debouncedRestart();
+        else scheduleLoopRender();
+      }
     });
   }
 
