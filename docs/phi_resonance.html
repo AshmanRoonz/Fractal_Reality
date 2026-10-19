@@ -1341,7 +1341,7 @@
     <section class="stage" id="stage" aria-label="The field">
       <div class="stage-flash" id="stageFlash" aria-hidden="true"><canvas id="stageFlashCanvas"></canvas></div>
       <div class="stage-now">
-        <span class="stage-balance">Balance <b id="betaStat">0.50</b></span>
+        <span class="stage-balance">Balance <b id="betaStat">0.25</b></span>
         <span class="stage-chips">
           <button class="stage-chip warn" id="stageFlashStop" type="button" title="Stop the flashes (Esc)" hidden>✕ Flash</button>
           <button class="stage-chip" id="openBreath" type="button" title="Breath guide">◠ Breathe</button>
@@ -1364,22 +1364,22 @@
       </div>
       <div class="preset-picker">
         <button class="pp-arrow" id="presetPrev" type="button" aria-label="Previous preset">◀</button>
-        <button class="pp-name" id="presetName" type="button" title="All presets">✹ φ-BEAT</button>
+        <button class="pp-name" id="presetName" type="button" title="All presets">ASHMAN1</button>
         <button class="pp-arrow" id="presetNext" type="button" aria-label="Next preset">▶</button>
       </div>
-      <div class="pp-desc" id="presetDesc">432 base, beat = φ Hz, binaural, sine</div>
+      <div class="pp-desc" id="presetDesc">144 base, 2.1 Hz binaural, triangle, octave layers</div>
       <!-- Base, Beat and Mode: tap one to change it here; tap it again to close -->
       <div class="stats">
-        <button class="stat" type="button" data-edit="base" aria-expanded="false" aria-controls="statEdit"><span class="label">Base Hz</span><span class="value" id="baseStat">432</span></button>
-        <button class="stat" type="button" data-edit="beat" aria-expanded="false" aria-controls="statEdit"><span class="label">Beat Hz</span><span class="value" id="beatStat">1.618</span></button>
+        <button class="stat" type="button" data-edit="base" aria-expanded="false" aria-controls="statEdit"><span class="label">Base Hz</span><span class="value" id="baseStat">144</span></button>
+        <button class="stat" type="button" data-edit="beat" aria-expanded="false" aria-controls="statEdit"><span class="label">Beat Hz</span><span class="value" id="beatStat">2.100</span></button>
         <button class="stat" type="button" data-edit="mode" aria-expanded="false" aria-controls="statEdit"><span class="label">Mode</span><span class="value" id="modeStat">BINAURAL</span></button>
       </div>
       <div class="stat-edit" id="statEdit">
         <div class="stat-pane" data-pane="base">
           <div class="setting-row">
             <label for="qBase">Base frequency</label>
-            <input type="range" id="qBase" min="40" max="1200" value="432" step="1">
-            <span class="param-val" id="qBaseVal">432 Hz</span>
+            <input type="range" id="qBase" min="40" max="1200" value="144" step="1">
+            <span class="param-val" id="qBaseVal">144 Hz</span>
           </div>
           <div class="stat-nudge">
             <button type="button" data-nudge="base" data-by="-10">−10</button>
@@ -1391,8 +1391,8 @@
         <div class="stat-pane" data-pane="beat">
           <div class="setting-row">
             <label for="qBeat">Beat</label>
-            <input type="range" id="qBeat" min="0.1" max="40" value="1.618" step="0.001">
-            <span class="param-val" id="qBeatVal">1.618 Hz</span>
+            <input type="range" id="qBeat" min="0.1" max="40" value="2.1" step="0.001">
+            <span class="param-val" id="qBeatVal">2.100 Hz</span>
           </div>
           <div class="stat-nudge">
             <button type="button" data-nudge="beat" data-by="-1">−1</button>
@@ -1468,13 +1468,13 @@
       <h3>Frequency</h3>
       <div class="setting-row">
         <label for="base">Base frequency</label>
-        <input type="range" id="base" min="40" max="1200" value="432" step="1">
-        <span class="param-val" id="baseVal">432 Hz</span>
+        <input type="range" id="base" min="40" max="1200" value="144" step="1">
+        <span class="param-val" id="baseVal">144 Hz</span>
       </div>
       <div class="setting-row">
         <label for="beat">Beat / pulse</label>
-        <input type="range" id="beat" min="0.1" max="40" value="1.618" step="0.001">
-        <span class="param-val" id="beatVal">1.618 Hz</span>
+        <input type="range" id="beat" min="0.1" max="40" value="2.1" step="0.001">
+        <span class="param-val" id="beatVal">2.100 Hz</span>
       </div>
       <div class="setting-row sel">
         <label for="wave">Waveform</label>
@@ -1938,6 +1938,7 @@
 
   // ============= PRESETS =============
   const PRESETS = [
+    { id: 'ashman1',     name: 'ASHMAN1',         desc: '144 base, 2.1 Hz binaural, triangle, octave layers', base: 144, beat: 2.1, beta: 0.25, mode: 'binaural', wave: 'triangle', spacing: 'octave' },
     { id: 'phibeat',     name: '✹ φ-BEAT',        desc: '432 base, beat = φ Hz, binaural, sine',        base: 432, beat: PHI,         beta: 0.50, mode: 'binaural',   wave: 'sine',     spacing: 'phi' },
     { id: 'organ',       name: '⊛ ORGAN DRONE',   desc: '256 base, octave layers, organ',               base: 256, beat: 7.83,        beta: 0.40, mode: 'drone',      wave: 'organ',    spacing: 'octave' },
     { id: 'fifth',       name: '⊛ 5TH BEAT',      desc: '528 base, 15 Hz beat, fifth spacing',          base: 528, beat: 15,          beta: 0.60, mode: 'binaural',   wave: 'sine',     spacing: 'fifth' },
@@ -2041,13 +2042,13 @@
     timerInt: null,
     timerStart: 0,
     timerTarget: 0,
-    currentPreset: 'phibeat',
+    currentPreset: 'ashman1',   // the starting sound
     mode: 'binaural',
     layerCount: 6,
     layerMute: new Array(9).fill(false),
     params: {
-      base: 432, beat: PHI, vol: 25, wave: 'sine', detune: 0,
-      spacing: 'phi', stereo: 100, beatStr: 100,
+      base: 144, beat: 2.1, vol: 25, wave: 'triangle', detune: 0,
+      spacing: 'octave', stereo: 100, beatStr: 100,
       lfoDepth: 30, lfoRate: 0.25, trem: 0, vib: 0,
       filterType: 'none', cutoff: 1500, q: 1,
       rev: 20, revSz: 2.5,
@@ -3909,6 +3910,8 @@
   renderLayerMixChips();
   renderSavedStates();
   updateStatsFromParams();
+  // the controls start on the starting preset: sliders, waveform, spacing, mode, readouts
+  applyPreset(state.currentPreset);
   drawBG();
   drawViz();
 
