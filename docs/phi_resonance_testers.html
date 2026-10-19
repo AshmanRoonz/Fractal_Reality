@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#05050f">
+<meta name="description" content="Help bring Phi Resonance to Google Play: join the testers, install the app on your Android phone, and keep it for 14 days.">
+<title>Help test Phi Resonance | Fractal Reality</title>
+<!-- The page testers are sent to while the Android app is in Google Play's closed test.
+     Two links wait to be filled in, each marked TESTER-LINK: the testers' Google Group, and
+     Play's opt-in page for the closed test. Until then their buttons read "coming soon". -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --amber: #ffaa00;
+    --amber-hi: #ffd27a;
+    --chip: #a8d8ff;
+    --chip-edge: rgba(80, 180, 255, 0.42);
+    --chip-bg: rgba(80, 180, 255, 0.08);
+    --text: #e6eef7;
+    --text-2: #cfdeeb;
+    --muted: rgba(185, 207, 223, 0.62);
+    --card: rgba(10, 16, 28, 0.62);
+    --card-edge: rgba(185, 207, 223, 0.10);
+    --rose: #ff9cab;
+    --display: 'Orbitron', 'Rajdhani', system-ui, sans-serif;
+    --body: 'Rajdhani', 'Inter', 'Helvetica Neue', system-ui, sans-serif;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { background: #05050f; }
+  body {
+    font-family: var(--body);
+    font-weight: 500;
+    font-size: 1.08rem;
+    line-height: 1.5;
+    color: var(--text);
+    background:
+      radial-gradient(1100px 700px at 22% 28%, rgba(40, 25, 80, 0.42), transparent 62%),
+      radial-gradient(900px 600px at 82% 80%, rgba(0, 60, 90, 0.28), transparent 60%),
+      #05050f;
+    background-attachment: fixed;
+    min-height: 100vh;
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  }
+  a { color: var(--chip); }
+  .page { max-width: 640px; margin: 0 auto; padding: 22px 16px 44px; }
+
+  /* the chromatic title tag (Last Ship Sailing) */
+  .tag {
+    display: inline-block;
+    padding: 0 8px 1px;
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: clamp(1rem, 4.6vw, 1.35rem);
+    letter-spacing: 3px;
+    color: var(--amber);
+    background: rgba(5, 8, 18, 0.35);
+    text-shadow: -1px 0 0 rgba(255, 64, 96, 0.6), 1px 0 0 rgba(64, 220, 255, 0.6), 0 0 4px currentColor, 0 0 8px currentColor;
+  }
+  h1 {
+    margin: 18px 0 4px;
+    font-family: var(--display);
+    font-size: clamp(1.15rem, 5.2vw, 1.6rem);
+    font-weight: 700;
+    letter-spacing: 2px;
+    line-height: 1.3;
+    color: var(--text);
+  }
+  .meta { color: var(--muted); font-size: 0.9rem; margin-bottom: 14px; }
+  .lead { color: var(--text-2); font-size: 1.12rem; margin-bottom: 18px; }
+
+  /* glass cards with amber headings */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--card-edge);
+    border-radius: 10px;
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.30);
+    padding: 14px 16px 12px;
+    margin-bottom: 14px;
+  }
+  .card h2 {
+    font-family: var(--display);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin: 2px 0 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid;
+    border-image: linear-gradient(to right, rgba(255, 170, 0, 0.45), rgba(255, 170, 0, 0)) 1;
+  }
+  .card p + p { margin-top: 8px; }
+  .card ul { padding-left: 20px; }
+  .card li + li { margin-top: 6px; }
+  b, strong { color: var(--amber-hi); font-weight: 700; }
+  .note { margin-top: 10px; color: var(--muted); font-size: 0.98rem; }
+
+  /* the numbered steps */
+  .steps { list-style: none; counter-reset: step; }
+  .steps > li {
+    counter-increment: step;
+    position: relative;
+    padding: 2px 0 14px 46px;
+  }
+  .steps > li + li { margin-top: 4px; border-top: 1px solid rgba(185, 207, 223, 0.07); padding-top: 14px; }
+  .steps > li::before {
+    content: counter(step);
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 170, 0, 0.75);
+    background: rgba(255, 170, 0, 0.12);
+    color: var(--amber-hi);
+    font-family: var(--display);
+    font-size: 0.85rem;
+    font-weight: 700;
+  }
+  .steps > li + li::before { top: 14px; }
+  .steps h3 {
+    font-family: var(--display);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text);
+    margin: 6px 0 6px;
+  }
+  .steps p { color: var(--text-2); }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    margin-top: 10px;
+    padding: 10px 16px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 170, 0, 0.85);
+    background: linear-gradient(180deg, rgba(255, 170, 0, 0.24), rgba(255, 170, 0, 0.08));
+    color: var(--amber-hi);
+    font-family: var(--display);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-decoration: none;
+    text-shadow: 0 0 10px rgba(255, 170, 0, 0.45);
+  }
+  .btn:hover { box-shadow: 0 0 22px rgba(255, 170, 0, 0.3); }
+  /* a link that isn't ready yet */
+  .btn.soon {
+    border-color: rgba(185, 207, 223, 0.25);
+    background: rgba(255, 255, 255, 0.03);
+    color: var(--muted);
+    text-shadow: none;
+    pointer-events: none;
+    cursor: default;
+  }
+
+  footer { margin-top: 22px; color: var(--muted); font-size: 0.95rem; text-align: center; }
+  footer a { color: var(--muted); }
+  footer a:hover { color: var(--amber-hi); }
+  .history { margin-top: 14px; text-align: left; font-size: 0.88rem; }
+  .history summary { cursor: pointer; color: var(--muted); }
+  .history ul { margin-top: 6px; padding-left: 20px; }
+</style>
+</head>
+<body>
+<main class="page">
+
+  <header>
+    <span class="tag">φ RESONANCE</span>
+    <h1>Help test the Android app</h1>
+    <div class="meta">Created: 2026-10-18 · Last updated: 2026-10-18 · Version: 1.0</div>
+    <p class="lead">Phi Resonance, the app version of the <span style="white-space:nowrap;">φ-Entrainment</span> sound lab on this site, is on its way to Google Play. Before a new app can go public, Google asks for at least 12 people to test it for 14 days in a row. If you have an Android phone, you can be one of them. Joining takes about five minutes.</p>
+  </header>
+
+  <section class="card">
+    <h2>What you need</h2>
+    <ul>
+      <li>An Android phone with the Google Play Store.</li>
+      <li>The Google account (Gmail) you use on that phone.</li>
+    </ul>
+    <p class="note">iPhones can't join a Google Play test. An iPhone version comes later.</p>
+  </section>
+
+  <section class="card">
+    <h2>How to join</h2>
+    <ol class="steps">
+      <li>
+        <h3>Join the testers group</h3>
+        <p>Open the group while you're signed in to the Google account from your phone, and tap <b>Join group</b>. That puts you on the list of testers, and it's where you'll hear when the test opens.</p>
+        <!-- TESTER-LINK: the Google Group, e.g. https://groups.google.com/g/your-group-name -->
+        <a class="btn soon" href="#" aria-disabled="true">Group link coming soon</a>
+      </li>
+      <li>
+        <h3>Become a tester</h3>
+        <p>When the test opens, open the tester link with the same Google account and tap <b>Become a tester</b>.</p>
+        <!-- TESTER-LINK: Play's opt-in page, https://play.google.com/apps/testing/ followed by the package name -->
+        <a class="btn soon" href="#" aria-disabled="true">Tester link coming soon</a>
+      </li>
+      <li>
+        <h3>Install it from Google Play</h3>
+        <p>The tester page then links to the app in the Play Store; install it like any other app. If it doesn't show up at first, give it a few minutes and look again.</p>
+      </li>
+      <li>
+        <h3>Keep it for 14 days</h3>
+        <p>Please stay in the test and keep the app installed for at least 14 days in a row; Google counts the days. Open it now and then: start a session, try a few presets, and use headphones for the binaural ones.</p>
+      </li>
+    </ol>
+  </section>
+
+  <section class="card">
+    <h2>Tell us what you think</h2>
+    <p>Anything helps: what you liked, what confused you, what didn't work, what you wish it did. Send it through the testers group. A sentence or two is plenty.</p>
+  </section>
+
+  <section class="card">
+    <h2>Good to know</h2>
+    <ul>
+      <li>The app collects nothing about you: no account, no ads, no tracking. Your settings stay on your phone. (<a href="phi_resonance_privacy.html">Privacy policy</a>)</li>
+      <li>Joining the group shares your email address with the developer, only to run this test.</li>
+      <li>Start at a low volume. The app can also show flashing light, off unless you turn it on; skip it if flashing light affects you.</li>
+      <li>It is a sound tool for relaxation, focus and exploration. It is not a medical device and does not diagnose, treat, cure, or prevent any medical condition.</li>
+    </ul>
+    <p class="note">Curious before the test opens? <a href="phi_resonance.html">Try the web version in your browser.</a></p>
+  </section>
+
+  <footer>
+    <a href="phi_resonance.html">φ-Entrainment on the web</a> · <a href="index.html">fractalreality.ca</a>
+    <details class="history">
+      <summary>Revision history</summary>
+      <ul>
+        <li>2026-10-18 v1.0: initial</li>
+      </ul>
+    </details>
+  </footer>
+
+</main>
+</body>
+</html>
