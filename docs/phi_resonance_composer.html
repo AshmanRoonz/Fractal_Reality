@@ -159,13 +159,23 @@
     min-width: 0;
   }
 
+  /* a phone stacks the stage, the session card, then the open tab; a desktop
+     sets the card beside them */
   .main {
     display: grid;
     grid-template-columns: 1fr;
+    grid-template-areas: "stage" "card" "panels";
     gap: 14px;
   }
+  .main > .stage { grid-area: stage; }
+  .main > .play-card { grid-area: card; }
+  .main > .tab-panels { grid-area: panels; min-width: 0; }
   @media (min-width: 900px) {
-    .main { grid-template-columns: minmax(0, 1fr) 390px; align-items: start; }
+    .main {
+      grid-template-columns: minmax(0, 1fr) 390px;
+      grid-template-areas: "stage card" "panels card";
+      align-items: start;
+    }
   }
 
   /* ── the stage: the field, the breath lane, the waveform ── */
@@ -303,6 +313,47 @@
     display: grid;
     gap: 12px;
   }
+  /* its title row holds the minimize button; folded, the card is a slim bar
+     with the preset, the timer and play / stop */
+  .card-head { display: flex; align-items: center; gap: 10px; }
+  .card-head > span:first-child { flex: 0 0 auto; }
+  .session-summary {
+    display: none;
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-align: right;
+    color: var(--amber-hi);
+    letter-spacing: 2px;
+    text-transform: none;   /* preset names carry their own capitals; φ stays φ */
+  }
+  .card-min {
+    flex: 0 0 auto;
+    width: 30px;
+    height: 30px;
+    margin: -6px 0 -4px auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(10, 16, 28, 0.7);
+    border: 1px solid rgba(185, 207, 223, 0.3);
+    border-radius: 50%;
+    color: #b9cfdf;
+    font-family: var(--display);
+    font-size: 0.95rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: color .15s, border-color .15s, box-shadow .15s;
+  }
+  .card-min:hover { color: var(--amber); border-color: rgba(255, 170, 0, 0.85); box-shadow: 0 0 14px rgba(255, 170, 0, 0.3); }
+  .play-card.mini { gap: 8px; padding-bottom: 10px; }
+  .play-card.mini > :not(.card-head):not(.play-btn) { display: none !important; }
+  .play-card.mini .session-summary { display: block; }
+  .play-card.mini .card-min { margin-left: 0; }
+  .play-card.mini .play-btn { min-height: 44px; font-size: 0.85rem; letter-spacing: 2px; }
+
   /* the card is narrow even on desktop: its rows always stack */
   .play-card .setting-row { grid-template-columns: 1fr auto; grid-template-areas: "lbl val" "ctl ctl"; padding: 4px 2px; }
 
@@ -939,8 +990,7 @@
     .main-tabs .settings-tab { font-size: 0.66rem; letter-spacing: 2px; }
   }
 
-  /* ── the main column: the stage, then the open tab's settings ── */
-  .main-col { display: grid; gap: 14px; min-width: 0; align-content: start; }
+  /* ── the open tab's settings ── */
   .stage, .tab-panels { scroll-margin-top: 58px; }
   .tab-panels { display: none; }
   .app.panel-open .tab-panels { display: block; }
@@ -1443,8 +1493,6 @@
 
   <div class="main">
 
-    <div class="main-col">
-
     <!-- THE STAGE: the field behind, the breath lane, the waveform -->
     <section class="stage" id="stage" aria-label="The field">
       <div class="stage-flash" id="stageFlash" aria-hidden="true"><canvas id="stageFlashCanvas"></canvas></div>
@@ -1463,7 +1511,97 @@
       <canvas class="viz" id="viz"></canvas>
     </section>
 
-    <!-- THE OPEN TAB'S SETTINGS (under the stage; hidden until a tab is chosen) -->
+    <!-- THE SESSION CARD: above the open tab; its − folds it to a bar -->
+    <section class="play-card glass" aria-label="Session">
+      <div class="card-title card-head">
+        <span>Session</span>
+        <span class="session-summary" id="sessionSummary"></span>
+        <button class="card-min" id="sessionMin" type="button" aria-expanded="true" title="Minimize the session card">−</button>
+      </div>
+      <div class="preset-picker">
+        <button class="pp-arrow" id="presetPrev" type="button" aria-label="Previous preset">◀</button>
+        <button class="pp-name" id="presetName" type="button" title="All presets">✹ φ-BEAT</button>
+        <button class="pp-arrow" id="presetNext" type="button" aria-label="Next preset">▶</button>
+      </div>
+      <div class="pp-desc" id="presetDesc">432 base, beat = φ Hz, binaural, sine</div>
+      <!-- Base, Beat and Mode: tap one to change it here; tap it again to close -->
+      <div class="stats">
+        <button class="stat" type="button" data-edit="base" aria-expanded="false" aria-controls="statEdit"><span class="label">Base Hz</span><span class="value" id="baseStat">432</span></button>
+        <button class="stat" type="button" data-edit="beat" aria-expanded="false" aria-controls="statEdit"><span class="label">Beat Hz</span><span class="value" id="beatStat">1.618</span></button>
+        <button class="stat" type="button" data-edit="mode" aria-expanded="false" aria-controls="statEdit"><span class="label">Mode</span><span class="value" id="modeStat">BINAURAL</span></button>
+      </div>
+      <div class="stat-edit" id="statEdit">
+        <div class="stat-pane" data-pane="base">
+          <div class="setting-row">
+            <label for="qBase">Base frequency</label>
+            <input type="range" id="qBase" min="40" max="1200" value="432" step="1">
+            <span class="param-val" id="qBaseVal">432 Hz</span>
+          </div>
+          <div class="stat-nudge">
+            <button type="button" data-nudge="base" data-by="-10">−10</button>
+            <button type="button" data-nudge="base" data-by="-1">−1</button>
+            <button type="button" data-nudge="base" data-by="1">+1</button>
+            <button type="button" data-nudge="base" data-by="10">+10</button>
+          </div>
+        </div>
+        <div class="stat-pane" data-pane="beat">
+          <div class="setting-row">
+            <label for="qBeat">Beat</label>
+            <input type="range" id="qBeat" min="0.1" max="40" value="1.618" step="0.001">
+            <span class="param-val" id="qBeatVal">1.618 Hz</span>
+          </div>
+          <div class="stat-nudge">
+            <button type="button" data-nudge="beat" data-by="-1">−1</button>
+            <button type="button" data-nudge="beat" data-by="-0.1">−0.1</button>
+            <button type="button" data-nudge="beat" data-by="0.1">+0.1</button>
+            <button type="button" data-nudge="beat" data-by="1">+1</button>
+          </div>
+        </div>
+        <div class="stat-pane" data-pane="mode">
+          <div class="mode-tabs">
+            <button class="mode-tab" data-mode="binaural">Binaural</button>
+            <button class="mode-tab" data-mode="isochronic">Isochronic</button>
+            <button class="mode-tab" data-mode="monaural">Monaural</button>
+            <button class="mode-tab" data-mode="drone">Drone</button>
+            <button class="mode-tab" data-mode="harmonic">Harmonic</button>
+            <button class="mode-tab" data-mode="cascade">φ-Cascade</button>
+            <button class="mode-tab" data-mode="noise">Noise</button>
+            <button class="mode-tab" data-mode="chord">Chord</button>
+          </div>
+        </div>
+        <div class="stat-hint" id="statHint">Tap the number to type an exact value.</div>
+      </div>
+
+      <button class="play-btn" id="playBtn">▶ BEGIN SESSION</button>
+      <button class="lock-btn" id="lockBtn" type="button">🔒 PLAY WITH SCREEN OFF</button>
+      <div class="bg-status" id="bgStatus" aria-live="polite"></div>
+      <div class="composer-quick">
+        <button class="quick-btn" id="musicToggleQuick" type="button" aria-pressed="false">♫ COMPOSER: OFF</button>
+        <button class="quick-btn" id="newPieceQuick" type="button">⟳ NEW PIECE</button>
+      </div>
+      <div class="piece-line" id="pieceLineQuick"></div>
+
+      <div class="setting-row">
+        <label for="vol">Master volume</label>
+        <input type="range" id="vol" min="0" max="100" value="25" step="1">
+        <span class="param-val" id="volVal">25%</span>
+      </div>
+      <div class="vol-caution" id="volCaution">High level. Long sessions this loud can harm hearing, especially on headphones; lower the volume if it feels loud.</div>
+
+      <div class="timer-head"><span>Timer</span><span class="timer-display" id="timer">00:00</span></div>
+      <div class="timer-buttons">
+        <button class="tbtn" data-time="0">∞</button>
+        <button class="tbtn" data-time="5">5m</button>
+        <button class="tbtn" data-time="15">15m</button>
+        <button class="tbtn" data-time="30">30m</button>
+        <button class="tbtn" data-time="45">45m</button>
+        <button class="tbtn" data-time="60">60m</button>
+        <button class="tbtn" data-time="90">90m</button>
+        <button class="tbtn" data-time="120">2h</button>
+      </div>
+    </section>
+
+    <!-- THE OPEN TAB'S SETTINGS (under the session card; hidden until a tab is chosen) -->
     <div class="tab-panels" id="tabPanels" role="tabpanel" aria-labelledby="panelTitle">
       <div class="panel-head">
         <span class="panel-title" id="panelTitle">Settings</span>
@@ -2010,94 +2148,6 @@
     </div>
   </div>
     </div>
-
-    </div>
-
-    <!-- THE SESSION CARD -->
-    <section class="play-card glass" aria-label="Session">
-      <div class="card-title">Session</div>
-      <div class="preset-picker">
-        <button class="pp-arrow" id="presetPrev" type="button" aria-label="Previous preset">◀</button>
-        <button class="pp-name" id="presetName" type="button" title="All presets">✹ φ-BEAT</button>
-        <button class="pp-arrow" id="presetNext" type="button" aria-label="Next preset">▶</button>
-      </div>
-      <div class="pp-desc" id="presetDesc">432 base, beat = φ Hz, binaural, sine</div>
-      <!-- Base, Beat and Mode: tap one to change it here; tap it again to close -->
-      <div class="stats">
-        <button class="stat" type="button" data-edit="base" aria-expanded="false" aria-controls="statEdit"><span class="label">Base Hz</span><span class="value" id="baseStat">432</span></button>
-        <button class="stat" type="button" data-edit="beat" aria-expanded="false" aria-controls="statEdit"><span class="label">Beat Hz</span><span class="value" id="beatStat">1.618</span></button>
-        <button class="stat" type="button" data-edit="mode" aria-expanded="false" aria-controls="statEdit"><span class="label">Mode</span><span class="value" id="modeStat">BINAURAL</span></button>
-      </div>
-      <div class="stat-edit" id="statEdit">
-        <div class="stat-pane" data-pane="base">
-          <div class="setting-row">
-            <label for="qBase">Base frequency</label>
-            <input type="range" id="qBase" min="40" max="1200" value="432" step="1">
-            <span class="param-val" id="qBaseVal">432 Hz</span>
-          </div>
-          <div class="stat-nudge">
-            <button type="button" data-nudge="base" data-by="-10">−10</button>
-            <button type="button" data-nudge="base" data-by="-1">−1</button>
-            <button type="button" data-nudge="base" data-by="1">+1</button>
-            <button type="button" data-nudge="base" data-by="10">+10</button>
-          </div>
-        </div>
-        <div class="stat-pane" data-pane="beat">
-          <div class="setting-row">
-            <label for="qBeat">Beat</label>
-            <input type="range" id="qBeat" min="0.1" max="40" value="1.618" step="0.001">
-            <span class="param-val" id="qBeatVal">1.618 Hz</span>
-          </div>
-          <div class="stat-nudge">
-            <button type="button" data-nudge="beat" data-by="-1">−1</button>
-            <button type="button" data-nudge="beat" data-by="-0.1">−0.1</button>
-            <button type="button" data-nudge="beat" data-by="0.1">+0.1</button>
-            <button type="button" data-nudge="beat" data-by="1">+1</button>
-          </div>
-        </div>
-        <div class="stat-pane" data-pane="mode">
-          <div class="mode-tabs">
-            <button class="mode-tab" data-mode="binaural">Binaural</button>
-            <button class="mode-tab" data-mode="isochronic">Isochronic</button>
-            <button class="mode-tab" data-mode="monaural">Monaural</button>
-            <button class="mode-tab" data-mode="drone">Drone</button>
-            <button class="mode-tab" data-mode="harmonic">Harmonic</button>
-            <button class="mode-tab" data-mode="cascade">φ-Cascade</button>
-            <button class="mode-tab" data-mode="noise">Noise</button>
-            <button class="mode-tab" data-mode="chord">Chord</button>
-          </div>
-        </div>
-        <div class="stat-hint" id="statHint">Tap the number to type an exact value.</div>
-      </div>
-
-      <button class="play-btn" id="playBtn">▶ BEGIN SESSION</button>
-      <button class="lock-btn" id="lockBtn" type="button">🔒 PLAY WITH SCREEN OFF</button>
-      <div class="bg-status" id="bgStatus" aria-live="polite"></div>
-      <div class="composer-quick">
-        <button class="quick-btn" id="musicToggleQuick" type="button" aria-pressed="false">♫ COMPOSER: OFF</button>
-        <button class="quick-btn" id="newPieceQuick" type="button">⟳ NEW PIECE</button>
-      </div>
-      <div class="piece-line" id="pieceLineQuick"></div>
-
-      <div class="setting-row">
-        <label for="vol">Master volume</label>
-        <input type="range" id="vol" min="0" max="100" value="25" step="1">
-        <span class="param-val" id="volVal">25%</span>
-      </div>
-      <div class="vol-caution" id="volCaution">High level. Long sessions this loud can harm hearing, especially on headphones; lower the volume if it feels loud.</div>
-
-      <div class="timer-head"><span>Timer</span><span class="timer-display" id="timer">00:00</span></div>
-      <div class="timer-buttons">
-        <button class="tbtn" data-time="0">∞</button>
-        <button class="tbtn" data-time="5">5m</button>
-        <button class="tbtn" data-time="15">15m</button>
-        <button class="tbtn" data-time="30">30m</button>
-        <button class="tbtn" data-time="45">45m</button>
-        <button class="tbtn" data-time="60">60m</button>
-        <button class="tbtn" data-time="90">90m</button>
-        <button class="tbtn" data-time="120">2h</button>
-      </div>
-    </section>
 
   </div>
 
@@ -5836,7 +5886,8 @@
   // and the settings menu is nice too"). The main screen is the player, with
   // every settings tab along its top (owner: "put all the tabs from the
   // settings screen onto the main screen at the top"): a tab opens its panel
-  // under the stage, and the open tab again, the panel's ✕, or Esc closes it.
+  // under the session card, and the open tab again, the panel's ✕, or Esc
+  // closes it.
 
   function anyOverlayOpen() { return !!document.querySelector('.overlay.open'); }
   function openOverlay(el) {
@@ -5951,6 +6002,30 @@
   });
   // presets, frequency chips and saved states set the sliders without an event
   setInterval(() => { if (openStat) syncQuick(); }, 250);
+
+  // ---- the session card folds to a slim bar in its place; the bar keeps
+  // play / stop, the preset and the timer, and the choice is remembered ----
+  const MINI_KEY = 'phi_resonance_session_mini';
+  const sessionCard = document.querySelector('.play-card');
+  function updateSessionSummary() {
+    if (!sessionCard.classList.contains('mini')) return;
+    const text = $('presetName').textContent + ' · ' + $('timer').textContent;
+    if ($('sessionSummary').textContent !== text) $('sessionSummary').textContent = text;
+  }
+  function setSessionMini(on) {
+    sessionCard.classList.toggle('mini', on);
+    $('sessionMin').textContent = on ? '+' : '−';
+    $('sessionMin').title = on ? 'Expand the session card' : 'Minimize the session card';
+    $('sessionMin').setAttribute('aria-expanded', String(!on));
+    if (on) showStat('');   // an open stat editor folds away with the card
+    updateSessionSummary();
+    try { localStorage.setItem(MINI_KEY, on ? '1' : ''); } catch (e) {}
+  }
+  $('sessionMin').addEventListener('click', () => setSessionMini(!sessionCard.classList.contains('mini')));
+  setInterval(updateSessionSummary, 500);
+  let startMini = false;
+  try { startMini = localStorage.getItem(MINI_KEY) === '1'; } catch (e) {}
+  setSessionMini(startMini);
 
   // ---- the breath guide's own view ----
   const openBreathGuide = () => openOverlay($('breathOverlay'));
