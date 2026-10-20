@@ -6,8 +6,10 @@
   φ-Entrainment Composer: the full sound lab plus generative music.
   Created: 2026-10-18
   Last updated: 2026-10-19
-  Version: 1.3
+  Version: 1.4
   Revision history:
+  - 2026-10-19 v1.4: one reverb runs across setting changes (it was rebuilt beside
+    the old one on every change, which stuttered in the phone app)
   - 2026-10-19 v1.3: the breath guide's lane is on the main screen by default; since
     v1.2 also: Base, Beat and Mode as buttons with editors, the File tab, the session
     card that folds to a bar, and the Ashman1 starting setting
@@ -2782,10 +2784,11 @@
     if (old && old.url !== url) URL.revokeObjectURL(old.url);
     const g = detachGraph();
     if (fadeSec > 0) fadeOutGraph(g, fadeSec); else teardownGraph(g);
+    reverbLevel(state.ctx && state.ctx.phiVerb, 0, fadeSec);   // the shared reverb goes with it
     state.nodes = g.nodes;   // keep the layer descriptors for the visuals
     if (crossfade) rampElementVolume(el, 1, fadeSec);
     const sleep = () => {
-      if (loopState.active && state.ctx && state.ctx.state === 'running') state.ctx.suspend();
+      if (loopState.active && state.ctx && state.ctx.state === 'running') { dropReverb(state.ctx, 0); state.ctx.suspend(); }
     };
     if (fadeSec > 0) setTimeout(sleep, fadeSec * 1000 + 200); else sleep();
     if (loopState.asked) {
@@ -2923,6 +2926,53 @@
       }
     }
     return buf;
+  }
+
+  // ----- one reverb across setting changes -----
+  // Most setting changes rebuild the field and crossfade to the new one. The
+  // reverb is the heaviest part, so it is no longer rebuilt with them (owner,
+  // 2026-10-19: in the phone app, changing settings stuttered; each change
+  // ran a second reverb, made from fresh noise, beside the first). Each audio
+  // context keeps one reverb; every graph feeds it through its own fade, and
+  // it is replaced only when Reverb size changes. It lives while the live
+  // engine sounds: a stop, or the lock loop taking over, fades it out and
+  // lets it go.
+  function sharedReverb(ctx, dest, size) {
+    const v = ctx.phiVerb;
+    if (v && v.size === size && v.dest === dest) {
+      reverbLevel(v, state.params.rev / 100, 0.05);   // back up if a stop was fading it
+      return v;
+    }
+    if (v) dropReverb(ctx, FADE_CHANGE + v.size + 0.5);   // the old one rings out first
+    const input = ctx.createGain();
+    const convolver = ctx.createConvolver();
+    convolver.buffer = createReverbImpulse(size, 2.5);
+    const wet = ctx.createGain();
+    wet.gain.value = state.params.rev / 100;
+    input.connect(convolver);
+    convolver.connect(wet);
+    wet.connect(dest);
+    [input, convolver, wet].forEach(n => { n.phiShared = true; });   // teardownGraph leaves these
+    ctx.phiVerb = { size, dest, input, convolver, wet };
+    return ctx.phiVerb;
+  }
+
+  // Ramp the shared reverb's output (it follows the live sound out)
+  function reverbLevel(v, level, sec) {
+    if (!v) return;
+    const g = v.wet.gain, now = v.wet.context.currentTime;
+    g.cancelScheduledValues(now);
+    g.setValueAtTime(g.value, now);
+    g.linearRampToValueAtTime(level, now + Math.max(0.01, sec));
+  }
+
+  // Let a context's reverb go, after afterSec (0: now)
+  function dropReverb(ctx, afterSec) {
+    const v = ctx && ctx.phiVerb;
+    if (!v) return;
+    ctx.phiVerb = null;
+    const off = () => [v.input, v.convolver, v.wet].forEach(n => { try { n.disconnect(); } catch (e) {} });
+    if (afterSec > 0) setTimeout(off, afterSec * 1000); else off();
   }
 
   function spacingRatio(kind, i) {
@@ -3960,8 +4010,9 @@
       try { g.noiseNodes.source && g.noiseNodes.source.stop(); } catch(e){}
       (g.noiseNodes.extras || []).forEach(n => { try { n.stop && n.stop(); } catch(e){} });
     }
+    // the shared reverb outlives the graphs (sharedReverb)
     ['masterGain','filter','convolver','wetGain','dryGain','fade','bedBus'].forEach(k => {
-      if (g[k]) { try { g[k].disconnect(); } catch(e){} }
+      if (g[k] && !g[k].phiShared) { try { g[k].disconnect(); } catch(e){} }
     });
   }
 
@@ -4030,6 +4081,7 @@
       } else {
         fadeOutGraph(detachGraph(), fadeSec);
       }
+      reverbLevel(state.ctx.phiVerb, 0, fadeSec);   // the shared reverb fades with the sound
     }
     composerStop(fadeSec);
     state.playing = false;
@@ -4041,6 +4093,7 @@
       if (state.playing) return;
       if (loopState.el) loopState.el.pause();
       // Nothing left to render; let the engine sleep (start resumes it)
+      dropReverb(state.ctx, 0);
       if (state.ctx && state.ctx.state === 'running') state.ctx.suspend();
     }, fadeSec * 1000 + 150);
     updateMediaSession();
@@ -4069,13 +4122,13 @@
     const ctx = ensureAudio();
     const p = state.params;
 
-    // Per-graph fade stage: dry + wet -> fade -> destination
+    // Per-graph fade stage: the dry sound -> fade -> destination, and on into the shared reverb
     state.fade = ctx.createGain();
     state.fade.gain.setValueAtTime(0, ctx.currentTime);
     state.fade.gain.linearRampToValueAtTime(1, ctx.currentTime + fadeInSec);
     state.fade.connect(dest || ctx.destination);
 
-    // master + effects chain: [sources] -> filter? -> master -> (dry + wet via convolver) -> destination
+    // master + effects chain: [sources] -> filter? -> master -> dry -> fade -> destination (+ the shared reverb)
     state.masterGain = ctx.createGain();
     state.masterGain.gain.value = p.vol / 100;
 
@@ -4095,18 +4148,17 @@
     state.bedBus.gain.value = bedLevel();
     state.bedBus.connect(filterInput);
 
-    // Reverb
-    state.convolver = ctx.createConvolver();
-    state.convolver.buffer = createReverbImpulse(p.revSz, 2.5);
-    state.wetGain = ctx.createGain();
+    // Reverb: the context's one reverb (sharedReverb), fed after this graph's
+    // fade, so a crossfade or a fade-out moves this graph out of the reverb as
+    // well as out of the dry sound
+    const verb = sharedReverb(ctx, dest || ctx.destination, p.revSz);
+    state.convolver = verb.convolver;
+    state.wetGain = verb.wet;
     state.dryGain = ctx.createGain();
-    state.wetGain.gain.value = p.rev / 100;
     state.dryGain.gain.value = 1;
     state.masterGain.connect(state.dryGain);
-    state.masterGain.connect(state.convolver);
-    state.convolver.connect(state.wetGain);
     state.dryGain.connect(state.fade);
-    state.wetGain.connect(state.fade);
+    state.fade.connect(verb.input);
 
     // Build layers based on mode
     const N = state.layerCount;
