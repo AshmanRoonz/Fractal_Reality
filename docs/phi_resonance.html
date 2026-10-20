@@ -1338,7 +1338,7 @@
   <div class="main">
 
     <!-- THE STAGE: the field behind, the breath lane, the waveform -->
-    <section class="stage" id="stage" aria-label="The field">
+    <section class="stage breath-on" id="stage" aria-label="The field">
       <div class="stage-flash" id="stageFlash" aria-hidden="true"><canvas id="stageFlashCanvas"></canvas></div>
       <div class="stage-now">
         <span class="stage-balance">Balance <b id="betaStat">0.25</b></span>
@@ -1669,7 +1669,7 @@
       <div class="row-note">A dot that rises as you breathe in and falls as you breathe out. It has its own view, and it can also sit on the main screen and ride over the flashes, all on one breath.</div>
       <div class="setting-row check">
         <span class="lbl">On the main screen</span>
-        <button class="toggle" type="button" data-breath-where="stage" aria-pressed="false">OFF</button>
+        <button class="toggle" type="button" data-breath-where="stage" aria-pressed="true">ON</button>
       </div>
       <div class="setting-row check">
         <span class="lbl">Over the flashes</span>
@@ -1882,7 +1882,7 @@
       </div>
       <div class="setting-row check">
         <span class="lbl">On the main screen</span>
-        <button class="toggle" type="button" data-breath-where="stage" aria-pressed="false">OFF</button>
+        <button class="toggle" type="button" data-breath-where="stage" aria-pressed="true">ON</button>
       </div>
       <div class="setting-row check">
         <span class="lbl">Over the flashes</span>
@@ -4349,20 +4349,25 @@
   // every view of it (owner: "the breathing bar should be able to be paired
   // with flashing visuals"): its own popup, a lane on the main screen, and a
   // layer over the flashes, wherever they run.
-  const BREATH_WHERE_KEY = 'phi_resonance_breath_where';
+  // The lane on the main screen is on by default (owner: "we should also have
+  // the breathing on the main screen by default"). The key is v2 because a
+  // choice saved under the old default (off) should start over once.
+  const BREATH_WHERE_KEY = 'phi_resonance_breath_where_v2';
 
   state.breath = {
     playing: false,
     raf: 0,
     t0: 0,           // timestamp (ms) of the current breath's start
     rate: 6.0,       // breaths per minute
-    onStage: false,  // shown on the main screen
+    onStage: true,   // shown on the main screen
     onFlash: false   // shown over the flashes
   };
   try {
-    const saved = JSON.parse(localStorage.getItem(BREATH_WHERE_KEY) || '{}');
-    state.breath.onStage = !!saved.stage;
-    state.breath.onFlash = !!saved.flash;
+    const saved = JSON.parse(localStorage.getItem(BREATH_WHERE_KEY) || 'null');
+    if (saved) {
+      state.breath.onStage = !!saved.stage;
+      state.breath.onFlash = !!saved.flash;
+    }
   } catch (e) {}
 
   const breathPlay = $('breathPlay');
