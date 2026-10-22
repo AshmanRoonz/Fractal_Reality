@@ -3,7 +3,7 @@
 ```
 Created: 2026-07-26
 Last updated: 2026-10-22
-Version: 1.1
+Version: 1.2
 ```
 
 Companion to `protecting_the_lie_thesis.md`. This log records what was verified by web search on 2026-07-26, what was found that changes the thesis, and what remains unverified. Verification here means: bibliographic details confirmed against publisher pages, journal databases, or author archives via web search. It does not mean the full texts were read; full-text reading remains on the pre-submission checklist.
@@ -116,9 +116,27 @@ Run to answer an external review (Kimi) that asked the paper to engage the canon
 
 Still unverified for this paper: Lewis (1971), cited through Tangney et al. (2007) and marked so in the reference list.
 
+## 8. Verification for Dr. Priyanka's review (2026-10-22): preprint v1.2 and paper v1.2
+
+Her three suggested sources and the sources for the overvalued-idea section, checked against Crossref, OpenAlex, Europe PMC/PubMed, publisher pages, OSF, and the Internet Archive. ScienceDirect and SSRN returned CAPTCHA pages, which were not bypassed; abstracts were paraphrased.
+
+**The finding that changes her advice:** Stern et al. (2025) is a null result. She suggested it as a stronger evidence base for the ego-threat claims; it found no compelling evidence that narcissism moderates stress reactivity under social-evaluative threat, and the authors read that as questioning "fragile self" accounts. Both papers now cite it as a null that rules out a generic-hypersensitivity reading and motivates claim-specific threat.
+
+| Reference | Status | Notes |
+|---|---|---|
+| Zajenkowski, Bąk, Zeigler-Hill, Górniak, Wojciechowski & Stefanowicz (2025), J. Research in Personality, 119, 104670 | VERIFIED, description narrowed | DOI 10.1016/j.jrp.2025.104670 (preregistration [osf.io/f6apu](https://osf.io/f6apu)). Two studies (N = 219, 278); three-factor narcissism vs Comprehensive Intellectual Humility Scale, controlling HEXACO and intelligence. Antagonistic and neurotic narcissism strongly negative with independence of intellect and ego; antagonistic also lower respect for others' views; agentic modestly positive with openness and respect; all facets with more intellectual overconfidence. Not uniformly negative; correlational; no revision behavior observed. ([Crossref](https://api.crossref.org/works/10.1016/j.jrp.2025.104670)) |
+| Stern, Otte, Wingenfeld, Streit, Kumsta, Deuter & Dufner (2025), SPPS, 16(8), 942-952 | VERIFIED, NULL | DOI 10.1177/19485506251313838; preregistered (osf.io/exk7v), open data. 161 healthy men, TSST vs control; self-report, cortisol, BP, HR; NARQ, HSNS, NPI-13. TSST worked; no compelling evidence any narcissism facet moderated reactivity. ([SAGE](https://journals.sagepub.com/doi/10.1177/19485506251313838)) |
+| Ward (2026), Deviant Behavior, advance online | VERIFIED, framing only | DOI 10.1080/01639625.2026.2632679. Single author; PRISMA-aligned; 2010-2025 prioritized; "everyday narcissism" as a self-regulatory system sustained by validation seeking, entitlement, and status preservation. No study count found; the flow diagram is described in the future tense. Cited in the preprint for framing only. ([T&F](https://www.tandfonline.com/doi/full/10.1080/01639625.2026.2632679)) |
+| Wernicke, *Grundriss der Psychiatrie* | CORRECTED | First edition 1900 (Thieme), which already uses "überwerthige Ideen"; 1906 is the posthumous 2nd edition. Rahman et al. (2019) date first use to 1892 (not retrieved). Cited as 1900 (2nd ed. 1906). ([archive.org](https://archive.org/details/grundrissderpsyc00wern)) |
+| McKenna (1984), Br. J. Psychiatry, 145(6), 579-585 | VERIFIED, wording limited | DOI 10.1192/bjp.145.6.579. Only the abstract's wording is used: solitary, abnormal belief, neither delusional nor obsessional, dominating the person's life. "Strong affect" and "ego-syntonic" were dropped (not in the abstract; full text not reached). |
+| Veale (2002), Behav. Res. Ther., 40(4), 383-400 | VERIFIED, wording limited | DOI 10.1016/S0005-7967(01)00016-X. Overvalued ideas as rigidly held idealized values that come to define the self. The BDD and anorexia examples were dropped pending a check of the PDF. |
+| Rahman, Resnick & Harry (2016), JAAPL, 44(1), 28-35 | CORRECTED (year and paper) | The paper that coins "extreme overvalued belief." The 2019 JAAPL paper is Rahman, Meloy & Bauer; the 2020 paper is a validation study (kappa = .91). ([PubMed](https://pubmed.ncbi.nlm.nih.gov/26944741)) |
+| Leary et al. (2017), PSPB, 43(6), 793-813 | VERIFIED | DOI 10.1177/0146167217697695. General Intellectual Humility Scale; Study 4 links intellectual humility to sensitivity to argument strength. |
+
 ---
 
 ## Revision history
 
+- 2026-10-22 v1.2: section 8 added: receipts for Dr. Priyanka's three suggested sources and the overvalued-idea sources (preprint v1.2, paper v1.2); Stern et al. (2025) recorded as a null, contrary to the review's description; Wernicke and Rahman citations corrected.
 - 2026-10-22 v1.1: section 7 added: receipts for `docs/circumpunct_theory_of_narcissism.html` (three parallel passes, 34 references; corrections applied to the paper: Talwar & Lee wording, Jones & Paulhus trait findings, Augustine's definition, Tangney quotation, Crocker & Park split, Crowe et al. for the three-factor model, Humphreys and Mackintosh for the PREE); Jones & Paulhus (2017) flagged as support for the thesis's §3.6 dissociation; Kernberg and Kohut now verified.
 - 2026-07-26 v1.0: initial. Thirteen core citations verified; Thomaes et al. (2009) found and flagged as the row 5 challenge; DARVO post-2020 line located (Harsey & Freyd 2023, no sequence-structure study found); preliminary novelty check passed with the assembly-not-parts caution.
