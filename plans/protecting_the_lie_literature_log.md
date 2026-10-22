@@ -2,8 +2,8 @@
 
 ```
 Created: 2026-07-26
-Last updated: 2026-07-26
-Version: 1.0
+Last updated: 2026-10-22
+Version: 1.1
 ```
 
 Companion to `protecting_the_lie_thesis.md`. This log records what was verified by web search on 2026-07-26, what was found that changes the thesis, and what remains unverified. Verification here means: bibliographic details confirmed against publisher pages, journal databases, or author archives via web search. It does not mean the full texts were read; full-text reading remains on the pre-submission checklist.
@@ -56,10 +56,69 @@ Freud (1914); Fenichel (1945) full text and page numbers for the supplies passag
 
 ## 6. Topics from the review's list not yet searched
 
-Contingent self-worth (Crocker line); self-concept clarity; excessive reassurance-seeking (Joiner line); mentalization and pathological narcissism; epistemic injustice. These feed Study 1's discriminant battery and Appendix C's philosophy pathway; next verification session.
+Contingent self-worth (Crocker line); self-concept clarity; excessive reassurance-seeking (Joiner line); mentalization and pathological narcissism; epistemic injustice. These feed Study 1's discriminant battery and Appendix C's philosophy pathway; next verification session. (2026-10-22: contingent self-worth and epistemic injustice are now covered in section 7.)
+
+## 7. Verification for `docs/circumpunct_theory_of_narcissism.html` (2026-10-22)
+
+The companion paper (the developmental and ethical account this thesis left aside in §3.7) was verified the same day it was written, by three parallel search passes against Europe PMC / PubMed records, publisher and Crossref DOI records, PMC full texts where open, the Akademie edition, and the SEP. Full texts were read for Talwar & Lee, Garrett et al., Abe et al., and Tangney et al.; the rest are abstract- or record-level. Corrections found are listed per row, and every one has been applied to the paper.
+
+### 7.1 Finding that bears on this thesis
+
+**Jones & Paulhus (2017)** supports the §3.6 dissociation (manipulator updates privately; narcissistic organization does not), which the thesis lists as untested. Across five studies (N = 1,750), all three dark-triad traits predicted cheating at low risk; psychopathy predicted cheating under serious punishment risk; Machiavellianism under high risk only when ego-depleted; cheating that required an intentional lie was predicted by psychopathy and Machiavellianism; and in Study 5 "those high in narcissism showed the highest levels of self-deceptive bias." This is support, not a test in the thesis's terms. Add to Chapter 2 and to the §3.6 remark.
+
+### 7.2 Empirical sources
+
+| Reference | Status | Notes |
+|---|---|---|
+| Talwar & Lee (2011), Child Development, 82(6), 1751-1758 | VERIFIED (full text) | DOI 10.1111/j.1467-8624.2011.01663.x. N = 84 (42 per school, ages 3-4), two private schools in one West African city. 80% peeked, no school difference; of peekers, 94% (punitive) vs 56% lied; of liars, 31% vs 70% revealed the toy's identity on follow-up. The paper does not use the phrase "semantic leakage." ([PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC3218233/)) |
+| Garrett, Lazzaro, Ariely & Sharot (2016), Nature Neuroscience, 19(12), 1727-1732 | VERIFIED (full text) | DOI 10.1038/nn.4426. Experiment 1: 55 adults, 25 scanned; Experiment 2: 25 behavioral. Escalation specific to self-serving dishonesty (other-serving did not escalate). Reduced amygdala sensitivity predicted escalation on the next decision. Within-task adaptation only. ([PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC5238933/)) |
+| Jones & Paulhus (2017), JPSP, 113(2), 329-342 | VERIFIED (abstract) | DOI 10.1037/pspp0000139. See 7.1. "Believing their own exaggerations" is our interpretation of "self-deceptive bias," labeled as such in the paper. ([Europe PMC](https://europepmc.org/article/MED/28253006)) |
+| Abe, Greene & Kiehl (2018), SCAN, 13(8), 797-807 | VERIFIED (full text) | DOI 10.1093/scan/nsy050. 67 incarcerated men; psychopathy did not predict frequency of dishonesty; higher psychopathy predicted reduced ACC activity during dishonest decisions (neural analyses on the 43 classified dishonest). ([PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC6123520/)) |
+| Brummelman et al. (2015), PNAS, 112(12), 3659-3662 | VERIFIED (abstract) | DOI 10.1073/pnas.1420870112. 565 children, ages 7-11 at baseline, four 6-month waves, cross-lagged panel models (correlational). Narcissism predicted by overvaluation, not lack of warmth; self-esteem predicted by warmth. ([Europe PMC](https://europepmc.org/article/MED/25775577), [OSU release](https://news.osu.edu/how-parents-may-help-create-their-own-little-narcissists/)) |
+| Weinberg & Ronningstam (2022), Focus, 20(4), 368-377 | VERIFIED (abstract) | DOI 10.1176/appi.focus.20220052. "Multifactorial etiology"; mechanisms in self-esteem dysregulation, emotion dysregulation, cognitive style, interpersonal relations, empathy. ([PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC10187400/)) |
+| Paulhus (1998), JPSP, 74(5), 1197-1208 | VERIFIED (abstract) | DOI 10.1037/0022-3514.74.5.1197. Self-enhancement indexed partly by narcissism; rated positively after meeting 1, negatively after meeting 7. ([Europe PMC](https://europepmc.org/article/MED/9599439)) |
+| Tangney, Stuewig & Mashek (2007), Annual Review of Psychology, 58, 345-372 | VERIFIED (full text) | DOI 10.1146/annurev.psych.56.091103.070145. Shame = negative evaluation of the global self; guilt = of a specific behavior (following Lewis 1971). "I am bad / I did a bad thing" is our paraphrase, not quoted as theirs. ([PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC3083636/)) |
+| Sherman & Cohen (2006), Advances in Experimental Social Psychology, 38, 183-242 | VERIFIED | DOI 10.1016/S0065-2601(06)38004-5. ([Crossref](https://api.crossref.org/works/10.1016/S0065-2601(06)38004-5)) |
+| Thomaes et al. (2009), Psychological Science, 20(12), 1536-1542 | VERIFIED (re-checked) | DOI 10.1111/j.1467-9280.2009.02478.x. N = 405, M age 13.9; effect "for a period of a school week." |
+
+### 7.3 Theory and ethics sources
+
+| Reference | Status | Notes |
+|---|---|---|
+| Bandura (1999), PSPR, 3(3), 193-209 | VERIFIED | DOI 10.1207/s15327957pspr0303_3. Mechanisms in four sets (recasting conduct; disowning agency; minimizing effects; the victims), plus subdivision of functions. ([PubMed](https://pubmed.ncbi.nlm.nih.gov/15661671/)) |
+| Mele (1997), BBS, 20(1), 91-102; Mele (2001), *Self-Deception Unmasked*, Princeton UP | VERIFIED | DOI 10.1017/S0140525X97000034. Biased treatment of evidence jointly sufficient; neither intention nor dual belief required. The 2001 book is the developed statement. ([Cambridge](https://www.cambridge.org/core/product/identifier/S0140525X97000034/type/journal_article), [SEP](https://plato.stanford.edu/entries/self-deception/)) |
+| Kant (1797), "Über ein vermeintes Recht aus Menschenliebe zu lügen" | VERIFIED | Berlinische Blätter 1 (1797); AA 8:423-430 (text 8:425-430). Constant's premise (duty of truth owed only to those with a right to it) is answered at 8:425. ([korpora.org](https://korpora.org/kant/aa08/425.html)) |
+| Constant (1797), *Des réactions politiques* | VERIFIED (via Kant and SEP) | The "German philosopher" passage; no one has a right to a truth that harms others. |
+| Bok (1978), *Lying*, Pantheon | VERIFIED | Principle of veracity; unjustified when a truthful alternative exists; publicity test; chapters on crisis and enemies; distrust of easy crisis appeals (the paper now says so). ([SEP](https://plato.stanford.edu/entries/lying-definition/)) |
+| Augustine, *Enchiridion* 18; *De mendacio*; *Contra mendacium* 26 | CORRECTED | "Every lie is a sin, though some graver" is Enchiridion 18. His definition varies across works; whether intent to deceive is required is disputed (Mahon, SEP). The paper cites Enchiridion 18 and leaves the definition to Mahon. ([New Advent](https://www.newadvent.org/fathers/1302.htm)) |
+| Mahon (2015), "The Definition of Lying and Deception," SEP | VERIFIED | Revision 2015. ([SEP](https://plato.stanford.edu/entries/lying-definition/)) |
+| Freyd (1997), Feminism & Psychology, 7(1), 22-32 | VERIFIED (re-checked) | Publisher title: "II. Violations of power, adaptive blindness and betrayal trauma theory." |
+| Lewis (1971), *Shame and Guilt in Neurosis* | CITED VIA TANGNEY | Primary not checked; credited as the source of the distinction through Tangney et al. (2007). |
+
+### 7.4 Canonical narcissism sources (third pass)
+
+Run to answer an external review (Kimi) that asked the paper to engage the canonical construct literature.
+
+| Reference | Status | Notes |
+|---|---|---|
+| Hepper, Hart & Sedikides (2014), PSPB, 40(9), 1079-1091 | VERIFIED, wording narrowed | DOI 10.1177/0146167214535812. Three studies; the low-empathy link runs through *maladaptive* NPI facets (entitlement, exploitativeness, exhibitionism); perspective-taking attenuated it in self-report (Study 2) and heart rate (Study 3). "Not inability" is the authors' conclusion. ([Europe PMC](https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=EXT_ID:24878930%20AND%20SRC:MED&resultType=core&format=json)) |
+| Back et al. (2013), JPSP, 105(6), 1013-1037 | VERIFIED | DOI 10.1037/a0034431. Admiration (assertive self-enhancement) and rivalry (antagonistic self-protection), both serving "maintaining a grandiose self." ([lab page](https://www.uni-muenster.de/PsyIFP/AEBack/research/topics/narcissism.html)) |
+| Crocker & Wolfe (2001), Psychological Review, 108(3), 593-623 | CORRECTED | DOI 10.1037/0033-295X.108.3.593. Self-esteem rises and falls with outcomes in contingent domains. "Self-validation goals" is not in this abstract; it is Crocker & Park (2004), Psychological Bulletin, 130(3), 392-414, DOI 10.1037/0033-2909.130.3.392 (Crossref-checked). Paper now cites both. |
+| Miller, Lynam, Hyatt & Campbell (2017), Annu. Rev. Clin. Psychol., 13, 291-315 | CORRECTED | DOI 10.1146/annurev-clinpsy-032816-045244. Abstract supports the grandiose/vulnerable distinction only; "antagonism as core" not confirmed (paywalled). The three-factor model is cited to Crowe, Lynam, Campbell & Miller (2019), J. Pers., 87(6), 1151-1169, DOI 10.1111/jopy.12464 (Crossref-checked title: "Exploring the structure of narcissism: Toward an integrated solution"). |
+| Morf & Rhodewalt (2001), Psychological Inquiry, 12(4), 177-196 | VERIFIED | DOI 10.1207/S15327965PLI1204_1. "Grandiose yet vulnerable" self; chronic goal of external self-affirmation. |
+| Raskin & Terry (1988), JPSP, 54(5), 890-902 | VERIFIED (re-checked) | DOI 10.1037/0022-3514.54.5.890. N = 1,018, seven components. "One of the most widely used," not "most widely used." |
+| Kernberg (1975); Kohut (1971) | VERIFIED (records + secondary) | Jason Aronson; International Universities Press. Kernberg: cold, rejecting parents, defensive grandiose self (Levy et al. 2007). Kohut: parental empathic failures to meet selfobject needs, mirroring *and* idealization. Moves these two out of section 5's unverified list. |
+| Brummelman et al. (2015) framing | VERIFIED | The abstract frames psychoanalytic (lack of warmth) vs social learning (overvaluation). Millon as the social-learning source is inferred from the reference list only. |
+| Fricker (2007), OUP | VERIFIED | DOI 10.1093/acprof:oso/9780198237907.001.0001. Testimonial injustice as identity-prejudicial credibility deficit (SEP). |
+| Constant (1797) via Kant AA 8:425 | VERIFIED | "Kein Mensch aber hat Recht auf eine Wahrheit, die anderen schadet." The murderer asks whether a friend has taken refuge in the house; "at the door" is a later label, removed from the paper. |
+| Partial reinforcement extinction effect | CORRECTED (source) | Ferster & Skinner (1957) not confirmed to state the PREE; paper cites Humphreys (1939), J. Exp. Psychol., 25(2), 141-158, DOI 10.1037/h0058138 (Crossref-checked), and Mackintosh (1974), Academic Press. |
+| Goffman (1959), Doubleday Anchor | VERIFIED | First published 1956 (Edinburgh). |
+
+Still unverified for this paper: Lewis (1971), cited through Tangney et al. (2007) and marked so in the reference list.
 
 ---
 
 ## Revision history
 
+- 2026-10-22 v1.1: section 7 added: receipts for `docs/circumpunct_theory_of_narcissism.html` (three parallel passes, 34 references; corrections applied to the paper: Talwar & Lee wording, Jones & Paulhus trait findings, Augustine's definition, Tangney quotation, Crocker & Park split, Crowe et al. for the three-factor model, Humphreys and Mackintosh for the PREE); Jones & Paulhus (2017) flagged as support for the thesis's §3.6 dissociation; Kernberg and Kohut now verified.
 - 2026-07-26 v1.0: initial. Thirteen core citations verified; Thomaes et al. (2009) found and flagged as the row 5 challenge; DARVO post-2020 line located (Harsey & Freyd 2023, no sequence-structure study found); preliminary novelty check passed with the assembly-not-parts caution.
