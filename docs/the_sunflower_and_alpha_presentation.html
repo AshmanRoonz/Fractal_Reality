@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A Point Spiraling Out</title>
+<meta name="description" content="The sunflower as a circumpunct, the golden angle as the turn that never closes, and how the fine-structure constant sits beside it.">
+<meta name="created" content="2026-10-22">
+<meta name="last-updated" content="2026-10-22">
+<meta name="version" content="1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Cinzel:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+    --bg-deep: #0a0a0f;
+    --bg-surface: #12121a;
+    --gold-primary: #d4a853;
+    --gold-light: #f0d78c;
+    --gold-dim: #8a6d3a;
+    --text-primary: #f2efe8;
+    --text-secondary: #c9c4b8;
+    --text-dim: #8f897b;
+    --border-subtle: rgba(212, 168, 83, 0.18);
+    --glow-gold: rgba(212, 168, 83, 0.35);
+    --blue-cool: #6a93b8;
+    --green-soft: #8ab07a;
+    --red-warn: #c97a6d;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { height: 100%; overflow: hidden; }
+
+body {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    background: var(--bg-deep);
+    color: var(--text-primary);
+    font-size: 20px;
+    line-height: 1.55;
+}
+
+.deck { position: relative; width: 100vw; height: 100vh; height: 100svh; overflow: hidden; }
+
+.slide {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    padding: 5vh 6vw 88px;
+    overflow-y: auto;
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+    pointer-events: none;
+    text-align: center;
+}
+.slide.active { opacity: 1; transform: translateY(0); pointer-events: auto; }
+.slide-inner { margin: auto; max-width: 960px; width: 100%; }
+
+h1.title {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(2.1rem, 6vw, 4.2rem);
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    color: var(--gold-light);
+    text-shadow: 0 0 30px var(--glow-gold);
+    line-height: 1.2;
+    margin-bottom: 1rem;
+}
+.subtitle { font-size: clamp(1.15rem, 2.2vw, 1.5rem); color: var(--text-secondary); font-style: italic; }
+.byline {
+    margin-top: 2rem;
+    font-family: 'Cinzel', serif;
+    font-size: 0.85rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+}
+.meta-line { margin-top: 0.6rem; font-family: Consolas, Menlo, monospace; font-size: 0.72rem; color: var(--text-dim); letter-spacing: 0.04em; }
+
+h2 {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(1.45rem, 3.2vw, 2.4rem);
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    color: var(--gold-light);
+    margin-bottom: 1.4rem;
+    line-height: 1.3;
+}
+.kicker {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(0.8rem, 1.4vw, 1rem);
+    color: var(--gold-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    margin-bottom: 0.9rem;
+}
+.kicker.staged { color: var(--red-warn); }
+
+.body-text { font-size: clamp(1.1rem, 1.8vw, 1.38rem); line-height: 1.65; margin: 0 auto 1rem; max-width: 760px; }
+.body-text.dim { color: var(--text-secondary); }
+.small { font-size: clamp(0.92rem, 1.3vw, 1.05rem); color: var(--text-dim); max-width: 760px; margin: 0.8rem auto 0; line-height: 1.55; }
+.big-line {
+    font-size: clamp(1.7rem, 4.4vw, 3.1rem);
+    line-height: 1.3;
+    color: var(--gold-light);
+    font-style: italic;
+    margin: 1.2rem 0;
+}
+.formula {
+    font-size: clamp(1.4rem, 3.4vw, 2.3rem);
+    color: var(--gold-light);
+    letter-spacing: 0.03em;
+    margin: 1.2rem 0;
+}
+.divider { width: 64px; height: 1px; background: var(--gold-dim); margin: 1.6rem auto; }
+
+.hero-canvas { width: min(46vh, 70vw); aspect-ratio: 1; display: block; margin: 0 auto 1.4rem; }
+
+/* station chips */
+.stations { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.8rem; margin: 1.6rem auto; max-width: 820px; }
+.stations.octave { grid-template-columns: repeat(8, 1fr); gap: 0.5rem; }
+.chip {
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
+    padding: 0.9rem 0.4rem 0.7rem;
+    background: var(--bg-surface);
+}
+.chip .g { font-size: clamp(1.6rem, 3.4vw, 2.3rem); color: var(--gold-light); line-height: 1.1; }
+.chip .d { font-family: Consolas, Menlo, monospace; font-size: 0.72rem; color: var(--gold-dim); margin-top: 0.3rem; }
+.chip .n { font-size: 1rem; color: var(--text-secondary); margin-top: 0.15rem; }
+.chip.half { background: transparent; border-style: dashed; }
+.chip.half .g { color: var(--gold-primary); }
+
+/* two-column layout */
+.two-col { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: 2.2rem; align-items: center; text-align: left; }
+.plant { width: 100%; max-width: 300px; display: block; margin: 0 auto; }
+.walk { list-style: none; }
+.walk li { display: grid; grid-template-columns: 2.4rem 1fr; gap: 0.6rem; padding: 0.42rem 0; border-bottom: 1px solid var(--border-subtle); font-size: clamp(1rem, 1.5vw, 1.15rem); color: var(--text-secondary); }
+.walk li:last-child { border-bottom: 0; }
+.walk .g { color: var(--gold-light); font-size: 1.35rem; text-align: center; line-height: 1.2; }
+.walk b { color: var(--text-primary); font-weight: 600; }
+
+/* canvases in a row */
+.heads { display: flex; justify-content: center; gap: 1.6rem; flex-wrap: wrap; margin: 1.2rem auto; }
+.head { width: min(300px, 40vw); }
+.heads.three .head { width: min(230px, 27vw); }
+.head canvas { width: 100%; aspect-ratio: 1; display: block; }
+.head .cap { font-size: clamp(0.9rem, 1.4vw, 1.05rem); color: var(--text-secondary); margin-top: 0.4rem; }
+.head .cap b { color: var(--gold-light); font-weight: 500; }
+
+/* widget */
+.widget { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 2rem; align-items: center; text-align: left; }
+.widget canvas { width: 100%; max-width: 440px; aspect-ratio: 1; display: block; margin: 0 auto; }
+.controls label { display: block; font-size: 0.95rem; color: var(--text-dim); margin-bottom: 0.3rem; font-family: 'Cinzel', serif; letter-spacing: 0.08em; text-transform: uppercase; }
+.dial-row { display: flex; gap: 0.6rem; align-items: center; margin-bottom: 0.9rem; }
+.dial-row input[type=range] { flex: 1; accent-color: var(--gold-primary); }
+.dial-row input[type=number] {
+    width: 7.2rem; background: var(--bg-surface); color: var(--gold-light);
+    border: 1px solid var(--border-subtle); border-radius: 6px; padding: 0.3rem 0.4rem;
+    font-family: Consolas, Menlo, monospace; font-size: 0.95rem;
+}
+.presets { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.9rem; }
+.btn {
+    background: var(--bg-surface); color: var(--text-secondary);
+    border: 1px solid var(--border-subtle); border-radius: 999px;
+    padding: 0.28rem 0.75rem; font-family: 'Cormorant Garamond', serif; font-size: 1rem; cursor: pointer;
+}
+.btn:hover { border-color: var(--gold-dim); color: var(--gold-light); }
+.btn.on { border-color: var(--gold-primary); color: var(--gold-light); }
+.toggle { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; font-size: 1.05rem; color: var(--text-secondary); cursor: pointer; }
+.toggle input { accent-color: var(--gold-primary); width: 1.05rem; height: 1.05rem; }
+.readout { border-left: 2px solid var(--gold-dim); padding: 0.6rem 0.9rem; background: rgba(212, 168, 83, 0.05); }
+.readout .row { font-size: 1.02rem; color: var(--text-secondary); }
+.readout .mono { font-family: Consolas, Menlo, monospace; font-size: 0.86rem; color: var(--gold-dim); }
+.readout .verdict { font-size: 1.15rem; color: var(--gold-light); margin-top: 0.35rem; }
+
+/* tables */
+.table-wrap { overflow-x: auto; margin: 1.2rem auto; max-width: 820px; }
+table { width: 100%; border-collapse: collapse; text-align: left; font-size: clamp(0.98rem, 1.5vw, 1.15rem); }
+th, td { padding: 0.55rem 0.7rem; border-bottom: 1px solid var(--border-subtle); vertical-align: top; }
+th { font-family: 'Cinzel', serif; font-weight: 500; font-size: 0.82rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold-dim); }
+td.num { font-family: Consolas, Menlo, monospace; font-size: 0.92em; color: var(--gold-light); white-space: nowrap; }
+td.who { color: var(--text-dim); font-size: 0.92em; }
+
+/* three columns */
+.cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.2rem; text-align: left; margin-top: 1.2rem; }
+.col { border: 1px solid var(--border-subtle); border-radius: 8px; padding: 1rem 1.1rem; background: var(--bg-surface); }
+.col h3 { font-family: 'Cinzel', serif; font-weight: 500; font-size: 0.86rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold-primary); margin-bottom: 0.6rem; }
+.col.against h3 { color: var(--red-warn); }
+.col ul { list-style: none; }
+.col li { font-size: clamp(0.95rem, 1.35vw, 1.06rem); color: var(--text-secondary); padding: 0.32rem 0; border-bottom: 1px solid rgba(212, 168, 83, 0.08); line-height: 1.45; }
+.col li:last-child { border-bottom: 0; }
+
+.number-big { font-family: Consolas, Menlo, monospace; font-size: clamp(1.6rem, 4.6vw, 3rem); color: var(--gold-light); letter-spacing: 0.02em; margin: 0.8rem 0 1.2rem; }
+
+.sources { list-style: none; text-align: left; max-width: 820px; margin: 0 auto; }
+.sources li { font-size: clamp(0.92rem, 1.35vw, 1.05rem); color: var(--text-secondary); padding: 0.38rem 0; border-bottom: 1px solid var(--border-subtle); }
+.sources a { color: var(--gold-primary); text-decoration: none; }
+.sources a:hover { color: var(--gold-light); }
+.sources code, .small code { font-family: Consolas, Menlo, monospace; font-size: 0.85em; color: var(--gold-dim); }
+.small a { color: var(--gold-primary); }
+
+/* nav */
+.hint { position: fixed; top: 14px; right: 18px; font-size: 0.8rem; color: var(--text-dim); letter-spacing: 0.1em; z-index: 10; }
+.nav-controls {
+    position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%);
+    display: flex; align-items: center; gap: 0.8rem; z-index: 10;
+    background: rgba(10, 10, 15, 0.82); padding: 0.4rem 0.9rem; border-radius: 999px; border: 1px solid var(--border-subtle);
+}
+.nav-btn { background: none; border: 0; color: var(--gold-primary); font-size: 1.6rem; line-height: 1; cursor: pointer; padding: 0 0.3rem; }
+.nav-btn:disabled { color: var(--text-dim); opacity: 0.4; cursor: default; }
+.dots { display: flex; gap: 6px; }
+.dot { width: 7px; height: 7px; border-radius: 50%; background: var(--gold-dim); opacity: 0.45; cursor: pointer; }
+.dot.active { background: var(--gold-light); opacity: 1; }
+.slide-counter { font-family: Consolas, Menlo, monospace; font-size: 0.78rem; color: var(--text-dim); min-width: 3.4rem; text-align: center; }
+
+@media (max-width: 760px) {
+    body { font-size: 18px; }
+    .slide { padding: 56px 16px 84px; }
+    .stations { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0.35rem; }
+    .stations.octave { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .chip { padding: 0.6rem 0.2rem 0.5rem; }
+    .chip .n { font-size: 0.82rem; }
+    .two-col, .widget { grid-template-columns: 1fr; gap: 1.2rem; }
+    .plant { max-width: 220px; }
+    .cols { grid-template-columns: 1fr; }
+    .head { width: min(300px, 41vw); }
+    .heads.three .head { width: min(200px, 29vw); }
+    .heads { gap: 0.8rem; }
+    .dots { display: none; }
+    .hint { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .slide { transition: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="hint">← → or Space</div>
+
+<div class="deck" id="deck">
+
+<!-- 1. Title -->
+<section class="slide active">
+    <div class="slide-inner">
+        <canvas class="hero-canvas" id="hero" aria-label="A sunflower head growing seed by seed at the golden angle"></canvas>
+        <h1 class="title">A Point Spiraling Out</h1>
+        <p class="subtitle">The sunflower, the circumpunct, and α</p>
+        <div class="byline">Ashman Roonz · Circumpunct Framework</div>
+        <div class="meta-line">Created 2026-10-22 · Last updated 2026-10-22 · Version 1.0</div>
+    </div>
+</section>
+
+<!-- 2. The circumpunct -->
+<section class="slide">
+    <div class="slide-inner">
+        <div class="kicker">The circumpunct</div>
+        <h2>⊙ = Φ(•, ○)</h2>
+        <p class="body-text">Every whole has the same anatomy: a center, a line that holds, a boundary that closes, and a field inside it.</p>
+        <div class="stations">
+            <div class="chip"><div class="g">•</div><div class="d">0D</div><div class="n">point</div></div>
+            <div class="chip"><div class="g">—</div><div class="d">1D</div><div class="n">line</div></div>
+            <div class="chip"><div class="g">○</div><div class="d">2D</div><div class="n">boundary</div></div>
+            <div class="chip"><div class="g">Φ</div><div class="d">3D</div><div class="n">field</div></div>
+            <div class="chip"><div class="g">⊙</div><div class="d">all</div><div class="n">whole</div></div>
+        </div>
+        <p class="body-text dim">Conservation of traversal: 0 + 1 + 2 = 3. Point, line and boundary add up to the field.</p>
+    </div>
+</section>
+
+<!-- 3. The octave -->
+<section class="slide">
+    <div class="slide-inner">
+        <div class="kicker">The octave</div>
+        <h2>Structure on the whole steps, process on the half steps</h2>
+        <div class="stations octave">
+            <div class="chip"><div class="g">•</div><div class="d">0</div></div>
+            <div class="chip half"><div class="g">⊛</div><div class="d">0.5 · i¹</div></div>
+            <div class="chip"><div class="g">—</div><div class="d">1</div></div>
+            <div class="chip half"><div class="g">⎇</div><div class="d">1.5 · i²</div></div>
+            <div class="chip"><div class="g">○</div><div class="d">2</div></div>
+            <div class="chip half"><div class="g">✹</div><div class="d">2.5 · i³</div></div>
+            <div class="chip"><div class="g">Φ</div><div class="d">3</div></div>
+            <div class="chip half"><div class="g">⟳</div><div class="d">3.5 · i⁰</div></div>
+        </div>
+        <p class="body-text">Four quarter-turns of i, one on each half step. At 3.5D the closed whole becomes the point of the next scale: <span style="color:var(--gold-light)">3.5D = 0D′</span>.</p>
+        <p class="small">The reading of 0.5D as the first outward stroke (emergence) is staged for countersign (2026-10-15); the glyphs and i-strokes above are unchanged either way.</p>
+    </div>
+</section>
+
+<!-- 4. The plant -->
+<section class="slide">
+    <div class="slide-inner">
+        <div class="kicker">A sunflower is a circumpunct</div>
+        <h2>Seed, stem, flower, seed</h2>
+        <div class="two-col">
+            <svg class="plant" viewBox="0 0 300 520" role="img" aria-label="A sunflower plant with the circumpunct stations marked: seed, root, stem, leaves, rim, disc and seeds">
+                <rect x="20" y="420" width="260" height="100" fill="#1a140d" opacity="0.7"/>
+                <line x1="20" y1="420" x2="280" y2="420" stroke="#5a4630" stroke-width="1.5"/>
+                <path d="M150 438 C 152 460, 146 482, 151 508" stroke="#9a8a6a" stroke-width="2.4" fill="none"/>
+                <path d="M150 462 C 138 470, 130 480, 122 494" stroke="#9a8a6a" stroke-width="1.4" fill="none"/>
+                <path d="M151 480 C 163 488, 171 496, 178 508" stroke="#9a8a6a" stroke-width="1.4" fill="none"/>
+                <path d="M150 158 C 144 250, 158 330, 150 424" stroke="#8ab07a" stroke-width="5" fill="none" stroke-linecap="round"/>
+                <path d="M148 232 C 118 205, 82 212, 60 236 C 88 252, 124 250, 148 232 Z" fill="#6f9460"/>
+                <path d="M153 285 C 184 260, 220 266, 242 290 C 214 306, 178 304, 153 285 Z" fill="#6f9460"/>
+                <path d="M151 340 C 122 318, 90 324, 70 346 C 96 360, 128 358, 151 340 Z" fill="#6f9460"/>
+                <path d="M152 384 C 178 366, 206 370, 224 388 C 202 400, 174 400, 152 384 Z" fill="#6f9460"/>
+                <g id="petals"></g>
+                <circle cx="150" cy="95" r="58" fill="#2a1f12"/>
+                <g id="disc"></g>
+                <ellipse cx="150" cy="429" rx="6.5" ry="9.5" fill="#d4a853"/>
+                <g font-family="Cormorant Garamond, Georgia, serif" font-size="19" fill="#f0d78c" text-anchor="middle">
+                    <line x1="226" y1="52" x2="178" y2="78" stroke="#8a6d3a" stroke-width="1"/>
+                    <circle cx="238" cy="46" r="14" fill="#12121a" stroke="#8a6d3a"/><text x="238" y="52">⟳</text>
+                    <line x1="254" y1="104" x2="170" y2="98" stroke="#8a6d3a" stroke-width="1"/>
+                    <circle cx="266" cy="104" r="14" fill="#12121a" stroke="#8a6d3a"/><text x="266" y="110">Φ</text>
+                    <line x1="236" y1="160" x2="206" y2="140" stroke="#8a6d3a" stroke-width="1"/>
+                    <circle cx="246" cy="168" r="14" fill="#12121a" stroke="#8a6d3a"/><text x="246" y="174">○</text>
+                    <line x1="48" y1="214" x2="64" y2="232" stroke="#8a6d3a" stroke-width="1"/>
+                    <circle cx="40" cy="204" r="14" fill="#12121a" stroke="#8a6d3a"/><text x="40" y="210">⎇</text>
+                    <line x1="190" y1="320" x2="157" y2="320" stroke="#8a6d3a" stroke-width="1"/>
+                    <circle cx="204" cy="320" r="14" fill="#12121a" stroke="#8a6d3a"/><text x="204" y="326">—</text>
+                    <line x1="196" y1="440" x2="158" y2="431" stroke="#8a6d3a" stroke-width="1"/>
+                    <circle cx="210" cy="444" r="14" fill="#12121a" stroke="#8a6d3a"/><text x="210" y="450">•</text>
+                    <line x1="96" y1="478" x2="146" y2="474" stroke="#8a6d3a" stroke-width="1"/>
+                    <circle cx="82" cy="478" r="14" fill="#12121a" stroke="#8a6d3a"/><text x="82" y="483" font-size="12" font-family="Consolas, monospace">0.5</text>
+                </g>
+            </svg>
+            <ul class="walk">
+                <li><span class="g">•</span><span><b>Seed, 0D.</b> The whole plant held at no size at all.</span></li>
+                <li><span class="g" style="font-size:0.95rem;font-family:Consolas,monospace">0.5</span><span><b>Root first.</b> In germination the root comes out before the shoot: one direction, then the other.</span></li>
+                <li><span class="g">—</span><span><b>Stem, 1D.</b> The line that has to hold.</span></li>
+                <li><span class="g">⎇</span><span><b>Leaves, 1.5D.</b> The line branching, set around the stem in a spiral.</span></li>
+                <li><span class="g">○</span><span><b>Rim, 2D.</b> The ray florets: the body the world sees. Pollinators read it.</span></li>
+                <li><span class="g">Φ</span><span><b>Disc, 3D.</b> The interior, where the seeds fill in.</span></li>
+                <li><span class="g">⟳</span><span><b>Seeds, 3.5D = 0D′.</b> The field makes new points, each the seed of a next plant.</span></li>
+            </ul>
+        </div>
+        <p class="small">Mapping: Ashman Roonz, 2026-10-22. A reading, not canon; the 0.5D gloss follows the staged 0.5D correction.</p>
+    </div>
+</section>
+
+<!-- 5. Wholes within wholes -->
+<section class="slide">
+    <div class="slide-inner">
+        <div class="kicker">Wholes within wholes</div>
+        <h2>The head is not one flower</h2>
+        <p class="body-text">A sunflower head is a capitulum: hundreds to thousands of complete florets, each a flower in its own right. Ray florets make the rim; disc florets fill the interior.</p>
+        <p class="big-line">⊙λ ⊂ ⊙Λ</p>
+        <p class="body-text dim">Each disc floret becomes a seed, and each seed carries a whole plant. The head is a field full of points, each holding a whole: the Soul Array, •∞, in miniature.</p>
+        <p class="small">The head is laid down from the rim inward, so the youngest florets sit at the center and the oldest at the edge: the present in the middle, the past around it.</p>
+    </div>
+</section>
+
+<!-- 6. The rule -->
+<section class="slide">
+    <div class="slide-inner">
+        <div class="kicker">One rule</div>
+        <h2>Turn, then step out</h2>
+        <p class="formula">θₙ = n · d &nbsp;&nbsp;&nbsp; rₙ = c √n</p>
+        <p class="body-text">Each new seed sits one fixed turn <i>d</i> past the last, and a little farther out, so that every seed gets the same room (Vogel, 1979).</p>
+        <p class="big-line">Everything depends on d.</p>
+        <p class="small">Botanists write the turn as α. It is <i>d</i> here, to keep α for physics.</p>
+    </div>
+</section>
+
+<!-- 7. The dial -->
+<section class="slide">
+    <div class="slide-inner">
+        <div class="kicker">Try it</div>
+        <h2>Turn the dial</h2>
+        <div class="widget">
+            <canvas id="dialCanvas" class="no-swipe" aria-label="Sunflower head drawn at the chosen turn"></canvas>
+            <div class="controls no-swipe">
+                <label for="dialRange">Turn per seed</label>
+                <div class="dial-row">
+                    <input type="range" id="dialRange" min="0" max="180" step="0.001" value="137.507764" aria-label="Turn per seed in degrees">
+                    <input type="number" id="dialNum" min="0" max="180" step="0.001" value="137.508" aria-label="Turn per seed, exact degrees">
+                </div>
+                <div class="presets" id="presets">
+                    <button class="btn" data-deg="90">90° · i</button>
+                    <button class="btn" data-deg="120">120°</button>
+                    <button class="btn" data-deg="alpha">137.036° · 1/α</button>
+                    <button class="btn" data-deg="spoke21">137.143° · 8/21</button>
+                    <button class="btn" data-deg="golden">137.508° · golden</button>
+                    <button class="btn" data-deg="golden1">golden + 1°</button>
+                </div>
+                <label class="toggle"><input type="checkbox" id="timeToggle" checked> Time on: each seed steps outward</label>
+                <div class="readout" aria-live="polite">
+                    <div class="row" id="rdAngle"></div>
+                    <div class="row mono" id="rdCf"></div>
+                    <div class="verdict" id="rdVerdict"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 8. i -->
+<section class="slide">
+    <div class="slide-inner">
+        <div class="kicker">Four turns</div>
+        <h2>90° is i</h2>
+        <div class="two-col">
+            <div class="head" style="width:100%;max-width:320px;margin:0 auto"><canvas id="iCanvas" aria-label="Twelve seeds at 90 degrees, numbered"></canvas></div>
+            <div>
+                <p class="body-text" style="margin-left:0">Seed <i>n</i> sits at iⁿ. Seed 1 is a quarter-turn on, seed 2 is opposite (i² = −1), seed 3 is i³, and seed 4 is home: <span style="color:var(--gold-light)">i⁴ = 1</span>.</p>
+                <p class="body-text dim" style="margin-left:0">The arms are the remainders mod 4. Seeds 0, 4 and 8 share an arm: the same phase, farther out each time. The note returns; the height climbs. That is the octave.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 9. If not for time -->
+<section class="slide">
+    <div class="slide-inner">
+        <div class="kicker">Ashman, 2026-10-22</div>
+        <h2>It would be a circle, if not for time</h2>
+        <div class="heads">
+            <div class="head"><canvas data-head="golden" data-time="0" aria-label="Golden angle with the radius frozen"></canvas><div class="cap"><b>golden angle, time stopped:</b> a circle</div></div>
+            <div class="head"><canvas data-head="90" data-time="0" aria-label="Ninety degrees with the radius frozen"></canvas><div class="cap"><b>90°, time stopped:</b> four points</div></div>
+        </div>
+        <p class="body-text">The radius is the clock. Stop it and every seed lands on one circle. Only a turn that never repeats draws the whole circle; i draws four points.</p>
+        <p class="body-text dim">Look straight down a helix and you see a circle. Time is the height.</p>
+        <p class="small">§4.11: time is scale. The staged 0.5D reading adds that time is one direction, a ray; a circle plus a one-way ray is a helix.</p>
+    </div>
+</section>
+
+<!-- 10. Close or fill -->
+<section class="slide">
+    <div class="slide-inner">
+        <div class="kicker">The trade</div>
+        <h2>Close, or fill</h2>
+        <div class="heads three">
+            <div class="head"><canvas data-head="90" data-n="600" aria-label="Ninety degrees"></canvas><div class="cap"><b>90° = i</b><br>closes after 4</div></div>
+            <div class="head"><canvas data-head="alpha" data-n="600" aria-label="One over alpha degrees"></canvas><div class="cap"><b>137.036° = 1/α</b><br>nearly closes after 21</div></div>
+            <div class="head"><canvas data-head="golden" data-n="600" aria-label="Golden angle"></canvas><div class="cap"><b>137.508°</b><br>never closes</div></div>
+        </div>
+        <p class="body-text">A turn that closes makes arms with empty lanes between them. A turn that never closes fills the disc. One turn cannot do both.</p>
+        <p class="small">In i's own terms the golden angle is i^(4/φ²) ≈ i^1.528: an irrational power of i, so it never lands on the tonic again.</p>
+    </div>
+</section>
+
+<!-- 11. alpha -->
+<section class="slide">
+    <div class="slide-inner">
+        <div class="kicker">α</div>
+        <h2>The fine-structure constant</h2>
+        <div class="number-big">1/α = 137.035999177</div>
+        <p class="body-text">The strength of the electromagnetic bond: how tightly light couples to charge. Measured, not derived (CODATA 2022).</p>
+        <p class="body-text dim">In the framework, α is the bond between the electron's aperture and the aperture of the greater whole it sits inside. It is small, so the part stays a part.</p>
+        <p class="small">α enters the framework as measured input to κ₀,₀. Nothing on the next slides changes that.</p>
+    </div>
+</section>
+
+<!-- 12. Three steps -->
+<section class="slide">
+    <div class="slide-inner">
+        <div class="kicker">Three steps</div>
+        <h2>From the golden angle to α</h2>
+        <div class="table-wrap">
+            <table>
+                <thead><tr><th>Step</th><th>Running value</th><th>Off by</th><th>Source</th></tr></thead>
+                <tbody>
+                    <tr><td>360/φ², the golden angle</td><td class="num">137.507764</td><td class="num">0.34%</td><td class="who">phyllotaxis</td></tr>
+                    <tr><td>− 2/φ³</td><td class="num">137.035628</td><td class="num">2.7 ppm</td><td class="who">Heyrovska and Narayan, 2005</td></tr>
+                    <tr><td>+ 3α/59</td><td class="num">137.035999147</td><td class="num">0.22 ppb</td><td class="who">this framework</td></tr>
+                    <tr><td>or + (3φ)⁻⁵</td><td class="num">137.035999165</td><td class="num">0.09 ppb</td><td class="who">Pellis, 2021</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <p class="body-text dim">The last step has two rival forms. The two best measurements of α (cesium, 2018; rubidium, 2020) disagree with each other by 1.17 ppb, nine times the gap between the rivals, so today's data cannot choose.</p>
+    </div>
+</section>
+
+<!-- 13. The lock -->
+<section class="slide">
+    <div class="slide-inner">
+        <div class="kicker">A fraction of a degree</div>
+        <h2>As an angle, α locks</h2>
+        <div class="heads">
+            <div class="head"><canvas data-head="golden" aria-label="Golden angle, 1000 seeds"></canvas><div class="cap"><b>137.508°</b> fills evenly</div></div>
+            <div class="head"><canvas data-head="alpha" aria-label="One over alpha degrees, 1000 seeds"></canvas><div class="cap"><b>137.036°</b> locks into 21 arms</div></div>
+        </div>
+        <p class="body-text">1/α in degrees sits 0.107° from the 21-spoke angle (8/21 of a turn) and 0.472° from the golden angle. A sunflower grown at 1/α degrees is a 21-arm head.</p>
+        <p class="small">Almost any step off the golden angle locks into arms (golden + 1° locks into 13), so the lock alone is not evidence of anything.</p>
+    </div>
+</section>
+
+<!-- 14. Derivation or resonance -->
+<section class="slide">
+    <div class="slide-inner">
+        <div class="kicker staged">Staged for countersign · not canon</div>
+        <h2>Derivation, or resonance?</h2>
+        <div class="cols">
+            <div class="col">
+                <h3>Observed</h3>
+                <ul>
+                    <li>The golden angle sits 0.34% from 1/α.</li>
+                    <li>2/φ³ closes the gap to 2.7 ppm; about 1 in 26 by chance within its family.</li>
+                    <li>Two different third terms close the rest, at the edge of what measurement resolves.</li>
+                    <li>As an angle, 1/α locks into 21 arms.</li>
+                </ul>
+            </div>
+            <div class="col">
+                <h3>Reading</h3>
+                <ul>
+                    <li>360 = P!·T·(Φ+○) = 24·3·5 makes the degree count structural.</li>
+                    <li>One term per station: field, closure, self-return.</li>
+                    <li>The golden angle as the open field, the correction as a boundary closing. Weak: almost any offset locks.</li>
+                </ul>
+            </div>
+            <div class="col against">
+                <h3>Would count against</h3>
+                <ul>
+                    <li>A declared, matched chance test that the hits do not beat by 3×.</li>
+                    <li>No reason why the low-energy α is the one that resonates (α runs to about 1/128 at the Z mass).</li>
+                    <li>Cesium and rubidium settling outside both closures.</li>
+                </ul>
+            </div>
+        </div>
+        <p class="small">Current canon is the two-layer derivation on the <a href="alpha_derivation.html">α page</a>; the proposal to reframe it is <code>plans/alpha_resonance_reframing_2026_10_22.md</code>.</p>
+    </div>
+</section>
+
+<!-- 15. Seed to seed -->
+<section class="slide">
+    <div class="slide-inner">
+        <p class="big-line" style="color:var(--text-secondary)">Seed, stem, flower, seed.</p>
+        <p class="body-text">The plant's life is one turn of the octave: a circle, if not for time. With time, each generation is one turn up the helix: the same note, an octave higher.</p>
+        <p class="body-text dim">A reading: the golden angle is how a whole lays down its next centers without crowding them.</p>
+        <div class="divider"></div>
+        <p class="big-line">A point spiraling out, trying to be a circle.</p>
+        <div class="byline" style="font-size:1.6rem;color:var(--gold-primary)">⊙</div>
+    </div>
+</section>
+
+<!-- 16. Sources -->
+<section class="slide">
+    <div class="slide-inner">
+        <div class="kicker">Sources and status</div>
+        <ul class="sources">
+            <li>H. Vogel, "A better way to construct the sunflower head," <i>Mathematical Biosciences</i> 44 (1979) 179–189.</li>
+            <li>R. Heyrovska and S. Narayan, "Fine-structure constant, anomalous magnetic moment, relativity factor and the golden ratio that divides the Bohr radius," <a href="https://arxiv.org/abs/physics/0509207">arXiv:physics/0509207</a> (2005).</li>
+            <li>S. Pellis, "Exact expressions of the fine-structure constant," preprint (2021), SSRN, <a href="https://doi.org/10.2139/ssrn.3975861">doi:10.2139/ssrn.3975861</a>.</li>
+            <li>R. H. Parker et al., "Measurement of the fine-structure constant as a test of the Standard Model," <i>Science</i> 360 (2018) 191 (cesium).</li>
+            <li>L. Morel et al., "Determination of the fine-structure constant with an accuracy of 81 parts per trillion," <i>Nature</i> 588 (2020) 61 (rubidium).</li>
+            <li>CODATA 2022 recommended value of the fine-structure constant.</li>
+            <li>Math Files, <a href="https://x.com/Math_files/status/2113048131273367665">"A fraction of a degree can change an entire pattern"</a> (video, 2026-10-21).</li>
+            <li>Numbers reproduced by <code>experiments/alpha_resonance_numbers_v1.py</code>. Status of the α reframing: staged, <code>plans/alpha_resonance_reframing_2026_10_22.md</code>.</li>
+        </ul>
+        <p class="small" style="text-align:left;max-width:820px">Revision history<br>2026-10-22 v1.0: initial.</p>
+    </div>
+</section>
+
+</div>
+
+<div class="nav-controls">
+    <button class="nav-btn" id="prev" aria-label="Previous slide">‹</button>
+    <span class="slide-counter" id="counter">1 / 16</span>
+    <button class="nav-btn" id="next" aria-label="Next slide">›</button>
+</div>
+
+<script>
+const PHI = (1 + Math.sqrt(5)) / 2;
+const ANGLES = {
+    golden: 360 / (PHI * PHI),
+    golden1: 360 / (PHI * PHI) + 1,
+    alpha: 137.035999177,
+    spoke21: 360 * 8 / 21
+};
+const resolveDeg = (key) => (key in ANGLES ? ANGLES[key] : parseFloat(key));
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ---------- drawing ---------- */
+function drawHead(canvas, deg, opts = {}) {
+    const n = opts.n || 1000;
+    const time = opts.time !== false;
+    const labels = opts.labels || 0;
+    const w = canvas.clientWidth;
+    if (!w) return;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = Math.round(w * dpr);
+    canvas.height = Math.round(w * dpr);
+    const ctx = canvas.getContext('2d');
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, w, w);
+    const cx = w / 2, cy = w / 2, R = w * 0.46;
+    const turn = deg * Math.PI / 180;
+    ctx.fillStyle = '#d4a853';
+    if (time) {
+        const c = R / Math.sqrt(n);
+        const dot = opts.dot || Math.max(1.1, c * 0.42);
+        for (let k = 0; k < n; k++) {
+            const r = c * Math.sqrt(k + 0.5), t = k * turn;
+            ctx.beginPath();
+            ctx.arc(cx + r * Math.cos(t), cy - r * Math.sin(t), dot, 0, 2 * Math.PI);
+            ctx.fill();
+        }
+        if (labels) {
+            ctx.fillStyle = '#f2efe8';
+            ctx.font = `${Math.round(w * 0.045)}px Cormorant Garamond, Georgia, serif`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            for (let k = 0; k < Math.min(labels, n); k++) {
+                const r = c * Math.sqrt(k + 0.5) + dot + w * 0.035, t = k * turn;
+                ctx.fillText(String(k), cx + r * Math.cos(t), cy - r * Math.sin(t));
+            }
+        }
+    } else {
+        const rr = R * 0.92;
+        ctx.strokeStyle = 'rgba(212, 168, 83, 0.16)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.arc(cx, cy, rr, 0, 2 * Math.PI);
+        ctx.stroke();
+        const dot = Math.max(2, w * 0.012);
+        ctx.globalAlpha = 0.5;
+        for (let k = 0; k < n; k++) {
+            const t = k * turn;
+            ctx.beginPath();
+            ctx.arc(cx + rr * Math.cos(t), cy - rr * Math.sin(t), dot, 0, 2 * Math.PI);
+            ctx.fill();
+        }
+        ctx.globalAlpha = 1;
+    }
+}
+
+/* ---------- continued fractions: does a turn close? ---------- */
+function contFrac(x, maxTerms = 18) {
+    const terms = [];
+    for (let k = 0; k < maxTerms; k++) {
+        const a = Math.floor(x + 1e-12);
+        terms.push(a);
+        const f = x - a;
+        if (f < 1e-9) return { terms, exact: true };
+        x = 1 / f;
+    }
+    return { terms, exact: false };
+}
+function convergents(terms) {
+    let h0 = 0, h1 = 1, k0 = 1, k1 = 0;
+    return terms.map((a) => {
+        const h = a * h1 + h0, k = a * k1 + k0;
+        h0 = h1; h1 = h; k0 = k1; k1 = k;
+        return [h, k];
+    });
+}
+function analyze(deg, nSeeds) {
+    const d = (((deg % 360) + 360) % 360) / 360;
+    const cf = contFrac(d);
+    const conv = convergents(cf.terms);
+    const last = conv[conv.length - 1];
+    const exactQ = cf.exact ? last[1] : 0;
+    // a small exact period is what the eye sees; a long one hides behind an earlier near-closure
+    if (exactQ && exactQ <= 60) return { kind: 'exact', p: last[0], q: exactQ, d, cf };
+    for (let k = 1; k < conv.length - 1; k++) {
+        const [p, q] = conv[k];
+        if (q < 2) continue;
+        if (q > nSeeds / 3) break;
+        if (cf.terms[k + 1] >= 3) return { kind: 'near', p, q, d, cf, drift: (q * d - p) * 360, exactQ };
+    }
+    if (exactQ && exactQ <= nSeeds) return { kind: 'exact', p: last[0], q: exactQ, d, cf };
+    return { kind: 'none', d, cf };
+}
+const signed = (x, digits) => (x < 0 ? '−' : '+') + Math.abs(x).toFixed(digits);
+
+/* ---------- the dial ---------- */
+const dial = {
+    canvas: document.getElementById('dialCanvas'),
+    range: document.getElementById('dialRange'),
+    num: document.getElementById('dialNum'),
+    time: document.getElementById('timeToggle'),
+    deg: ANGLES.golden,
+    n: 1000
+};
+function renderDial() {
+    const deg = dial.deg, timeOn = dial.time.checked;
+    drawHead(dial.canvas, deg, { n: dial.n, time: timeOn });
+    const res = analyze(deg, dial.n);
+    document.getElementById('rdAngle').textContent =
+        `d = ${deg.toFixed(3)}° = ${res.d.toFixed(5)} of a turn`;
+    const t = res.cf.terms;
+    document.getElementById('rdCf').textContent =
+        `continued fraction [${t[0]}; ${t.slice(1, 9).join(', ')}${t.length > 9 ? ', …' : ''}]`;
+    let v;
+    if (res.kind === 'exact') {
+        v = timeOn
+            ? (res.q === 1 ? 'Every seed on one line.' : `Closes exactly after ${res.q} seeds: ${res.q} straight arms.`)
+            : `${res.q} points on the circle: a polygon, not a circle.`;
+    } else if (res.kind === 'near') {
+        v = timeOn
+            ? `Nearly closes after ${res.q} seeds (${res.p}/${res.q} of a turn): ${res.q} curving arms, drifting ${signed(res.drift, 2)}° each round.`
+            : `Clusters near ${res.q} points before slowly filling the circle.`;
+        if (res.exactQ && res.exactQ <= dial.n) v += ` It repeats exactly after ${res.exactQ} seeds.`;
+    } else {
+        v = timeOn
+            ? `Never settles into arms in ${dial.n.toLocaleString()} seeds: the head fills evenly.`
+            : 'Fills the whole circle evenly.';
+    }
+    document.getElementById('rdVerdict').textContent = v;
+    dial.time.parentElement.lastChild.textContent = timeOn
+        ? ' Time on: each seed steps outward'
+        : ' Time off: every seed on one circle';
+    document.querySelectorAll('#presets .btn').forEach((b) =>
+        b.classList.toggle('on', Math.abs(resolveDeg(b.dataset.deg) - deg) < 5e-4));
+}
+function setDial(deg, from) {
+    deg = Math.min(180, Math.max(0, deg));
+    if (!isFinite(deg)) return;
+    dial.deg = deg;
+    if (from !== 'range') dial.range.value = deg;
+    if (from !== 'num') dial.num.value = deg.toFixed(3);
+    renderDial();
+}
+dial.range.addEventListener('input', () => setDial(parseFloat(dial.range.value), 'range'));
+dial.num.addEventListener('change', () => setDial(parseFloat(dial.num.value), 'num'));
+dial.time.addEventListener('change', renderDial);
+document.querySelectorAll('#presets .btn').forEach((b) =>
+    b.addEventListener('click', () => setDial(resolveDeg(b.dataset.deg))));
+
+/* ---------- static heads ---------- */
+function renderStatics() {
+    document.querySelectorAll('canvas[data-head]').forEach((c) => {
+        drawHead(c, resolveDeg(c.dataset.head), {
+            n: parseInt(c.dataset.n || '1000', 10),
+            time: c.dataset.time !== '0'
+        });
+    });
+    const ic = document.getElementById('iCanvas');
+    drawHead(ic, 90, { n: 12, labels: 12, dot: ic.clientWidth * 0.022 });
+}
+
+/* ---------- the plant's head ---------- */
+(function buildPlantHead() {
+    const ns = 'http://www.w3.org/2000/svg';
+    const petals = document.getElementById('petals');
+    for (let k = 0; k < 34; k++) {
+        const a = (360 / 34) * k;
+        const e = document.createElementNS(ns, 'ellipse');
+        e.setAttribute('cx', 150); e.setAttribute('cy', 95 - 74);
+        e.setAttribute('rx', 7.5); e.setAttribute('ry', 19);
+        e.setAttribute('fill', k % 2 ? '#e8c46a' : '#f0d78c');
+        e.setAttribute('transform', `rotate(${a} 150 95)`);
+        petals.appendChild(e);
+    }
+    const disc = document.getElementById('disc');
+    const N = 260, c = 54 / Math.sqrt(N), g = ANGLES.golden * Math.PI / 180;
+    for (let k = 0; k < N; k++) {
+        const r = c * Math.sqrt(k + 0.5), t = k * g;
+        const dot = document.createElementNS(ns, 'circle');
+        dot.setAttribute('cx', (150 + r * Math.cos(t)).toFixed(2));
+        dot.setAttribute('cy', (95 - r * Math.sin(t)).toFixed(2));
+        dot.setAttribute('r', 1.55);
+        dot.setAttribute('fill', '#8a6d3a');
+        disc.appendChild(dot);
+    }
+})();
+
+/* ---------- hero: a head growing seed by seed ---------- */
+const hero = document.getElementById('hero');
+let heroCount = reduceMotion ? 1000 : 0;
+function heroFrame() {
+    drawHead(hero, ANGLES.golden, { n: Math.max(1, Math.floor(heroCount)) });
+    if (heroCount < 1000) {
+        heroCount = Math.min(1000, heroCount + 4);
+        requestAnimationFrame(heroFrame);
+    }
+}
+
+/* ---------- deck navigation ---------- */
+const slides = document.querySelectorAll('.slide');
+const total = slides.length;
+let current = 0;
+const counter = document.getElementById('counter');
+const prevBtn = document.getElementById('prev');
+const nextBtn = document.getElementById('next');
+const dotsWrap = document.createElement('div');
+dotsWrap.className = 'dots';
+for (let i = 0; i < total; i++) {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === 0 ? ' active' : '');
+    d.addEventListener('click', () => goTo(i));
+    dotsWrap.appendChild(d);
+}
+document.querySelector('.nav-controls').insertBefore(dotsWrap, nextBtn);
+const dots = dotsWrap.querySelectorAll('.dot');
+
+function goTo(i) {
+    if (i < 0 || i >= total) return;
+    slides[current].classList.remove('active');
+    dots[current].classList.remove('active');
+    current = i;
+    slides[current].classList.add('active');
+    dots[current].classList.add('active');
+    slides[current].scrollTop = 0;
+    counter.textContent = (current + 1) + ' / ' + total;
+    prevBtn.disabled = current === 0;
+    nextBtn.disabled = current === total - 1;
+    history.replaceState(null, '', '#' + (current + 1));
+    renderAll();
+}
+prevBtn.addEventListener('click', () => goTo(current - 1));
+nextBtn.addEventListener('click', () => goTo(current + 1));
+
+document.addEventListener('keydown', (e) => {
+    if (e.target.closest('input')) return;
+    if (e.target.closest('button') && (e.key === ' ' || e.key === 'Enter')) return;
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); goTo(current + 1); }
+    else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); goTo(current - 1); }
+    else if (e.key === 'Home') goTo(0);
+    else if (e.key === 'End') goTo(total - 1);
+});
+
+let touchX = 0, touchY = 0, touchOk = true;
+document.addEventListener('touchstart', (e) => {
+    touchOk = !e.target.closest('.no-swipe, input, button');
+    touchX = e.changedTouches[0].screenX;
+    touchY = e.changedTouches[0].screenY;
+}, { passive: true });
+document.addEventListener('touchend', (e) => {
+    if (!touchOk) return;
+    const dx = e.changedTouches[0].screenX - touchX;
+    const dy = e.changedTouches[0].screenY - touchY;
+    if (Math.abs(dx) < 50 || Math.abs(dx) < Math.abs(dy)) return;
+    goTo(current + (dx < 0 ? 1 : -1));
+});
+
+/* ---------- start ---------- */
+function renderAll() {
+    renderDial();
+    renderStatics();
+    if (heroCount >= 1000) drawHead(hero, ANGLES.golden, { n: 1000 });
+}
+let resizeTimer;
+window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(renderAll, 120);
+});
+const start = parseInt((location.hash || '').slice(1), 10);
+prevBtn.disabled = true;
+if (start >= 1 && start <= total) goTo(start - 1);
+setDial(ANGLES.golden);
+renderStatics();
+heroFrame();
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(renderStatics);
+</script>
+
+</body>
+</html>

@@ -189,6 +189,32 @@ td code { color: var(--warm); }
 .ruled-out .kept { color: var(--green); font-weight: 600; }
 .ruled-out .killed { color: var(--red); }
 
+.header .meta { font-family: 'JetBrains Mono', Menlo, Consolas, monospace; font-size: 13px; color: var(--dim); letter-spacing: .5px; margin-top: 18px; }
+
+.prior-art {
+  margin: 30px 0;
+  padding: 22px 26px;
+  border-left: 3px solid var(--purple);
+  background: rgba(155,122,216,0.06);
+  border-radius: 0 6px 6px 0;
+  font-size: 17px;
+}
+.prior-art h3 { font-size: 13px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--purple); margin: 0 0 10px; font-weight: 700; }
+.prior-art p { margin-bottom: 10px; }
+.prior-art p:last-child { margin-bottom: 0; }
+.prior-art strong { color: var(--gold); font-weight: 600; }
+.prior-art a { color: var(--purple); }
+.prior-art a:hover { color: var(--gold); }
+.prior-art .cite { font-size: 15px; color: var(--dim); }
+.prior-art .table-wrap { overflow-x: auto; }
+.prior-art table { font-size: 15.5px; margin: 14px 0; }
+.prior-art .eq-block { margin: 14px 0; }
+
+.revision-history { margin-top: 60px; padding-top: 24px; border-top: 1px solid var(--faint); font-size: 15px; color: var(--dim); }
+.revision-history h2 { font-size: 14px; letter-spacing: 2px; text-transform: uppercase; color: var(--dim); font-weight: 600; margin: 0 0 12px; }
+.revision-history ul { list-style: none; }
+.revision-history li { margin-bottom: 8px; }
+
 .footer {
   margin-top: 70px;
   padding-top: 30px;
@@ -212,6 +238,7 @@ mjx-container { overflow-x: auto; overflow-y: hidden; }
   <div class="subtitle">
     Narrow auxiliary claim: the low-energy value of κ<sub>0,0</sub> = |•<sub>electron</sub>| (the electron's 0D aperture coupling; α's epistemic status is measured input to the master equation) admits a structurally motivated closed form in ladder integers and φ, landing CODATA 2022 at 0.22 ppb. What follows is the derivation of the closed form, with a parameter audit that separates what the axioms pin from what the assembly still chooses.
   </div>
+  <div class="meta">Created: 2026-04-15 &middot; Last updated: 2026-10-22 &middot; Version: 1.1</div>
 </div>
 
 
@@ -354,6 +381,22 @@ The correction advances one dimensional step beyond the base (\(d = 2 \to d = 3\
 CODATA 2022 measurement: \(1/\alpha = 137.035999177(21)\). Base formula residual: \(2.7\) ppm. This is the entrance bar, not the final answer.
 </p>
 
+<div class="prior-art" id="origin">
+<h3>Origin and prior art of the base</h3>
+<p>
+The leading term has a name outside the framework. \(360/\varphi^2 = 137.50776\ldots\) is the <strong>golden angle</strong> in degrees: the angle that divides a full turn in the golden ratio, and the angle between successive seeds in a sunflower head. Because φ is the number hardest to approximate by fractions, seeds placed at this angle never fall into lines and fill the head evenly. This is where the formula began. The corpus's first version (<code>Path_of_Learning/Golden_Ratio/fine_structure_derivation.md</code>) took the golden angle as the "ideal" value of \(1/\alpha\) and read \(2/\varphi^3\) as the correction that brings it down to the physical value. <code>circumpunct_framework.md</code> §15 still carries that reading ("ideal resonance (golden angle)"), and <a href="alpha_bridge.html">the α bridge</a> builds on it.
+</p>
+<p>
+This document does not rest on that reading. The golden angle is 137.5 only in degrees (in radians it is \(2\pi/\varphi^2 = 2.39996\ldots\)), and a dimensionless constant cannot depend on the convention of 360 degrees to a turn. That is why the note on units under Symbol 1 treats 360 as the integer \(P! \cdot T \cdot (\Phi + \circ)\) rather than as a count of degrees. The cost is worth stating plainly: under the integer reading, the fact that the leading term is also the sunflower angle follows from the base-360 degree convention, not from anything in this derivation. The two readings cannot both carry weight. Either 360 is structural and the golden-angle match is a coincidence of units, or 360 is a degree count and the formula depends on a human unit.
+</p>
+<p>
+<strong>The base formula is prior art.</strong> Heyrovska and Narayan (2005) observed that α is close to \(\varphi^2/360 = 1/137.508\), and that the gap \(137.508 - 137.036 = 0.472\) equals \(2/\varphi^3\). That is \(1/\alpha_0 = 360/\varphi^2 - 2/\varphi^3\) in all but notation. Earlier versions of this document did not cite it. What this document adds to the 2005 base is the integer reading of each symbol above and the self-referential closure in §3; those are the parts the framework's claim rests on.
+</p>
+<p class="cite">
+R. Heyrovska and S. Narayan, "Fine-structure constant, anomalous magnetic moment, relativity factor and the golden ratio that divides the Bohr radius," <a href="https://arxiv.org/abs/physics/0509207">arXiv:physics/0509207</a> (24 September 2005).
+</p>
+</div>
+
 <h2>3. The self-referential closure</h2>
 
 <p>
@@ -431,6 +474,37 @@ Exhaustive comparison of \(k\) candidates against the measured residual:
 <p style="margin-top: 14px">
 The structural argument (C3) and the numerical precision converge on the same \(k\). Any other \(k\) either has no structural origin or is demonstrably worse by orders of magnitude.
 </p>
+
+<div class="prior-art" id="rival-closure">
+<h3>A rival closure in the literature</h3>
+<p>
+Pellis (2021) closes the same 2.7 ppm gap with a different third term: a fixed number, not a feedback term.
+</p>
+<div class="eq-block">
+\[
+\frac{1}{\alpha} \;=\; \frac{360}{\varphi^2} \,-\, \frac{2}{\varphi^3} \,+\, (3\varphi)^{-5}
+\]
+</div>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Third term</th><th>Its value</th><th>Predicted \(1/\alpha\)</th><th>Residual from CODATA</th></tr></thead>
+<tbody>
+<tr><td>none (the 2005 base)</td><td>0</td><td>137.035628095</td><td>−2.7 ppm</td></tr>
+<tr><td>\(+\alpha/(59/3)\) (this document)</td><td>0.000371052</td><td>137.035999147</td><td>−0.22 ppb (1.4σ)</td></tr>
+<tr><td>\(+(3\varphi)^{-5}\) (Pellis 2021)</td><td>0.000371070</td><td>137.035999165</td><td>−0.09 ppb (0.6σ)</td></tr>
+</tbody>
+</table>
+</div>
+<p>
+The two third terms agree to about 2 × 10<sup>−8</sup>, and Pellis's lands closer to CODATA. Its term can also be written in this document's own integers, \((3\varphi)^{-5} = (T\varphi)^{-(\Phi+\circ)}\), with T = 3 and Φ + ○ = 5 taken from the same pool as Symbol 1; whether that rewriting passes the <a href="octave_wrap_lemma.html">octave-wrap type rule</a> has not been checked.
+</p>
+<p>
+This bears on two claims above. The uniqueness table compares only feedback denominators of the form α/k, so it does not rule out closures of other forms, and one such closure fits better. And it engages falsification criterion 3 in §7: a nearby alternative with an equal or better numerical fit. Whether its structural justification is equal or better is a judgment this revision does not make; it is left for adjudication. One thing the comparison already shows: the remaining 0.000371 is small enough that more than one short expression in φ and small integers can fill it, which limits how much the 0.22 ppb match can carry on its own.
+</p>
+<p class="cite">
+S. Pellis, "Exact expressions of the fine-structure constant," preprint (20 October 2021), SSRN, <a href="https://doi.org/10.2139/ssrn.3975861">doi:10.2139/ssrn.3975861</a>.
+</p>
+</div>
 
 <h2>4. The numerical result</h2>
 
@@ -556,7 +630,7 @@ Nine independent constants, one shared integer pool, sub-percent precision in ev
 <ol>
 <li><strong>A CODATA measurement of \(1/\alpha\) outside \(137.035999147 \pm 1\) ppb.</strong> The current residual is 0.22 ppb at 1.4σ. Future precision measurements that push \(1/\alpha\) to, say, 137.036000 ± 10⁻¹¹ would put the prediction out of reach; the formula has no tuning to accommodate this.</li>
 <li><strong>A shift in any of the nine cross-validation constants that forces a different integer pool.</strong> If a new precision measurement of \(m_\mu/m_e\), \(\sin^2\theta_W\), or \(G\) required replacing 21, 13, or 59/3 with a different ratio, the \(\alpha\) derivation would lose its structural basis. The integers must remain mutually consistent across all nine formulas.</li>
-<li><strong>A nearby alternative with equal or better structural justification and equal or better numerical fit.</strong> The exhaustive search in §5 ruled out \(k = 20, 21, 22\); if a missed candidate \(k^\star\) exists with a stated structural origin and residual \(\leq\) 0.22 ppb, the uniqueness claim breaks. This is an open invitation to critics.</li>
+<li><strong>A nearby alternative with equal or better structural justification and equal or better numerical fit.</strong> The exhaustive search in §5 ruled out \(k = 20, 21, 22\); if a missed candidate \(k^\star\) exists with a stated structural origin and residual \(\leq\) 0.22 ppb, the uniqueness claim breaks. This is an open invitation to critics.<br><em>Status (2026-10-22): engaged. Pellis (2021) closes the base with \(+(3\varphi)^{-5}\) at 0.09 ppb; see <a href="#rival-closure">a rival closure in the literature</a> in §3. Adjudication pending.</em></li>
 <li><strong>Demonstration that any exponent of \(\varphi\) can be shifted by one unit and still work.</strong> The derivation states that \(\varphi^2\) is forced by the 2D station. If the formula still lands at sub-ppb precision with \(\varphi\), \(\varphi^{2.5}\), or \(\varphi^3\) in place of \(\varphi^2\), the "exponent-follows-dimension" rule is not constraining the formula; it is being rationalized post-hoc.</li>
 <li><strong>A proof that the fixed-point quadratic admits multiple positive roots that are all structurally valid.</strong> The derivation assumes the positive root is unique; if multiple positive roots exist with competing structural readings, the framework has to choose, and the derivation's "no tuning" claim is compromised.</li>
 </ol>
@@ -580,8 +654,18 @@ What this derivation <strong>does</strong> claim, as an auxiliary claim: a speci
 </p>
 </div>
 
+<div class="revision-history">
+<h2>Revision history</h2>
+<ul>
+<li>2026-10-22 v1.1: golden-angle origin of the base stated, with its cost under the integer reading of 360; prior art cited (Heyrovska and Narayan 2005 for the base; Pellis 2021 for a rival closure that fits at 0.09 ppb and engages falsification criterion 3, adjudication pending); header block and this history added.</li>
+<li>2026-04-22 v1.0: φ-exponent rule closed by A3 + dimensional analysis; three-term shape closed by the station-content argument. Last revision before versioning; the unversioned revisions ran from 2026-04-15.</li>
+<li>2026-04-15: initial.</li>
+</ul>
+</div>
+
 <div class="footer">
 <div class="ref">Source: <code>circumpunct_framework.md</code> §27.7a, §27.7a.1, §27.7a.2; reframe at line 19756; <a href="octave_wrap_lemma.html">octave-wrap lemma</a> (new, pending §27.7t integration)</div>
+<div class="ref">Prior art: Heyrovska and Narayan 2005 (<a href="https://arxiv.org/abs/physics/0509207">arXiv:physics/0509207</a>) for the base, <a href="#origin">§2</a>; Pellis 2021 (<a href="https://doi.org/10.2139/ssrn.3975861">SSRN</a>) for a rival closure, <a href="#rival-closure">§3</a></div>
 <div class="ref">Related: <a href="octave_wrap_lemma.html">the octave-wrap lemma</a> · <a href="dimensional_ladder.html">the dimensional ladder</a> · <a href="gravity.html">gravity (same integer 21)</a> · <a href="gauge_structure.html">gauge structure (same integer 13)</a></div>
 <div class="ref">Attack surface: every falsification criterion in §7 is a direct invitation. The auxiliary claim stakes itself on this formula; the representation layer (<a href="unified_expression_formal.html">unified_expression_formal.html</a>) stands either way; α as measured input to κ<sub>0,0</sub> stands either way.</div>
 <div class="sig">⊙</div>
