@@ -3,7 +3,7 @@
 ```
 Created: 2026-07-26
 Last updated: 2026-10-22
-Version: 1.2
+Version: 1.3
 ```
 
 Companion to `protecting_the_lie_thesis.md`. This log records what was verified by web search on 2026-07-26, what was found that changes the thesis, and what remains unverified. Verification here means: bibliographic details confirmed against publisher pages, journal databases, or author archives via web search. It does not mean the full texts were read; full-text reading remains on the pre-submission checklist.
@@ -133,10 +133,48 @@ Her three suggested sources and the sources for the overvalued-idea section, che
 | Rahman, Resnick & Harry (2016), JAAPL, 44(1), 28-35 | CORRECTED (year and paper) | The paper that coins "extreme overvalued belief." The 2019 JAAPL paper is Rahman, Meloy & Bauer; the 2020 paper is a validation study (kappa = .91). ([PubMed](https://pubmed.ncbi.nlm.nih.gov/26944741)) |
 | Leary et al. (2017), PSPB, 43(6), 793-813 | VERIFIED | DOI 10.1177/0146167217697695. General Intellectual Humility Scale; Study 4 links intellectual humility to sensitivity to argument strength. |
 
+## 9. Verification for the paper's §6.5, "How a lie becomes reality" (2026-10-22, paper v1.3)
+
+Written in answer to a third-round review (Kimi), which named the acceptance mechanism as the deepest open hole, and built around Ashman's formulation: a lie becomes belief when it is told or acted consistently and then externally reinforced enough. Two verification passes against Crossref, OpenAlex, Europe PMC, PubMed, and publisher or full-text pages.
+
+**The finding that shapes the section:** telling a lie usually does not make the liar believe it. In Polage (2004), most people who lied to convince others that false childhood stories were true came to rate those events as *less* likely ("fabrication deflation"). Belief inflation appears only in some liars, and is linked to weaker source monitoring and to delay (Polage, 2012). This supports Ashman's formulation: telling alone is not enough, and the reinforcement and enactment conditions do real work.
+
+### 9.1 First pass: memory and belief
+
+| Reference | Status | Notes |
+|---|---|---|
+| Higgins & Rholes (1978), JESP, 14(4), 363-378 | VERIFIED, wording narrowed | DOI 10.1016/0022-1031(78)90032-X. Design confirmed through Echterhoff, Higgins & Groll (2005). Slanting an ambiguous description toward an audience biased later recall toward the message; the effect required actually producing it. It concerns slanting ambiguous material, not lying. |
+| Polage (2004), Appl. Cogn. Psychol., 18(4), 455-465 | CORRECTED (direction) | DOI 10.1002/acp.995. Mostly fabrication *deflation*; only 10-16% gave maximum belief to the lie item. Cited as the deflation result. |
+| Polage (2012), Acta Psychologica, 139(2), 335-342 | CORRECTED (title) | DOI 10.1016/j.actpsy.2011.12.007. Title ends "as source monitoring ability decreases." Inflation tied to dissociative experiences, lying frequency, discomfort while lying, and a separate session; source monitoring inferred from proxies. |
+| Pickel (2004), Memory, 12(1), 14-26 | VERIFIED, wording narrowed | DOI 10.1080/09658210244000072. Fabricating witnesses later remembered the culprit less accurately and *sometimes* reported their own fabrications. |
+| Vieira & Lane (2013), JARMAC, 2(3), 173-178 | VERIFIED, claim redirected | DOI 10.1016/j.jarmac.2013.05.005. The outcome was memory for having lied: false denials, unlike fabricated descriptions, were often forgotten as lies. Used for the point that denial, DARVO's first move, is the lie most easily forgotten. |
+| Schwardmann & van der Weele (2019), Nat. Hum. Behav., 3(10), 1055-1061 | VERIFIED, second half narrowed | DOI 10.1038/s41562-019-0666-7. An incentive to persuade raised private overconfidence; separately, experimentally raised confidence made people more persuasive (not the incentive-induced confidence itself). |
+| Festinger & Carlsmith (1959), JASP, 58(2), 203-210 | VERIFIED | DOI 10.1037/h0041593. $1 vs $20 enjoyment ratings +1.35 vs -0.05 (p = .03). |
+| Hasher, Goldstein & Toppino (1977), JVLVB, 16(1), 107-112 | VERIFIED (secondary design receipt) | DOI 10.1016/S0022-5371(77)80012-1. |
+| Fazio, Brashier, Payne & Marsh (2015), JEP: General, 144(5), 993-1002 | VERIFIED | DOI 10.1037/xge0000098. The "even against knowledge" clause belongs here, not to Hasher et al. |
+| Johnson, Hashtroudi & Lindsay (1993), Psychol. Bull., 114(1), 3-28 | VERIFIED, wording narrowed | DOI 10.1037/0033-2909.114.1.3. "A major source of memory error," not "the central mechanism"; the "no fixed labels" phrasing was not confirmed in the scanned full text and is not used. |
+| von Hippel & Trivers (2011), BBS, 34(1), 1-16 | VERIFIED | DOI 10.1017/S0140525X10001354. Theoretical. |
+
+**Excluded on verification:**
+- **Shu, Gino & Bazerman (2011), PSPB, 37(3), 330-349.** Expression of Concern (PSPB, 28 Aug 2025, DOI 10.1177/01461672251372058): a direct replication of Study 2 failed, the last author has publicly withdrawn confidence, and Gino collected the data for all four studies. Not cited.
+- **Kouchaki & Gino (2016), PNAS, 113(22), 6166-6171 ("unethical amnesia").** No notice on Crossref, but Stanley, Yang & De Brigard (2018, Memory & Cognition, 46(5), 787-795) found no effect on memory accuracy, and Gino collected the data for three of the nine studies. Not cited; Vieira & Lane (2013) carries the narrower, cleaner point.
+
+### 9.2 Second pass: enactment and social reinforcement
+
+| Reference | Status | Notes |
+|---|---|---|
+| Echterhoff, Higgins & Groll (2005), JPSP, 89(3), 257-276 | VERIFIED (full text), wording narrowed | DOI 10.1037/0022-3514.89.3.257. Memory followed the audience-tuned message only under shared reality: after successful identification (Exp 1) and with an in-group audience (Exp 2; weaker in Exp 3); trust in the audience's judgment (measured, not manipulated) mediated it. No one lied: the material was evaluatively ambiguous. The authors say their results are "not easily understood" by dissonance or self-perception (p. 271), so Bem is presented as a separate route. ([PDF](https://www.uni-muenster.de/imperia/md/content/psyifp/aeechterhoff/wintersemester2011-12/seminarsozialekognitionundattribution/echterhoffhigginsgroll_jpsp2005.pdf)) |
+| Echterhoff, Higgins & Levine (2009), Perspect. Psychol. Sci., 4(5), 496-521 | VERIFIED (full text) | DOI 10.1111/j.1745-6924.2009.01161.x. Four conditions of shared reality; shared reality lets beliefs be experienced as valid and reliable. **Boundary (pp. 506-507):** tuning done to entertain, obey, or collect rewards left memory unaffected. The paper uses this boundary to separate instrumental lies (which stay lies) from lies told to be believed, and flags that application as its own extension. |
+| Hardin & Higgins (1996), Handbook of Motivation and Cognition, Vol. 3, pp. 28-84, Guilford | VERIFIED (records; chapter not accessed) | ISBN 1572300523. Content checked through the 2005 summary: socially verified views are experienced as matching reality, especially under uncertainty. |
+| Bem (1972), Adv. Exp. Soc. Psychol., 6, 1-62 | VERIFIED | DOI 10.1016/S0065-2601(08)60024-6. Postulates quoted from p. 2 in open-access sources; cited at p. 2. |
+
+---
+
 ---
 
 ## Revision history
 
+- 2026-10-22 v1.3: section 9 added: receipts for the paper's §6.5 (how a lie becomes reality), two passes, fifteen sources cited; Polage (2004) recorded as fabrication deflation, contrary to the first draft's claim; the shared-reality boundary recorded as the evidence that instrumental lies stay lies; Shu, Gino & Bazerman (2011) and Kouchaki & Gino (2016) excluded, with reasons.
 - 2026-10-22 v1.2: section 8 added: receipts for Dr. Priyanka's three suggested sources and the overvalued-idea sources (preprint v1.2, paper v1.2); Stern et al. (2025) recorded as a null, contrary to the review's description; Wernicke and Rahman citations corrected.
 - 2026-10-22 v1.1: section 7 added: receipts for `docs/circumpunct_theory_of_narcissism.html` (three parallel passes, 34 references; corrections applied to the paper: Talwar & Lee wording, Jones & Paulhus trait findings, Augustine's definition, Tangney quotation, Crocker & Park split, Crowe et al. for the three-factor model, Humphreys and Mackintosh for the PREE); Jones & Paulhus (2017) flagged as support for the thesis's §3.6 dissociation; Kernberg and Kohut now verified.
 - 2026-07-26 v1.0: initial. Thirteen core citations verified; Thomaes et al. (2009) found and flagged as the row 5 challenge; DARVO post-2020 line located (Harsey & Freyd 2023, no sequence-structure study found); preliminary novelty check passed with the assembly-not-parts caution.
