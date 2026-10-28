@@ -14,7 +14,7 @@
 
   Created: 2026-10-27
   Last updated: 2026-10-27
-  Version: 1.1
+  Version: 1.2
 
   How it connects (the About tab has the long version):
   - Voice runs over WebRTC, which is already a direct, encrypted (DTLS-SRTP)
@@ -39,6 +39,10 @@
     channel code cannot pose as it. Channels and the devices met on them live
     in localStorage; powering on re-tunes the last channel and the devices
     find each other again with no codes.
+  - Channels: a name and a PIN derive the channel key (PBKDF2-SHA256, 200,000
+    rounds, salted with the name's letters and digits), so anyone who types
+    both joins, like a radio's channel and privacy code. Invite links and the
+    older 20-letter codes still work.
 
   Dev probes: ?profile=<name> keeps a separate identity and channel list (two
   tabs on one machine can talk to each other); ?tone sends a test tone
@@ -49,6 +53,7 @@
   @noble/secp256k1 (MIT) are vendored unchanged except the export line.
 
   Revision history:
+  - 2026-10-27 v1.2: channels are a name and a PIN (PBKDF2 derives the key), so typing both joins; invite links carry the PIN; relay nostr.oxtr.dev swapped for relay.nostr.dev.br
   - 2026-10-27 v1.1: TURN fallback for networks that block a direct link; the radio shows each connecting step, and Diagnostics keeps a copyable log; typing a channel's name explains that joining takes its code
   - 2026-10-27 v1.0: initial
 -->
@@ -465,6 +470,12 @@
   .qr-box { display: flex; justify-content: center; padding: 8px 0 6px; }
   .qr-box canvas { width: min(64vw, 236px); height: auto; image-rendering: pixelated; border-radius: 8px; background: #fff; box-shadow: 0 0 24px rgba(255, 170, 0, 0.18); }
   .code { font-family: var(--display); font-size: 0.86rem; font-weight: 700; letter-spacing: 3px; color: var(--amber-hi); text-align: center; overflow-wrap: anywhere; padding: 6px 4px 2px; -webkit-user-select: all; user-select: all; }
+  /* a named channel's name and PIN, big enough to read out across a room */
+  .pair { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; padding: 2px 0 4px; }
+  .pair[hidden] { display: none; }
+  .pair div { text-align: center; padding: 8px 12px; border-radius: 8px; border: 1px solid rgba(255, 170, 0, 0.35); background: rgba(255, 170, 0, 0.06); min-width: 0; }
+  .pair small { display: block; font-family: var(--display); font-size: 0.52rem; letter-spacing: 3px; color: var(--muted); }
+  .pair b { display: block; font-family: var(--display); font-size: 1.05rem; letter-spacing: 3px; color: var(--amber-hi); overflow-wrap: anywhere; -webkit-user-select: all; user-select: all; }
 
   /* about */
   .prose p { color: var(--text-2); font-size: 1.04rem; line-height: 1.5; margin: 0 0 10px; }
@@ -553,23 +564,31 @@
           </div>
           <div class="settings-section">
             <h3>New channel</h3>
-            <div class="save-row"><input type="text" id="newChName" maxlength="24" placeholder="Channel name" autocomplete="off"><button class="btn amber" id="makeCh">Make</button></div>
-            <p class="row-note">A new channel gets its own secret key. Share it from the SHARE tab with the devices you want on it.</p>
+            <div class="setting-row"><label for="newChName">Name</label><input type="text" id="newChName" maxlength="24" placeholder="Channel name" autocomplete="off"></div>
+            <div class="setting-row"><label for="newChPin">PIN</label><input type="text" id="newChPin" maxlength="12" inputmode="numeric" autocomplete="off" spellcheck="false"></div>
+            <div class="io-row"><button class="btn amber" id="makeCh">Make</button><span></span></div>
+            <p class="row-note">Anyone who types the same name and PIN lands on this channel, like a walkie-talkie's channel and privacy code. A longer PIN is harder to guess, and a device you haven't met shows up as NEW.</p>
           </div>
           <div class="settings-section">
             <h3>Join a channel</h3>
-            <div class="save-row"><input type="text" id="joinCode" placeholder="Invite link or 20-letter code" autocomplete="off" spellcheck="false"><button class="btn" id="joinCh">Join</button></div>
-            <p class="row-note">The code is the channel's key; its name is only a label, so typing the name won't find it. Easiest of all: point your camera app at the other phone's QR code, which opens this page already tuned.</p>
+            <div class="setting-row"><label for="joinName">Name</label><input type="text" id="joinName" maxlength="300" placeholder="Channel name, or an invite link or code" autocomplete="off" spellcheck="false"></div>
+            <div class="setting-row"><label for="joinPin">PIN</label><input type="text" id="joinPin" maxlength="12" inputmode="numeric" placeholder="4 or more digits" autocomplete="off" spellcheck="false"></div>
+            <div class="io-row"><button class="btn amber" id="joinCh">Join</button><span></span></div>
+            <p class="row-note">Type the same name and PIN as the other phone; capitals, spaces and punctuation in the name don't matter. Or point your camera app at the other phone's QR code, which opens this page already tuned.</p>
           </div>
         </div>
 
         <div class="settings-panel" data-panel="share">
           <div class="settings-section" id="shareBox">
             <h3>Invite to <span id="shareName"></span></h3>
+            <div class="pair" id="sharePair">
+              <div><small>NAME</small><b id="sharePairName"></b></div>
+              <div><small>PIN</small><b id="sharePin"></b></div>
+            </div>
             <div class="qr-box"><canvas id="qr" width="10" height="10" aria-label="Invite QR code"></canvas></div>
             <div class="code" id="shareCode"></div>
             <div class="io-row"><button class="btn amber" id="copyLink">Copy link</button><button class="btn" id="shareLink">Share…</button></div>
-            <p class="row-note">Point the other phone's camera at the code, or send the link, or read out the code. <b>Anyone with it can join this channel</b>, so give it only to people you want on it.</p>
+            <p class="row-note" id="shareNote"></p>
           </div>
           <div class="settings-section" id="shareNone"><p class="row-note">Make or pick a channel first, then its invite shows here.</p></div>
         </div>
@@ -608,11 +627,12 @@
         <div class="settings-panel" data-panel="about">
           <div class="settings-section prose">
             <h3>How it connects</h3>
-            <div class="meta-block">Created: 2026-10-27<br>Last updated: 2026-10-27<br>Version: 1.1</div>
+            <div class="meta-block">Created: 2026-10-27<br>Last updated: 2026-10-27<br>Version: 1.2</div>
             <p><b>Your voice goes straight from this device to theirs.</b> The link is WebRTC, the browser's own peer-to-peer channel, encrypted end to end. No server carries the audio.</p>
             <p><b>The only internet step is the introduction.</b> To find each other, the two devices swap a few kilobytes of connection details, encrypted with the channel's key, through public Nostr relays. Once they are linked the relays are out of the loop. On the same Wi-Fi, or with one phone sharing a hotspot, the audio never leaves the local network: the LINK line on the radio shows the route it actually took.</p>
             <p><b>Why not Wi-Fi Direct or Bluetooth?</b> A web page cannot reach either one. No browser exposes Wi-Fi Direct, and Web Bluetooth can only connect out to gadgets like heart-rate straps (it cannot advertise), so two phones running a page cannot pair over it. A native app could, through Android's Nearby Connections or Apple's Multipeer Connectivity.</p>
             <p><b>How devices remember each other.</b> The first time you power on, this device makes its own key pair. When two devices meet on a channel, each proves its key to the other over the live encrypted link, so a remembered device is recognized by its key rather than its name. Next time, power on and the radio tunes your last channel and finds them by itself, with no codes.</p>
+            <p><b>Channels are a name and a PIN.</b> Anyone who types both lands on the same channel, like a walkie-talkie's channel and privacy code, so pick a PIN that's hard to guess; a longer one is safer. A device you haven't met shows up as NEW, so you'd see a stranger arrive.</p>
             <p><b>What is kept, and where.</b> Only on this device: your key, your name, your channels and the devices you have met. Nothing is uploaded anywhere.</p>
             <p><b>When a direct link is blocked.</b> Phones on different mobile networks, or on guest Wi-Fi that keeps devices apart, often can't reach each other directly. Then the radio falls back to a relay server (TURN, on Cloudflare) that passes the audio along still encrypted, so it can't listen in. The LINK line says RELAYED when that happens.</p>
           </div>
@@ -624,7 +644,7 @@
           </div>
           <div class="settings-section prose">
             <h3>Revision history</h3>
-            <ul><li>2026-10-27 v1.1: falls back to a TURN relay server when networks block a direct link; shows each connecting step; Diagnostics keeps a log you can copy; typing a channel's name explains that joining takes its code</li><li>2026-10-27 v1.0: initial</li></ul>
+            <ul><li>2026-10-27 v1.2: channels are a name and a PIN, so typing both joins; invite links pass the PIN along; one relay that refused steady use was swapped out</li><li>2026-10-27 v1.1: falls back to a TURN relay server when networks block a direct link; shows each connecting step; Diagnostics keeps a log you can copy; typing a channel's name explains that joining takes its code</li><li>2026-10-27 v1.0: initial</li></ul>
           </div>
         </div>
       </section>
@@ -671,7 +691,7 @@ var ht={p:0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffefffffc2fn,n:
    ========================================================================== */
 const { joinRoom, getRelaySockets } = window.__trystero;
 
-const VERSION = '1.1';
+const VERSION = '1.2';
 const APP_ID = 'fractal-walkie-v1';
 // The LSS TURN worker mints short-lived Cloudflare TURN credentials and
 // answers any origin. TURN only carries a link when the two networks block a
@@ -682,8 +702,11 @@ const TURN_URL = 'https://lss-turn.ashroney.workers.dev';
 // of which two answered; these eight all forwarded its ephemeral events in a
 // probe on 2026-10-27 (of 28 tried). Re-check with window.__walkie.probeRelays()
 // and swap out any that go quiet: a device only needs one relay in common with
-// the other to be introduced.
-const RELAYS = ['relay.mostro.network', 'relay.primal.net', 'nostr.sathoarder.com', 'nos.lol', 'nostr.oxtr.dev', 'nostr.mom', 'nostr.data.haus', 'relay.snort.social'].map(h => 'wss://' + h);
+// the other to be introduced. A one-event probe is not the whole test:
+// nostr.oxtr.dev passed it, then refused a page's steady announcements after
+// about 38 s (found while pinning DEADDROP and LSS), so relay.nostr.dev.br
+// replaced it in v1.2, matching their list.
+const RELAYS = ['relay.mostro.network', 'relay.primal.net', 'nostr.sathoarder.com', 'nos.lol', 'relay.nostr.dev.br', 'nostr.mom', 'nostr.data.haus', 'relay.snort.social'].map(h => 'wss://' + h);
 const params = new URLSearchParams(location.search);
 const PROFILE = (params.get('profile') || '').replace(/[^\w-]/g, '').slice(0, 24);
 const TEST_TONE = params.has('tone');
@@ -776,28 +799,46 @@ const saveSettings = () => store.set('settings', settings);
 let channels = store.get('channels', []).filter(c => c && c.id && c.secret);
 let current = null;
 const saveChannels = () => store.set('channels', channels);
-const newSecret = () => base32(crypto.getRandomValues(new Uint8Array(13)), 20);   // 100 bits
 const pageUrl = () => location.href.split('#')[0].split('?')[0];
-const inviteLink = ch => pageUrl() + '#c=' + ch.secret + '&n=' + encodeURIComponent(ch.name);
-async function channelFor(secret, name) {
+const inviteLink = ch => pageUrl() + '#c=' + ch.secret + '&n=' + encodeURIComponent(ch.name) + (ch.pin ? '&p=' + ch.pin : '');
+async function channelFor(secret, name, pin) {
   const id = hex(await sha256('walkie-id|' + secret)).slice(0, 12);   // the same id on every device
   let ch = channels.find(c => c.id === id);
   if (!ch) {
     ch = { id, name: cleanName(name).toUpperCase() || 'CHANNEL ' + (channels.length + 1), secret, created: now(), used: 0, members: {} };
     channels.push(ch);
-    saveChannels();
   }
+  if (pin && !ch.pin) ch.pin = pin;
+  saveChannels();
   return ch;
 }
 function parseInvite(text) {
   text = (text || '').trim();
   if (!text) return null;
-  let secret, name = '';
+  let secret, name = '', pin = '';
   const h = text.includes('#') ? text.slice(text.indexOf('#') + 1) : /(^|&)c=/.test(text) ? text : '';
-  if (h) { const p = new URLSearchParams(h); secret = normCode(p.get('c') || ''); name = p.get('n') || ''; }
+  if (h) { const p = new URLSearchParams(h); secret = normCode(p.get('c') || ''); name = p.get('n') || ''; pin = cleanPin(p.get('p')); }
   else secret = normCode(text);
-  return secret.length === 20 ? { secret, name } : null;
+  return secret.length === 20 ? { secret, name, pin } : null;
 }
+
+/* ── name + PIN channels (owner, 2026-10-27: picked "Name + PIN" after trying
+   to join a channel by its name). The name and PIN derive the channel key, so
+   anyone who types both lands on the same channel, like a walkie-talkie's
+   channel and privacy code. Only letters and digits of the name count, in
+   any case. PBKDF2 makes each PIN guess against the topics the relays can see
+   cost real time. Every device must keep these exact parameters forever:
+   changing any of them moves every named channel. ── */
+const keyName = n => (typeof n === 'string' ? n : '').normalize('NFKC').toUpperCase().replace(/[^\p{L}\p{N}]/gu, '').slice(0, 40);
+const cleanPin = p => (typeof p === 'string' ? p : '').replace(/\D/g, '').slice(0, 12);
+const randomPin = () => String(crypto.getRandomValues(new Uint32Array(1))[0] % 10000).padStart(4, '0');
+async function namedSecret(name, pin) {
+  const base = await crypto.subtle.importKey('raw', enc.encode(pin), 'PBKDF2', false, ['deriveBits']);
+  const bits = await crypto.subtle.deriveBits({ name: 'PBKDF2', hash: 'SHA-256', salt: enc.encode('walkie-named-v1|' + keyName(name)), iterations: 200000 }, base, 104);
+  return base32(new Uint8Array(bits), 20);
+}
+// an invite link carries the PIN so the next person can pass it on; keep it only if it really makes this key
+const linkPin = async inv => inv.pin && inv.name && await namedSecret(inv.name, inv.pin) === inv.secret ? inv.pin : '';
 
 /* ── state ── */
 let powered = false, powering = false, pendingInvite = null;
@@ -1033,7 +1074,7 @@ async function acceptInvite() {
   const inv = pendingInvite;
   pendingInvite = null;
   history.replaceState(null, '', location.pathname + location.search);   // the secret lives in the hash, which never reaches a server; clear it from the address bar anyway
-  const ch = await channelFor(inv.secret, inv.name);
+  const ch = await channelFor(inv.secret, inv.name, await linkPin(inv));
   await tune(ch);
   toast('Tuned to ' + ch.name);
 }
@@ -1371,19 +1412,20 @@ function renderPanel() {
 function renderChannels() {
   const box = $('#chList');
   box.textContent = '';
-  if (!channels.length) { box.append(el('div', 'empty', 'No channels yet. Make one below, or join with an invite.')); return; }
+  if (!channels.length) { box.append(el('div', 'empty', 'No channels yet. Make one below, or join one with its name and PIN.')); return; }
   for (const ch of [...channels].sort((a, b) => (b.used || 0) - (a.used || 0))) {
     const row = el('div', 'row-item' + (ch === current ? ' current' : ''));
     const who = el('div', 'who');
     const n = Object.keys(ch.members).length;
-    who.append(el('b', null, ch.name), el('small', null, (ch === current ? (powered ? 'on the air' : 'tuned') : 'used ' + ago(ch.used)) + ' · ' + n + ' device' + (n === 1 ? '' : 's') + ' remembered'));
+    who.append(el('b', null, ch.name), el('small', null, (ch.pin ? 'PIN ' + ch.pin + ' · ' : '') + (ch === current ? (powered ? 'on the air' : 'tuned') : 'used ' + ago(ch.used)) + ' · ' + n + ' device' + (n === 1 ? '' : 's') + ' remembered'));
     const acts = el('div', 'row-actions');
     if (ch !== current) { const b = el('button', 'btn small amber', 'Tune'); b.onclick = () => { tune(ch); renderChannels(); }; acts.append(b); }
-    const rn = el('button', 'btn small', 'Rename');
+    // a named channel's name is half its key, so it keeps the name it was made with
+    const rn = ch.pin ? null : el('button', 'btn small', 'Rename');
     const fg = el('button', 'btn small rose', 'Forget');
-    acts.append(rn, fg);
+    acts.append(...[rn, fg].filter(Boolean));
     row.append(who, acts);
-    rn.onclick = () => {
+    if (rn) rn.onclick = () => {
       const edit = el('div', 'save-row'), inp = el('input'), ok = el('button', 'btn small amber', 'Save');
       inp.type = 'text'; inp.maxLength = 24; inp.value = ch.name;
       edit.append(inp, ok);
@@ -1395,7 +1437,7 @@ function renderChannels() {
       inp.onkeydown = e => { if (e.key === 'Enter') save(); if (e.key === 'Escape') renderChannels(); };
     };
     fg.onclick = async () => {
-      if (!confirm(`Forget channel ${ch.name}? To come back you will need its invite again.`)) return;
+      if (!confirm(`Forget channel ${ch.name}? To come back you will need its ${ch.pin ? 'name and PIN' : 'invite'} again.`)) return;
       channels = channels.filter(c => c !== ch);
       saveChannels();
       if (ch === current) {
@@ -1412,9 +1454,15 @@ function renderShare() {
   $('#shareBox').hidden = !current;
   $('#shareNone').hidden = !!current;
   if (!current) return;
-  const link = inviteLink(current);
+  const link = inviteLink(current), named = !!current.pin;
   $('#shareName').textContent = current.name;
-  $('#shareCode').textContent = group(current.secret);
+  $('#sharePair').hidden = !named;
+  $('#shareCode').hidden = named;
+  if (named) { $('#sharePairName').textContent = current.name; $('#sharePin').textContent = current.pin; }
+  else $('#shareCode').textContent = group(current.secret);
+  const note = $('#shareNote');
+  note.textContent = named ? 'Tell them the name and PIN, let their camera scan the code, or send the link. ' : 'Point the other phone\'s camera at the code, send the link, or read out the letters. ';
+  note.append(el('b', null, 'Anyone with ' + (named ? 'the name and PIN' : 'it') + ' can join this channel'), ', so share ' + (named ? 'them' : 'it') + ' only with people you want on it.');
   try {
     // whole device pixels per module, so a camera sees crisp edges
     const qr = QR.encode(link, 'M'), n = qr.size + 8, dpr = devicePixelRatio || 1;
@@ -1519,31 +1567,41 @@ function bindUI() {
   $$('.settings-tab').forEach(t => { t.onclick = () => openPanel(t.dataset.tab); });
   $('#panelClose').onclick = () => openTab && openPanel(openTab);
 
+  $('#newChPin').value = randomPin();
   $('#makeCh').onclick = async () => {
-    const name = cleanName($('#newChName').value).toUpperCase() || 'CHANNEL ' + (channels.length + 1);
-    const ch = await channelFor(newSecret(), name);
+    const typed = $('#newChName').value, pin = cleanPin($('#newChPin').value);
+    if (!keyName(typed)) { toast('Give the channel a name'); return; }
+    if (pin.length < 4) { toast('The PIN needs at least 4 digits'); return; }
+    const ch = await channelFor(await namedSecret(typed, pin), cleanName(typed).toUpperCase(), pin);
     $('#newChName').value = '';
+    $('#newChPin').value = randomPin();
     await tune(ch);
     openPanel('share', true);
-    toast(powered ? `Made ${ch.name}: share it to bring someone in` : `Made ${ch.name}: power on to go on the air`);
+    toast(powered ? `${ch.name} is on the air: tell them the name and PIN` : `Made ${ch.name}: power on to go on the air`);
   };
-  $('#newChName').onkeydown = e => { if (e.key === 'Enter') $('#makeCh').click(); };
+  for (const id of ['#newChName', '#newChPin']) $(id).onkeydown = e => { if (e.key === 'Enter') $('#makeCh').click(); };
   $('#joinCh').onclick = async () => {
-    const typed = $('#joinCode').value, inv = parseInvite(typed);
-    if (!inv) {
-      // a name is only a label, so it can only match a channel this device already has (owner, 2026-10-27: tried to join by the room's name)
-      const mine = channels.find(c => c.name === cleanName(typed).toUpperCase());
-      if (mine) { $('#joinCode').value = ''; await tune(mine); renderChannels(); toast('Tuned to ' + mine.name); return; }
-      toast("A channel's name is only a label. Join with its invite: scan the other phone's QR code, or type the 20-letter code from its SHARE tab.", 6000);
+    const typed = $('#joinName').value.trim(), pin = cleanPin($('#joinPin').value), inv = parseInvite(typed);
+    const join = async ch => {
+      $('#joinName').value = '';
+      $('#joinPin').value = '';
+      await tune(ch);
+      renderChannels();
+      toast(powered ? 'Tuned to ' + ch.name : `Saved ${ch.name}: power on to tune in`);
+    };
+    // an invite link or a bare 20-letter code; a typed PIN means the name box holds a name
+    if (inv && (/(^|[#&?])c=/.test(typed) || !pin)) return join(await channelFor(inv.secret, inv.name, await linkPin(inv)));
+    if (!keyName(typed)) { toast('Type the channel name and PIN, or paste an invite link'); return; }
+    if (!pin) {
+      const mine = channels.find(c => keyName(c.name) === keyName(typed));
+      if (mine) return join(mine);
+      toast("Add the channel's PIN too. Whoever made it can read it off their SHARE tab.", 5000);
       return;
     }
-    $('#joinCode').value = '';
-    const ch = await channelFor(inv.secret, inv.name);
-    await tune(ch);
-    renderChannels();
-    toast(powered ? 'Tuned to ' + ch.name : `Saved ${ch.name}: power on to tune in`);
+    if (pin.length < 4) { toast('A PIN is at least 4 digits'); return; }
+    join(await channelFor(await namedSecret(typed, pin), cleanName(typed).toUpperCase(), pin));
   };
-  $('#joinCode').onkeydown = e => { if (e.key === 'Enter') $('#joinCh').click(); };
+  for (const id of ['#joinName', '#joinPin']) $(id).onkeydown = e => { if (e.key === 'Enter') $('#joinCh').click(); };
 
   $('#copyLink').onclick = () => current && copy(inviteLink(current));
   $('#copyDiag').onclick = () => { renderDiag(); copy('Walkie Talkie diagnostics\n' + $('#diag').textContent + '\n' + navigator.userAgent); };
@@ -1791,6 +1849,7 @@ window.__walkie = {
   invite: () => current && inviteLink(current),
   tx: on => setTx(!!on),
   qr: (text, ecl) => QR.encode(text, ecl),
+  named: (name, pin) => namedSecret(name, cleanPin(String(pin))),
   // Does each relay forward an introduction? One socket subscribes, a second
   // publishes a fresh event in Trystero's format; 'forwards' means it arrived.
   probeRelays: (urls = RELAYS) => Promise.all(urls.map(url => new Promise(res => {
