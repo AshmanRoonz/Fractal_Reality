@@ -14,7 +14,7 @@
 
   Created: 2026-10-27
   Last updated: 2026-10-28
-  Version: 1.3
+  Version: 1.4
 
   How it connects (the About tab has the long version):
   - Voice runs over WebRTC, which is already a direct, encrypted (DTLS-SRTP)
@@ -53,6 +53,7 @@
   @noble/secp256k1 (MIT) are vendored unchanged except the export line.
 
   Revision history:
+  - 2026-10-28 v1.4: two of three phones went deaf to each other after page reloads: a device seen on two links kept the first (dead) one and muted the newer one for good. Now only links to this same device stay silent, every other link plays, and a page says goodbye on pagehide so the others drop its link at once
   - 2026-10-28 v1.3: one-way audio fix (a sister in New Zealand saw him transmit but heard nothing): voice is agreed in the first handshake instead of renegotiated after the link opens; incoming voice is never script-muted or tapped by Web Audio; a refused speaker asks for a tap; the radio and Diagnostics show audio packets each way and flag "no sound arriving"
   - 2026-10-27 v1.2: channels are a name and a PIN (PBKDF2 derives the key), so typing both joins; invite links carry the PIN; relay nostr.oxtr.dev swapped for relay.nostr.dev.br
   - 2026-10-27 v1.1: TURN fallback for networks that block a direct link; the radio shows each connecting step, and Diagnostics keeps a copyable log; typing a channel's name explains that joining takes its code
@@ -628,7 +629,7 @@
         <div class="settings-panel" data-panel="about">
           <div class="settings-section prose">
             <h3>How it connects</h3>
-            <div class="meta-block">Created: 2026-10-27<br>Last updated: 2026-10-28<br>Version: 1.3</div>
+            <div class="meta-block">Created: 2026-10-27<br>Last updated: 2026-10-28<br>Version: 1.4</div>
             <p><b>Your voice goes straight from this device to theirs.</b> The link is WebRTC, the browser's own peer-to-peer channel, encrypted end to end. No server carries the audio.</p>
             <p><b>The only internet step is the introduction.</b> To find each other, the two devices swap a few kilobytes of connection details, encrypted with the channel's key, through public Nostr relays. Once they are linked the relays are out of the loop. On the same Wi-Fi, or with one phone sharing a hotspot, the audio never leaves the local network: the LINK line on the radio shows the route it actually took.</p>
             <p><b>Why not Wi-Fi Direct or Bluetooth?</b> A web page cannot reach either one. No browser exposes Wi-Fi Direct, and Web Bluetooth can only connect out to gadgets like heart-rate straps (it cannot advertise), so two phones running a page cannot pair over it. A native app could, through Android's Nearby Connections or Apple's Multipeer Connectivity.</p>
@@ -645,7 +646,7 @@
           </div>
           <div class="settings-section prose">
             <h3>Revision history</h3>
-            <ul><li>2026-10-28 v1.3: fixes voice that only went one way over long distances; a phone that blocks sound asks for a tap; the radio says when someone is transmitting but no sound is arriving</li><li>2026-10-27 v1.2: channels are a name and a PIN, so typing both joins; invite links pass the PIN along; one relay that refused steady use was swapped out</li><li>2026-10-27 v1.1: falls back to a TURN relay server when networks block a direct link; shows each connecting step; Diagnostics keeps a log you can copy; typing a channel's name explains that joining takes its code</li><li>2026-10-27 v1.0: initial</li></ul>
+            <ul><li>2026-10-28 v1.4: fixes two radios going deaf to each other after a page reload; a closing page tells the others right away</li><li>2026-10-28 v1.3: fixes voice that only went one way over long distances; a phone that blocks sound asks for a tap; the radio says when someone is transmitting but no sound is arriving</li><li>2026-10-27 v1.2: channels are a name and a PIN, so typing both joins; invite links pass the PIN along; one relay that refused steady use was swapped out</li><li>2026-10-27 v1.1: falls back to a TURN relay server when networks block a direct link; shows each connecting step; Diagnostics keeps a log you can copy; typing a channel's name explains that joining takes its code</li><li>2026-10-27 v1.0: initial</li></ul>
           </div>
         </div>
       </section>
@@ -692,7 +693,7 @@ var ht={p:0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffefffffc2fn,n:
    ========================================================================== */
 const { joinRoom, getRelaySockets } = window.__trystero;
 
-const VERSION = '1.3';
+const VERSION = '1.4';
 const APP_ID = 'fractal-walkie-v1';
 // The LSS TURN worker mints short-lived Cloudflare TURN credentials and
 // answers any origin. TURN only carries a link when the two networks block a
@@ -1239,9 +1240,15 @@ async function onAction(type, d, peerId) {
 }
 function remember(l, quiet) {
   if (!current) return;
+  // Only a link to this same device (another tab of mine) stays silent, or
+  // it would play my own voice back into the room. Until v1.3 a device that
+  // showed up twice kept its first link and muted the newer one for good, but
+  // a second link almost always means the page reloaded and the first link is
+  // the dead one: its phone left without saying so. After two reloads, two
+  // phones went deaf to each other while a third heard both (owner,
+  // 2026-10-28, with his wife and son). A device talks from one page at a
+  // time, so playing every link of it never doubles a voice.
   if (l.key === me.key) { l.standby = true; squelch(l); toastOnce('self:' + l.id, 'This device is already on the channel in another tab'); return; }
-  // one live link per device: if a device shows up twice, the newer link waits
-  for (const o of links.values()) if (o !== l && o.key === l.key && o.verified && !o.standby) { const late = o.since <= l.since ? l : o; late.standby = true; squelch(late); }
   const m = current.members[l.key];
   if (!quiet) l.wasKnown = !!m;
   current.members[l.key] = { name: l.name, callsign: l.callsign, first: m?.first || now(), last: now() };
@@ -1441,7 +1448,7 @@ function statusText(ls) {
   }
   if (!current) return 'No channel yet: make one in CHANNELS';
   if (speakerBlocked && ls.length) return 'Tap anywhere to turn on the speaker';
-  if (ls.length) return ls.length + ' on channel with you';
+  if (ls.length) return new Set(ls.map(l => l.verified ? l.key : l.id)).size + ' on channel with you';
   if (room) {
     if (linkingNow()) return 'Found a device: linking…';
     if (net.failed) return ice.servers ? 'Found a device, but no link formed, even through the relay server' : 'Found a device, but your networks block a direct link';
@@ -1462,7 +1469,9 @@ function renderMembers(ls) {
   for (const l of ls) {
     const k = l.verified ? l.key : 'link:' + l.id;
     const r = rows.get(k) || { name: l.name, callsign: l.callsign, last: now(), link: null };
-    r.link = l; r.name = l.name || r.name || 'CONNECTING'; r.callsign = l.callsign || r.callsign;
+    // a device briefly on two links (its page reloaded) is one row: show the one talking, else the newest
+    const prev = r.link;
+    if (!prev || l.tx || (!prev.tx && l.since > prev.since)) { r.link = l; r.name = l.name || r.name || 'CONNECTING'; r.callsign = l.callsign || r.callsign; }
     rows.set(k, r);
   }
   if (!rows.size) { box.append(el('div', 'empty', 'Nobody yet. Share the channel from the SHARE tab.')); return; }
@@ -1654,6 +1663,12 @@ function bindUI() {
   addEventListener('keyup', e => { if (e.code === 'Space' && !typing()) { e.preventDefault(); if (!settings.latch) setTx(false); } });
   addEventListener('blur', () => { if (!settings.latch) setTx(false); });
   document.addEventListener('visibilitychange', () => { if (document.hidden) setTx(false); else keepAwake(); });
+  // Phones close or reload a page without the 'beforeunload' Trystero listens
+  // for, so the others held this page's dead link for up to half a minute.
+  // Saying goodbye on 'pagehide' lets them drop it at once; a page restored
+  // from the back-forward cache tunes back in.
+  addEventListener('pagehide', () => { if (room) try { room.leave(); } catch {} });
+  addEventListener('pageshow', e => { if (e.persisted && powered && current) tune(current); });
 
   const step = d => {
     if (channels.length < 2) return;
