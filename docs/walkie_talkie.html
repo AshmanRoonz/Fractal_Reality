@@ -14,7 +14,7 @@
 
   Created: 2026-10-27
   Last updated: 2026-10-27
-  Version: 1.0
+  Version: 1.1
 
   How it connects (the About tab has the long version):
   - Voice runs over WebRTC, which is already a direct, encrypted (DTLS-SRTP)
@@ -24,6 +24,10 @@
     public Nostr relays (Trystero's nostr strategy, vendored below). After
     that the relays are out of the loop, and on one Wi-Fi network or a phone
     hotspot the audio never leaves the local network.
+  - When two networks block a direct link (carrier NAT, guest Wi-Fi), the
+    link falls back to Cloudflare TURN, whose short-lived credentials come
+    from the LSS worker (lss-turn.ashroney.workers.dev). TURN forwards the
+    encrypted audio but cannot read it.
   - Web pages cannot use Wi-Fi Direct (no browser exposes it), and Web
     Bluetooth is central-only (a page can connect to a gadget but cannot
     advertise), so two phones running a page cannot link over either one.
@@ -38,12 +42,14 @@
 
   Dev probes: ?profile=<name> keeps a separate identity and channel list (two
   tabs on one machine can talk to each other); ?tone sends a test tone
-  instead of the microphone; window.__walkie.state reads the live state.
+  instead of the microphone; ?relay forces every link through TURN, to test
+  that path; window.__walkie.state reads the live state.
 
   (c) 2026 Ashman Roonz / fractalreality.ca. Trystero (MIT) and its bundled
   @noble/secp256k1 (MIT) are vendored unchanged except the export line.
 
   Revision history:
+  - 2026-10-27 v1.1: TURN fallback for networks that block a direct link; the radio shows each connecting step, and Diagnostics keeps a copyable log; typing a channel's name explains that joining takes its code
   - 2026-10-27 v1.0: initial
 -->
 <style>
@@ -552,8 +558,8 @@
           </div>
           <div class="settings-section">
             <h3>Join a channel</h3>
-            <div class="save-row"><input type="text" id="joinCode" placeholder="Invite link or code" autocomplete="off" spellcheck="false"><button class="btn" id="joinCh">Join</button></div>
-            <p class="row-note">Or point your camera app at the other phone's invite code: it opens this page already tuned.</p>
+            <div class="save-row"><input type="text" id="joinCode" placeholder="Invite link or 20-letter code" autocomplete="off" spellcheck="false"><button class="btn" id="joinCh">Join</button></div>
+            <p class="row-note">The code is the channel's key; its name is only a label, so typing the name won't find it. Easiest of all: point your camera app at the other phone's QR code, which opens this page already tuned.</p>
           </div>
         </div>
 
@@ -602,21 +608,23 @@
         <div class="settings-panel" data-panel="about">
           <div class="settings-section prose">
             <h3>How it connects</h3>
-            <div class="meta-block">Created: 2026-10-27<br>Last updated: 2026-10-27<br>Version: 1.0</div>
+            <div class="meta-block">Created: 2026-10-27<br>Last updated: 2026-10-27<br>Version: 1.1</div>
             <p><b>Your voice goes straight from this device to theirs.</b> The link is WebRTC, the browser's own peer-to-peer channel, encrypted end to end. No server carries the audio.</p>
             <p><b>The only internet step is the introduction.</b> To find each other, the two devices swap a few kilobytes of connection details, encrypted with the channel's key, through public Nostr relays. Once they are linked the relays are out of the loop. On the same Wi-Fi, or with one phone sharing a hotspot, the audio never leaves the local network: the LINK line on the radio shows the route it actually took.</p>
             <p><b>Why not Wi-Fi Direct or Bluetooth?</b> A web page cannot reach either one. No browser exposes Wi-Fi Direct, and Web Bluetooth can only connect out to gadgets like heart-rate straps (it cannot advertise), so two phones running a page cannot pair over it. A native app could, through Android's Nearby Connections or Apple's Multipeer Connectivity.</p>
             <p><b>How devices remember each other.</b> The first time you power on, this device makes its own key pair. When two devices meet on a channel, each proves its key to the other over the live encrypted link, so a remembered device is recognized by its key rather than its name. Next time, power on and the radio tunes your last channel and finds them by itself, with no codes.</p>
             <p><b>What is kept, and where.</b> Only on this device: your key, your name, your channels and the devices you have met. Nothing is uploaded anywhere.</p>
-            <p><b>When it cannot connect.</b> Two phones on different mobile networks can sit behind carrier NAT that blocks a direct link; the fix is a relay server (TURN), which this version does not use yet. Same Wi-Fi and phone hotspots always link directly.</p>
+            <p><b>When a direct link is blocked.</b> Phones on different mobile networks, or on guest Wi-Fi that keeps devices apart, often can't reach each other directly. Then the radio falls back to a relay server (TURN, on Cloudflare) that passes the audio along still encrypted, so it can't listen in. The LINK line says RELAYED when that happens.</p>
           </div>
           <div class="settings-section">
             <h3>Diagnostics</h3>
             <div class="diag" id="diag"></div>
+            <div class="io-row"><button class="btn" id="copyDiag">Copy diagnostics</button><span></span></div>
+            <p class="row-note">If two radios won't link, copy this from each one and send it along: it shows how far they got. It holds no addresses or keys.</p>
           </div>
           <div class="settings-section prose">
             <h3>Revision history</h3>
-            <ul><li>2026-10-27 v1.0: initial</li></ul>
+            <ul><li>2026-10-27 v1.1: falls back to a TURN relay server when networks block a direct link; shows each connecting step; Diagnostics keeps a log you can copy; typing a channel's name explains that joining takes its code</li><li>2026-10-27 v1.0: initial</li></ul>
           </div>
         </div>
       </section>
@@ -663,8 +671,13 @@ var ht={p:0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffefffffc2fn,n:
    ========================================================================== */
 const { joinRoom, getRelaySockets } = window.__trystero;
 
-const VERSION = '1.0';
+const VERSION = '1.1';
 const APP_ID = 'fractal-walkie-v1';
+// The LSS TURN worker mints short-lived Cloudflare TURN credentials and
+// answers any origin. TURN only carries a link when the two networks block a
+// direct one (owner, 2026-10-27: two phones joined the same channel and never
+// saw each other, with no TURN to fall back on).
+const TURN_URL = 'https://lss-turn.ashroney.workers.dev';
 // Introduction relays. Trystero's own pick for this app id landed on six relays
 // of which two answered; these eight all forwarded its ephemeral events in a
 // probe on 2026-10-27 (of 28 tried). Re-check with window.__walkie.probeRelays()
@@ -674,6 +687,7 @@ const RELAYS = ['relay.mostro.network', 'relay.primal.net', 'nostr.sathoarder.co
 const params = new URLSearchParams(location.search);
 const PROFILE = (params.get('profile') || '').replace(/[^\w-]/g, '').slice(0, 24);
 const TEST_TONE = params.has('tone');
+const FORCE_RELAY = params.has('relay');
 const NS = 'walkie' + (PROFILE ? '.' + PROFILE : '');
 
 const $ = (s, root = document) => root.querySelector(s);
@@ -792,6 +806,75 @@ let room = null, act = null, tuning = 0, roomSince = 0;
 let transmitting = false, txStart = 0, txKeep = 0, txOpenT = 0;
 const links = new Map();   // Trystero peer id -> link
 
+/* ── watching the connection steps. Trystero reports a peer only once its
+   link is open, so a link that never opens used to look exactly like nobody
+   being there. Every RTCPeerConnection Trystero makes is this subclass
+   (its rtcPolyfill option): a remote description arriving means a relay
+   introduced us to a device, and the ICE state then says whether a link
+   formed. ── */
+let ice = { servers: null, at: 0, status: 'not fetched yet' };
+let net = { intro: 0, failed: 0, cand: new Set() };
+const pcs = new Set(), netLog = [];
+function logNet(msg) {
+  netLog.push(new Date().toTimeString().slice(0, 8) + '  ' + msg);
+  if (netLog.length > 16) netLog.shift();
+  if (openTab === 'about') renderDiag();
+}
+const WatchedPC = typeof RTCPeerConnection === 'function' ? class extends RTCPeerConnection {
+  constructor(cfg) {
+    super(cfg);
+    this.__seen = false;
+    pcs.add(this);
+    this.addEventListener('icecandidate', e => { const m = e.candidate && / typ (\w+)/.exec(e.candidate.candidate); if (m) net.cand.add(m[1]); });
+    this.addEventListener('connectionstatechange', () => watch(this));
+    this.addEventListener('iceconnectionstatechange', () => watch(this));
+  }
+  async setRemoteDescription(d) {
+    const r = await super.setRemoteDescription(d);
+    if (!this.__seen) { this.__seen = true; net.intro++; logNet('introduced to a device through a relay; linking'); watch(this); }
+    return r;
+  }
+  close() { pcs.delete(this); return super.close(); }
+} : undefined;
+// Trystero tries a device once per relay that introduced it and keeps the
+// first link that opens; the spare attempts then time out as 'failed'. So a
+// failure only counts while no link is up, and a new link marks the
+// attempts still pending as spares.
+function watch(pc) {
+  if (!pc.__seen) return;
+  const st = pc.connectionState || pc.iceConnectionState;
+  if (st === pc.__st) return;
+  pc.__st = st;
+  if (st === 'connected') logNet('link up');
+  else if (st === 'failed' && !pc.__failed) {
+    pc.__failed = true;
+    if (pc.__spare || live().length) pc.__spare = true;
+    else {
+      net.failed++;
+      logNet(`link failed (${ice.servers ? 'TURN on' : 'no TURN'}; routes tried: ${[...net.cand].join(', ') || 'none'})`);
+    }
+  }
+  render();
+}
+const markSpares = () => { for (const pc of pcs) if (pc.__seen && pc.connectionState !== 'connected') pc.__spare = true; };
+const linkingNow = () => [...pcs].filter(pc => pc.__seen && !pc.__failed && !pc.__spare && !['connected', 'closed', 'failed'].includes(pc.connectionState)).length;
+async function getTurn() {
+  if (ice.servers && now() - ice.at < 12 * 3600e3) return ice.servers;   // credentials live 24 h
+  try {
+    const ctl = new AbortController(), t = setTimeout(() => ctl.abort(), 4000);
+    const res = await fetch(TURN_URL, { signal: ctl.signal, cache: 'no-store' });
+    clearTimeout(t);
+    const d = await res.json();
+    const servers = (Array.isArray(d.iceServers) ? d.iceServers : []).filter(s => s && s.urls);
+    if (!servers.length) throw new Error(d.error || 'no servers');
+    ice = { servers, at: now(), status: 'ready' };
+  } catch (e) {
+    ice = { servers: null, at: 0, status: 'unavailable (' + (e && e.name === 'AbortError' ? 'timed out' : (e && e.message) || e) + ')' };
+  }
+  logNet('TURN ' + ice.status);
+  return ice.servers;
+}
+
 /* ── audio ── */
 async function openMic() {
   if (TEST_TONE) {
@@ -874,9 +957,13 @@ async function powerOn() {
     ac = ac || new (window.AudioContext || window.webkitAudioContext)();
     ac.resume().catch(() => {});
     if (!me.key) await loadIdentity();
-    micStream = await openMic();
+    // TURN credentials must be in hand before the first room: Trystero builds
+    // its pool of connections on the first join and keeps them
+    const [mic] = await Promise.all([openMic(), getTurn()]);
+    micStream = mic;
     txTrack = micStream?.getAudioTracks()[0] || null;
     if (txTrack) { txTrack.enabled = false; micAnalyser = tap(micStream).an; }
+    logNet('power on; mic ' + (TEST_TONE ? 'test tone' : txTrack ? 'ready' : 'none (listening only)'));
     powered = true;
     keepAwake();
     if (pendingInvite) await acceptInvite();
@@ -913,8 +1000,16 @@ async function tune(ch) {
   const roomId = hex(await sha256('walkie-room|' + ch.secret)).slice(0, 32);
   const password = b64u(await sha256('walkie-pass|' + ch.secret));
   if (token !== tuning || !powered) return;
-  room = joinRoom({ appId: APP_ID, password, relayUrls: RELAYS }, roomId);
+  net = { intro: 0, failed: 0, cand: net.cand };
+  room = joinRoom({
+    appId: APP_ID, password, relayUrls: RELAYS,
+    turnConfig: ice.servers || [],
+    ...(WatchedPC ? { rtcPolyfill: WatchedPC } : {}),
+    ...(FORCE_RELAY ? { rtcConfig: { iceTransportPolicy: 'relay' } } : {}),
+  }, roomId);
   roomSince = now();
+  logNet('tuned to ' + ch.name + (FORCE_RELAY ? ' (TURN only)' : ''));
+  setTimeout(() => { if (token === tuning && room) { const r = relayCount(); logNet(`relays: ${r.open} of ${r.total} open`); } }, 4000);
   act = {};
   for (const name of ['hi', 'pf', 'tx', 'nm']) {
     const [send, onGet] = room.makeAction(name);
@@ -955,6 +1050,7 @@ function getLink(peerId) {
   return l;
 }
 function peerJoined(peerId) {
+  markSpares();
   const l = getLink(peerId);
   act?.hi({ v: 1, key: me.key, name: me.name, nonce: l.nonce, tx: transmitting }, peerId);
   if (micStream) room?.addStream(micStream, peerId);
@@ -963,6 +1059,7 @@ function peerJoined(peerId) {
 function peerLeft(peerId) {
   const l = links.get(peerId);
   if (!l) return;
+  logNet((l.name || 'a device') + ' left');
   if (l.tx && settings.beeps) sfx('tail');
   if (l.verified && current?.members[l.key]) { current.members[l.key].last = now(); saveChannels(); }
   toasted.delete('hi:' + l.key);
@@ -1021,6 +1118,7 @@ async function onAction(type, d, peerId) {
       const fp = fingerprints(peerId);
       l.verified = await crypto.subtle.verify({ name: 'ECDSA', hash: 'SHA-256' }, pub, unb64u(d.sig), enc.encode(['walkie-v1', l.nonce, fp.remote, fp.local].join('|')));
     } catch { l.verified = false; }
+    logNet((l.verified ? 'verified ' : 'could NOT verify ') + l.name + ' (' + l.callsign + ')');
     if (l.verified) remember(l);
     else toast((l.name || 'A device') + ' could not prove its key; treat it with care');
     render();
@@ -1130,7 +1228,8 @@ async function pollStats() {
         : types.includes('srflx') || addrs.some(a => !PRIVATE.test(a)) ? 'internet'
         : 'local';
       if (pair.currentRoundTripTime != null) l.rtt = Math.round(pair.currentRoundTripTime * 1000);
-      l.route = types.join('/') + (addrs.length ? ' ' + addrs.join(' > ') : '');
+      if (!l.route) logNet(`audio route: ${PATH_TEXT[l.path].toLowerCase()} (${types.join('/')})`);
+      l.route = types.join('/');   // candidate types only: Diagnostics gets copied into chats, addresses stay out
       rep.forEach(s => {
         if (s.type !== 'inbound-rtp' || s.kind !== 'audio') return;
         const prev = l.inbound;
@@ -1206,6 +1305,11 @@ function statusText(ls) {
   }
   if (!current) return 'No channel yet: make one in CHANNELS';
   if (ls.length) return ls.length + ' on channel with you';
+  if (room) {
+    if (linkingNow()) return 'Found a device: linking…';
+    if (net.failed) return ice.servers ? 'Found a device, but no link formed, even through the relay server' : 'Found a device, but your networks block a direct link';
+    if (now() - roomSince > 6000 && relayCount().open === 0) return 'Cannot reach the introduction relays from this network';
+  }
   const known = Object.values(current.members);
   if (known.length) return 'Listening for ' + known.map(m => m.name).slice(0, 3).join(', ') + (known.length > 3 ? '…' : '');
   return 'On the air: share the channel to bring someone in';
@@ -1366,8 +1470,11 @@ function renderDiag() {
     `version ${VERSION}${PROFILE ? ' · profile ' + PROFILE : ''}${TEST_TONE ? ' · test tone' : ''}`,
     `power ${powered ? 'on' : 'off'} · audio ${ac ? ac.state : 'idle'} · mic ${txTrack ? 'yes' : 'no'}`,
     `channel ${current ? current.name + ' (' + current.id + ')' : 'none'}`,
-    `relays ${r.open}/${r.total} open`,
+    `relays ${r.open}/${r.total} open · TURN ${ice.status}${FORCE_RELAY ? ' · TURN only' : ''}`,
+    `introductions ${net.intro} · linking ${linkingNow()} · failed ${net.failed} · spare attempts ${[...pcs].filter(pc => pc.__spare).length} · routes gathered: ${[...net.cand].join(', ') || 'none yet'}`,
     ...[...links.values()].map(l => `link ${l.name || '?'} · ${l.verified === null ? 'checking' : l.verified ? 'verified' : 'UNVERIFIED'}${l.standby ? ' · standby' : ''} · ${l.route || 'no route yet'}${l.rtt != null ? ' · ' + l.rtt + ' ms' : ''} · audio ${l.stream ? 'yes' : 'no'}`),
+    '',
+    ...netLog,
   ];
   $('#diag').textContent = lines.join('\n');
 }
@@ -1422,8 +1529,14 @@ function bindUI() {
   };
   $('#newChName').onkeydown = e => { if (e.key === 'Enter') $('#makeCh').click(); };
   $('#joinCh').onclick = async () => {
-    const inv = parseInvite($('#joinCode').value);
-    if (!inv) { toast('That is not an invite link or a 20-letter channel code'); return; }
+    const typed = $('#joinCode').value, inv = parseInvite(typed);
+    if (!inv) {
+      // a name is only a label, so it can only match a channel this device already has (owner, 2026-10-27: tried to join by the room's name)
+      const mine = channels.find(c => c.name === cleanName(typed).toUpperCase());
+      if (mine) { $('#joinCode').value = ''; await tune(mine); renderChannels(); toast('Tuned to ' + mine.name); return; }
+      toast("A channel's name is only a label. Join with its invite: scan the other phone's QR code, or type the 20-letter code from its SHARE tab.", 6000);
+      return;
+    }
     $('#joinCode').value = '';
     const ch = await channelFor(inv.secret, inv.name);
     await tune(ch);
@@ -1433,6 +1546,7 @@ function bindUI() {
   $('#joinCode').onkeydown = e => { if (e.key === 'Enter') $('#joinCh').click(); };
 
   $('#copyLink').onclick = () => current && copy(inviteLink(current));
+  $('#copyDiag').onclick = () => { renderDiag(); copy('Walkie Talkie diagnostics\n' + $('#diag').textContent + '\n' + navigator.userAgent); };
   $('#shareLink').onclick = async () => {
     if (!current) return;
     const url = inviteLink(current);
@@ -1669,7 +1783,7 @@ window.__walkie = {
       version: VERSION, profile: PROFILE, powered, transmitting, audio: ac?.state,
       me: { name: me.name, callsign: me.callsign, kept: me.kept },
       channel: current && { id: current.id, name: current.name, remembered: Object.keys(current.members).length },
-      relays: relayCount(),
+      relays: relayCount(), turn: ice.status, net: { intro: net.intro, linking: linkingNow(), failed: net.failed, routes: [...net.cand] }, log: [...netLog],
       links: [...links.values()].map(l => ({ id: l.id, name: l.name, callsign: l.callsign, verified: l.verified, wasKnown: l.wasKnown, standby: l.standby,
         tx: l.tx, path: l.path, route: l.route, rtt: l.rtt, stream: !!l.stream, muted: l.audio?.muted ?? null, level: l.analyser ? +rms(l.analyser).toFixed(4) : null })),
     };
