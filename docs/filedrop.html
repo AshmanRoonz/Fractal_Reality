@@ -515,6 +515,21 @@ function createVoteRegister({
 const {joinRoom, selfId} = window.__trystero;  // vendored below — no runtime fetch
 
 const APP_ID = 'ashman-deaddrop-v1';
+// Introduction relays, pinned. Left to itself, Trystero 0.22 hands each app id
+// a fixed 5 of its 18 built-in relays, and by 2026-10-27 none of this app's 5
+// still forwarded its events: two tabs sat "solo" for good. These 8, run by
+// eight different operators, forwarded a fresh Trystero event in every probe
+// that day and took a page's steady announcements for 90 s or more without
+// answering "rate limited" (nostr.oxtr.dev forwards too, but began refusing
+// them after 38 s, so it was left out). To re-check one: socket A sends
+// window.__trystero.subscribe(id, topic); about a second after both are open,
+// socket B sends await window.__trystero.createEvent(topic, 'x') (made any
+// earlier, it falls before the REQ's `since` and is filtered out). A relay
+// that never delivers it to A goes. Two peers need only one relay in common
+// to meet.
+const RELAY_URLS = ['relay.mostro.network', 'relay.primal.net', 'nostr.sathoarder.com', 'nos.lol',
+                    'relay.nostr.dev.br', 'nostr.mom', 'nostr.data.haus', 'relay.snort.social']
+  .map(h => 'wss://' + h);
 const $ = id => document.getElementById(id);
 
 // ---- room code from URL hash ------------------------------------------------
@@ -587,7 +602,7 @@ function fmtBytes(n) {
 
 // ---- join --------------------------------------------------------------------
 log(`joining room <span class="lm">${roomCode}</span> as <span class="cy">${ME}</span> …`);
-const room = joinRoom({appId: APP_ID}, roomCode);
+const room = joinRoom({appId: APP_ID, relayUrls: RELAY_URLS}, roomCode);
 
 const [sendFile, getFile, onFileProgress] = room.makeAction('file');
 const [sendOffer, getOffer]   = room.makeAction('offer');
