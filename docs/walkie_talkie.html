@@ -1,0 +1,1717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#05050f">
+<meta name="description" content="A browser walkie-talkie: push to talk, device to device over WebRTC, with channels and devices that remember each other.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+<title>Walkie Talkie | Fractal Reality</title>
+<!--
+  WALKIE TALKIE: push to talk between browsers, device to device.
+
+  Created: 2026-10-27
+  Last updated: 2026-10-27
+  Version: 1.0
+
+  How it connects (the About tab has the long version):
+  - Voice runs over WebRTC, which is already a direct, encrypted (DTLS-SRTP)
+    link from one device to the other. No server carries the audio.
+  - The only internet step is the introduction: the two devices swap a few
+    kilobytes of connection details, encrypted with the channel key, through
+    public Nostr relays (Trystero's nostr strategy, vendored below). After
+    that the relays are out of the loop, and on one Wi-Fi network or a phone
+    hotspot the audio never leaves the local network.
+  - Web pages cannot use Wi-Fi Direct (no browser exposes it), and Web
+    Bluetooth is central-only (a page can connect to a gadget but cannot
+    advertise), so two phones running a page cannot link over either one.
+    A native wrapper could (Nearby Connections, Multipeer Connectivity).
+  - Remembering: each device makes an ECDSA P-256 key pair on first run
+    (IndexedDB, private key non-extractable). When two devices meet, each
+    signs the other's challenge bound to both DTLS fingerprints, so a
+    remembered device is recognized by its key, and even someone holding the
+    channel code cannot pose as it. Channels and the devices met on them live
+    in localStorage; powering on re-tunes the last channel and the devices
+    find each other again with no codes.
+
+  Dev probes: ?profile=<name> keeps a separate identity and channel list (two
+  tabs on one machine can talk to each other); ?tone sends a test tone
+  instead of the microphone; window.__walkie.state reads the live state.
+
+  (c) 2026 Ashman Roonz / fractalreality.ca. Trystero (MIT) and its bundled
+  @noble/secp256k1 (MIT) are vendored unchanged except the export line.
+
+  Revision history:
+  - 2026-10-27 v1.0: initial
+-->
+<style>
+  /* ═══ THE LAST SHIP SAILING LOOK ══════════════════════════════════════════
+     The house style (owner: "last ship sailing has a nice interface, and the
+     settings menu is nice too"): deep-space backdrop, Orbitron for what you
+     press, Rajdhani for what you read, glass cards with amber headings, flat
+     tabs lit from below, chip-blue secondary controls, rose for danger. The
+     main screen is the radio (display, push to talk, who is on); everything
+     else opens under it from the tabs along the top. */
+  :root {
+    --amber: #ffaa00;
+    --amber-hi: #ffd27a;
+    --amber-dim: rgba(255, 170, 0, 0.35);
+    --chip: #a8d8ff;
+    --chip-edge: rgba(80, 180, 255, 0.42);
+    --chip-bg: rgba(80, 180, 255, 0.08);
+    --text: #e6eef7;
+    --text-2: #cfdeeb;
+    --muted: rgba(185, 207, 223, 0.62);
+    --card: rgba(10, 16, 28, 0.62);
+    --card-edge: rgba(185, 207, 223, 0.10);
+    --rose: #ff9cab;
+    --tx: #ff5d73;
+    --green: #8fe3a8;
+    --display: 'Orbitron', 'Rajdhani', system-ui, sans-serif;
+    --body: 'Rajdhani', 'Inter', 'Helvetica Neue', system-ui, sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 100%; min-height: 100%; -webkit-text-size-adjust: 100%; -webkit-tap-highlight-color: transparent; }
+  body {
+    font-family: var(--body);
+    font-weight: 500;
+    color: var(--text);
+    background:
+      radial-gradient(1100px 700px at 22% 28%, rgba(40, 25, 80, 0.42), transparent 62%),
+      radial-gradient(900px 600px at 82% 80%, rgba(0, 60, 90, 0.28), transparent 60%),
+      #05050f;
+    background-attachment: fixed;
+    min-height: 100vh;
+    overflow-x: hidden;
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  }
+  button { font-family: inherit; }
+
+  /* ── the chromatic tag (LSS .lss-tag): titles. A one-off glitch every few
+     seconds instead of a constant jitter, so a phone screen can rest between
+     frames (the Pixel 9 measurement behind phi_resonance v1.7) ── */
+  .lss-tag { position: relative; display: inline-block; font-family: var(--display); font-weight: 700; white-space: nowrap; }
+  .lss-tag .lt-text {
+    position: relative;
+    display: inline-block;
+    padding: 0 8px 1px;
+    color: currentColor;
+    background: rgba(5, 8, 18, 0.35);
+    text-shadow: -1px 0 0 rgba(255, 64, 96, 0.6), 1px 0 0 rgba(64, 220, 255, 0.6), 0 0 4px currentColor, 0 0 8px currentColor;
+  }
+  .lss-tag.glitch-shot { animation: tagGlitchShot 94ms steps(1) 1; }
+  @keyframes tagGlitchShot {
+    0% { clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%); transform: translate(2px, 0); }
+    25% { clip-path: polygon(0 55%, 100% 55%, 100% 100%, 0 100%); transform: translate(-2px, 0); }
+    50% { clip-path: polygon(0 20%, 100% 20%, 100% 80%, 0 80%); transform: translate(1px, 0); filter: hue-rotate(45deg); }
+    75%, 100% { clip-path: none; transform: translate(-1px, 0); }
+  }
+
+  /* ── the app frame ── */
+  .app { position: relative; z-index: 2; max-width: 1120px; margin: 0 auto; padding: 0 14px 28px; }
+  .topbar { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 12px 0 8px; }
+  .brand { color: var(--amber); font-size: clamp(1rem, 4.6vw, 1.4rem); letter-spacing: 3px; min-width: 0; }
+  .power {
+    flex: 0 0 auto;
+    width: 46px;
+    height: 46px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: 1px solid rgba(185, 207, 223, 0.3);
+    background: rgba(10, 16, 28, 0.7);
+    color: #b9cfdf;
+    cursor: pointer;
+    transition: color .15s, border-color .15s, box-shadow .15s;
+  }
+  .power svg { width: 22px; height: 22px; }
+  .power:hover { color: var(--amber); border-color: rgba(255, 170, 0, 0.85); }
+  .power.on { color: var(--green); border-color: rgba(143, 227, 168, 0.75); box-shadow: 0 0 16px rgba(143, 227, 168, 0.3); }
+
+  /* ── tabs along the top: sticky; on a phone the row scrolls sideways ── */
+  .tabbar { position: sticky; top: 0; z-index: 60; margin: 0 0 12px; }
+  .tabbar::before {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 100vw;
+    transform: translateX(-50%);
+    background: rgba(6, 7, 18, 0.93);
+    border-bottom: 1px solid rgba(185, 207, 223, 0.16);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    pointer-events: none;
+  }
+  .settings-tabs { display: flex; align-items: center; gap: 2px 20px; width: 100%; overflow-x: auto; scrollbar-width: none; }
+  .settings-tabs::-webkit-scrollbar { display: none; }
+  .settings-tab {
+    position: relative;
+    flex: 0 0 auto;
+    padding: 12px 2px 12px;
+    background: transparent;
+    border: none;
+    color: rgba(185, 207, 223, 0.62);
+    font-family: var(--display);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: color .15s, text-shadow .15s;
+  }
+  .settings-tab:hover { color: var(--text); }
+  .settings-tab::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 2px;
+    background: var(--amber);
+    box-shadow: 0 0 12px rgba(255, 170, 0, 0.75);
+    transform: scaleX(0);
+    transition: transform .2s ease;
+  }
+  .settings-tab[data-active="1"] { color: var(--amber-hi); text-shadow: 0 0 14px rgba(255, 170, 0, 0.45); }
+  .settings-tab[data-active="1"]::after { transform: scaleX(1); }
+
+  /* a phone stacks the radio, who is on, then the open tab; a desktop sets
+     the list and the tab beside the radio */
+  .main { display: grid; grid-template-columns: 1fr; gap: 14px; }
+  .device, .side { display: grid; gap: 14px; align-content: start; min-width: 0; }
+  @media (min-width: 900px) {
+    .main { grid-template-columns: minmax(0, 1fr) minmax(340px, 430px); align-items: start; }
+    .device { position: sticky; top: 58px; }
+  }
+
+  /* ── glass cards and their headings (LSS .settings-section) ── */
+  .glass, .settings-section { background: var(--card); border: 1px solid var(--card-edge); border-radius: 10px; box-shadow: 0 8px 28px rgba(0, 0, 0, 0.30); }
+  .card-title, .settings-section h3 {
+    font-family: var(--display);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin: 2px 0 8px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid;
+    border-image: linear-gradient(to right, rgba(255, 170, 0, 0.45), rgba(255, 170, 0, 0)) 1;
+  }
+  .settings-section h3 span { color: var(--amber-hi); letter-spacing: 2px; }
+
+  /* ── the radio's display ── */
+  .radio { padding: 12px 14px 12px; display: grid; gap: 8px; }
+  .lcd-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .state-chip {
+    font-family: var(--display);
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    padding: 5px 11px;
+    border-radius: 999px;
+    border: 1px solid var(--card-edge);
+    color: var(--muted);
+  }
+  .state-chip.on { color: var(--green); border-color: rgba(143, 227, 168, 0.5); }
+  .state-chip.tx { color: #ffd6dc; border-color: var(--tx); background: rgba(255, 93, 115, 0.16); }
+  .state-chip.rx { color: var(--chip); border-color: var(--chip-edge); background: var(--chip-bg); }
+  .bars { display: inline-flex; gap: 3px; align-items: flex-end; height: 16px; }
+  .bars i { display: block; width: 4px; border-radius: 1px; background: rgba(185, 207, 223, 0.16); }
+  .bars i:nth-child(1) { height: 5px; } .bars i:nth-child(2) { height: 8px; } .bars i:nth-child(3) { height: 12px; } .bars i:nth-child(4) { height: 16px; }
+  .bars i.lit { background: var(--amber); box-shadow: 0 0 6px rgba(255, 170, 0, 0.6); }
+  .ch-picker { display: grid; grid-template-columns: 46px 1fr 46px; gap: 6px; align-items: center; }
+  .pp-arrow {
+    height: 46px;
+    border-radius: 6px;
+    background: var(--chip-bg);
+    border: 1px solid var(--chip-edge);
+    color: var(--chip);
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: background .15s, border-color .15s, color .15s, opacity .15s;
+  }
+  .pp-arrow:hover { background: rgba(80, 180, 255, 0.2); border-color: rgba(80, 180, 255, 0.85); color: #fff; }
+  .pp-arrow:disabled { opacity: 0.3; cursor: default; }
+  .ch-name { text-align: center; min-width: 0; }
+  .ch-name small { display: block; font-family: var(--display); font-size: 0.54rem; letter-spacing: 3px; color: var(--muted); }
+  .ch-name b {
+    display: block;
+    font-family: var(--display);
+    font-size: clamp(1rem, 5vw, 1.35rem);
+    letter-spacing: 2px;
+    color: var(--amber-hi);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-shadow: 0 0 12px rgba(255, 170, 0, 0.35);
+  }
+  .lcd-line { font-size: 1.05rem; color: var(--text-2); min-height: 1.35em; text-align: center; line-height: 1.3; overflow-wrap: anywhere; }
+  .lcd-line.rx { font-family: var(--display); font-size: 0.74rem; font-weight: 700; letter-spacing: 2px; color: var(--chip); text-shadow: 0 0 10px rgba(80, 180, 255, 0.5); }
+  .lcd-line.link { font-family: var(--display); font-size: 0.58rem; letter-spacing: 2px; color: var(--muted); }
+  .lcd-line.link.direct { color: var(--green); }
+  .lcd-line.link.relay { color: var(--amber-hi); }
+
+  /* ── push to talk ── */
+  .ptt-wrap { display: flex; justify-content: center; padding: 6px 0 2px; }
+  .ptt {
+    --lvl: 0;
+    position: relative;
+    width: min(68vw, 280px);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 170, 0, 0.75);
+    background: radial-gradient(circle at 50% 36%, rgba(255, 170, 0, 0.20), rgba(10, 16, 28, 0.94) 64%);
+    box-shadow: 0 0 calc(18px + var(--lvl) * 60px) rgba(255, 170, 0, calc(0.16 + var(--lvl) * 0.5)), inset 0 0 40px rgba(0, 0, 0, 0.6);
+    color: var(--amber-hi);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+    cursor: pointer;
+    transition: transform .08s, border-color .15s, background .15s, opacity .15s;
+  }
+  .ptt:focus-visible { outline: 2px solid var(--chip-edge); outline-offset: 6px; }
+  .ptt-label { font-family: var(--display); font-size: clamp(0.88rem, 4.2vw, 1.12rem); font-weight: 700; letter-spacing: 3px; text-align: center; padding: 0 18px; }
+  .ptt-sub { font-size: 0.98rem; color: var(--muted); letter-spacing: 0.04em; text-align: center; padding: 0 26px; }
+  .ptt.off { border-color: rgba(185, 207, 223, 0.35); background: radial-gradient(circle at 50% 36%, rgba(185, 207, 223, 0.10), rgba(10, 16, 28, 0.94) 64%); color: var(--text-2); box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.6); }
+  .ptt.tx {
+    border-color: var(--tx);
+    background: radial-gradient(circle at 50% 36%, rgba(255, 93, 115, 0.38), rgba(30, 6, 12, 0.94) 64%);
+    box-shadow: 0 0 calc(24px + var(--lvl) * 80px) rgba(255, 93, 115, calc(0.35 + var(--lvl) * 0.5)), inset 0 0 40px rgba(0, 0, 0, 0.5);
+    color: #ffe0e5;
+    transform: scale(0.97);
+  }
+  .ptt.rx {
+    border-color: rgba(80, 180, 255, 0.85);
+    background: radial-gradient(circle at 50% 36%, rgba(80, 180, 255, 0.30), rgba(6, 14, 30, 0.94) 64%);
+    box-shadow: 0 0 calc(18px + var(--lvl) * 70px) rgba(80, 180, 255, calc(0.25 + var(--lvl) * 0.5)), inset 0 0 40px rgba(0, 0, 0, 0.5);
+    color: #d8eeff;
+  }
+  .ptt.tx .ptt-sub, .ptt.rx .ptt-sub { color: inherit; opacity: 0.8; }
+
+  /* ── who is on the channel ── */
+  .members { padding: 12px 14px 10px; }
+  .me-line { color: var(--muted); font-size: 0.95rem; margin: -2px 0 8px; }
+  .me-line b { color: var(--text-2); font-weight: 700; }
+  .member-list { display: grid; gap: 6px; }
+  .member {
+    display: grid;
+    grid-template-columns: 12px minmax(0, 1fr) auto;
+    gap: 10px;
+    align-items: center;
+    padding: 8px 10px;
+    border-radius: 8px;
+    border: 1px solid var(--card-edge);
+    background: rgba(255, 255, 255, 0.02);
+  }
+  .member .dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(185, 207, 223, 0.22); }
+  .member.online .dot { background: var(--green); box-shadow: 0 0 8px rgba(143, 227, 168, 0.7); }
+  .member.tx { border-color: var(--chip-edge); background: var(--chip-bg); }
+  .member.tx .dot { background: var(--chip); box-shadow: 0 0 10px rgba(80, 180, 255, 0.9); }
+  .member .who { min-width: 0; }
+  .member .who b { display: block; font-family: var(--display); font-size: 0.72rem; letter-spacing: 1.5px; color: var(--amber-hi); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .member:not(.online) .who b { color: var(--text-2); }
+  .member .who small { display: block; color: var(--muted); font-size: 0.92rem; line-height: 1.25; }
+  .badge { font-family: var(--display); font-size: 0.5rem; font-weight: 700; letter-spacing: 1.5px; padding: 4px 8px; border-radius: 999px; border: 1px solid; white-space: nowrap; }
+  .badge.known { color: var(--green); border-color: rgba(143, 227, 168, 0.45); }
+  .badge.new { color: var(--amber-hi); border-color: var(--amber-dim); }
+  .badge.warn { color: var(--rose); border-color: rgba(255, 156, 171, 0.5); }
+  .badge.dim { color: var(--muted); border-color: var(--card-edge); }
+  .empty { color: var(--muted); font-size: 1rem; padding: 6px 2px; }
+
+  /* ── the open tab ── */
+  .tab-panels { display: none; }
+  .app.panel-open .tab-panels { display: block; }
+  .panel-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 0 0 10px; }
+  .panel-title { font-family: var(--display); font-size: 0.8rem; font-weight: 700; letter-spacing: 5px; text-transform: uppercase; color: var(--amber); text-shadow: 0 0 12px rgba(255, 170, 0, 0.4); }
+  .panel-close {
+    flex: 0 0 auto;
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(10, 16, 28, 0.7);
+    border: 1px solid rgba(185, 207, 223, 0.3);
+    border-radius: 50%;
+    color: #b9cfdf;
+    font-family: var(--display);
+    font-size: 0.95rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: color .15s, border-color .15s, box-shadow .15s, transform .2s;
+  }
+  .panel-close:hover { color: var(--amber); border-color: rgba(255, 170, 0, 0.85); box-shadow: 0 0 18px rgba(255, 170, 0, 0.38); transform: rotate(90deg); }
+  .settings-panel { display: none; }
+  .settings-panel[data-active="1"] { display: block; }
+  .settings-section { width: 100%; margin-bottom: 14px; padding: 12px 16px 10px; }
+
+  /* setting rows (LSS .setting-row): label and value, then the control */
+  .setting-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-areas: "lbl val" "ctl ctl";
+    align-items: center;
+    column-gap: 12px;
+    row-gap: 2px;
+    padding: 8px 4px;
+    border-bottom: 1px solid rgba(185, 207, 223, 0.07);
+  }
+  .setting-row:last-child { border-bottom: none; }
+  .setting-row > label, .setting-row > .lbl { grid-area: lbl; font-size: 1.02rem; color: var(--text-2); letter-spacing: 0.02em; }
+  .setting-row > input, .setting-row > .ctl { grid-area: ctl; width: 100%; }
+  .setting-row > .param-val, .setting-row > .toggle { grid-area: val; }
+  .setting-row.check { grid-template-areas: "lbl val"; }
+  .param-val { font-family: var(--display); font-size: 0.7rem; letter-spacing: 1px; color: var(--amber-hi); text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .row-note { color: var(--muted); font-size: 0.95rem; line-height: 1.4; padding: 6px 4px 6px; }
+  .row-note b { color: var(--text-2); }
+
+  input[type="range"] { -webkit-appearance: none; appearance: none; width: 100%; height: 30px; background: transparent; outline: none; cursor: pointer; }
+  input[type="range"]::-webkit-slider-runnable-track { height: 6px; background: rgba(185, 207, 223, 0.16); border-radius: 3px; }
+  input[type="range"]::-moz-range-track { height: 6px; background: rgba(185, 207, 223, 0.16); border-radius: 3px; }
+  input[type="range"]::-moz-range-progress { height: 6px; background: var(--amber); border-radius: 3px; }
+  input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 20px; height: 20px; margin-top: -7px; border-radius: 50%; background: var(--amber); border: 2px solid #ffe2a8; box-shadow: 0 0 10px rgba(255, 170, 0, 0.6); }
+  input[type="range"]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 50%; background: var(--amber); border: 2px solid #ffe2a8; box-shadow: 0 0 10px rgba(255, 170, 0, 0.6); }
+
+  input[type="text"] {
+    width: 100%;
+    min-height: 44px;
+    padding: 9px 12px;
+    background-color: rgba(8, 12, 24, 0.92);
+    border: 1px solid rgba(80, 180, 255, 0.38);
+    border-radius: 6px;
+    color: var(--text);
+    font-family: var(--body);
+    font-size: 1rem;
+    font-weight: 600;
+  }
+  input[type="text"]:focus { border-color: rgba(80, 180, 255, 0.85); box-shadow: 0 0 10px rgba(80, 180, 255, 0.25); outline: none; }
+  input[type="text"]::placeholder { color: rgba(185, 207, 223, 0.4); }
+
+  /* chip-blue buttons inside cards (LSS .settings-section button) */
+  .btn {
+    min-height: 42px;
+    padding: 9px 14px;
+    background: var(--chip-bg);
+    border: 1px solid var(--chip-edge);
+    border-radius: 6px;
+    color: var(--chip);
+    font-family: var(--display);
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background .15s, border-color .15s, color .15s;
+  }
+  .btn:hover { background: rgba(80, 180, 255, 0.20); border-color: rgba(80, 180, 255, 0.85); color: #fff; }
+  .btn.amber { background: rgba(255, 170, 0, 0.12); border-color: rgba(255, 170, 0, 0.75); color: var(--amber-hi); }
+  .btn.amber:hover { background: rgba(255, 170, 0, 0.22); color: #fff; box-shadow: 0 0 16px rgba(255, 170, 0, 0.3); }
+  .btn.rose { background: rgba(255, 93, 115, 0.08); border-color: rgba(255, 105, 125, 0.55); color: #ffc2cc; }
+  .btn.rose:hover { background: rgba(255, 70, 95, 0.22); border-color: rgba(255, 105, 125, 0.95); color: #fff; }
+  .btn.small { min-height: 34px; padding: 6px 10px; font-size: 0.56rem; }
+  .io-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
+  .save-row { display: grid; grid-template-columns: 1fr auto; gap: 8px; margin: 2px 0 4px; }
+
+  /* ON / OFF toggles */
+  .toggle {
+    justify-self: end;
+    min-width: 66px;
+    min-height: 36px;
+    padding: 6px 14px;
+    border-radius: 999px;
+    border: 1px solid rgba(185, 207, 223, 0.22);
+    background: rgba(10, 16, 28, 0.6);
+    color: var(--muted);
+    font-family: var(--display);
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    cursor: pointer;
+    transition: background .15s, border-color .15s, color .15s, box-shadow .15s;
+  }
+  .toggle:hover { border-color: rgba(80, 180, 255, 0.6); color: #fff; }
+  .toggle[aria-pressed="true"] { border-color: rgba(255, 170, 0, 0.85); background: rgba(255, 170, 0, 0.16); color: var(--amber-hi); box-shadow: 0 0 12px rgba(255, 170, 0, 0.2); }
+
+  /* channel and device lists */
+  .row-list { display: grid; gap: 8px; }
+  .row-item { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px 10px; align-items: center; padding: 10px; border-radius: 8px; border: 1px solid var(--card-edge); background: rgba(255, 255, 255, 0.02); }
+  .row-item.current { border-color: rgba(255, 170, 0, 0.45); background: rgba(255, 170, 0, 0.05); }
+  .row-item .who b { display: block; font-family: var(--display); font-size: 0.74rem; letter-spacing: 1.5px; color: var(--amber-hi); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .row-item .who small { display: block; color: var(--muted); font-size: 0.92rem; line-height: 1.3; }
+  .row-actions { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+  .row-item .save-row { grid-column: 1 / -1; margin: 0; }
+
+  /* the invite */
+  .qr-box { display: flex; justify-content: center; padding: 8px 0 6px; }
+  .qr-box canvas { width: min(64vw, 236px); height: auto; image-rendering: pixelated; border-radius: 8px; background: #fff; box-shadow: 0 0 24px rgba(255, 170, 0, 0.18); }
+  .code { font-family: var(--display); font-size: 0.86rem; font-weight: 700; letter-spacing: 3px; color: var(--amber-hi); text-align: center; overflow-wrap: anywhere; padding: 6px 4px 2px; -webkit-user-select: all; user-select: all; }
+
+  /* about */
+  .prose p { color: var(--text-2); font-size: 1.04rem; line-height: 1.5; margin: 0 0 10px; }
+  .prose p b { color: var(--amber-hi); font-weight: 700; }
+  .prose ul { margin: 0 0 10px 18px; color: var(--text-2); line-height: 1.5; }
+  .meta-block { font-family: var(--display); font-size: 0.56rem; letter-spacing: 2px; color: var(--muted); line-height: 1.9; margin: -2px 0 10px; }
+  .diag { font-family: ui-monospace, Consolas, monospace; font-size: 0.82rem; color: var(--muted); line-height: 1.55; white-space: pre-wrap; overflow-wrap: anywhere; }
+
+  .footer { margin-top: 22px; text-align: center; color: var(--muted); font-size: 0.95rem; }
+  .footer a { color: var(--chip); text-decoration: none; letter-spacing: 1px; }
+  .footer a:hover { color: #fff; }
+
+  /* toasts */
+  #toasts { position: fixed; left: 50%; bottom: calc(18px + env(safe-area-inset-bottom)); transform: translateX(-50%); z-index: 100; display: grid; gap: 6px; pointer-events: none; width: min(92vw, 420px); }
+  .toast { background: rgba(10, 16, 28, 0.95); border: 1px solid var(--chip-edge); color: var(--text); padding: 10px 14px; border-radius: 8px; font-size: 1.02rem; line-height: 1.35; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5); animation: toastIn .2s ease; transition: opacity .35s, transform .35s; }
+  .toast.out { opacity: 0; transform: translateY(6px); }
+  @keyframes toastIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .lss-tag.glitch-shot { animation: none; }
+    .ptt, .toast { transition: none; }
+  }
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <header class="topbar">
+    <span class="lss-tag brand" id="brand"><span class="lt-text">WALKIE · TALKIE</span></span>
+    <button class="power" id="powerBtn" aria-label="Power on" title="Power">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 3v8"/><path d="M6.4 6.6a8 8 0 1 0 11.2 0"/></svg>
+    </button>
+  </header>
+
+  <nav class="tabbar" aria-label="Settings">
+    <div class="settings-tabs" role="tablist">
+      <button class="settings-tab" data-tab="channels" role="tab">Channels</button>
+      <button class="settings-tab" data-tab="share" role="tab">Share</button>
+      <button class="settings-tab" data-tab="devices" role="tab">Devices</button>
+      <button class="settings-tab" data-tab="audio" role="tab">Audio</button>
+      <button class="settings-tab" data-tab="about" role="tab">About</button>
+    </div>
+  </nav>
+
+  <main class="main">
+    <div class="device">
+      <section class="radio glass" aria-live="polite">
+        <div class="lcd-top">
+          <span class="state-chip" id="stateChip">OFF</span>
+          <span class="bars" id="bars" title="Link quality"><i></i><i></i><i></i><i></i></span>
+        </div>
+        <div class="ch-picker">
+          <button class="pp-arrow" id="chPrev" aria-label="Previous channel">◀</button>
+          <div class="ch-name"><small>CHANNEL</small><b id="chName">NO CHANNEL</b></div>
+          <button class="pp-arrow" id="chNext" aria-label="Next channel">▶</button>
+        </div>
+        <div class="lcd-line" id="statusLine"></div>
+        <div class="lcd-line rx" id="rxLine"></div>
+        <div class="lcd-line link" id="linkLine"></div>
+      </section>
+
+      <div class="ptt-wrap">
+        <button class="ptt off" id="ptt" aria-label="Push to talk">
+          <span class="ptt-label" id="pttLabel">POWER ON</span>
+          <span class="ptt-sub" id="pttSub">tap to turn the radio on</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="side">
+      <section class="members glass">
+        <h3 class="card-title">On this channel</h3>
+        <p class="me-line" id="meLine"></p>
+        <div class="member-list" id="memberList"></div>
+      </section>
+
+      <section class="tab-panels" id="panels">
+        <div class="panel-head">
+          <span class="panel-title" id="panelTitle"></span>
+          <button class="panel-close" id="panelClose" aria-label="Close">✕</button>
+        </div>
+
+        <div class="settings-panel" data-panel="channels">
+          <div class="settings-section">
+            <h3>Your channels</h3>
+            <div class="row-list" id="chList"></div>
+          </div>
+          <div class="settings-section">
+            <h3>New channel</h3>
+            <div class="save-row"><input type="text" id="newChName" maxlength="24" placeholder="Channel name" autocomplete="off"><button class="btn amber" id="makeCh">Make</button></div>
+            <p class="row-note">A new channel gets its own secret key. Share it from the SHARE tab with the devices you want on it.</p>
+          </div>
+          <div class="settings-section">
+            <h3>Join a channel</h3>
+            <div class="save-row"><input type="text" id="joinCode" placeholder="Invite link or code" autocomplete="off" spellcheck="false"><button class="btn" id="joinCh">Join</button></div>
+            <p class="row-note">Or point your camera app at the other phone's invite code: it opens this page already tuned.</p>
+          </div>
+        </div>
+
+        <div class="settings-panel" data-panel="share">
+          <div class="settings-section" id="shareBox">
+            <h3>Invite to <span id="shareName"></span></h3>
+            <div class="qr-box"><canvas id="qr" width="10" height="10" aria-label="Invite QR code"></canvas></div>
+            <div class="code" id="shareCode"></div>
+            <div class="io-row"><button class="btn amber" id="copyLink">Copy link</button><button class="btn" id="shareLink">Share…</button></div>
+            <p class="row-note">Point the other phone's camera at the code, or send the link, or read out the code. <b>Anyone with it can join this channel</b>, so give it only to people you want on it.</p>
+          </div>
+          <div class="settings-section" id="shareNone"><p class="row-note">Make or pick a channel first, then its invite shows here.</p></div>
+        </div>
+
+        <div class="settings-panel" data-panel="devices">
+          <div class="settings-section">
+            <h3>This device</h3>
+            <div class="setting-row"><label for="myName">Name others see</label><input type="text" id="myName" maxlength="24" autocomplete="off"></div>
+            <div class="setting-row check"><span class="lbl">Callsign (key fingerprint)</span><span class="param-val" id="myCall"></span></div>
+            <p class="row-note" id="keyNote"></p>
+          </div>
+          <div class="settings-section">
+            <h3>Remembered devices</h3>
+            <div class="row-list" id="devList"></div>
+            <p class="row-note">A device is remembered by its key, which it proves over the encrypted link every time you meet, so a new phone using an old name shows up as new. Forgetting a device here does not lock it out: for that, make a new channel and share it only with the devices you want.</p>
+          </div>
+        </div>
+
+        <div class="settings-panel" data-panel="audio">
+          <div class="settings-section">
+            <h3>Sound</h3>
+            <div class="setting-row"><label for="vol">Speaker volume</label><span class="param-val" id="volVal"></span><input type="range" id="vol" min="0" max="1" step="0.01"></div>
+            <div class="setting-row check"><span class="lbl">Squelch and roger beeps</span><button class="toggle" data-set="beeps"></button></div>
+            <div class="setting-row check"><span class="lbl">Tap to talk (latch) instead of hold</span><button class="toggle" data-set="latch"></button></div>
+            <div class="setting-row check"><span class="lbl">Keep the screen on while powered</span><button class="toggle" data-set="awake"></button></div>
+            <div class="io-row"><button class="btn" id="testBeep">Test beep</button><span></span></div>
+          </div>
+          <div class="settings-section">
+            <h3>Microphone</h3>
+            <div class="setting-row check"><span class="lbl">Echo cancellation</span><button class="toggle" data-set="echo"></button></div>
+            <div class="setting-row check"><span class="lbl">Noise suppression</span><button class="toggle" data-set="noise"></button></div>
+            <p class="row-note" id="micNote"></p>
+          </div>
+        </div>
+
+        <div class="settings-panel" data-panel="about">
+          <div class="settings-section prose">
+            <h3>How it connects</h3>
+            <div class="meta-block">Created: 2026-10-27<br>Last updated: 2026-10-27<br>Version: 1.0</div>
+            <p><b>Your voice goes straight from this device to theirs.</b> The link is WebRTC, the browser's own peer-to-peer channel, encrypted end to end. No server carries the audio.</p>
+            <p><b>The only internet step is the introduction.</b> To find each other, the two devices swap a few kilobytes of connection details, encrypted with the channel's key, through public Nostr relays. Once they are linked the relays are out of the loop. On the same Wi-Fi, or with one phone sharing a hotspot, the audio never leaves the local network: the LINK line on the radio shows the route it actually took.</p>
+            <p><b>Why not Wi-Fi Direct or Bluetooth?</b> A web page cannot reach either one. No browser exposes Wi-Fi Direct, and Web Bluetooth can only connect out to gadgets like heart-rate straps (it cannot advertise), so two phones running a page cannot pair over it. A native app could, through Android's Nearby Connections or Apple's Multipeer Connectivity.</p>
+            <p><b>How devices remember each other.</b> The first time you power on, this device makes its own key pair. When two devices meet on a channel, each proves its key to the other over the live encrypted link, so a remembered device is recognized by its key rather than its name. Next time, power on and the radio tunes your last channel and finds them by itself, with no codes.</p>
+            <p><b>What is kept, and where.</b> Only on this device: your key, your name, your channels and the devices you have met. Nothing is uploaded anywhere.</p>
+            <p><b>When it cannot connect.</b> Two phones on different mobile networks can sit behind carrier NAT that blocks a direct link; the fix is a relay server (TURN), which this version does not use yet. Same Wi-Fi and phone hotspots always link directly.</p>
+          </div>
+          <div class="settings-section">
+            <h3>Diagnostics</h3>
+            <div class="diag" id="diag"></div>
+          </div>
+          <div class="settings-section prose">
+            <h3>Revision history</h3>
+            <ul><li>2026-10-27 v1.0: initial</li></ul>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="footer"><a href="https://fractalreality.ca" target="_blank" rel="noopener">fractalreality.ca</a></footer>
+</div>
+<div id="toasts" aria-live="polite"></div>
+<div id="sink" hidden></div>
+
+<!-- ============================================================
+  VENDORED: Trystero 0.22.0 (nostr strategy), bundled with its deps
+  (incl. @noble/secp256k1, MIT). Source, byte-for-byte except the
+  export line rewritten to window.__trystero:
+    https://esm.sh/trystero@0.22.0/es2022/nostr.bundle.mjs
+  Nothing is fetched at runtime; open this file from file:// and it
+  still works, with no CDN in the trust path. To update: re-fetch
+  that URL, re-audit, re-inline.
+============================================================ -->
+<script type="module">
+/* esm.sh - trystero@0.22.0/nostr */
+var ht={p:0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffefffffc2fn,n:0xfffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141n,h:1n,a:0n,b:7n,Gx:0x79be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798n,Gy:0x483ada7726a3c4655da4fbfc0e1108a8fd17b448a68554199c47d08ffb10d4b8n},{p:W,n:ge,Gx:wn,Gy:bn,b:mt}=ht,D=32,le=64,Ge={publicKey:D+1,publicKeyUncompressed:le+1,signature:le,seed:D+D/2},xn=(...e)=>{"captureStackTrace"in Error&&typeof Error.captureStackTrace=="function"&&Error.captureStackTrace(...e)},P=(e="")=>{let t=new Error(e);throw xn(t,P),t},Sn=e=>typeof e=="bigint",kn=e=>typeof e=="string",An=e=>e instanceof Uint8Array||ArrayBuffer.isView(e)&&e.constructor.name==="Uint8Array",Z=(e,t,n="")=>{let s=An(e),r=e?.length,o=t!==void 0;if(!s||o&&r!==t){let u=n&&`"${n}" `,h=o?` of length ${t}`:"",p=s?`length=${r}`:`type=${typeof e}`;P(u+"expected Uint8Array"+h+", got "+p)}return e},ue=e=>new Uint8Array(e),gt=(e,t)=>e.toString(16).padStart(t,"0"),wt=e=>Array.from(Z(e)).map(t=>gt(t,2)).join(""),q={_0:48,_9:57,A:65,F:70,a:97,f:102},ft=e=>{if(e>=q._0&&e<=q._9)return e-q._0;if(e>=q.A&&e<=q.F)return e-(q.A-10);if(e>=q.a&&e<=q.f)return e-(q.a-10)},bt=e=>{let t="hex invalid";if(!kn(e))return P(t);let n=e.length,s=n/2;if(n%2)return P(t);let r=ue(s);for(let o=0,u=0;o<s;o++,u+=2){let h=ft(e.charCodeAt(u)),p=ft(e.charCodeAt(u+1));if(h===void 0||p===void 0)return P(t);r[o]=h*16+p}return r},xt=()=>globalThis?.crypto,lt=()=>xt()?.subtle??P("crypto.subtle must be defined, consider polyfill"),de=(...e)=>{let t=ue(e.reduce((s,r)=>s+Z(r).length,0)),n=0;return e.forEach(s=>{t.set(s,n),n+=s.length}),t},Fe=(e=D)=>xt().getRandomValues(ue(e)),Re=BigInt,oe=(e,t,n,s="bad number: out of range")=>Sn(e)&&t<=e&&e<n?e:P(s),f=(e,t=W)=>{let n=e%t;return n>=0n?n:t+n},Oe=e=>f(e,ge),vn=(e,t)=>{(e===0n||t<=0n)&&P("no inverse n="+e+" mod="+t);let n=f(e,t),s=t,r=0n,o=1n,u=1n,h=0n;for(;n!==0n;){let p=s/n,g=s%n,d=r-u*p,a=o-h*p;s=n,n=g,r=u,o=h,u=d,h=a}return s===1n?f(r,t):P("no inverse")},Tn=e=>{let t=vt[e];return typeof t!="function"&&P("hashes."+e+" not set"),t};var je=e=>e instanceof Q?e:P("Point expected"),St=e=>f(f(e*e)*e+mt),ut=e=>oe(e,0n,W),Le=e=>oe(e,1n,W),Pn=e=>oe(e,1n,ge),ye=e=>(e&1n)===0n,Ue=e=>Uint8Array.of(e),En=e=>Ue(ye(e)?2:3),kt=e=>{let t=St(Le(e)),n=1n;for(let s=t,r=(W+1n)/4n;r>0n;r>>=1n)r&1n&&(n=n*s%W),s=s*s%W;return f(n*n)===t?n:P("sqrt invalid")},Q=class e{static BASE;static ZERO;X;Y;Z;constructor(t,n,s){this.X=ut(t),this.Y=Le(n),this.Z=ut(s),Object.freeze(this)}static CURVE(){return ht}static fromAffine(t){let{x:n,y:s}=t;return n===0n&&s===0n?se:new e(n,s,1n)}static fromBytes(t){Z(t);let{publicKey:n,publicKeyUncompressed:s}=Ge,r,o=t.length,u=t[0],h=t.subarray(1),p=_e(h,0,D);if(o===n&&(u===2||u===3)){let g=kt(p),d=ye(g);ye(Re(u))!==d&&(g=f(-g)),r=new e(p,g,1n)}return o===s&&u===4&&(r=new e(p,_e(h,D,le),1n)),r?r.assertValidity():P("bad point: not on curve")}static fromHex(t){return e.fromBytes(bt(t))}get x(){return this.toAffine().x}get y(){return this.toAffine().y}equals(t){let{X:n,Y:s,Z:r}=this,{X:o,Y:u,Z:h}=je(t),p=f(n*h),g=f(o*r),d=f(s*h),a=f(u*r);return p===g&&d===a}is0(){return this.equals(se)}negate(){return new e(this.X,f(-this.Y),this.Z)}double(){return this.add(this)}add(t){let{X:n,Y:s,Z:r}=this,{X:o,Y:u,Z:h}=je(t),p=0n,g=mt,d=0n,a=0n,i=0n,w=f(g*3n),S=f(n*o),v=f(s*u),E=f(r*h),K=f(n+s),B=f(o+u);K=f(K*B),B=f(S+v),K=f(K-B),B=f(n+r);let O=f(o+h);return B=f(B*O),O=f(S+E),B=f(B-O),O=f(s+r),d=f(u+h),O=f(O*d),d=f(v+E),O=f(O-d),i=f(p*B),d=f(w*E),i=f(d+i),d=f(v-i),i=f(v+i),a=f(d*i),v=f(S+S),v=f(v+S),E=f(p*E),B=f(w*B),v=f(v+E),E=f(S-E),E=f(p*E),B=f(B+E),S=f(v*B),a=f(a+S),S=f(O*B),d=f(K*d),d=f(d-S),S=f(K*v),i=f(O*i),i=f(i+S),new e(d,a,i)}subtract(t){return this.add(je(t).negate())}multiply(t,n=!0){if(!n&&t===0n)return se;if(Pn(t),t===1n)return this;if(this.equals(ee))return Dn(t).p;let s=se,r=ee;for(let o=this;t>0n;o=o.double(),t>>=1n)t&1n?s=s.add(o):n&&(r=r.add(o));return s}multiplyUnsafe(t){return this.multiply(t,!1)}toAffine(){let{X:t,Y:n,Z:s}=this;if(this.equals(se))return{x:0n,y:0n};if(s===1n)return{x:t,y:n};let r=vn(s,W);return f(s*r)!==1n&&P("inverse invalid"),{x:f(t*r),y:f(n*r)}}assertValidity(){let{x:t,y:n}=this.toAffine();return Le(t),Le(n),f(n*n)===St(t)?this:P("bad point: not on curve")}toBytes(t=!0){let{x:n,y:s}=this.assertValidity().toAffine(),r=j(n);return t?de(En(s),r):de(Ue(4),r,j(s))}toHex(t){return wt(this.toBytes(t))}},ee=new Q(wn,bn,1n),se=new Q(0n,1n,0n);Q.BASE=ee;Q.ZERO=se;var Bn=(e,t,n)=>ee.multiply(t,!1).add(e.multiply(n,!1)).assertValidity(),ce=e=>Re("0x"+(wt(e)||"0")),_e=(e,t,n)=>ce(e.subarray(t,n)),Ln=2n**256n,j=e=>bt(gt(oe(e,0n,Ln),le)),At=e=>{let t=ce(Z(e,D,"secret key"));return oe(t,1n,ge,"invalid secret key: outside of range")};var Rn=(e,t=!0)=>ee.multiply(At(e)).toBytes(t);var dt="SHA-256",vt={hmacSha256Async:async(e,t)=>{let n=lt(),s="HMAC",r=await n.importKey("raw",e,{name:s,hash:{name:dt}},!1,["sign"]);return ue(await n.sign(s,r,t))},hmacSha256:void 0,sha256Async:async e=>ue(await lt().digest(dt,e)),sha256:void 0};var or=ue(0),cr=Ue(0),ar=Ue(1);var _n=(e=Fe(Ge.seed))=>{Z(e),(e.length<Ge.seed||e.length>1024)&&P("expected 40-1024b");let t=f(ce(e),ge-1n);return j(t+1n)},Tt=e=>t=>{let n=_n(t);return{secretKey:n,publicKey:e(n)}},ir=Tt(Rn);var Pt=e=>Uint8Array.from("BIP0340/"+e,t=>t.charCodeAt(0)),Et="aux",Bt="nonce",Lt="challenge",Je=(e,...t)=>{let n=Tn("sha256"),s=n(Pt(e));return n(de(s,s,...t))},Xe=async(e,...t)=>{let n=vt.sha256Async,s=await n(Pt(e));return await n(de(s,s,...t))},qe=e=>{let t=At(e),n=ee.multiply(t),{x:s,y:r}=n.assertValidity().toAffine(),o=ye(r)?t:Oe(-t),u=j(s);return{d:o,px:u}},ze=e=>Oe(ce(e)),Rt=(...e)=>ze(Je(Lt,...e)),_t=async(...e)=>ze(await Xe(Lt,...e)),Ct=e=>qe(e).px,Cn=Tt(Ct),Ot=(e,t,n)=>{let{px:s,d:r}=qe(t);return{m:Z(e),px:s,d:r,a:Z(n,D)}},Ut=e=>{let t=ze(e);t===0n&&P("sign failed: k is zero");let{px:n,d:s}=qe(j(t));return{rx:n,k:s}},Nt=(e,t,n,s)=>de(t,j(Oe(e+n*s))),Kt="invalid signature produced",On=(e,t,n=Fe(D))=>{let{m:s,px:r,d:o,a:u}=Ot(e,t,n),h=Je(Et,u),p=j(o^ce(h)),g=Je(Bt,p,r,s),{rx:d,k:a}=Ut(g),i=Rt(d,r,s),w=Nt(a,d,i,o);return Dt(w,s,r)||P(Kt),w},Un=async(e,t,n=Fe(D))=>{let{m:s,px:r,d:o,a:u}=Ot(e,t,n),h=await Xe(Et,u),p=j(o^ce(h)),g=await Xe(Bt,p,r,s),{rx:d,k:a}=Ut(g),i=await _t(d,r,s),w=Nt(a,d,i,o);return await Ht(w,s,r)||P(Kt),w},Nn=(e,t)=>e instanceof Promise?e.then(t):t(e),Mt=(e,t,n,s)=>{let r=Z(e,le,"signature"),o=Z(t,void 0,"message"),u=Z(n,D,"publicKey");try{let h=ce(u),p=kt(h),g=ye(p)?p:f(-p),d=new Q(h,g,1n).assertValidity(),a=j(d.toAffine().x),i=_e(r,0,D);oe(i,1n,W);let w=_e(r,D,le);oe(w,1n,ge);let S=de(j(i),a,o);return Nn(s(S),v=>{let{x:E,y:K}=Bn(d,w,Oe(-v)).toAffine();return!(!ye(K)||E!==i)})}catch{return!1}},Dt=(e,t,n)=>Mt(e,t,n,Rt),Ht=async(e,t,n)=>Mt(e,t,n,_t),We={keygen:Cn,getPublicKey:Ct,sign:On,verify:Dt,signAsync:Un,verifyAsync:Ht},Ce=8,Kn=256,$t=Math.ceil(Kn/Ce)+1,Ye=2**(Ce-1),Mn=()=>{let e=[],t=ee,n=t;for(let s=0;s<$t;s++){n=t,e.push(n);for(let r=1;r<Ye;r++)n=n.add(t),e.push(n);t=n.double()}return e},yt,pt=(e,t)=>{let n=t.negate();return e?n:t},Dn=e=>{let t=yt||(yt=Mn()),n=se,s=ee,r=2**Ce,o=r,u=Re(r-1),h=Re(Ce);for(let p=0;p<$t;p++){let g=Number(e&u);e>>=h,g>Ye&&(g-=o,e+=1n);let d=p*Ye,a=d,i=d+Math.abs(g)-1,w=p%2!==0,S=g<0;g===0?s=s.add(pt(w,t[a])):n=n.add(pt(S,t[i]))}return e!==0n&&P("invalid wnaf"),{p:n,f:s}};var{floor:Qe,random:Hn,sin:$n}=Math,te="Trystero",ne=(e,t)=>Array(e).fill().map(t),It="0123456789AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz",Ke=e=>ne(e,()=>It[Qe(Hn()*It.length)]).join(""),z=Ke(20),G=Promise.all.bind(Promise),tt=typeof window<"u",{entries:Me,fromEntries:nt,keys:Zt}=Object,$=()=>{},I=e=>new Error(`${te}: ${e}`),In=new TextEncoder,Vn=new TextDecoder,re=e=>In.encode(e),pe=e=>Vn.decode(e),De=e=>e.reduce((t,n)=>t+n.toString(16).padStart(2,"0"),""),be=(...e)=>e.join("@"),Zn=(e,t)=>{let n=[...e],s=()=>{let o=$n(t++)*1e4;return o-Qe(o)},r=n.length;for(;r;){let o=Qe(s()*r--);[n[r],n[o]]=[n[o],n[r]]}return n},jt=(e,t,n,s)=>(e.relayUrls||(s?Zn(t,rt(e.appId)):t)).slice(0,e.relayUrls?e.relayUrls.length:e.relayRedundancy||n),H=JSON.stringify,ae=JSON.parse,rt=(e,t=Number.MAX_SAFE_INTEGER)=>e.split("").reduce((n,s)=>n+s.charCodeAt(0),0)%t,Vt=3333,Ne={},we=null,et=null,Gt=()=>{we||(we=new Promise(e=>{et=e}).finally(()=>{et=null,we=null}))},Jt=()=>et?.(),Xt=(e,t)=>{let n={},s=()=>{let r=new WebSocket(e);r.onclose=()=>{if(we){we.then(s);return}Ne[e]??=Vt,setTimeout(s,Ne[e]),Ne[e]*=2},r.onmessage=o=>t(o.data),n.socket=r,n.url=r.url,n.ready=new Promise(o=>r.onopen=()=>{o(n),Ne[e]=Vt}),n.send=o=>{r.readyState===1&&r.send(o)}};return s(),n},Yt=e=>()=>nt(Me(e).map(([t,n])=>[t,n.socket])),Ft=()=>{if(tt){let e=new AbortController;return addEventListener("online",Jt,{signal:e.signal}),addEventListener("offline",Gt,{signal:e.signal}),()=>e.abort()}return $};var st="AES-GCM",jn={},Gn=e=>btoa(String.fromCharCode.apply(null,new Uint8Array(e))),Jn=e=>{let t=atob(e);return new Uint8Array(t.length).map((n,s)=>t.charCodeAt(s)).buffer},ot=async(e,t)=>new Uint8Array(await crypto.subtle.digest(e,re(t))),xe=async e=>jn[e]||=Array.from(await ot("SHA-1",e)).map(t=>t.toString(36)).join(""),qt=async(e,t,n)=>crypto.subtle.importKey("raw",await crypto.subtle.digest({name:"SHA-256"},re(`${e}:${t}:${n}`)),{name:st},!1,["encrypt","decrypt"]),zt="$",Wt=",",Qt=async(e,t)=>{let n=crypto.getRandomValues(new Uint8Array(16));return n.join(Wt)+zt+Gn(await crypto.subtle.encrypt({name:st,iv:n},await e,re(t)))},en=async(e,t)=>{let[n,s]=t.split(zt);return pe(await crypto.subtle.decrypt({name:st,iv:new Uint8Array(n.split(Wt))},await e,Jn(s)))};var Xn=5e3,tn="icegatheringstatechange",nn="offer",Yn="answer",ct=(e,{rtcConfig:t,rtcPolyfill:n,turnConfig:s})=>{let r=new(n||RTCPeerConnection)({iceServers:Fn.concat(s||[]),...t}),o={},u=!1,h=!1,p=null,g=a=>{a.binaryType="arraybuffer",a.bufferedAmountLowThreshold=65535,a.onmessage=i=>o.data?.(i.data),a.onopen=()=>o.connect?.(),a.onclose=()=>o.close?.(),a.onerror=i=>o.error?.(i)},d=a=>Promise.race([new Promise(i=>{let w=()=>{a.iceGatheringState==="complete"&&(a.removeEventListener(tn,w),i())};a.addEventListener(tn,w),w()}),new Promise(i=>setTimeout(i,Xn))]).then(()=>({type:a.localDescription.type,sdp:a.localDescription.sdp.replace(/a=ice-options:trickle\s\n/g,"")}));return e?(p=r.createDataChannel("data"),g(p)):r.ondatachannel=({channel:a})=>{p=a,g(a)},r.onnegotiationneeded=async()=>{try{u=!0,await r.setLocalDescription();let a=await d(r);o.signal?.(a)}catch(a){o.error?.(a)}finally{u=!1}},r.onconnectionstatechange=()=>{["disconnected","failed","closed"].includes(r.connectionState)&&o.close?.()},r.ontrack=a=>{o.track?.(a.track,a.streams[0]),o.stream?.(a.streams[0])},r.onremovestream=a=>o.stream?.(a.stream),e&&(r.canTrickleIceCandidates||r.onnegotiationneeded()),{created:Date.now(),connection:r,get channel(){return p},get isDead(){return r.connectionState==="closed"},async signal(a){if(!(p?.readyState==="open"&&!a.sdp?.includes("a=rtpmap")))try{if(a.type===nn){if(u||r.signalingState!=="stable"&&!h){if(e)return;await G([r.setLocalDescription({type:"rollback"}),r.setRemoteDescription(a)])}else await r.setRemoteDescription(a);await r.setLocalDescription();let i=await d(r);return o.signal?.(i),i}else if(a.type===Yn){h=!0;try{await r.setRemoteDescription(a)}finally{h=!1}}}catch(i){o.error?.(i)}},sendData:a=>p.send(a),destroy:()=>{p?.close(),r.close(),u=!1,h=!1},setHandlers:a=>Object.assign(o,a),offerPromise:e?new Promise(a=>o.signal=i=>{i.type===nn&&a(i)}):Promise.resolve(),addStream:a=>a.getTracks().forEach(i=>r.addTrack(i,a)),removeStream:a=>r.getSenders().filter(i=>a.getTracks().includes(i.track)).forEach(i=>r.removeTrack(i)),addTrack:(a,i)=>r.addTrack(a,i),removeTrack:a=>{let i=r.getSenders().find(w=>w.track===a);i&&r.removeTrack(i)},replaceTrack:(a,i)=>{let w=r.getSenders().find(S=>S.track===a);if(w)return w.replaceTrack(i)}}},Fn=[...ne(3,(e,t)=>`stun:stun${t||""}.l.google.com:19302`),"stun:stun.cloudflare.com:3478"].map(e=>({urls:e}));var qn=Object.getPrototypeOf(Uint8Array),$e=12,sn=0,Ie=sn+$e,Ve=Ie+1,Se=Ve+1,ke=Se+1,ie=16*2**10-ke,He=255,rn="bufferedamountlow",he=e=>"@_"+e,on=(e,t,n)=>{let s={},r={},o={},u={},h={},p={},g={},d={onPeerJoin:$,onPeerLeave:$,onPeerStream:$,onPeerTrack:$},a=(c,l)=>(c?Array.isArray(c)?c:[c]:Zt(s)).flatMap(b=>{let x=s[b];return x?l(b,x):(console.warn(`${te}: no peer with id ${b} found`),[])}),i=c=>{s[c]&&(s[c].destroy(),delete s[c],delete u[c],delete h[c],d.onPeerLeave(c),t(c))},w=c=>{if(r[c])return o[c];if(!c)throw I("action type argument is required");let l=re(c);if(l.byteLength>$e)throw I(`action type string "${c}" (${l.byteLength}b) exceeds byte limit (${$e}). Hint: choose a shorter name.`);let b=new Uint8Array($e);b.set(l);let x=0;return r[c]={onComplete:$,onProgress:$,setOnComplete:A=>r[c]={...r[c],onComplete:A},setOnProgress:A=>r[c]={...r[c],onProgress:A},send:async(A,y,m,T)=>{if(m&&typeof m!="object")throw I("action meta argument must be an object");let M=typeof A;if(M==="undefined")throw I("action data cannot be undefined");let R=M!=="string",J=A instanceof Blob,k=J||A instanceof ArrayBuffer||A instanceof qn;if(m&&!k)throw I("action meta argument can only be used with binary data");let U=k?new Uint8Array(J?await A.arrayBuffer():A):re(R?H(A):A),V=m?re(H(m)):null,L=Math.ceil(U.byteLength/ie)+(m?1:0)||1,_=ne(L,(C,N)=>{let X=N===L-1,Y=m&&N===0,F=new Uint8Array(ke+(Y?V.byteLength:X?U.byteLength-ie*(L-(m?2:1)):ie));return F.set(b),F.set([x],Ie),F.set([X|Y<<1|k<<2|R<<3],Ve),F.set([Math.round((N+1)/L*He)],Se),F.set(m?Y?V:U.subarray((N-1)*ie,N*ie):U.subarray(N*ie,(N+1)*ie),ke),F});return x=x+1&He,G(a(y,async(C,N)=>{let{channel:X}=N,Y=0;for(;Y<L;){let F=_[Y];if(X.bufferedAmount>X.bufferedAmountLowThreshold&&await new Promise(gn=>{let it=()=>{X.removeEventListener(rn,it),gn()};X.addEventListener(rn,it)}),!s[C])break;N.sendData(F),Y++,T?.(F[Se]/He,C,m)}}))}},o[c]||=[r[c].send,r[c].setOnComplete,r[c].setOnProgress]},S=(c,l)=>{let b=new Uint8Array(l),x=pe(b.subarray(sn,Ie)).replaceAll("\0",""),[A]=b.subarray(Ie,Ve),[y]=b.subarray(Ve,Se),[m]=b.subarray(Se,ke),T=b.subarray(ke),M=!!(y&1),R=!!(y&2),J=!!(y&4),k=!!(y&8);if(!r[x]){console.warn(`${te}: received message with unregistered type (${x})`);return}u[c]||={},u[c][x]||={};let U=u[c][x][A]||={chunks:[]};if(R?U.meta=ae(pe(T)):U.chunks.push(T),r[x].onProgress(m/He,c,U.meta),!M)return;let V=new Uint8Array(U.chunks.reduce((L,_)=>L+_.byteLength,0));if(U.chunks.reduce((L,_)=>(V.set(_,L),L+_.byteLength),0),delete u[c][x][A],J)r[x].onComplete(V,c,U.meta);else{let L=pe(V);r[x].onComplete(k?ae(L):L,c)}},v=async()=>{await Ee(""),await new Promise(c=>setTimeout(c,99)),Me(s).forEach(([c,l])=>{l.destroy(),delete s[c]}),n()},[E,K]=w(he("ping")),[B,O]=w(he("pong")),[ve,Te]=w(he("signal")),[Pe,me]=w(he("stream")),[fe,Ze]=w(he("track")),[Ee,Be]=w(he("leave"));return e((c,l)=>{s[l]||(s[l]=c,c.setHandlers({data:b=>S(l,b),stream:b=>{d.onPeerStream(b,l,p[l]),delete p[l]},track:(b,x)=>{d.onPeerTrack(b,x,l,g[l]),delete g[l]},signal:b=>ve(b,l),close:()=>i(l),error:b=>{console.error(b),i(l)}}),d.onPeerJoin(l))}),K((c,l)=>B("",l)),O((c,l)=>{h[l]?.(),delete h[l]}),Te((c,l)=>s[l]?.signal(c)),me((c,l)=>p[l]=c),Ze((c,l)=>g[l]=c),Be((c,l)=>i(l)),tt&&addEventListener("beforeunload",v),{makeAction:w,leave:v,ping:async c=>{if(!c)throw I("ping() must be called with target peer ID");let l=Date.now();return E("",c),await new Promise(b=>h[c]=b),Date.now()-l},getPeers:()=>nt(Me(s).map(([c,l])=>[c,l.connection])),addStream:(c,l,b)=>a(l,async(x,A)=>{b&&await Pe(b,x),A.addStream(c)}),removeStream:(c,l)=>a(l,(b,x)=>x.removeStream(c)),addTrack:(c,l,b,x)=>a(b,async(A,y)=>{x&&await fe(x,A),y.addTrack(c,l)}),removeTrack:(c,l)=>a(l,(b,x)=>x.removeTrack(c)),replaceTrack:(c,l,b,x)=>a(b,async(A,y)=>{x&&await fe(x,A),y.replaceTrack(c,l)}),onPeerJoin:c=>d.onPeerJoin=c,onPeerLeave:c=>d.onPeerLeave=c,onPeerStream:c=>d.onPeerStream=c,onPeerTrack:c=>d.onPeerTrack=c}};var zn=20,Wn=5333,cn=57333,an=({init:e,subscribe:t,announce:n})=>{let s={},r=!1,o,u,h,p;return(g,d,a)=>{let{appId:i}=g;if(s[i]?.[d])return s[i][d];let w={},S={},v=be(te,i,d),E=xe(v),K=xe(be(v,z)),B=qt(g.password||"",i,d),O=y=>async m=>({type:m.type,sdp:await y(B,m.sdp)}),ve=O(en),Te=O(Qt),Pe=()=>ct(!0,g),me=(y,m,T)=>{if(S[m]){S[m]!==y&&y.destroy();return}S[m]=y,A(y,m),w[m]?.forEach((M,R)=>{R!==T&&M.destroy()}),delete w[m]},fe=(y,m)=>{S[m]===y&&delete S[m]},Ze=(y,m)=>{if(S[y])return;let T=w[y]?.[m];T&&(delete w[y][m],T.destroy())},Ee=y=>(u.push(...ne(y,Pe)),G(u.splice(0,y).map(m=>m.offerPromise.then(Te).then(T=>({peer:m,offer:T}))))),Be=(y,m)=>a?.({error:`incorrect password (${g.password}) when decrypting ${m}`,appId:i,peerId:y,roomId:d}),c=y=>async(m,T,M)=>{let[R,J]=await G([E,K]);if(m!==R&&m!==J)return;let{peerId:k,offer:U,answer:V,peer:L}=typeof T=="string"?ae(T):T;if(!(k===z||S[k])){if(k&&!U&&!V){if(w[k]?.[y])return;let[[{peer:_,offer:C}],N]=await G([Ee(1),xe(be(v,k))]);w[k]||=[],w[k][y]=_,setTimeout(()=>Ze(k,y),l[y]*.9),_.setHandlers({connect:()=>me(_,k,y),close:()=>fe(_,k)}),M(N,H({peerId:z,offer:C}))}else if(U){if(w[k]?.[y]&&z>k)return;let C=ct(!1,g);C.setHandlers({connect:()=>me(C,k,y),close:()=>fe(C,k)});let N;try{N=await ve(U)}catch{Be(k,"offer");return}if(C.isDead)return;let[X,Y]=await G([xe(be(v,k)),C.signal(N)]);M(X,H({peerId:z,answer:await Te(Y)}))}else if(V){let _;try{_=await ve(V)}catch{Be(k,"answer");return}if(L)L.setHandlers({connect:()=>me(L,k,y),close:()=>fe(L,k)}),L.signal(_);else{let C=w[k]?.[y];C&&!C.isDead&&C.signal(_)}}}};if(!g)throw I("requires a config map as the first argument");if(!i&&!g.firebaseApp)throw I("config map is missing appId field");if(!d)throw I("roomId argument required");if(!r){let y=e(g);u=ne(zn,Pe),o=Array.isArray(y)?y:[y],r=!0,h=setInterval(()=>u=u.filter(m=>{let T=Date.now()-m.created<cn;return T||m.destroy(),T}),cn*1.03),p=g.manualRelayReconnection?$:Ft()}let l=o.map(()=>Wn),b=[],x=o.map(async(y,m)=>t(await y,await E,await K,c(m),Ee));G([E,K]).then(([y,m])=>{let T=async(M,R)=>{let J=await n(M,y,m);typeof J=="number"&&(l[R]=J),b[R]=setTimeout(()=>T(M,R),l[R])};x.forEach(async(M,R)=>{await M,T(await o[R],R)})});let A=$;return s[i]||={},s[i][d]=on(y=>A=y,y=>delete S[y],()=>{delete s[i][d],b.forEach(clearTimeout),x.forEach(async y=>(await y)()),clearInterval(h),p(),r=!1})}};var dn={},Qn=5,yn="x",pn="EVENT",{secretKey:er,publicKey:tr}=We.keygen(),nr=De(tr),at={},Ae={},rr={},hn=()=>Math.floor(Date.now()/1e3),mn=e=>rr[e]??=rt(e,1e4)+2e4,fn=async(e,t)=>{let n={kind:mn(e),tags:[[yn,e]],created_at:hn(),content:t,pubkey:nr},s=await ot("SHA-256",H([0,n.pubkey,n.created_at,n.kind,n.tags,n.content]));return H([pn,{...n,id:De(s),sig:De(await We.signAsync(s,er))}])},ln=(e,t)=>(at[e]=t,H(["REQ",e,{kinds:[mn(t)],since:hn(),["#"+yn]:[t]}])),un=e=>(delete at[e],H(["CLOSE",e])),Pr=an({init:e=>jt(e,sr,Qn,!0).map(t=>{let n=Xt(t,s=>{let[r,o,u,h]=ae(s);if(r!==pn){let p=`${te}: relay failure from ${n.url} - `;r==="NOTICE"?console.warn(p+o):r==="OK"&&!u&&console.warn(p+h);return}Ae[o]?.(at[o],u.content)});return dn[t]=n,n.ready}),subscribe:(e,t,n,s)=>{let r=Ke(64),o=Ke(64);return Ae[r]=Ae[o]=(u,h)=>s(u,h,async(p,g)=>e.send(await fn(p,g))),e.send(ln(r,t)),e.send(ln(o,n)),()=>{e.send(un(r)),e.send(un(o)),delete Ae[r],delete Ae[o]}},announce:async(e,t)=>e.send(await fn(t,H({peerId:z})))}),Er=Yt(dn),sr=["black.nostrcity.club","ftp.halifax.rwth-aachen.de/nostr","nos.lol","nostr.cool110.xyz","nostr.data.haus","nostr.sathoarder.com","nostr.vulpem.com","relay.agorist.space","relay.binaryrobot.com","relay.damus.io","relay.fountain.fm","relay.mostro.network","relay.nostraddress.com","relay.nostrdice.com","relay.nostromo.social","relay.oldenburg.cool","relay.verified-nostr.com","yabu.me/v2"].map(e=>"wss://"+e);window.__trystero={createEvent:fn,defaultRelayUrls:sr,getRelaySockets:Er,joinRoom:Pr,pauseRelayReconnection:Gt,resumeRelayReconnection:Jt,selfId:z,subscribe:ln};
+/*! Bundled license information:
+
+@noble/secp256k1/index.js:
+  (*! noble-secp256k1 - MIT License (c) 2019 Paul Miller (paulmillr.com) *)
+*/
+</script>
+
+<script type="module">
+/* ═══ WALKIE TALKIE v1.0 ═══════════════════════════════════════════════════
+   One radio, three layers:
+   1. Introduction: Trystero (nostr) finds the other devices on a channel. The
+      room id and the password both derive from the channel secret, so the
+      relays see a hashed topic and AES-GCM ciphertext, never the secret.
+   2. Identity: an ECDSA P-256 key per device. Each side sends a nonce ('hi');
+      the other signs nonce | its DTLS fingerprint | ours ('pf'). Binding the
+      signature to this session's fingerprints means a relayed or forged
+      introduction cannot borrow a remembered device's name.
+   3. Voice: the mic track is added once per link and kept disabled; push to
+      talk flips track.enabled, so there is no renegotiation per press. 'tx'
+      messages open and close the receiver's squelch and play the beeps.
+   ========================================================================== */
+const { joinRoom, getRelaySockets } = window.__trystero;
+
+const VERSION = '1.0';
+const APP_ID = 'fractal-walkie-v1';
+// Introduction relays. Trystero's own pick for this app id landed on six relays
+// of which two answered; these eight all forwarded its ephemeral events in a
+// probe on 2026-10-27 (of 28 tried). Re-check with window.__walkie.probeRelays()
+// and swap out any that go quiet: a device only needs one relay in common with
+// the other to be introduced.
+const RELAYS = ['relay.mostro.network', 'relay.primal.net', 'nostr.sathoarder.com', 'nos.lol', 'nostr.oxtr.dev', 'nostr.mom', 'nostr.data.haus', 'relay.snort.social'].map(h => 'wss://' + h);
+const params = new URLSearchParams(location.search);
+const PROFILE = (params.get('profile') || '').replace(/[^\w-]/g, '').slice(0, 24);
+const TEST_TONE = params.has('tone');
+const NS = 'walkie' + (PROFILE ? '.' + PROFILE : '');
+
+const $ = (s, root = document) => root.querySelector(s);
+const $$ = (s, root = document) => [...root.querySelectorAll(s)];
+const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+const enc = new TextEncoder();
+const now = () => Date.now();
+
+/* ── bytes ── */
+const b64u = u8 => btoa(String.fromCharCode(...u8)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+const unb64u = s => { const t = s.replace(/-/g, '+').replace(/_/g, '/'); return Uint8Array.from(atob(t + '='.repeat((4 - t.length % 4) % 4)), c => c.charCodeAt(0)); };
+const hex = u8 => Array.from(u8, b => b.toString(16).padStart(2, '0')).join('');
+const sha256 = async x => new Uint8Array(await crypto.subtle.digest('SHA-256', typeof x === 'string' ? enc.encode(x) : x));
+const B32 = '0123456789ABCDEFGHJKMNPQRSTVWXYZ';   // Crockford: no I, L, O or U, so a code survives being read aloud
+function base32(u8, n) {
+  let out = '', acc = 0, bits = 0;
+  for (const b of u8) {
+    acc = (acc << 8) | b; bits += 8;
+    while (bits >= 5 && out.length < n) { bits -= 5; out += B32[(acc >>> bits) & 31]; }
+    acc &= (1 << bits) - 1;
+  }
+  return out;
+}
+const group = s => s.match(/.{1,4}/g).join('-');
+const normCode = s => s.toUpperCase().replace(/O/g, '0').replace(/[IL]/g, '1').split('').filter(c => B32.includes(c)).join('');
+const cleanName = s => typeof s === 'string' ? s.replace(/[\u0000-\u001f\u007f-\u009f​-‏‪-‮⁦-⁩]/g, '').trim().slice(0, 24) : '';
+function ago(t) {
+  if (!t) return 'never';
+  const s = Math.round((now() - t) / 1000);
+  if (s < 60) return 'just now';
+  if (s < 3600) return Math.round(s / 60) + ' min ago';
+  if (s < 86400) return Math.round(s / 3600) + ' h ago';
+  return Math.round(s / 86400) + ' d ago';
+}
+
+/* ── storage: localStorage for lists and settings, IndexedDB for the key pair
+   (a CryptoKey survives structured clone, so the private key never leaves
+   the browser's key store) ── */
+const store = {
+  get(k, d) { try { const v = localStorage.getItem(NS + '.' + k); return v == null ? d : JSON.parse(v); } catch { return d; } },
+  set(k, v) { try { localStorage.setItem(NS + '.' + k, JSON.stringify(v)); return true; } catch { return false; } },
+};
+function idbOpen() {
+  return new Promise((res, rej) => {
+    const r = indexedDB.open(NS, 1);
+    r.onupgradeneeded = () => r.result.createObjectStore('kv');
+    r.onsuccess = () => res(r.result);
+    r.onerror = () => rej(r.error);
+  });
+}
+async function idbDo(mode, fn) {
+  const db = await idbOpen();
+  return new Promise((res, rej) => {
+    const tx = db.transaction('kv', mode), req = fn(tx.objectStore('kv'));
+    tx.oncomplete = () => { db.close(); res(req.result); };
+    tx.onerror = tx.onabort = () => { db.close(); rej(tx.error); };
+  });
+}
+const idbGet = k => idbDo('readonly', st => st.get(k));
+const idbSet = (k, v) => idbDo('readwrite', st => st.put(v, k));
+
+/* ── identity ── */
+const me = { key: '', callsign: '', name: '', priv: null, kept: false };
+const callsignOf = async raw => group(base32(await sha256(raw), 8));
+async function loadIdentity() {
+  let rec = null;
+  try { rec = await idbGet('identity'); } catch {}
+  if (rec && rec.priv && rec.pub) me.kept = true;
+  else {
+    const kp = await crypto.subtle.generateKey({ name: 'ECDSA', namedCurve: 'P-256' }, false, ['sign', 'verify']);
+    rec = { priv: kp.privateKey, pub: kp.publicKey, created: now() };
+    try { await idbSet('identity', rec); me.kept = true; } catch { me.kept = false; }
+  }
+  me.priv = rec.priv;
+  const raw = new Uint8Array(await crypto.subtle.exportKey('raw', rec.pub));
+  me.key = b64u(raw);
+  me.callsign = await callsignOf(raw);
+  me.name = cleanName(store.get('name', '')) || 'UNIT ' + me.callsign.slice(0, 4);
+}
+
+/* ── settings ── */
+const settings = Object.assign({ beeps: true, latch: false, volume: 0.9, awake: true, echo: true, noise: true }, store.get('settings', {}));
+const saveSettings = () => store.set('settings', settings);
+
+/* ── channels: { id, name, secret, created, used, members: { key: { name, callsign, first, last } } } ── */
+let channels = store.get('channels', []).filter(c => c && c.id && c.secret);
+let current = null;
+const saveChannels = () => store.set('channels', channels);
+const newSecret = () => base32(crypto.getRandomValues(new Uint8Array(13)), 20);   // 100 bits
+const pageUrl = () => location.href.split('#')[0].split('?')[0];
+const inviteLink = ch => pageUrl() + '#c=' + ch.secret + '&n=' + encodeURIComponent(ch.name);
+async function channelFor(secret, name) {
+  const id = hex(await sha256('walkie-id|' + secret)).slice(0, 12);   // the same id on every device
+  let ch = channels.find(c => c.id === id);
+  if (!ch) {
+    ch = { id, name: cleanName(name).toUpperCase() || 'CHANNEL ' + (channels.length + 1), secret, created: now(), used: 0, members: {} };
+    channels.push(ch);
+    saveChannels();
+  }
+  return ch;
+}
+function parseInvite(text) {
+  text = (text || '').trim();
+  if (!text) return null;
+  let secret, name = '';
+  const h = text.includes('#') ? text.slice(text.indexOf('#') + 1) : /(^|&)c=/.test(text) ? text : '';
+  if (h) { const p = new URLSearchParams(h); secret = normCode(p.get('c') || ''); name = p.get('n') || ''; }
+  else secret = normCode(text);
+  return secret.length === 20 ? { secret, name } : null;
+}
+
+/* ── state ── */
+let powered = false, powering = false, pendingInvite = null;
+let ac = null, micStream = null, txTrack = null, micAnalyser = null;
+let room = null, act = null, tuning = 0, roomSince = 0;
+let transmitting = false, txStart = 0, txKeep = 0, txOpenT = 0;
+const links = new Map();   // Trystero peer id -> link
+
+/* ── audio ── */
+async function openMic() {
+  if (TEST_TONE) {
+    // a 520 Hz tone wobbling at 3 Hz, so a test link carries something speech-shaped
+    const osc = ac.createOscillator(), lfo = ac.createOscillator(), depth = ac.createGain(), g = ac.createGain(), dest = ac.createMediaStreamDestination();
+    osc.frequency.value = 520; lfo.frequency.value = 3; depth.gain.value = 0.15; g.gain.value = 0.2;
+    lfo.connect(depth).connect(g.gain); osc.connect(g).connect(dest); osc.start(); lfo.start();
+    return dest.stream;
+  }
+  if (!navigator.mediaDevices?.getUserMedia) { toast('No microphone access on this page (it needs https): listening only'); return null; }
+  try {
+    return await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: settings.echo, noiseSuppression: settings.noise, autoGainControl: true, channelCount: 1 } });
+  } catch (e) {
+    toast(e && e.name === 'NotAllowedError' ? 'Microphone blocked: listening only' : 'No microphone found: listening only');
+    return null;
+  }
+}
+let noise = null;
+function noiseBuf() {
+  if (noise) return noise;
+  noise = ac.createBuffer(1, Math.round(ac.sampleRate * 0.5), ac.sampleRate);
+  const d = noise.getChannelData(0);
+  for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+  return noise;
+}
+function sfx(kind) {
+  if (!ac || ac.state !== 'running') return;
+  const t = ac.currentTime + 0.01, out = ac.createGain();
+  out.gain.value = 0.55 * settings.volume;
+  out.connect(ac.destination);
+  const tone = (f, t0, dur, type, vol) => {
+    const o = ac.createOscillator(), g = ac.createGain();
+    o.type = type; o.frequency.value = f;
+    g.gain.setValueAtTime(0, t0);
+    g.gain.linearRampToValueAtTime(vol, t0 + 0.006);
+    g.gain.setValueAtTime(vol, t0 + dur - 0.012);
+    g.gain.linearRampToValueAtTime(0, t0 + dur);
+    o.connect(g).connect(out); o.start(t0); o.stop(t0 + dur + 0.02);
+  };
+  const hiss = (t0, dur, vol) => {
+    const n = ac.createBufferSource(), bp = ac.createBiquadFilter(), g = ac.createGain();
+    n.buffer = noiseBuf(); bp.type = 'bandpass'; bp.frequency.value = 2200; bp.Q.value = 0.7;
+    g.gain.setValueAtTime(vol, t0); g.gain.exponentialRampToValueAtTime(0.001, t0 + dur);
+    n.connect(bp).connect(g).connect(out); n.start(t0); n.stop(t0 + dur + 0.02);
+  };
+  if (kind === 'permit') tone(1750, t, 0.05, 'sine', 0.16);
+  else if (kind === 'squelch') hiss(t, 0.09, 0.2);
+  else if (kind === 'roger') { tone(1250, t, 0.07, 'square', 0.06); tone(900, t + 0.08, 0.09, 'square', 0.06); hiss(t + 0.18, 0.16, 0.22); }
+  else if (kind === 'tail') hiss(t, 0.18, 0.2);
+  else if (kind === 'hello') { tone(660, t, 0.07, 'triangle', 0.22); tone(990, t + 0.09, 0.11, 'triangle', 0.22); }
+}
+const vibe = ms => { try { navigator.vibrate?.(ms); } catch {} };
+const frame = new Float32Array(1024);
+function rms(an) {
+  an.getFloatTimeDomainData(frame);
+  let s = 0;
+  for (let i = 0; i < frame.length; i++) s += frame[i] * frame[i];
+  return Math.sqrt(s / frame.length);
+}
+function tap(stream) {
+  const src = ac.createMediaStreamSource(stream), an = ac.createAnalyser();
+  an.fftSize = 1024;
+  src.connect(an);
+  return { src, an };
+}
+
+/* ── screen wake lock (a locked phone would stop the radio's page) ── */
+let wake = null;
+async function keepAwake() {
+  if (!settings.awake || !powered || wake || document.hidden || !navigator.wakeLock) return;
+  try { wake = await navigator.wakeLock.request('screen'); wake.addEventListener('release', () => { wake = null; }); } catch {}
+}
+function releaseAwake() { try { wake?.release(); } catch {} wake = null; }
+
+/* ── power ── */
+async function powerOn() {
+  if (powered || powering) return;
+  powering = true; render();
+  try {
+    ac = ac || new (window.AudioContext || window.webkitAudioContext)();
+    ac.resume().catch(() => {});
+    if (!me.key) await loadIdentity();
+    micStream = await openMic();
+    txTrack = micStream?.getAudioTracks()[0] || null;
+    if (txTrack) { txTrack.enabled = false; micAnalyser = tap(micStream).an; }
+    powered = true;
+    keepAwake();
+    if (pendingInvite) await acceptInvite();
+    else if (current) await tune(current);
+    else openPanel('channels', true);
+  } catch (e) {
+    console.error(e);
+    toast('Could not power on: ' + (e && e.message || e));
+  } finally {
+    powering = false;
+    render();
+  }
+}
+async function powerOff() {
+  setTx(false);
+  powered = false;
+  await leaveRoom();
+  micStream?.getTracks().forEach(t => t.stop());
+  micStream = null; txTrack = null; micAnalyser = null;
+  releaseAwake();
+  render();
+}
+
+/* ── tuning: one Trystero room per channel ── */
+async function tune(ch) {
+  const token = ++tuning;
+  await leaveRoom();
+  if (token !== tuning) return;
+  current = ch;
+  ch.used = now();
+  store.set('last', ch.id);
+  saveChannels();
+  if (!powered) { render(); return; }
+  const roomId = hex(await sha256('walkie-room|' + ch.secret)).slice(0, 32);
+  const password = b64u(await sha256('walkie-pass|' + ch.secret));
+  if (token !== tuning || !powered) return;
+  room = joinRoom({ appId: APP_ID, password, relayUrls: RELAYS }, roomId);
+  roomSince = now();
+  act = {};
+  for (const name of ['hi', 'pf', 'tx', 'nm']) {
+    const [send, onGet] = room.makeAction(name);
+    act[name] = send;
+    onGet((data, peerId) => onAction(name, data, peerId).catch(e => console.warn('walkie', name, e)));
+  }
+  room.onPeerJoin(peerJoined);
+  room.onPeerLeave(peerLeft);
+  room.onPeerStream((stream, peerId) => attachStream(getLink(peerId), stream));
+  render();
+  renderPanel();
+}
+async function leaveRoom() {
+  if (!room) return;
+  const r = room;
+  room = null; act = null;
+  for (const l of [...links.values()]) dropLink(l);
+  try { await r.leave(); } catch {}
+}
+async function acceptInvite() {
+  const inv = pendingInvite;
+  pendingInvite = null;
+  history.replaceState(null, '', location.pathname + location.search);   // the secret lives in the hash, which never reaches a server; clear it from the address bar anyway
+  const ch = await channelFor(inv.secret, inv.name);
+  await tune(ch);
+  toast('Tuned to ' + ch.name);
+}
+
+/* ── links ── */
+function getLink(peerId) {
+  let l = links.get(peerId);
+  if (!l) {
+    l = { id: peerId, key: '', name: '', callsign: '', verified: null, wasKnown: false, standby: false,
+          nonce: b64u(crypto.getRandomValues(new Uint8Array(16))), tx: false, txUntil: 0, muteT: 0,
+          stream: null, audio: null, src: null, analyser: null, path: null, rtt: null, loss: 0, inbound: null, since: now() };
+    links.set(peerId, l);
+  }
+  return l;
+}
+function peerJoined(peerId) {
+  const l = getLink(peerId);
+  act?.hi({ v: 1, key: me.key, name: me.name, nonce: l.nonce, tx: transmitting }, peerId);
+  if (micStream) room?.addStream(micStream, peerId);
+  render();
+}
+function peerLeft(peerId) {
+  const l = links.get(peerId);
+  if (!l) return;
+  if (l.tx && settings.beeps) sfx('tail');
+  if (l.verified && current?.members[l.key]) { current.members[l.key].last = now(); saveChannels(); }
+  toasted.delete('hi:' + l.key);
+  dropLink(l);
+  render();
+  renderPanel();
+}
+function dropLink(l) {
+  links.delete(l.id);
+  clearTimeout(l.muteT);
+  if (l.audio) { l.audio.srcObject = null; l.audio.remove(); }
+  try { l.src?.disconnect(); } catch {}
+}
+function attachStream(l, stream) {
+  if (!stream || l.stream === stream) return;
+  l.stream = stream;
+  if (!l.audio) {
+    l.audio = document.createElement('audio');
+    l.audio.autoplay = true;
+    l.audio.playsInline = true;
+    $('#sink').append(l.audio);
+  }
+  l.audio.srcObject = stream;   // Chrome only plays remote WebRTC audio through an element; Web Audio taps it for the meter
+  l.audio.volume = settings.volume;
+  squelch(l);
+  l.audio.play().catch(() => {});
+  if (ac) { try { l.src?.disconnect(); const t = tap(stream); l.src = t.src; l.analyser = t.an; } catch {} }
+}
+const squelch = l => { if (l.audio) l.audio.muted = !(l.tx && !l.standby); };
+const fpOf = desc => { const m = desc && /a=fingerprint:(\S+)\s+([0-9A-Fa-f:]+)/.exec(desc.sdp || ''); return m ? m[1].toLowerCase() + ' ' + m[2].toUpperCase() : ''; };
+function fingerprints(peerId) {
+  const pc = room?.getPeers()[peerId];
+  return { local: fpOf(pc?.localDescription), remote: fpOf(pc?.remoteDescription) };
+}
+
+async function onAction(type, d, peerId) {
+  if (!d || typeof d !== 'object' || !links.has(peerId) && type !== 'hi') return;
+  const l = getLink(peerId);
+  if (type === 'hi') {
+    if (typeof d.key !== 'string' || d.key.length > 100 || typeof d.nonce !== 'string' || d.nonce.length > 64) return;
+    let raw;
+    try { raw = unb64u(d.key); } catch { return; }
+    if (raw.length !== 65 || raw[0] !== 4) return;
+    l.key = d.key;   // set before any await: their proof can arrive while we sign
+    l.name = cleanName(d.name) || 'UNIT';
+    if (d.tx === true) setPeerTx(l, true);
+    l.callsign = await callsignOf(raw);
+    const fp = fingerprints(peerId);
+    const sig = await crypto.subtle.sign({ name: 'ECDSA', hash: 'SHA-256' }, me.priv, enc.encode(['walkie-v1', d.nonce, fp.local, fp.remote].join('|')));
+    act?.pf({ sig: b64u(new Uint8Array(sig)) }, peerId);
+    render();
+  } else if (type === 'pf') {
+    if (!l.key || typeof d.sig !== 'string' || d.sig.length > 200) return;
+    try {
+      const pub = await crypto.subtle.importKey('raw', unb64u(l.key), { name: 'ECDSA', namedCurve: 'P-256' }, false, ['verify']);
+      const fp = fingerprints(peerId);
+      l.verified = await crypto.subtle.verify({ name: 'ECDSA', hash: 'SHA-256' }, pub, unb64u(d.sig), enc.encode(['walkie-v1', l.nonce, fp.remote, fp.local].join('|')));
+    } catch { l.verified = false; }
+    if (l.verified) remember(l);
+    else toast((l.name || 'A device') + ' could not prove its key; treat it with care');
+    render();
+    renderPanel();
+  } else if (type === 'tx') {
+    setPeerTx(l, d.on === true);
+  } else if (type === 'nm') {
+    const n = cleanName(d.name);
+    if (n && n !== l.name) { l.name = n; if (l.verified) remember(l, true); render(); renderPanel(); }
+  }
+}
+function remember(l, quiet) {
+  if (!current) return;
+  if (l.key === me.key) { l.standby = true; squelch(l); toastOnce('self:' + l.id, 'This device is already on the channel in another tab'); return; }
+  // one live link per device: if a device shows up twice, the newer link waits
+  for (const o of links.values()) if (o !== l && o.key === l.key && o.verified && !o.standby) { const late = o.since <= l.since ? l : o; late.standby = true; squelch(late); }
+  const m = current.members[l.key];
+  if (!quiet) l.wasKnown = !!m;
+  current.members[l.key] = { name: l.name, callsign: l.callsign, first: m?.first || now(), last: now() };
+  saveChannels();
+  if (!quiet && !l.standby) {
+    if (settings.beeps) sfx('hello');
+    toastOnce('hi:' + l.key, m ? `${l.name} is on ${current.name}` : `New device on ${current.name}: ${l.name} (${l.callsign})`);
+  }
+}
+function setPeerTx(l, on) {
+  if (l.standby) return;
+  const was = l.tx;
+  l.tx = on;
+  l.txUntil = on ? now() + 25000 : 0;
+  clearTimeout(l.muteT);
+  if (on && !was) { if (settings.beeps) sfx('squelch'); squelch(l); vibe(10); ensureLoop(); }
+  if (!on && was) {
+    if (settings.beeps) setTimeout(() => sfx('roger'), 160);   // the voice runs a jitter buffer behind the message
+    l.muteT = setTimeout(() => squelch(l), 320);
+  }
+  render();
+}
+function expireTx() { for (const l of links.values()) if (l.tx && now() > l.txUntil) setPeerTx(l, false); }
+
+/* ── transmit ── */
+function setTx(on) {
+  if (on === transmitting) return;
+  if (on && (!powered || !room)) return;
+  transmitting = on;
+  clearTimeout(txOpenT);
+  clearInterval(txKeep);
+  if (on) {
+    txStart = now();
+    if (settings.beeps) sfx('permit');
+    vibe(14);
+    // the talk-permit blip plays first, so the open mic does not send it
+    txOpenT = setTimeout(() => { if (transmitting && txTrack) txTrack.enabled = true; }, settings.beeps ? 70 : 0);
+    act?.tx({ on: true });
+    txKeep = setInterval(() => {
+      act?.tx({ on: true });   // keepalive: a receiver drops a silent transmitter after 25 s
+      if (now() - txStart > 120000) { setTx(false); toast('Transmit stopped after 2 minutes'); }
+    }, 10000);
+    if (!micStream) toastOnce('nomic', 'No microphone: they see you transmit, but hear nothing');
+    ensureLoop();
+  } else {
+    if (txTrack) txTrack.enabled = false;
+    act?.tx({ on: false });
+  }
+  render();
+}
+
+/* ── the level ring: runs only while someone is on the air ── */
+let looping = false, lvlS = 0, lastF = 0, lastLvl = '';
+function ensureLoop() {
+  if (looping) return;
+  looping = true;
+  const step = t => {
+    const anyRx = [...links.values()].some(l => l.tx);
+    if (!powered || (!transmitting && !anyRx && lvlS < 0.005)) { looping = false; lvlS = 0; ptt.style.setProperty('--lvl', 0); lastLvl = ''; return; }
+    requestAnimationFrame(step);
+    if (t - lastF < 33) return;   // 30 fps is plenty for a glow
+    lastF = t;
+    let lvl = 0;
+    if (transmitting) { if (micAnalyser && txTrack?.enabled) lvl = rms(micAnalyser); }
+    else for (const l of links.values()) if (l.tx && l.analyser) lvl = Math.max(lvl, rms(l.analyser));
+    const target = Math.min(1, lvl * 5);
+    lvlS += (target - lvlS) * (target > lvlS ? 0.5 : 0.15);
+    const v = lvlS.toFixed(3);
+    if (v !== lastLvl) { ptt.style.setProperty('--lvl', v); lastLvl = v; }
+  };
+  requestAnimationFrame(step);
+}
+
+/* ── link route and quality, read from WebRTC's own stats ── */
+const PRIVATE = /^(10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.|169\.254\.|127\.|100\.(6[4-9]|[7-9]\d|1[01]\d|12[0-7])\.|f[cd][0-9a-f]{2}:|fe80:|::1$)|\.local$/i;
+async function pollStats() {
+  for (const l of links.values()) {
+    const pc = room?.getPeers()[l.id];
+    if (!pc) continue;
+    try {
+      const rep = await pc.getStats(), byId = new Map();
+      let pair = null, transport = null;
+      rep.forEach(s => { byId.set(s.id, s); if (s.type === 'transport' && s.selectedCandidatePairId) transport = s; });
+      if (transport) pair = byId.get(transport.selectedCandidatePairId);
+      if (!pair) rep.forEach(s => { if (!pair && s.type === 'candidate-pair' && (s.selected || (s.nominated && s.state === 'succeeded'))) pair = s; });
+      if (!pair) continue;
+      const lc = byId.get(pair.localCandidateId), rc = byId.get(pair.remoteCandidateId);
+      const types = [lc?.candidateType, rc?.candidateType];
+      const addrs = [lc?.address || lc?.ip || '', rc?.address || rc?.ip || ''].filter(Boolean);
+      l.path = types.includes('relay') ? 'relay'
+        : types.includes('srflx') || addrs.some(a => !PRIVATE.test(a)) ? 'internet'
+        : 'local';
+      if (pair.currentRoundTripTime != null) l.rtt = Math.round(pair.currentRoundTripTime * 1000);
+      l.route = types.join('/') + (addrs.length ? ' ' + addrs.join(' > ') : '');
+      rep.forEach(s => {
+        if (s.type !== 'inbound-rtp' || s.kind !== 'audio') return;
+        const prev = l.inbound;
+        l.inbound = { lost: s.packetsLost || 0, recv: s.packetsReceived || 0 };
+        if (prev) {
+          const dl = l.inbound.lost - prev.lost, dr = l.inbound.recv - prev.recv;
+          if (dl + dr > 20) l.loss = Math.max(0, dl) / (dl + dr);
+        }
+      });
+    } catch {}
+  }
+}
+const barsFor = l => !l || !l.path ? 0 : (l.loss > 0.15 || (l.rtt ?? 0) > 600) ? 1 : (l.loss > 0.05 || (l.rtt ?? 0) > 250) ? 2 : (l.loss > 0.01 || (l.rtt ?? 0) > 100) ? 3 : 4;
+const PATH_TEXT = { local: 'DIRECT · SAME NETWORK', internet: 'DIRECT · OVER THE INTERNET', relay: 'RELAYED · TURN SERVER' };
+function relayCount() {
+  try { const s = Object.values(getRelaySockets()); return { open: s.filter(w => w.readyState === 1).length, total: s.length }; }
+  catch { return { open: 0, total: 0 }; }
+}
+
+/* ── toasts ── */
+const toasted = new Set();
+function toast(msg, ms = 3400) {
+  const t = el('div', 'toast', msg);
+  $('#toasts').append(t);
+  setTimeout(() => t.classList.add('out'), ms);
+  setTimeout(() => t.remove(), ms + 400);
+}
+function toastOnce(key, msg) { if (!toasted.has(key)) { toasted.add(key); toast(msg); } }
+
+/* ── render: the radio ── */
+const ptt = $('#ptt');
+const live = () => [...links.values()].filter(l => !l.standby);
+function render() {
+  const ls = live(), talking = ls.filter(l => l.tx);
+  $('#powerBtn').classList.toggle('on', powered);
+  $('#powerBtn').setAttribute('aria-label', powered ? 'Power off' : 'Power on');
+
+  const chip = $('#stateChip');
+  chip.className = 'state-chip' + (transmitting ? ' tx' : talking.length ? ' rx' : powered ? ' on' : '');
+  chip.textContent = powering ? 'WARMING UP' : transmitting ? 'TX' : talking.length ? 'RX' : powered ? 'ON' : 'OFF';
+
+  $('#chName').textContent = current ? current.name : pendingInvite ? (cleanName(pendingInvite.name).toUpperCase() || 'INVITE') : 'NO CHANNEL';
+  $('#chPrev').disabled = $('#chNext').disabled = channels.length < 2;
+
+  $('#statusLine').textContent = statusText(ls);
+  $('#rxLine').textContent = talking.length ? '◉ RX · ' + talking.map(l => l.name || 'UNIT').join(' + ') : transmitting ? '◉ TX · ' + me.name : '';
+
+  const withPath = ls.filter(l => l.path), focus = talking.find(l => l.path) || withPath[0];
+  const line = $('#linkLine');
+  line.className = 'lcd-line link' + (focus ? (focus.path === 'relay' ? ' relay' : ' direct') : '');
+  if (focus) line.textContent = 'LINK · ' + (withPath.length > 1 ? (focus.name || 'UNIT') + ' · ' : '') + PATH_TEXT[focus.path] + (focus.rtt != null ? ' · ' + focus.rtt + ' MS' : '');
+  else if (powered && room) { const r = relayCount(); line.textContent = ls.length ? 'LINK · OPENING…' : `SCANNING · ${r.open}/${r.total} RELAYS`; }
+  else line.textContent = '';
+
+  const bars = barsFor(focus);
+  $$('#bars i').forEach((b, i) => b.classList.toggle('lit', i < bars));
+
+  ptt.className = 'ptt' + (!powered ? ' off' : transmitting ? ' tx' : talking.length ? ' rx' : '');
+  $('#pttLabel').textContent = powering ? 'WARMING UP' : !powered ? 'POWER ON' : transmitting ? 'TRANSMITTING' : talking.length ? 'RECEIVING' : settings.latch ? 'TAP TO TALK' : 'HOLD TO TALK';
+  $('#pttSub').textContent = !powered ? (pendingInvite ? 'tap to join the channel' : 'tap to turn the radio on')
+    : !current ? 'make or join a channel first'
+    : transmitting ? (settings.latch ? 'tap again to stop' : 'let go to stop')
+    : talking.length ? (talking.map(l => l.name).join(' + ') + ' is talking')
+    : !ls.length ? 'nobody else is on yet'
+    : matchMedia('(pointer: fine)').matches ? 'or hold the space bar' : 'press and talk';
+  renderMembers(ls);
+}
+function statusText(ls) {
+  if (powering) return 'Warming up…';
+  if (!powered) {
+    if (pendingInvite) return 'You were invited: tap POWER ON to join';
+    return current ? 'Tap POWER ON to tune in' : 'Tap POWER ON to start';
+  }
+  if (!current) return 'No channel yet: make one in CHANNELS';
+  if (ls.length) return ls.length + ' on channel with you';
+  const known = Object.values(current.members);
+  if (known.length) return 'Listening for ' + known.map(m => m.name).slice(0, 3).join(', ') + (known.length > 3 ? '…' : '');
+  return 'On the air: share the channel to bring someone in';
+}
+function renderMembers(ls) {
+  $('#meLine').innerHTML = '';
+  $('#meLine').append('You are ', el('b', null, me.name || '…'), me.callsign ? ' · ' + me.callsign : '');
+  const box = $('#memberList');
+  box.textContent = '';
+  if (!current) { box.append(el('div', 'empty', 'Make or join a channel to see who is on it.')); return; }
+  const rows = new Map();
+  for (const [key, m] of Object.entries(current.members)) rows.set(key, { name: m.name, callsign: m.callsign, last: m.last, link: null });
+  for (const l of ls) {
+    const k = l.verified ? l.key : 'link:' + l.id;
+    const r = rows.get(k) || { name: l.name, callsign: l.callsign, last: now(), link: null };
+    r.link = l; r.name = l.name || r.name || 'CONNECTING'; r.callsign = l.callsign || r.callsign;
+    rows.set(k, r);
+  }
+  if (!rows.size) { box.append(el('div', 'empty', 'Nobody yet. Share the channel from the SHARE tab.')); return; }
+  const list = [...rows.values()].sort((a, b) => (!!b.link - !!a.link) || ((b.link?.tx ? 1 : 0) - (a.link?.tx ? 1 : 0)) || ((b.last || 0) - (a.last || 0)));
+  for (const r of list) {
+    const l = r.link, row = el('div', 'member' + (l ? ' online' : '') + (l?.tx ? ' tx' : ''));
+    const who = el('div', 'who');
+    who.append(el('b', null, r.name || 'UNIT'));
+    const sub = [r.callsign || ''];
+    if (l) sub.push(l.tx ? 'talking' : l.path ? PATH_TEXT[l.path].toLowerCase().replace('direct · ', 'direct, ') + (l.rtt != null ? ', ' + l.rtt + ' ms' : '') : 'linking');
+    else sub.push('seen ' + ago(r.last));
+    who.append(el('small', null, sub.filter(Boolean).join(' · ')));
+    let badge;
+    if (!l) badge = el('span', 'badge dim', 'REMEMBERED');
+    else if (l.verified === null) badge = el('span', 'badge dim', 'CHECKING');
+    else if (!l.verified) badge = el('span', 'badge warn', 'UNVERIFIED');
+    else badge = l.wasKnown ? el('span', 'badge known', '✓ KNOWN') : el('span', 'badge new', 'NEW');
+    row.append(el('span', 'dot'), who, badge);
+    box.append(row);
+  }
+}
+
+/* ── render: the open tab ── */
+let openTab = null;
+const TITLES = { channels: 'Channels', share: 'Share', devices: 'Devices', audio: 'Audio', about: 'About' };
+function openPanel(name, force) {
+  openTab = !force && openTab === name ? null : name;
+  $$('.settings-tab').forEach(t => { t.dataset.active = t.dataset.tab === openTab ? '1' : '0'; t.setAttribute('aria-selected', t.dataset.tab === openTab); });
+  $$('.settings-panel').forEach(p => { p.dataset.active = p.dataset.panel === openTab ? '1' : '0'; });
+  $('#app').classList.toggle('panel-open', !!openTab);
+  if (!openTab) return;
+  $('#panelTitle').textContent = TITLES[openTab];
+  renderPanel();
+  requestAnimationFrame(() => $('#panels').scrollIntoView({ behavior: 'smooth', block: 'nearest' }));
+}
+function renderPanel() {
+  if (openTab === 'channels') renderChannels();
+  else if (openTab === 'share') renderShare();
+  else if (openTab === 'devices') renderDevices();
+  else if (openTab === 'audio') renderAudio();
+  else if (openTab === 'about') renderDiag();
+}
+function renderChannels() {
+  const box = $('#chList');
+  box.textContent = '';
+  if (!channels.length) { box.append(el('div', 'empty', 'No channels yet. Make one below, or join with an invite.')); return; }
+  for (const ch of [...channels].sort((a, b) => (b.used || 0) - (a.used || 0))) {
+    const row = el('div', 'row-item' + (ch === current ? ' current' : ''));
+    const who = el('div', 'who');
+    const n = Object.keys(ch.members).length;
+    who.append(el('b', null, ch.name), el('small', null, (ch === current ? (powered ? 'on the air' : 'tuned') : 'used ' + ago(ch.used)) + ' · ' + n + ' device' + (n === 1 ? '' : 's') + ' remembered'));
+    const acts = el('div', 'row-actions');
+    if (ch !== current) { const b = el('button', 'btn small amber', 'Tune'); b.onclick = () => { tune(ch); renderChannels(); }; acts.append(b); }
+    const rn = el('button', 'btn small', 'Rename');
+    const fg = el('button', 'btn small rose', 'Forget');
+    acts.append(rn, fg);
+    row.append(who, acts);
+    rn.onclick = () => {
+      const edit = el('div', 'save-row'), inp = el('input'), ok = el('button', 'btn small amber', 'Save');
+      inp.type = 'text'; inp.maxLength = 24; inp.value = ch.name;
+      edit.append(inp, ok);
+      row.append(edit);
+      rn.disabled = true;
+      inp.focus(); inp.select();
+      const save = () => { const v = cleanName(inp.value).toUpperCase(); if (v) { ch.name = v; saveChannels(); } renderChannels(); render(); };
+      ok.onclick = save;
+      inp.onkeydown = e => { if (e.key === 'Enter') save(); if (e.key === 'Escape') renderChannels(); };
+    };
+    fg.onclick = async () => {
+      if (!confirm(`Forget channel ${ch.name}? To come back you will need its invite again.`)) return;
+      channels = channels.filter(c => c !== ch);
+      saveChannels();
+      if (ch === current) {
+        current = channels[0] || null;
+        store.set('last', current?.id || '');
+        if (current) await tune(current); else await leaveRoom();
+      }
+      renderChannels(); render();
+    };
+    box.append(row);
+  }
+}
+function renderShare() {
+  $('#shareBox').hidden = !current;
+  $('#shareNone').hidden = !!current;
+  if (!current) return;
+  const link = inviteLink(current);
+  $('#shareName').textContent = current.name;
+  $('#shareCode').textContent = group(current.secret);
+  try {
+    // whole device pixels per module, so a camera sees crisp edges
+    const qr = QR.encode(link, 'M'), n = qr.size + 8, dpr = devicePixelRatio || 1;
+    const scale = Math.max(1, Math.floor(Math.min(innerWidth * 0.64, 236) * dpr / n));
+    QR.draw($('#qr'), qr, scale);
+    $('#qr').style.width = n * scale / dpr + 'px';
+  } catch (e) { console.warn(e); }
+}
+function renderDevices() {
+  const inp = $('#myName');
+  if (document.activeElement !== inp) inp.value = me.name;
+  $('#myCall').textContent = me.callsign || '…';
+  $('#keyNote').textContent = me.kept
+    ? 'Other devices check this callsign against the key this device proves when you meet. It stays the same until you clear this site\'s data.'
+    : 'This browser would not keep the key (private browsing?), so other devices will see this one as new each time.';
+  const box = $('#devList');
+  box.textContent = '';
+  const map = new Map();
+  for (const c of channels) for (const [k, m] of Object.entries(c.members)) {
+    const d = map.get(k) || { key: k, name: m.name, callsign: m.callsign, last: 0, chans: [] };
+    if ((m.last || 0) >= d.last) { d.name = m.name; d.last = m.last || 0; }
+    d.chans.push(c.name);
+    map.set(k, d);
+  }
+  if (!map.size) { box.append(el('div', 'empty', 'None yet. Devices you meet on a channel show up here.')); return; }
+  for (const d of [...map.values()].sort((a, b) => b.last - a.last)) {
+    const on = [...links.values()].some(l => l.verified && l.key === d.key && !l.standby);
+    const row = el('div', 'row-item'), who = el('div', 'who');
+    who.append(el('b', null, d.name), el('small', null, `${d.callsign} · ${on ? 'online now' : 'seen ' + ago(d.last)} · ${d.chans.join(', ')}`));
+    const fg = el('button', 'btn small rose', 'Forget');
+    fg.onclick = () => {
+      if (!confirm(`Forget ${d.name}? If it joins one of your channels again it will show as new.`)) return;
+      for (const c of channels) delete c.members[d.key];
+      saveChannels(); renderDevices(); render();
+    };
+    const acts = el('div', 'row-actions');
+    acts.append(fg);
+    row.append(who, acts);
+    box.append(row);
+  }
+}
+function renderAudio() {
+  $('#vol').value = settings.volume;
+  $('#volVal').textContent = Math.round(settings.volume * 100) + '%';
+  $$('.toggle[data-set]').forEach(b => { const on = !!settings[b.dataset.set]; b.setAttribute('aria-pressed', on); b.textContent = on ? 'ON' : 'OFF'; });
+  $('#micNote').textContent = TEST_TONE ? 'Test mode: sending a tone instead of the microphone.'
+    : !powered ? 'The microphone opens when you power on, and only sends while you hold the button.'
+    : txTrack ? 'Microphone ready. Echo and noise changes apply the next time you power on.'
+    : 'No microphone: this radio can listen but not talk.';
+}
+function renderDiag() {
+  const r = relayCount(), lines = [
+    `version ${VERSION}${PROFILE ? ' · profile ' + PROFILE : ''}${TEST_TONE ? ' · test tone' : ''}`,
+    `power ${powered ? 'on' : 'off'} · audio ${ac ? ac.state : 'idle'} · mic ${txTrack ? 'yes' : 'no'}`,
+    `channel ${current ? current.name + ' (' + current.id + ')' : 'none'}`,
+    `relays ${r.open}/${r.total} open`,
+    ...[...links.values()].map(l => `link ${l.name || '?'} · ${l.verified === null ? 'checking' : l.verified ? 'verified' : 'UNVERIFIED'}${l.standby ? ' · standby' : ''} · ${l.route || 'no route yet'}${l.rtt != null ? ' · ' + l.rtt + ' ms' : ''} · audio ${l.stream ? 'yes' : 'no'}`),
+  ];
+  $('#diag').textContent = lines.join('\n');
+}
+
+/* ── wiring ── */
+function bindUI() {
+  $('#powerBtn').onclick = () => powered ? powerOff() : powerOn();
+  ptt.addEventListener('pointerdown', e => {
+    if (e.button > 0) return;
+    e.preventDefault();
+    if (!powered) { powerOn(); return; }
+    if (!current) { openPanel('channels', true); return; }
+    try { ptt.setPointerCapture(e.pointerId); } catch {}
+    setTx(settings.latch ? !transmitting : true);
+  });
+  const release = () => { if (!settings.latch) setTx(false); };
+  ptt.addEventListener('pointerup', release);
+  ptt.addEventListener('pointercancel', release);
+  ptt.addEventListener('lostpointercapture', release);
+  ptt.addEventListener('contextmenu', e => e.preventDefault());
+  const typing = () => /^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement?.tagName || '');
+  addEventListener('keydown', e => {
+    if (e.key === 'Escape' && openTab) { openPanel(openTab); return; }
+    if (e.code !== 'Space' || typing()) return;
+    e.preventDefault();
+    if (document.activeElement?.tagName === 'BUTTON') document.activeElement.blur();   // a focused button would click on the space bar too
+    if (e.repeat || !powered || !current) return;
+    setTx(settings.latch ? !transmitting : true);
+  });
+  addEventListener('keyup', e => { if (e.code === 'Space' && !typing()) { e.preventDefault(); if (!settings.latch) setTx(false); } });
+  addEventListener('blur', () => { if (!settings.latch) setTx(false); });
+  document.addEventListener('visibilitychange', () => { if (document.hidden) setTx(false); else keepAwake(); });
+
+  const step = d => {
+    if (channels.length < 2) return;
+    const list = [...channels].sort((a, b) => a.created - b.created), i = Math.max(0, list.indexOf(current));
+    tune(list[(i + d + list.length) % list.length]);
+  };
+  $('#chPrev').onclick = () => step(-1);
+  $('#chNext').onclick = () => step(1);
+
+  $$('.settings-tab').forEach(t => { t.onclick = () => openPanel(t.dataset.tab); });
+  $('#panelClose').onclick = () => openTab && openPanel(openTab);
+
+  $('#makeCh').onclick = async () => {
+    const name = cleanName($('#newChName').value).toUpperCase() || 'CHANNEL ' + (channels.length + 1);
+    const ch = await channelFor(newSecret(), name);
+    $('#newChName').value = '';
+    await tune(ch);
+    openPanel('share', true);
+    toast(powered ? `Made ${ch.name}: share it to bring someone in` : `Made ${ch.name}: power on to go on the air`);
+  };
+  $('#newChName').onkeydown = e => { if (e.key === 'Enter') $('#makeCh').click(); };
+  $('#joinCh').onclick = async () => {
+    const inv = parseInvite($('#joinCode').value);
+    if (!inv) { toast('That is not an invite link or a 20-letter channel code'); return; }
+    $('#joinCode').value = '';
+    const ch = await channelFor(inv.secret, inv.name);
+    await tune(ch);
+    renderChannels();
+    toast(powered ? 'Tuned to ' + ch.name : `Saved ${ch.name}: power on to tune in`);
+  };
+  $('#joinCode').onkeydown = e => { if (e.key === 'Enter') $('#joinCh').click(); };
+
+  $('#copyLink').onclick = () => current && copy(inviteLink(current));
+  $('#shareLink').onclick = async () => {
+    if (!current) return;
+    const url = inviteLink(current);
+    if (navigator.share) { try { await navigator.share({ title: 'Walkie Talkie', text: `Join my channel ${current.name}`, url }); return; } catch (e) { if (e?.name === 'AbortError') return; } }
+    copy(url);
+  };
+
+  const nameInp = $('#myName');
+  nameInp.onchange = () => {
+    me.name = cleanName(nameInp.value) || 'UNIT ' + me.callsign.slice(0, 4);
+    nameInp.value = me.name;
+    store.set('name', me.name);
+    act?.nm({ name: me.name });
+    render();
+  };
+  nameInp.onkeydown = e => { if (e.key === 'Enter') nameInp.blur(); };
+
+  $('#vol').oninput = e => {
+    settings.volume = +e.target.value;
+    saveSettings();
+    $('#volVal').textContent = Math.round(settings.volume * 100) + '%';
+    for (const l of links.values()) if (l.audio) l.audio.volume = settings.volume;
+  };
+  $$('.toggle[data-set]').forEach(b => {
+    b.setAttribute('aria-label', b.previousElementSibling?.textContent || b.dataset.set);   // the row's label names the switch for screen readers
+    b.onclick = () => {
+      const k = b.dataset.set;
+      settings[k] = !settings[k];
+      saveSettings();
+      if (k === 'awake') settings.awake ? keepAwake() : releaseAwake();
+      if (k === 'latch' && transmitting) setTx(false);
+      renderAudio(); render();
+    };
+  });
+  $('#testBeep').onclick = () => {
+    ac = ac || new (window.AudioContext || window.webkitAudioContext)();
+    ac.resume().then(() => sfx('roger')).catch(() => {});
+  };
+}
+async function copy(text) {
+  try { await navigator.clipboard.writeText(text); toast('Copied'); return; } catch {}
+  const t = el('textarea');
+  t.value = text;
+  document.body.append(t);
+  t.select();
+  try { document.execCommand('copy'); toast('Copied'); } catch { toast('Copy failed: select the code by hand'); }
+  t.remove();
+}
+function readHash() {
+  const inv = parseInvite(location.hash);
+  if (!inv) return;
+  pendingInvite = inv;
+  if (powered) acceptInvite(); else render();
+}
+
+/* ═══ QR encoder: byte mode, levels L and M, versions 1 to 40, best of eight
+   masks. A port of the structure of Project Nayuki's QR Code generator (MIT),
+   trimmed to what an invite needs. ═══ */
+const QR = (() => {
+  const T = {
+    L: { f: 1, ec: [-1, 7, 10, 15, 20, 26, 18, 20, 24, 30, 18, 20, 24, 26, 30, 22, 24, 28, 30, 28, 28, 28, 28, 30, 30, 26, 28, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30],
+         nb: [-1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 4, 4, 4, 4, 4, 6, 6, 6, 6, 7, 8, 8, 9, 9, 10, 12, 12, 12, 13, 14, 15, 16, 17, 18, 19, 19, 20, 21, 22, 24, 25] },
+    M: { f: 0, ec: [-1, 10, 16, 26, 18, 24, 16, 18, 22, 22, 26, 30, 22, 22, 24, 24, 28, 28, 26, 26, 26, 26, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28],
+         nb: [-1, 1, 1, 1, 2, 2, 4, 4, 4, 5, 5, 5, 8, 9, 9, 10, 10, 11, 13, 14, 16, 17, 17, 18, 20, 21, 23, 25, 26, 28, 29, 31, 33, 35, 37, 38, 40, 43, 45, 47, 49] },
+  };
+  const rawModules = v => {
+    let r = (16 * v + 128) * v + 64;
+    if (v >= 2) { const n = Math.floor(v / 7) + 2; r -= (25 * n - 10) * n - 55; if (v >= 7) r -= 36; }
+    return r;
+  };
+  const dataCodewords = (v, e) => Math.floor(rawModules(v) / 8) - T[e].ec[v] * T[e].nb[v];
+  const gfMul = (x, y) => { let z = 0; for (let i = 7; i >= 0; i--) { z = (z << 1) ^ ((z >>> 7) * 0x11d); z ^= ((y >>> i) & 1) * x; } return z; };
+  function rsDivisor(deg) {
+    const r = new Array(deg).fill(0);
+    r[deg - 1] = 1;
+    let root = 1;
+    for (let i = 0; i < deg; i++) {
+      for (let j = 0; j < deg; j++) { r[j] = gfMul(r[j], root); if (j + 1 < deg) r[j] ^= r[j + 1]; }
+      root = gfMul(root, 2);
+    }
+    return r;
+  }
+  function rsRemainder(data, div) {
+    const r = div.map(() => 0);
+    for (const b of data) {
+      const f = b ^ r.shift();
+      r.push(0);
+      div.forEach((c, i) => { r[i] ^= gfMul(c, f); });
+    }
+    return r;
+  }
+  const MASKS = [
+    (x, y) => (x + y) % 2 === 0, (x, y) => y % 2 === 0, (x, y) => x % 3 === 0, (x, y) => (x + y) % 3 === 0,
+    (x, y) => (Math.floor(x / 3) + Math.floor(y / 2)) % 2 === 0, (x, y) => x * y % 2 + x * y % 3 === 0,
+    (x, y) => (x * y % 2 + x * y % 3) % 2 === 0, (x, y) => ((x + y) % 2 + x * y % 3) % 2 === 0,
+  ];
+  function penalty(m, size) {
+    let score = 0;
+    const addHist = (len, h) => { if (h[0] === 0) len += size; h.pop(); h.unshift(len); };
+    const countPat = h => {
+      const n = h[1], core = n > 0 && h[2] === n && h[3] === n * 3 && h[4] === n && h[5] === n;
+      return (core && h[0] >= n * 4 && h[6] >= n ? 1 : 0) + (core && h[6] >= n * 4 && h[0] >= n ? 1 : 0);
+    };
+    for (const rows of [true, false]) {
+      for (let a = 0; a < size; a++) {
+        let color = false, run = 0;
+        const h = [0, 0, 0, 0, 0, 0, 0];
+        for (let b = 0; b < size; b++) {
+          const c = rows ? m[a][b] : m[b][a];
+          if (c === color) { run++; if (run === 5) score += 3; else if (run > 5) score++; }
+          else { addHist(run, h); if (!color) score += countPat(h) * 40; color = c; run = 1; }
+        }
+        if (color) { addHist(run, h); run = 0; }
+        addHist(run + size, h);
+        score += countPat(h) * 40;
+      }
+    }
+    for (let y = 0; y < size - 1; y++) for (let x = 0; x < size - 1; x++) {
+      const c = m[y][x];
+      if (c === m[y][x + 1] && c === m[y + 1][x] && c === m[y + 1][x + 1]) score += 3;
+    }
+    let dark = 0;
+    for (const row of m) for (const c of row) if (c) dark++;
+    const total = size * size;
+    return score + (Math.ceil(Math.abs(dark * 20 - total * 10) / total) - 1) * 10;
+  }
+  function encode(text, ecl = 'M') {
+    const bytes = enc.encode(text);
+    let v = 1;
+    while (v <= 40 && 4 + (v < 10 ? 8 : 16) + bytes.length * 8 > dataCodewords(v, ecl) * 8) v++;
+    if (v > 40) throw new Error('QR: too much data');
+    const cap = dataCodewords(v, ecl) * 8, bits = [];
+    const put = (val, len) => { for (let i = len - 1; i >= 0; i--) bits.push((val >>> i) & 1); };
+    put(4, 4);
+    put(bytes.length, v < 10 ? 8 : 16);
+    for (const b of bytes) put(b, 8);
+    put(0, Math.min(4, cap - bits.length));
+    put(0, (8 - bits.length % 8) % 8);
+    for (let pad = 0xec; bits.length < cap; pad ^= 0xec ^ 0x11) put(pad, 8);
+    const data = [];
+    for (let i = 0; i < bits.length; i += 8) { let b = 0; for (let j = 0; j < 8; j++) b = (b << 1) | bits[i + j]; data.push(b); }
+
+    // error correction, split into blocks and interleaved
+    const nb = T[ecl].nb[v], ecLen = T[ecl].ec[v], raw = Math.floor(rawModules(v) / 8);
+    const nShort = nb - raw % nb, shortLen = Math.floor(raw / nb), div = rsDivisor(ecLen), blocks = [];
+    for (let i = 0, k = 0; i < nb; i++) {
+      const dat = data.slice(k, k + shortLen - ecLen + (i < nShort ? 0 : 1));
+      k += dat.length;
+      const ecc = rsRemainder(dat, div);
+      if (i < nShort) dat.push(0);
+      blocks.push(dat.concat(ecc));
+    }
+    const cw = [];
+    for (let i = 0; i < blocks[0].length; i++) blocks.forEach((b, j) => { if (i !== shortLen - ecLen || j >= nShort) cw.push(b[i]); });
+
+    // function patterns
+    const size = v * 4 + 17;
+    const m = Array.from({ length: size }, () => new Array(size).fill(false));
+    const fn = Array.from({ length: size }, () => new Array(size).fill(false));
+    const set = (x, y, d) => { m[y][x] = d; fn[y][x] = true; };
+    for (let i = 0; i < size; i++) { set(6, i, i % 2 === 0); set(i, 6, i % 2 === 0); }
+    for (const [cx, cy] of [[3, 3], [size - 4, 3], [3, size - 4]])
+      for (let dy = -4; dy <= 4; dy++) for (let dx = -4; dx <= 4; dx++) {
+        const x = cx + dx, y = cy + dy, d = Math.max(Math.abs(dx), Math.abs(dy));
+        if (x >= 0 && x < size && y >= 0 && y < size) set(x, y, d !== 2 && d !== 4);
+      }
+    if (v > 1) {
+      const n = Math.floor(v / 7) + 2, stepA = Math.floor((v * 8 + n * 3 + 5) / (n * 4 - 4)) * 2, pos = [6];
+      for (let p = size - 7; pos.length < n; p -= stepA) pos.splice(1, 0, p);
+      for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) {
+        if ((i === 0 && j === 0) || (i === 0 && j === n - 1) || (i === n - 1 && j === 0)) continue;
+        for (let dy = -2; dy <= 2; dy++) for (let dx = -2; dx <= 2; dx++) set(pos[i] + dx, pos[j] + dy, Math.max(Math.abs(dx), Math.abs(dy)) !== 1);
+      }
+    }
+    const drawFormat = mask => {
+      const d = (T[ecl].f << 3) | mask;
+      let r = d;
+      for (let i = 0; i < 10; i++) r = (r << 1) ^ ((r >>> 9) * 0x537);
+      const b = ((d << 10) | r) ^ 0x5412, bit = i => ((b >>> i) & 1) !== 0;
+      for (let i = 0; i <= 5; i++) set(8, i, bit(i));
+      set(8, 7, bit(6)); set(8, 8, bit(7)); set(7, 8, bit(8));
+      for (let i = 9; i < 15; i++) set(14 - i, 8, bit(i));
+      for (let i = 0; i < 8; i++) set(size - 1 - i, 8, bit(i));
+      for (let i = 8; i < 15; i++) set(8, size - 15 + i, bit(i));
+      set(8, size - 8, true);
+    };
+    drawFormat(0);
+    if (v >= 7) {
+      let r = v;
+      for (let i = 0; i < 12; i++) r = (r << 1) ^ ((r >>> 11) * 0x1f25);
+      const b = (v << 12) | r;
+      for (let i = 0; i < 18; i++) { const d = ((b >>> i) & 1) !== 0, a = size - 11 + i % 3, c = Math.floor(i / 3); set(a, c, d); set(c, a, d); }
+    }
+
+    // data, zigzagging up and down column pairs from the right
+    let bi = 0;
+    for (let right = size - 1; right >= 1; right -= 2) {
+      if (right === 6) right = 5;
+      for (let vert = 0; vert < size; vert++) for (let j = 0; j < 2; j++) {
+        const x = right - j, up = ((right + 1) & 2) === 0, y = up ? size - 1 - vert : vert;
+        if (!fn[y][x] && bi < cw.length * 8) { m[y][x] = ((cw[bi >>> 3] >>> (7 - (bi & 7))) & 1) !== 0; bi++; }
+      }
+    }
+
+    // the mask with the lowest penalty
+    const applyMask = k => { for (let y = 0; y < size; y++) for (let x = 0; x < size; x++) if (!fn[y][x] && MASKS[k](x, y)) m[y][x] = !m[y][x]; };
+    let best = 0, bestScore = Infinity;
+    for (let k = 0; k < 8; k++) {
+      applyMask(k); drawFormat(k);
+      const s = penalty(m, size);
+      if (s < bestScore) { best = k; bestScore = s; }
+      applyMask(k);
+    }
+    applyMask(best);
+    drawFormat(best);
+    return { size, m, version: v, mask: best };
+  }
+  function draw(canvas, qr, scale) {
+    const quiet = 4, n = qr.size + quiet * 2;
+    canvas.width = canvas.height = n * scale;
+    const g = canvas.getContext('2d');
+    g.fillStyle = '#fff';
+    g.fillRect(0, 0, n * scale, n * scale);
+    g.fillStyle = '#05050f';
+    for (let y = 0; y < qr.size; y++) for (let x = 0; x < qr.size; x++) if (qr.m[y][x]) g.fillRect((x + quiet) * scale, (y + quiet) * scale, scale, scale);
+  }
+  return { encode, draw };
+})();
+
+/* ── probes (LSS habit: closure state is unreachable from the console otherwise) ── */
+window.__walkie = {
+  get state() {
+    return {
+      version: VERSION, profile: PROFILE, powered, transmitting, audio: ac?.state,
+      me: { name: me.name, callsign: me.callsign, kept: me.kept },
+      channel: current && { id: current.id, name: current.name, remembered: Object.keys(current.members).length },
+      relays: relayCount(),
+      links: [...links.values()].map(l => ({ id: l.id, name: l.name, callsign: l.callsign, verified: l.verified, wasKnown: l.wasKnown, standby: l.standby,
+        tx: l.tx, path: l.path, route: l.route, rtt: l.rtt, stream: !!l.stream, muted: l.audio?.muted ?? null, level: l.analyser ? +rms(l.analyser).toFixed(4) : null })),
+    };
+  },
+  invite: () => current && inviteLink(current),
+  tx: on => setTx(!!on),
+  qr: (text, ecl) => QR.encode(text, ecl),
+  // Does each relay forward an introduction? One socket subscribes, a second
+  // publishes a fresh event in Trystero's format; 'forwards' means it arrived.
+  probeRelays: (urls = RELAYS) => Promise.all(urls.map(url => new Promise(res => {
+    const T = window.__trystero, topic = 'walkie-probe-' + Math.random().toString(36).slice(2), sub = Math.random().toString(36).slice(2);
+    const a = new WebSocket(url), b = new WebSocket(url), t0 = performance.now();
+    let done = false, open = 0;
+    const fin = verdict => { if (done) return; done = true; try { a.close(); b.close(); } catch {} res({ url, verdict, ms: Math.round(performance.now() - t0) }); };
+    const ready = () => { if (++open === 2) setTimeout(async () => b.send(await T.createEvent(topic, 'probe')), 1200); };
+    a.onopen = () => { a.send(T.subscribe(sub, topic)); ready(); };
+    b.onopen = ready;
+    a.onmessage = m => { try { const d = JSON.parse(m.data); if (d[0] === 'EVENT' && d[1] === sub) fin('forwards'); } catch {} };
+    a.onerror = b.onerror = () => fin('error');
+    setTimeout(() => fin(open === 2 ? 'silent' : 'unreachable'), 9000);
+  }))),
+};
+
+/* ── boot ── */
+setInterval(async () => {
+  expireTx();
+  if (powered && links.size) await pollStats();
+  if (powered) { render(); if (openTab === 'about') renderDiag(); }
+}, 2000);
+setInterval(() => {
+  if (document.hidden) return;
+  const tag = $('#brand');
+  tag.classList.remove('glitch-shot');
+  void tag.offsetWidth;
+  tag.classList.add('glitch-shot');
+}, 4700);
+addEventListener('hashchange', readHash);
+bindUI();
+current = channels.find(c => c.id === store.get('last', '')) || null;
+readHash();
+render();
+loadIdentity().then(render, e => { console.warn('walkie identity', e); toast('This browser cannot make a device key here'); });
+</script>
+</body>
+</html>
