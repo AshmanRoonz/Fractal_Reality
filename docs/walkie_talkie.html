@@ -13,8 +13,8 @@
   WALKIE TALKIE: push to talk between browsers, device to device.
 
   Created: 2026-10-27
-  Last updated: 2026-10-27
-  Version: 1.2
+  Last updated: 2026-10-28
+  Version: 1.3
 
   How it connects (the About tab has the long version):
   - Voice runs over WebRTC, which is already a direct, encrypted (DTLS-SRTP)
@@ -53,6 +53,7 @@
   @noble/secp256k1 (MIT) are vendored unchanged except the export line.
 
   Revision history:
+  - 2026-10-28 v1.3: one-way audio fix (a sister in New Zealand saw him transmit but heard nothing): voice is agreed in the first handshake instead of renegotiated after the link opens; incoming voice is never script-muted or tapped by Web Audio; a refused speaker asks for a tap; the radio and Diagnostics show audio packets each way and flag "no sound arriving"
   - 2026-10-27 v1.2: channels are a name and a PIN (PBKDF2 derives the key), so typing both joins; invite links carry the PIN; relay nostr.oxtr.dev swapped for relay.nostr.dev.br
   - 2026-10-27 v1.1: TURN fallback for networks that block a direct link; the radio shows each connecting step, and Diagnostics keeps a copyable log; typing a channel's name explains that joining takes its code
   - 2026-10-27 v1.0: initial
@@ -627,7 +628,7 @@
         <div class="settings-panel" data-panel="about">
           <div class="settings-section prose">
             <h3>How it connects</h3>
-            <div class="meta-block">Created: 2026-10-27<br>Last updated: 2026-10-27<br>Version: 1.2</div>
+            <div class="meta-block">Created: 2026-10-27<br>Last updated: 2026-10-28<br>Version: 1.3</div>
             <p><b>Your voice goes straight from this device to theirs.</b> The link is WebRTC, the browser's own peer-to-peer channel, encrypted end to end. No server carries the audio.</p>
             <p><b>The only internet step is the introduction.</b> To find each other, the two devices swap a few kilobytes of connection details, encrypted with the channel's key, through public Nostr relays. Once they are linked the relays are out of the loop. On the same Wi-Fi, or with one phone sharing a hotspot, the audio never leaves the local network: the LINK line on the radio shows the route it actually took.</p>
             <p><b>Why not Wi-Fi Direct or Bluetooth?</b> A web page cannot reach either one. No browser exposes Wi-Fi Direct, and Web Bluetooth can only connect out to gadgets like heart-rate straps (it cannot advertise), so two phones running a page cannot pair over it. A native app could, through Android's Nearby Connections or Apple's Multipeer Connectivity.</p>
@@ -644,7 +645,7 @@
           </div>
           <div class="settings-section prose">
             <h3>Revision history</h3>
-            <ul><li>2026-10-27 v1.2: channels are a name and a PIN, so typing both joins; invite links pass the PIN along; one relay that refused steady use was swapped out</li><li>2026-10-27 v1.1: falls back to a TURN relay server when networks block a direct link; shows each connecting step; Diagnostics keeps a log you can copy; typing a channel's name explains that joining takes its code</li><li>2026-10-27 v1.0: initial</li></ul>
+            <ul><li>2026-10-28 v1.3: fixes voice that only went one way over long distances; a phone that blocks sound asks for a tap; the radio says when someone is transmitting but no sound is arriving</li><li>2026-10-27 v1.2: channels are a name and a PIN, so typing both joins; invite links pass the PIN along; one relay that refused steady use was swapped out</li><li>2026-10-27 v1.1: falls back to a TURN relay server when networks block a direct link; shows each connecting step; Diagnostics keeps a log you can copy; typing a channel's name explains that joining takes its code</li><li>2026-10-27 v1.0: initial</li></ul>
           </div>
         </div>
       </section>
@@ -691,7 +692,7 @@ var ht={p:0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffefffffc2fn,n:
    ========================================================================== */
 const { joinRoom, getRelaySockets } = window.__trystero;
 
-const VERSION = '1.2';
+const VERSION = '1.3';
 const APP_ID = 'fractal-walkie-v1';
 // The LSS TURN worker mints short-lived Cloudflare TURN credentials and
 // answers any origin. TURN only carries a link when the two networks block a
@@ -869,14 +870,47 @@ const WatchedPC = typeof RTCPeerConnection === 'function' ? class extends RTCPee
     this.addEventListener('icecandidate', e => { const m = e.candidate && / typ (\w+)/.exec(e.candidate.candidate); if (m) net.cand.add(m[1]); });
     this.addEventListener('connectionstatechange', () => watch(this));
     this.addEventListener('iceconnectionstatechange', () => watch(this));
+    // Trystero passes on 'track' events only once a link is open, but voice
+    // agreed in the first handshake arrives before that, so keep it here and
+    // hand it to the speaker when the link opens (peerJoined)
+    this.addEventListener('track', e => { if (e.track.kind === 'audio') this.__voice = e.streams[0] || new MediaStream([e.track]); });
+  }
+  // Voice rides in the first handshake. v1.2 added it after the link opened,
+  // so both phones proposed a change at once; over a long link those offers
+  // crossed and one direction's voice could stay unagreed (owner, 2026-10-28:
+  // his sister in New Zealand saw him transmit but heard nothing, while he
+  // heard her). The phone that opens a link puts its voice in its first offer;
+  // the answering phone attaches its own before reading an offer that carries
+  // audio, so the answer agrees voice both ways and nothing is renegotiated.
+  createDataChannel(...args) {
+    attachVoice(this);
+    return super.createDataChannel(...args);
   }
   async setRemoteDescription(d) {
+    if (d && d.type === 'offer' && /\nm=audio /.test(d.sdp || '')) attachVoice(this);
     const r = await super.setRemoteDescription(d);
     if (!this.__seen) { this.__seen = true; net.intro++; logNet('introduced to a device through a relay; linking'); watch(this); }
     return r;
   }
   close() { pcs.delete(this); return super.close(); }
 } : undefined;
+function attachVoice(pc) {
+  if (!txTrack || !micStream || pc.getSenders().some(s => s.track && s.track.kind === 'audio')) return;
+  try { pc.addTrack(txTrack, micStream); } catch (e) { console.warn('walkie: could not attach voice', e); }
+}
+// On joining, and whenever I transmit: every link must carry my live mic track.
+// A link from an older version (voice added after opening) gets it the old
+// way; a link built before a power cycle gets the new track swapped in.
+function ensureSending(peerId, why) {
+  if (!txTrack || !room) return;
+  const pc = room.getPeers()[peerId];
+  if (!pc) return;
+  const sender = pc.getSenders().find(s => s.track && s.track.kind === 'audio');
+  if (!sender) {
+    room.addStream(micStream, peerId);
+    if (why) logNet(`adding my voice to the link with ${links.get(peerId)?.name || 'a device'} (${why})`);
+  } else if (sender.track !== txTrack) sender.replaceTrack(txTrack).catch(() => {});
+}
 // Trystero tries a device once per relay that introduced it and keeps the
 // first link that opens; the spare attempts then time out as 'failed'. So a
 // failure only counts while no link is up, and a new link marks the
@@ -1060,6 +1094,8 @@ async function tune(ch) {
   room.onPeerJoin(peerJoined);
   room.onPeerLeave(peerLeft);
   room.onPeerStream((stream, peerId) => attachStream(getLink(peerId), stream));
+  // some browsers hand over a bare track with no stream around it
+  room.onPeerTrack((track, stream, peerId) => { if (track.kind === 'audio') attachStream(getLink(peerId), stream || new MediaStream([track])); });
   render();
   renderPanel();
 }
@@ -1084,8 +1120,9 @@ function getLink(peerId) {
   let l = links.get(peerId);
   if (!l) {
     l = { id: peerId, key: '', name: '', callsign: '', verified: null, wasKnown: false, standby: false,
-          nonce: b64u(crypto.getRandomValues(new Uint8Array(16))), tx: false, txUntil: 0, muteT: 0,
-          stream: null, audio: null, src: null, analyser: null, path: null, rtt: null, loss: 0, inbound: null, since: now() };
+          nonce: b64u(crypto.getRandomValues(new Uint8Array(16))), tx: false, txUntil: 0,
+          stream: null, trackId: '', audio: null, path: null, rtt: null, loss: 0, inbound: null, outbound: null,
+          inPps: null, outPps: null, quietPolls: 0, noAudio: false, since: now() };
     links.set(peerId, l);
   }
   return l;
@@ -1094,7 +1131,8 @@ function peerJoined(peerId) {
   markSpares();
   const l = getLink(peerId);
   act?.hi({ v: 1, key: me.key, name: me.name, nonce: l.nonce, tx: transmitting }, peerId);
-  if (micStream) room?.addStream(micStream, peerId);
+  ensureSending(peerId);
+  hearVoice(l);
   render();
 }
 function peerLeft(peerId) {
@@ -1110,12 +1148,19 @@ function peerLeft(peerId) {
 }
 function dropLink(l) {
   links.delete(l.id);
-  clearTimeout(l.muteT);
   if (l.audio) { l.audio.srcObject = null; l.audio.remove(); }
-  try { l.src?.disconnect(); } catch {}
 }
+// The incoming voice plays through one plain <audio> element that is never
+// muted and unmuted by script: an iPhone can refuse that kind of unmute, and
+// the sender's mic is already off between transmissions, so there is nothing
+// to squelch. Nothing else consumes the remote stream (the RX meter reads the
+// receiver's own audio levels), and a refused play() raises a visible "tap to
+// turn on the speaker" instead of failing silently.
+let speakerBlocked = false;
 function attachStream(l, stream) {
-  if (!stream || l.stream === stream) return;
+  const track = stream && stream.getAudioTracks()[0];
+  if (!track || l.trackId === track.id) return;
+  l.trackId = track.id;
   l.stream = stream;
   if (!l.audio) {
     l.audio = document.createElement('audio');
@@ -1123,13 +1168,34 @@ function attachStream(l, stream) {
     l.audio.playsInline = true;
     $('#sink').append(l.audio);
   }
-  l.audio.srcObject = stream;   // Chrome only plays remote WebRTC audio through an element; Web Audio taps it for the meter
+  l.audio.srcObject = stream;
   l.audio.volume = settings.volume;
   squelch(l);
-  l.audio.play().catch(() => {});
-  if (ac) { try { l.src?.disconnect(); const t = tap(stream); l.src = t.src; l.analyser = t.an; } catch {} }
+  playOut(l);
+  logNet('voice from ' + (l.name || 'a device') + ' connected to the speaker');
 }
-const squelch = l => { if (l.audio) l.audio.muted = !(l.tx && !l.standby); };
+function playOut(l) {
+  if (!l.audio || !l.audio.srcObject || !l.audio.paused) return;
+  l.audio.play().then(() => { if (speakerBlocked) { speakerBlocked = false; logNet('speaker on'); render(); } })
+    .catch(() => { if (!speakerBlocked) { speakerBlocked = true; logNet('the browser blocked the speaker; waiting for a tap'); render(); } });
+}
+// The other side's voice, from wherever it showed up: the 'track' event this
+// page kept, or failing that the link's live audio receiver. Runs when a link
+// opens and on every stats poll, so a missed event can't leave a link mute.
+function hearVoice(l) {
+  if (l.trackId) return;
+  const pc = room?.getPeers()[l.id];
+  if (!pc) return;
+  if (pc.__voice) return attachStream(l, pc.__voice);
+  const rcv = pc.getReceivers?.().find(r => r.track && r.track.kind === 'audio' && r.track.readyState === 'live');
+  if (rcv) attachStream(l, new MediaStream([rcv.track]));
+}
+// any tap counts as the user's go-ahead for sound, on phones that ask for one
+function wakeSpeakers() {
+  if (ac && ac.state !== 'running') ac.resume().catch(() => {});
+  for (const l of links.values()) playOut(l);
+}
+const squelch = l => { if (l.audio) l.audio.muted = !!l.standby; };   // only a duplicate link stays silent
 const fpOf = desc => { const m = desc && /a=fingerprint:(\S+)\s+([0-9A-Fa-f:]+)/.exec(desc.sdp || ''); return m ? m[1].toLowerCase() + ' ' + m[2].toUpperCase() : ''; };
 function fingerprints(peerId) {
   const pc = room?.getPeers()[peerId];
@@ -1190,11 +1256,10 @@ function setPeerTx(l, on) {
   const was = l.tx;
   l.tx = on;
   l.txUntil = on ? now() + 25000 : 0;
-  clearTimeout(l.muteT);
-  if (on && !was) { if (settings.beeps) sfx('squelch'); squelch(l); vibe(10); ensureLoop(); }
+  if (on && !was) { l.quietPolls = 0; l.noAudio = false; if (settings.beeps) sfx('squelch'); playOut(l); vibe(10); ensureLoop(); }
   if (!on && was) {
+    l.noAudio = false;
     if (settings.beeps) setTimeout(() => sfx('roger'), 160);   // the voice runs a jitter buffer behind the message
-    l.muteT = setTimeout(() => squelch(l), 320);
   }
   render();
 }
@@ -1214,6 +1279,7 @@ function setTx(on) {
     // the talk-permit blip plays first, so the open mic does not send it
     txOpenT = setTimeout(() => { if (transmitting && txTrack) txTrack.enabled = true; }, settings.beeps ? 70 : 0);
     act?.tx({ on: true });
+    for (const id of links.keys()) ensureSending(id, 'transmit check');
     txKeep = setInterval(() => {
       act?.tx({ on: true });   // keepalive: a receiver drops a silent transmitter after 25 s
       if (now() - txStart > 120000) { setTx(false); toast('Transmit stopped after 2 minutes'); }
@@ -1225,6 +1291,16 @@ function setTx(on) {
     act?.tx({ on: false });
   }
   render();
+}
+
+// The incoming level, as the sender measured it (the RTP audio-level header,
+// 0 to 1): no second consumer on the remote stream, which phones dislike.
+function rxLevel(l) {
+  try {
+    const rs = room?.getPeers()[l.id]?.getReceivers?.() || [];
+    const rcv = rs.find(r => r.track && r.track.id === l.trackId) || rs.find(r => r.track && r.track.kind === 'audio');
+    return rcv?.getSynchronizationSources?.()[0]?.audioLevel || 0;
+  } catch { return 0; }
 }
 
 /* ── the level ring: runs only while someone is on the air ── */
@@ -1240,7 +1316,7 @@ function ensureLoop() {
     lastF = t;
     let lvl = 0;
     if (transmitting) { if (micAnalyser && txTrack?.enabled) lvl = rms(micAnalyser); }
-    else for (const l of links.values()) if (l.tx && l.analyser) lvl = Math.max(lvl, rms(l.analyser));
+    else for (const l of links.values()) if (l.tx) lvl = Math.max(lvl, rxLevel(l) * 0.6);
     const target = Math.min(1, lvl * 5);
     lvlS += (target - lvlS) * (target > lvlS ? 0.5 : 0.15);
     const v = lvlS.toFixed(3);
@@ -1271,15 +1347,34 @@ async function pollStats() {
       if (pair.currentRoundTripTime != null) l.rtt = Math.round(pair.currentRoundTripTime * 1000);
       if (!l.route) logNet(`audio route: ${PATH_TEXT[l.path].toLowerCase()} (${types.join('/')})`);
       l.route = types.join('/');   // candidate types only: Diagnostics gets copied into chats, addresses stay out
+      // Audio packets each way. A sender whose mic is off still sends silence,
+      // about 50 packets a second, so 0 means no voice was ever set up in that
+      // direction, while packets with no sound mean the speaker is the problem.
+      let inbound = null, outbound = null;
       rep.forEach(s => {
-        if (s.type !== 'inbound-rtp' || s.kind !== 'audio') return;
-        const prev = l.inbound;
-        l.inbound = { lost: s.packetsLost || 0, recv: s.packetsReceived || 0 };
-        if (prev) {
-          const dl = l.inbound.lost - prev.lost, dr = l.inbound.recv - prev.recv;
-          if (dl + dr > 20) l.loss = Math.max(0, dl) / (dl + dr);
-        }
+        if (s.kind !== 'audio' && s.mediaType !== 'audio') return;
+        if (s.type === 'inbound-rtp') inbound = { lost: (inbound?.lost || 0) + (s.packetsLost || 0), recv: (inbound?.recv || 0) + (s.packetsReceived || 0), t: s.timestamp };
+        if (s.type === 'outbound-rtp') outbound = { sent: (outbound?.sent || 0) + (s.packetsSent || 0), t: s.timestamp };
       });
+      const rate = (cur, prev, key) => cur && prev && cur.t > prev.t ? Math.round((cur[key] - prev[key]) * 1000 / (cur.t - prev.t)) : null;
+      const inPrev = l.inbound, outPrev = l.outbound;
+      l.inbound = inbound;
+      l.outbound = outbound;
+      l.inPps = inbound ? rate(inbound, inPrev, 'recv') : 0;   // no inbound audio stats at all: nothing set up from them
+      l.outPps = outbound ? rate(outbound, outPrev, 'sent') : 0;
+      if (inPrev && inbound) {
+        const dl = l.inbound.lost - inPrev.lost, dr = l.inbound.recv - inPrev.recv;
+        if (dl + dr > 20) l.loss = Math.max(0, dl) / (dl + dr);
+      }
+      if (l.inPps > 0 && !l.heard) { l.heard = true; logNet(`audio arriving from ${l.name || 'a device'}`); }
+      if (l.outPps > 0 && !l.sent) { l.sent = true; logNet(`my audio reaching ${l.name || 'a device'}'s link`); }
+      if (l.tx && !l.standby) {
+        l.quietPolls = l.inPps === 0 ? l.quietPolls + 1 : 0;
+        const was = l.noAudio;
+        l.noAudio = l.quietPolls >= 2;
+        if (l.noAudio && !was) logNet(`${l.name || 'a device'} is transmitting but NO audio is arriving`);
+      }
+      if (l.inPps > 0) { hearVoice(l); playOut(l); }   // sound is coming in: make sure the speaker has it and is playing it
     } catch {}
   }
 }
@@ -1316,7 +1411,7 @@ function render() {
   $('#chPrev').disabled = $('#chNext').disabled = channels.length < 2;
 
   $('#statusLine').textContent = statusText(ls);
-  $('#rxLine').textContent = talking.length ? '◉ RX · ' + talking.map(l => l.name || 'UNIT').join(' + ') : transmitting ? '◉ TX · ' + me.name : '';
+  $('#rxLine').textContent = talking.length ? '◉ RX · ' + talking.map(l => (l.name || 'UNIT') + (l.noAudio ? ' (NO SOUND ARRIVING)' : '')).join(' + ') : transmitting ? '◉ TX · ' + me.name : '';
 
   const withPath = ls.filter(l => l.path), focus = talking.find(l => l.path) || withPath[0];
   const line = $('#linkLine');
@@ -1345,6 +1440,7 @@ function statusText(ls) {
     return current ? 'Tap POWER ON to tune in' : 'Tap POWER ON to start';
   }
   if (!current) return 'No channel yet: make one in CHANNELS';
+  if (speakerBlocked && ls.length) return 'Tap anywhere to turn on the speaker';
   if (ls.length) return ls.length + ' on channel with you';
   if (room) {
     if (linkingNow()) return 'Found a device: linking…';
@@ -1520,7 +1616,9 @@ function renderDiag() {
     `channel ${current ? current.name + ' (' + current.id + ')' : 'none'}`,
     `relays ${r.open}/${r.total} open · TURN ${ice.status}${FORCE_RELAY ? ' · TURN only' : ''}`,
     `introductions ${net.intro} · linking ${linkingNow()} · failed ${net.failed} · spare attempts ${[...pcs].filter(pc => pc.__spare).length} · routes gathered: ${[...net.cand].join(', ') || 'none yet'}`,
-    ...[...links.values()].map(l => `link ${l.name || '?'} · ${l.verified === null ? 'checking' : l.verified ? 'verified' : 'UNVERIFIED'}${l.standby ? ' · standby' : ''} · ${l.route || 'no route yet'}${l.rtt != null ? ' · ' + l.rtt + ' ms' : ''} · audio ${l.stream ? 'yes' : 'no'}`),
+    `speaker ${speakerBlocked ? 'BLOCKED (tap to allow)' : 'ok'}`,
+    ...[...links.values()].map(l => `link ${l.name || '?'} · ${l.verified === null ? 'checking' : l.verified ? 'verified' : 'UNVERIFIED'}${l.standby ? ' · standby' : ''} · ${l.route || 'no route yet'}${l.rtt != null ? ' · ' + l.rtt + ' ms' : ''}\n` +
+      `  audio in ${l.inPps ?? '?'}/s · out ${l.outPps ?? '?'}/s · their voice ${l.audio ? (l.audio.paused ? 'PAUSED' : 'playing') + (l.audio.muted ? ', muted' : '') : 'not received'} · level ${rxLevel(l).toFixed(2)}${l.noAudio ? ' · NO SOUND ARRIVING' : ''}`),
     '',
     ...netLog,
   ];
@@ -1530,6 +1628,7 @@ function renderDiag() {
 /* ── wiring ── */
 function bindUI() {
   $('#powerBtn').onclick = () => powered ? powerOff() : powerOn();
+  document.addEventListener('pointerdown', wakeSpeakers, true);
   ptt.addEventListener('pointerdown', e => {
     if (e.button > 0) return;
     e.preventDefault();
@@ -1843,7 +1942,9 @@ window.__walkie = {
       channel: current && { id: current.id, name: current.name, remembered: Object.keys(current.members).length },
       relays: relayCount(), turn: ice.status, net: { intro: net.intro, linking: linkingNow(), failed: net.failed, routes: [...net.cand] }, log: [...netLog],
       links: [...links.values()].map(l => ({ id: l.id, name: l.name, callsign: l.callsign, verified: l.verified, wasKnown: l.wasKnown, standby: l.standby,
-        tx: l.tx, path: l.path, route: l.route, rtt: l.rtt, stream: !!l.stream, muted: l.audio?.muted ?? null, level: l.analyser ? +rms(l.analyser).toFixed(4) : null })),
+        tx: l.tx, path: l.path, route: l.route, rtt: l.rtt, stream: !!l.stream, muted: l.audio?.muted ?? null, paused: l.audio?.paused ?? null,
+        level: +rxLevel(l).toFixed(4), inPps: l.inPps, outPps: l.outPps, noAudio: l.noAudio })),
+      speakerBlocked,
     };
   },
   invite: () => current && inviteLink(current),
