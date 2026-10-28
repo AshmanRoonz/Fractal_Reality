@@ -1846,6 +1846,13 @@
         <input type="file" id="importFile" accept="application/json,.json" style="display:none;">
       </div>
     </div>
+    <div class="settings-section">
+      <h3>Start over</h3>
+      <div class="row-note" style="padding-top:0;">Puts every setting back the way it starts, with the Ashman1 sound: the layers, texture and tuning, the breath guide, the visuals and the rest. Your saved settings stay.</div>
+      <div class="io-row" style="grid-template-columns:1fr;">
+        <button id="resetAllBtn" type="button">Reset all settings</button>
+      </div>
+    </div>
   </div>
 
   <!-- ABOUT -->
@@ -3485,6 +3492,15 @@
   function applyPreset(id) {
     const pr = PRESETS.find(p => p.id === id);
     if (!pr) return;
+    // A preset is a whole sound: every setting starts from the starting sound, then the
+    // preset sets its own. The volume and the session timer stay as they are.
+    if (FACTORY) {
+      const vol = state.params.vol;
+      restoreSettings(FACTORY, { keepTimer: true, quiet: true });
+      state.params.vol = vol;
+      $('vol').value = vol;
+      updateVolumeCaution(vol);
+    }
     state.currentPreset = id;
     state.mode = pr.mode;
     state.params.base = pr.base;
@@ -3887,10 +3903,13 @@
     renderSavedStates();
   }
 
-  function loadSaved(name) {
-    const all = getSaved();
-    const s = all[name];
-    if (!s) return;
+  // The starting sound, whole, taken once the page has set itself up: presets start from it,
+  // and Reset all settings goes back to it
+  let FACTORY = null;
+
+  // Put a whole set of settings in place: saved settings, or the starting sound under a preset
+  function restoreSettings(s, opts) {
+    opts = opts || {};
     state.mode = s.mode || state.mode;
     state.layerCount = s.layerCount || state.layerCount;
     if (Array.isArray(s.layerMute)) {
@@ -3898,7 +3917,7 @@
       s.layerMute.forEach((v, i) => { if (i < 9) state.layerMute[i] = !!v; });
     }
     state.currentPreset = s.currentPreset || state.currentPreset;
-    state.timerTarget = s.timerTarget || 0;
+    if (!opts.keepTimer) state.timerTarget = s.timerTarget || 0;
     if (s.params) state.params = Object.assign({}, state.params, s.params);
 
     pushUIFromState();
@@ -3907,7 +3926,12 @@
     document.querySelectorAll('.mode-tab').forEach(t => t.classList.toggle('active', t.dataset.mode === state.mode));
     $('modeStat').textContent = state.mode.toUpperCase();
     document.querySelectorAll('.tbtn').forEach(x => x.classList.toggle('active', parseInt(x.dataset.time,10) === state.timerTarget));
-    if (state.playing) debouncedRestart();
+    if (state.playing && !opts.quiet) debouncedRestart();
+  }
+
+  function loadSaved(name) {
+    const s = getSaved()[name];
+    if (s) restoreSettings(s);
   }
 
   function deleteSaved(name) {
@@ -3993,6 +4017,22 @@
   $('saveBtn').addEventListener('click', saveCurrent);
   $('saveName').addEventListener('keydown', (e) => { if (e.key === 'Enter') saveCurrent(); });
   $('exportBtn').addEventListener('click', exportStates);
+  // Reset all settings: saved settings and the safety notice's answer stay; everything else
+  // this page keeps on the device goes, and the page starts again (a playing session stops
+  // first, so a phone's playback service ends with it)
+  $('resetAllBtn').addEventListener('click', () => {
+    if (!confirm('Reset all settings?\n\nEverything goes back to how it starts, with the Ashman1 sound. Your saved settings stay.')) return;
+    const startOver = () => {
+      try {
+        for (let i = localStorage.length - 1; i >= 0; i--) {
+          const k = localStorage.key(i);
+          if (k && k.indexOf('phi_resonance_') === 0 && k !== STORAGE_KEY && k !== SAFETY_KEY) localStorage.removeItem(k);
+        }
+      } catch (e) {}
+      location.reload();
+    };
+    if (state.playing) { stopSession(0.4); setTimeout(startOver, 900); } else startOver();
+  });
   $('importBtn').addEventListener('click', () => $('importFile').click());
   $('importFile').addEventListener('change', (e) => {
     const f = e.target.files && e.target.files[0];
@@ -4044,6 +4084,8 @@
   renderLayerMixChips();
   renderSavedStates();
   updateStatsFromParams();
+  // the starting sound, whole, before anyone touches a control
+  FACTORY = JSON.parse(JSON.stringify(serializeState()));
   // the controls start on the starting preset: sliders, waveform, spacing, mode, readouts
   applyPreset(state.currentPreset);
   drawBG();

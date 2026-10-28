@@ -1,0 +1,3 @@
+# Keep these files byte for byte: the patch anchors match exact text, line endings included,
+# and the repo converts line endings (core.autocrlf) everywhere else.
+* -text

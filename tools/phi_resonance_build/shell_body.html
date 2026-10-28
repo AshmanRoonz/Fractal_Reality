@@ -1,0 +1,616 @@
+<body>
+<canvas id="bgcanvas"></canvas>
+
+<div class="app">
+
+  <header class="topbar">
+    <div class="brand"><span class="lss-tag"><span class="lt-text">φ-ENTRAINMENT</span></span></div>
+  </header>
+
+  <!-- THE TABS: every setting one tap from the main screen; the open tab again closes it -->
+  <div class="tabbar">
+    <nav class="settings-tabs main-tabs" id="mainTabs" role="tablist" aria-label="Settings">
+      <button class="settings-tab" data-tab="sound" type="button" role="tab" aria-selected="false">Sound</button>
+      <button class="settings-tab" data-tab="layers" type="button" role="tab" aria-selected="false">Layers</button>
+      <button class="settings-tab" data-tab="texture" type="button" role="tab" aria-selected="false">Texture</button>
+      <button class="settings-tab" data-tab="tuning" type="button" role="tab" aria-selected="false">Tuning</button>
+      <button class="settings-tab" data-tab="library" type="button" role="tab" aria-selected="false">Library</button>
+      <button class="settings-tab" data-tab="visuals" type="button" role="tab" aria-selected="false">Visuals</button>
+      <button class="settings-tab" data-tab="file" type="button" role="tab" aria-selected="false">File</button>
+      <button class="settings-tab" data-tab="about" type="button" role="tab" aria-selected="false">About</button>
+    </nav>
+  </div>
+
+  <div class="main">
+
+    <!-- THE STAGE: the field behind, the breath lane, the waveform -->
+    <section class="stage breath-on" id="stage" aria-label="The field">
+      <div class="stage-flash" id="stageFlash" aria-hidden="true"><i class="flash-tint"></i><i class="flash-tint white"></i><canvas id="stageFlashCanvas"></canvas></div>
+      <div class="stage-now">
+        <span class="stage-balance">Balance <b id="betaStat">0.25</b></span>
+        <span class="stage-chips">
+          <button class="stage-chip warn" id="stageFlashStop" type="button" title="Stop the flashes (Esc)" hidden>✕ Flash</button>
+          <button class="stage-chip" id="openBreath" type="button" title="Breath guide">◠ Breathe</button>
+        </span>
+      </div>
+      <div class="stage-orb" id="stageOrb" aria-hidden="true"></div>
+      <button class="stage-breath" id="stageBreath" type="button" aria-label="Breath guide: tap to start or pause">
+        <canvas id="stageBreathCanvas"></canvas>
+        <span class="stage-breath-phase" id="stageBreathPhase">TAP TO BREATHE</span>
+      </button>
+      <canvas class="viz" id="viz"></canvas>
+    </section>
+
+    <!-- THE SESSION CARD: above the open tab; its − folds it to a bar -->
+    <section class="play-card glass" aria-label="Session">
+      <div class="card-title card-head">
+        <span>Session</span>
+        <span class="session-summary" id="sessionSummary"></span>
+        <button class="card-min" id="sessionMin" type="button" aria-expanded="true" title="Minimize the session card">−</button>
+      </div>
+      <div class="preset-picker">
+        <button class="pp-arrow" id="presetPrev" type="button" aria-label="Previous preset">◀</button>
+        <button class="pp-name" id="presetName" type="button" title="All presets">ASHMAN1</button>
+        <button class="pp-arrow" id="presetNext" type="button" aria-label="Next preset">▶</button>
+      </div>
+      <div class="pp-desc" id="presetDesc">144 base, 2.1 Hz binaural, triangle, octave layers</div>
+      <!-- Base, Beat and Mode: tap one to change it here; tap it again to close -->
+      <div class="stats">
+        <button class="stat" type="button" data-edit="base" aria-expanded="false" aria-controls="statEdit"><span class="label">Base Hz</span><span class="value" id="baseStat">144</span></button>
+        <button class="stat" type="button" data-edit="beat" aria-expanded="false" aria-controls="statEdit"><span class="label">Beat Hz</span><span class="value" id="beatStat">2.100</span></button>
+        <button class="stat" type="button" data-edit="mode" aria-expanded="false" aria-controls="statEdit"><span class="label">Mode</span><span class="value" id="modeStat">BINAURAL</span></button>
+      </div>
+      <div class="stat-edit" id="statEdit">
+        <div class="stat-pane" data-pane="base">
+          <div class="setting-row">
+            <label for="qBase">Base frequency</label>
+            <input type="range" id="qBase" min="40" max="1200" value="144" step="1">
+            <span class="param-val" id="qBaseVal">144 Hz</span>
+          </div>
+          <div class="stat-nudge">
+            <button type="button" data-nudge="base" data-by="-10">−10</button>
+            <button type="button" data-nudge="base" data-by="-1">−1</button>
+            <button type="button" data-nudge="base" data-by="1">+1</button>
+            <button type="button" data-nudge="base" data-by="10">+10</button>
+          </div>
+        </div>
+        <div class="stat-pane" data-pane="beat">
+          <div class="setting-row">
+            <label for="qBeat">Beat</label>
+            <input type="range" id="qBeat" min="0.1" max="40" value="2.1" step="0.001">
+            <span class="param-val" id="qBeatVal">2.100 Hz</span>
+          </div>
+          <div class="stat-nudge">
+            <button type="button" data-nudge="beat" data-by="-1">−1</button>
+            <button type="button" data-nudge="beat" data-by="-0.1">−0.1</button>
+            <button type="button" data-nudge="beat" data-by="0.1">+0.1</button>
+            <button type="button" data-nudge="beat" data-by="1">+1</button>
+          </div>
+        </div>
+        <div class="stat-pane" data-pane="mode">
+          <div class="mode-tabs">
+            <button class="mode-tab" data-mode="binaural">Binaural</button>
+            <button class="mode-tab" data-mode="isochronic">Isochronic</button>
+            <button class="mode-tab" data-mode="monaural">Monaural</button>
+            <button class="mode-tab" data-mode="drone">Drone</button>
+            <button class="mode-tab" data-mode="harmonic">Harmonic</button>
+            <button class="mode-tab" data-mode="cascade">φ-Cascade</button>
+            <button class="mode-tab" data-mode="noise">Noise</button>
+            <button class="mode-tab" data-mode="chord">Chord</button>
+          </div>
+        </div>
+        <div class="stat-hint" id="statHint">Tap the number to type an exact value.</div>
+      </div>
+
+      <button class="play-btn" id="playBtn">▶ BEGIN SESSION</button>
+      <button class="lock-btn" id="lockBtn" type="button">🔒 PLAY WITH SCREEN OFF</button>
+      <div class="bg-status" id="bgStatus" aria-live="polite"></div>
+
+      <div class="setting-row">
+        <label for="vol">Master volume</label>
+        <input type="range" id="vol" min="0" max="100" value="25" step="1">
+        <span class="param-val" id="volVal">25%</span>
+      </div>
+      <div class="vol-caution" id="volCaution">High level. Long sessions this loud can harm hearing, especially on headphones; lower the volume if it feels loud.</div>
+
+      <div class="timer-head"><span>Timer</span><span class="timer-display" id="timer">00:00</span></div>
+      <div class="timer-buttons">
+        <button class="tbtn" data-time="0">∞</button>
+        <button class="tbtn" data-time="5">5m</button>
+        <button class="tbtn" data-time="15">15m</button>
+        <button class="tbtn" data-time="30">30m</button>
+        <button class="tbtn" data-time="45">45m</button>
+        <button class="tbtn" data-time="60">60m</button>
+        <button class="tbtn" data-time="90">90m</button>
+        <button class="tbtn" data-time="120">2h</button>
+      </div>
+    </section>
+
+    <!-- THE OPEN TAB'S SETTINGS (under the session card; hidden until a tab is chosen) -->
+    <div class="tab-panels" id="tabPanels" role="tabpanel" aria-labelledby="panelTitle">
+      <div class="panel-head">
+        <span class="panel-title" id="panelTitle">Settings</span>
+        <button class="panel-close" id="panelClose" type="button" title="Close (Esc)" aria-label="Close this panel">✕</button>
+      </div>
+
+  <!-- SOUND -->
+  <div class="settings-panel" data-panel="sound">
+    <div class="settings-section">
+      <h3>Engine</h3>
+      <div class="mode-tabs" id="modeTabs">
+        <button class="mode-tab active" data-mode="binaural">Binaural</button>
+        <button class="mode-tab" data-mode="isochronic">Isochronic</button>
+        <button class="mode-tab" data-mode="monaural">Monaural</button>
+        <button class="mode-tab" data-mode="drone">Drone</button>
+        <button class="mode-tab" data-mode="harmonic">Harmonic</button>
+        <button class="mode-tab" data-mode="cascade">φ-Cascade</button>
+        <button class="mode-tab" data-mode="noise">Noise</button>
+        <button class="mode-tab" data-mode="chord">Chord</button>
+      </div>
+      <div class="row-note" style="padding-top:10px;">Headphones for binaural and φ-cascade (each ear gets its own tone). The other modes play fine on a speaker.</div>
+    </div>
+
+    <div class="settings-section">
+      <h3>Frequency</h3>
+      <div class="setting-row">
+        <label for="base">Base frequency</label>
+        <input type="range" id="base" min="40" max="1200" value="144" step="1">
+        <span class="param-val" id="baseVal">144 Hz</span>
+      </div>
+      <div class="setting-row">
+        <label for="beat">Beat / pulse</label>
+        <input type="range" id="beat" min="0.1" max="40" value="2.1" step="0.001">
+        <span class="param-val" id="beatVal">2.100 Hz</span>
+      </div>
+      <div class="setting-row sel">
+        <label for="wave">Waveform</label>
+        <select id="wave">
+          <option value="sine">Sine (pure)</option>
+          <option value="triangle">Triangle (warm)</option>
+          <option value="square">Square (hollow)</option>
+          <option value="sawtooth">Saw (bright)</option>
+          <option value="fm">FM Bell</option>
+          <option value="am">AM Pulse</option>
+          <option value="organ">Organ (stacked sines)</option>
+          <option value="vocal">Vocal (formant)</option>
+          <option value="bowed">Bowed (sawtooth+filter)</option>
+        </select>
+      </div>
+      <div class="setting-row">
+        <label for="detune">Fine tune (cents)</label>
+        <input type="range" id="detune" min="-100" max="100" value="0" step="1">
+        <span class="param-val" id="detuneVal">0 c</span>
+      </div>
+      <div class="row-note">Tap any value to type an exact number.</div>
+    </div>
+  </div>
+
+  <!-- LAYERS -->
+  <div class="settings-panel" data-panel="layers">
+    <div class="settings-section">
+      <h3>Layers</h3>
+      <div class="setting-row">
+        <label for="layers">Layer count</label>
+        <input type="range" id="layers" min="1" max="9" value="6" step="1">
+        <span class="param-val" id="layersVal">6</span>
+      </div>
+      <div class="setting-row sel">
+        <label for="spacing">Layer spacing</label>
+        <select id="spacing">
+          <option value="phi">φ ratio (golden)</option>
+          <option value="octave">Octave (×2)</option>
+          <option value="fifth">Perfect 5th (3/2)</option>
+          <option value="fourth">Perfect 4th (4/3)</option>
+          <option value="major3">Major 3rd (5/4)</option>
+          <option value="minor3">Minor 3rd (6/5)</option>
+          <option value="semitone">Semitone (12-TET)</option>
+          <option value="harmonic">Harmonic (×n integer)</option>
+          <option value="subharmonic">Sub-harmonic (÷n)</option>
+          <option value="prime">Prime cascade</option>
+        </select>
+      </div>
+      <div class="setting-row">
+        <label for="stereo">Stereo width</label>
+        <input type="range" id="stereo" min="0" max="100" value="100" step="1">
+        <span class="param-val" id="stereoVal">100%</span>
+      </div>
+      <div class="setting-row">
+        <label for="beatStr">Beat strength</label>
+        <input type="range" id="beatStr" min="0" max="100" value="100" step="1">
+        <span class="param-val" id="beatStrVal">100%</span>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <h3>Active layers</h3>
+      <div class="layer-list" id="layerList"></div>
+    </div>
+
+    <div class="settings-section">
+      <h3>Per-layer mix</h3>
+      <div class="chips" id="layerMixChips"></div>
+      <div class="row-note">Tap a layer to mute or unmute it.</div>
+    </div>
+  </div>
+
+  <!-- TEXTURE -->
+  <div class="settings-panel" data-panel="texture">
+    <div class="settings-section">
+      <h3>Modulation</h3>
+      <div class="setting-row">
+        <label for="lfoDepth">LFO depth</label>
+        <input type="range" id="lfoDepth" min="0" max="100" value="30" step="1">
+        <span class="param-val" id="lfoDepthVal">30%</span>
+      </div>
+      <div class="setting-row">
+        <label for="lfoRate">LFO rate</label>
+        <input type="range" id="lfoRate" min="0.01" max="10" value="0.25" step="0.01">
+        <span class="param-val" id="lfoRateVal">0.25 Hz</span>
+      </div>
+      <div class="setting-row">
+        <label for="trem">Tremolo</label>
+        <input type="range" id="trem" min="0" max="100" value="0" step="1">
+        <span class="param-val" id="tremVal">0%</span>
+      </div>
+      <div class="setting-row">
+        <label for="vib">Vibrato</label>
+        <input type="range" id="vib" min="0" max="100" value="0" step="1">
+        <span class="param-val" id="vibVal">0%</span>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <h3>Filter &amp; space</h3>
+      <div class="setting-row sel">
+        <label for="filterType">Filter type</label>
+        <select id="filterType">
+          <option value="none">None (open aperture)</option>
+          <option value="lowpass">Lowpass (dark)</option>
+          <option value="highpass">Highpass (airy)</option>
+          <option value="bandpass">Bandpass (focused)</option>
+          <option value="notch">Notch (shadow)</option>
+        </select>
+      </div>
+      <div class="setting-row">
+        <label for="cutoff">Cutoff</label>
+        <input type="range" id="cutoff" min="80" max="12000" value="1500" step="10">
+        <span class="param-val" id="cutoffVal">1500 Hz</span>
+      </div>
+      <div class="setting-row">
+        <label for="q">Resonance (Q)</label>
+        <input type="range" id="q" min="0.1" max="20" value="1.0" step="0.1">
+        <span class="param-val" id="qVal">1.0</span>
+      </div>
+      <div class="setting-row">
+        <label for="rev">Reverb</label>
+        <input type="range" id="rev" min="0" max="100" value="20" step="1">
+        <span class="param-val" id="revVal">20%</span>
+      </div>
+      <div class="setting-row">
+        <label for="revSz">Reverb size</label>
+        <input type="range" id="revSz" min="0.2" max="8" value="2.5" step="0.1">
+        <span class="param-val" id="revSzVal">2.5 s</span>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <h3>Noise layer</h3>
+      <div class="setting-row sel">
+        <label for="noiseType">Noise type</label>
+        <select id="noiseType">
+          <option value="none">Off</option>
+          <option value="white">White (energetic)</option>
+          <option value="pink">Pink (balanced)</option>
+          <option value="brown">Brown (deep)</option>
+          <option value="rain">Rain (filtered)</option>
+          <option value="ocean">Ocean (slow modulated)</option>
+          <option value="wind">Wind (breath)</option>
+        </select>
+      </div>
+      <div class="setting-row">
+        <label for="noiseLvl">Noise level</label>
+        <input type="range" id="noiseLvl" min="0" max="100" value="20" step="1">
+        <span class="param-val" id="noiseLvlVal">20%</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- TUNING -->
+  <div class="settings-panel" data-panel="tuning">
+    <div class="settings-section">
+      <h3>Base frequency sets</h3>
+      <div class="chips" id="freqSets"></div>
+    </div>
+    <div class="settings-section">
+      <h3>Solfeggio</h3>
+      <div class="chips" id="solfeggio"></div>
+    </div>
+    <div class="settings-section">
+      <h3>Equal temperament</h3>
+      <div class="chips" id="notes"></div>
+    </div>
+    <div class="settings-section">
+      <h3>Beat rates</h3>
+      <div class="chips" id="lowfreqs"></div>
+    </div>
+    <div class="settings-section">
+      <h3>Framework ratios</h3>
+      <div class="chips" id="ratios"></div>
+      <div class="row-note">These set the beat rate to framework integers: Φ = 2, T = 3, P = 4, (Φ+○) = 5, R = 7, SU(3) = 8, A(2) = 10, G = 12, V = 13, A(3) = 21, and the golden number φ ≈ 1.618.</div>
+    </div>
+  </div>
+
+  <!-- LIBRARY -->
+  <div class="settings-panel" data-panel="library">
+    <div class="settings-section">
+      <h3>Presets</h3>
+      <div class="preset-grid" id="presetGrid"></div>
+    </div>
+  </div>
+
+  <!-- VISUALS -->
+  <div class="settings-panel" data-panel="visuals">
+    <div class="settings-section">
+      <h3>Breath guide</h3>
+      <div class="row-note">A dot that rises as you breathe in and falls as you breathe out. It has its own view, and it can also sit on the main screen and ride over the flashes, all on one breath.</div>
+      <div class="setting-row check">
+        <span class="lbl">On the main screen</span>
+        <button class="toggle" type="button" data-breath-where="stage" aria-pressed="true">ON</button>
+      </div>
+      <div class="setting-row check">
+        <span class="lbl">Over the flashes</span>
+        <button class="toggle" type="button" data-breath-where="flash" aria-pressed="false">OFF</button>
+      </div>
+      <button class="btn amber" id="openBreath2" type="button" style="width:100%; margin:8px 0 6px;">◠ Open the breath guide</button>
+    </div>
+
+    <div class="settings-section">
+      <h3>Visual beat</h3>
+      <div class="vbeat-row">
+        <div class="vbeat-swatch" id="vbeatSwatch" style="--swatch: #ff3030;">
+          <span id="vbeatNote">C</span>
+        </div>
+        <div class="vbeat-info">
+          <div>Note: <strong id="vbeatNoteName">C</strong></div>
+          <div>Color: <strong id="vbeatColorName">Red</strong></div>
+          <div>Flash rate: <strong id="vbeatRate">1.618 Hz</strong></div>
+        </div>
+      </div>
+      <div class="row-note">Notes map to the rainbow across the octave: C is red, E yellow, G blue, B violet, and the semitones in between.</div>
+
+      <div class="setting-row sel">
+        <label for="vbeatShape">Flash shape <span class="param-val" id="vbeatShapeVal">pulse</span></label>
+        <select id="vbeatShape">
+          <option value="pulse">Pulse (soft fade)</option>
+          <option value="strobe">Strobe (hard on/off)</option>
+          <option value="radial">Radial (center → edge)</option>
+          <option value="ring">Ring (expanding)</option>
+          <option value="split">Split (two colors)</option>
+        </select>
+      </div>
+      <div class="setting-row">
+        <label for="vbeatInt">Intensity</label>
+        <input type="range" id="vbeatInt" min="10" max="100" value="80" step="5">
+        <span class="param-val" id="vbeatIntVal">80%</span>
+      </div>
+      <div class="setting-row sel">
+        <label for="vbeatSrc">Color source <span class="param-val" id="vbeatSrcVal">base note</span></label>
+        <select id="vbeatSrc">
+          <option value="base">Base note → color</option>
+          <option value="beat">Beat rate → color</option>
+          <option value="sweep">Auto-sweep (rainbow)</option>
+          <option value="manual">Manual (pick color)</option>
+        </select>
+      </div>
+      <div id="vbeatManualRow">
+        <div class="setting-row">
+          <label for="vbeatHue">Manual color</label>
+          <div class="ctl" style="display:grid; grid-template-columns: 48px 1fr; gap:10px; align-items:center;">
+            <input type="color" id="vbeatPicker" value="#ff3030" style="width:48px; height:40px; padding:0; border:1px solid var(--card-edge); border-radius:6px; background:transparent; cursor:pointer;">
+            <input type="range" id="vbeatHue" min="0" max="359" value="0" step="1">
+          </div>
+          <span class="param-val" id="vbeatHueVal">0°</span>
+        </div>
+      </div>
+      <div class="setting-row sel">
+        <label for="vbeatSync">Audio → visual sync <span class="param-val" id="vbeatSyncVal">1 : 1 (match beat)</span></label>
+        <select id="vbeatSync">
+          <optgroup label="Direct ratios">
+            <option value="1:1">1 : 1 (match beat exactly)</option>
+            <option value="2:1">2 : 1 (double: 2 flashes per beat)</option>
+            <option value="4:1">4 : 1 (quadruple)</option>
+            <option value="8:1">8 : 1 (octuple)</option>
+            <option value="1:2">1 : 2 (half time)</option>
+            <option value="1:4">1 : 4 (quarter time)</option>
+            <option value="1:8">1 : 8 (eighth time)</option>
+          </optgroup>
+          <optgroup label="Polyrhythm">
+            <option value="3:2">3 : 2 (dotted)</option>
+            <option value="2:3">2 : 3 (triplet feel)</option>
+            <option value="5:4">5 : 4 (quintuplet)</option>
+            <option value="7:4">7 : 4 (septuplet)</option>
+          </optgroup>
+          <optgroup label="Framework ratios">
+            <option value="phi">φ : 1 (golden; ~1.618× beat)</option>
+            <option value="invphi">1 : φ (~0.618× beat)</option>
+            <option value="phisq">φ² : 1 (~2.618× beat)</option>
+          </optgroup>
+          <optgroup label="Coupled sources">
+            <option value="breath">Follow the breath guide (one per breath)</option>
+            <option value="base-div">Base frequency ÷ divisor</option>
+          </optgroup>
+          <optgroup label="Custom">
+            <option value="custom-hz">Custom Hz (free rate)</option>
+            <option value="custom-ratio">Custom ratio (visual : beat)</option>
+          </optgroup>
+        </select>
+      </div>
+      <div id="vbeatDivisorRow" style="display:none;">
+        <div class="setting-row">
+          <label for="vbeatDivisor">Base divisor</label>
+          <input type="range" id="vbeatDivisor" min="10" max="10000" value="1000" step="10">
+          <span class="param-val" id="vbeatDivisorVal">1000</span>
+        </div>
+        <div class="row-note">Flash rate = base frequency ÷ divisor. At 432 Hz and 1000, the flash is 0.432 Hz.</div>
+      </div>
+      <div id="vbeatCustomHzRow" style="display:none;">
+        <div class="setting-row">
+          <label for="vbeatCustomHz">Custom rate</label>
+          <input type="range" id="vbeatCustomHz" min="0.05" max="40" value="1" step="0.01">
+          <span class="param-val" id="vbeatCustomHzVal">1.000 Hz</span>
+        </div>
+      </div>
+      <div id="vbeatCustomRatioRow" style="display:none;">
+        <div class="setting-row">
+          <label for="vbeatCustomRatio">Custom ratio (visual : beat)</label>
+          <input type="range" id="vbeatCustomRatio" min="0.05" max="16" value="1" step="0.01">
+          <span class="param-val" id="vbeatCustomRatioVal">1.000</span>
+        </div>
+      </div>
+      <div class="setting-row">
+        <label for="vbeatPhase">Phase offset</label>
+        <input type="range" id="vbeatPhase" min="0" max="360" value="0" step="1">
+        <span class="param-val" id="vbeatPhaseVal">0°</span>
+      </div>
+      <div class="setting-row check">
+        <span class="lbl">Effective flash rate</span>
+        <span class="param-val" id="vbeatEffective">1.618 Hz</span>
+      </div>
+
+      <div class="setting-row sel">
+        <span class="lbl">Show the flashes</span>
+        <span class="ctl seg" role="group" aria-label="Where the flashes show">
+          <button class="seg-btn" type="button" data-flash-where="full" aria-pressed="true">Full screen</button>
+          <button class="seg-btn" type="button" data-flash-where="stage" aria-pressed="false">Main window</button>
+        </span>
+      </div>
+      <button class="btn amber" id="vbeatLaunch" type="button" style="width:100%; margin-top:8px;">▣ Launch full-screen</button>
+      <div class="vbeat-warn">
+        <strong>Photosensitivity warning.</strong> Flashing light between about 3 Hz and 60 Hz can trigger seizures in people with photosensitive epilepsy, and may cause migraines or nausea. If you have any history of seizures, do not launch this view. If you feel dizzy, close it at once (tap anywhere, press Esc, or use the × button; in the main window, the ✕ Flash button). Start at low intensity and low beat rates (below 3 Hz) and increase slowly.
+      </div>
+    </div>
+  </div>
+
+  <!-- FILE: save and load your settings -->
+  <div class="settings-panel" data-panel="file">
+    <div class="settings-section">
+      <h3>Save your settings</h3>
+      <div class="row-note" style="padding-top:0;">Everything you have set, kept under a name you choose, on this device.</div>
+      <div class="save-row">
+        <input type="text" id="saveName" placeholder="Name these settings..." maxlength="40" autocomplete="off" spellcheck="false">
+        <button id="saveBtn">Save</button>
+      </div>
+    </div>
+    <div class="settings-section">
+      <h3>Load saved settings</h3>
+      <div class="saved-list" id="savedStates"></div>
+    </div>
+    <div class="settings-section">
+      <h3>Back up or move</h3>
+      <div class="row-note" style="padding-top:0;">Put all your saved settings in a file, or bring them in from one, to keep a copy or carry them to another device.</div>
+      <div class="io-row">
+        <button id="exportBtn">Save to a file (.json)</button>
+        <button id="importBtn">Load from a file (.json)</button>
+        <input type="file" id="importFile" accept="application/json,.json" style="display:none;">
+      </div>
+    </div>
+  </div>
+
+  <!-- ABOUT -->
+  <div class="settings-panel" data-panel="about">
+    <div class="settings-section">
+      <h3>Listening safely</h3>
+      <div class="row-note"><strong style="color:var(--amber-hi);">Headphones</strong> for binaural and φ-cascade modes (stereo separation matters). Drone, harmonic, chord, monaural and noise modes play fine on any speaker. Start at a low volume and raise it slowly; if anything becomes uncomfortable, lower the beat rate, the reverb and the volume. This is a sound tool for relaxation and exploration, not a medical treatment.</div>
+    </div>
+    <div class="settings-section">
+      <h3>Framework mapping</h3>
+      <div class="row-note">In binaural mode the left channel (•) holds the base tone and the right channel (○) holds the φ-offset tone. The interference pattern at the difference frequency is Φ, the beat. This is an acoustic mapping onto the circumpunct notation, not a medical claim.</div>
+    </div>
+    <div class="settings-section">
+      <h3>More</h3>
+      <div class="row-note">
+        <a href="circumpunct_consciousness_theory.html" style="color:var(--chip);">Consciousness Theory</a> ·
+        <a href="attune.html" style="color:var(--chip);">Attune</a> ·
+        <a href="hemispheric_resonance.html" style="color:var(--chip);">Hemispheric Resonance</a> ·
+        <a href="how_reality_is_built.html" style="color:var(--chip);">How Reality Is Built</a><br>
+        The Circumpunct Framework · Ashman Roonz · 2026
+      </div>
+    </div>
+  </div>
+    </div>
+
+  </div>
+
+  <footer class="app-foot">
+    <a href="circumpunct_consciousness_theory.html">Consciousness Theory</a> ·
+    <a href="attune.html">Attune</a> ·
+    <a href="hemispheric_resonance.html">Hemispheric Resonance</a> ·
+    <a href="how_reality_is_built.html">How Reality Is Built</a>
+  </footer>
+</div>
+
+<!-- BREATH GUIDE (its own full-screen view; runs alongside a session) -->
+<div class="overlay" id="breathOverlay" role="dialog" aria-modal="true" aria-label="Breath guide">
+  <div class="overlay-head">
+    <h1><span class="lss-tag"><span class="lt-text">BREATHE</span></span></h1>
+    <button class="overlay-close" id="breathClose" type="button" title="Close (Esc)" aria-label="Close the breath guide">✕</button>
+  </div>
+  <div class="breath-wrap">
+    <div class="breath-stage">
+      <canvas id="breathCanvas"></canvas>
+      <div class="breath-phase" id="breathPhase">READY</div>
+    </div>
+    <div class="settings-section" style="margin:0;">
+      <div class="setting-row">
+        <label for="breathRate">Breaths per minute</label>
+        <input type="range" id="breathRate" min="3" max="12" value="6" step="0.5">
+        <span class="param-val" id="breathRateVal">6.0 bpm</span>
+      </div>
+      <div class="setting-row check">
+        <span class="lbl">On the main screen</span>
+        <button class="toggle" type="button" data-breath-where="stage" aria-pressed="true">ON</button>
+      </div>
+      <div class="setting-row check">
+        <span class="lbl">Over the flashes</span>
+        <button class="toggle" type="button" data-breath-where="flash" aria-pressed="false">OFF</button>
+      </div>
+    </div>
+    <button class="breath-play" id="breathPlay" type="button">▶ START</button>
+    <div class="row-note" style="text-align:center;">Follow the dot. Breathe <strong style="color:#8fd3ff;">in</strong> as it rises, <strong style="color:#ffb08f;">out</strong> as it falls. About 5.5 to 6 breaths a minute is coherent breathing; 3 to 4 is deeper practice.</div>
+  </div>
+</div>
+
+<!-- Full-screen flash overlay (hidden by default) -->
+<div id="flashOverlay" role="dialog" aria-label="Full-screen visual beat">
+  <div id="flashPanel"><i class="flash-tint"></i><i class="flash-tint white"></i></div>
+  <canvas id="flashCanvas" style="position:absolute; inset:0; width:100%; height:100%; display:none;"></canvas>
+  <div class="flash-breath" id="flashBreath" aria-hidden="true">
+    <canvas id="flashBreathCanvas"></canvas>
+    <div class="flash-breath-phase" id="flashBreathPhase"></div>
+  </div>
+  <button id="flashClose" aria-label="Close full-screen">×</button>
+  <div id="flashHUD">
+    <span id="flashHUDNote">C · Red</span>
+    <span id="flashHUDRate">1.618 Hz</span>
+    <span id="flashHUDHint">tap / Esc to close</span>
+  </div>
+</div>
+
+<!-- Safety notice (once per device, before the first session) -->
+<div id="safetyNotice" role="dialog" aria-modal="true" aria-labelledby="safetyTitle">
+  <div class="card">
+    <h3 id="safetyTitle">Before you begin</h3>
+    <ul>
+      <li><strong>Turn your device volume down first.</strong> Sessions fade in over a few seconds; raise the level slowly to a comfortable, quiet volume.</li>
+      <li>Use headphones for binaural and φ-cascade modes, at a low level. Long, loud listening can harm hearing.</li>
+      <li>Do not listen while driving, operating machinery, or doing anything that needs your full attention.</li>
+      <li>If you have epilepsy or a history of seizures, avoid fast pulses and the visual flash, and talk to your doctor first.</li>
+      <li>This is a sound tool for relaxation and exploration, not a medical treatment. Stop if you feel unwell.</li>
+    </ul>
+    <div class="actions">
+      <button id="safetyCancel" type="button">Not now</button>
+      <button id="safetyOk" type="button">I understand, begin</button>
+    </div>
+  </div>
+</div>
+

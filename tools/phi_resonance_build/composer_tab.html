@@ -1,0 +1,135 @@
+  <!-- COMPOSER -->
+  <div class="settings-panel" data-panel="composer">
+    <div class="settings-section">
+      <h3>Grown from the field</h3>
+      <div class="composer-top">
+        <button class="quick-btn" id="musicToggle" type="button" aria-pressed="false">♫ COMPOSER: OFF</button>
+        <button class="quick-btn" id="newPiece" type="button">⟳ NEW PIECE</button>
+      </div>
+      <div class="row-note">A piece grown from the field itself. The <strong style="color:var(--amber-hi);">home note</strong> is your base frequency, the <strong style="color:var(--amber-hi);">tempo</strong> is locked to your beat (a 1.618 Hz beat plays at 97.1 BPM, one beat per quarter note), the sections follow the <strong style="color:var(--amber-hi);">Fibonacci</strong> numbers, and every piece peaks at the <strong style="color:var(--amber-hi);">golden section</strong>, 61.8% of the way through, before breathing back to the start. With binaural pads on, the chords themselves carry the beat between your ears.</div>
+    </div>
+
+    <div class="settings-section">
+      <h3>Style</h3>
+      <div class="style-tabs" id="styleTabs"></div>
+    </div>
+
+    <div class="settings-section">
+      <h3>Form</h3>
+      <div class="form-bar" id="formBar"></div>
+      <div class="form-legend"><span id="formPos">Press begin session to hear the piece</span><span id="formChord"></span></div>
+      <div class="piece-info" id="pieceInfo"></div>
+    </div>
+
+    <div class="settings-section">
+      <h3>Piece</h3>
+      <div class="setting-row sel">
+        <label for="mScale">Scale</label>
+        <select id="mScale"></select>
+      </div>
+      <div class="setting-row sel">
+        <label for="mBars">Length</label>
+        <select id="mBars">
+          <option value="13">13 bars (2 + 3 + 3 + 3 + 2)</option>
+          <option value="21">21 bars (3 + 5 + 5 + 5 + 3)</option>
+          <option value="34">34 bars (5 + 8 + 8 + 8 + 5)</option>
+          <option value="55">55 bars (8 + 13 + 13 + 13 + 8)</option>
+        </select>
+      </div>
+      <div class="setting-row sel">
+        <label for="mTempo">Tempo</label>
+        <select id="mTempo">
+          <option value="locked">Locked to the beat</option>
+          <option value="free">Free</option>
+        </select>
+      </div>
+      <div class="setting-row" id="bpmRow">
+        <label for="mBpm">Free tempo</label>
+        <input type="range" id="mBpm" min="50" max="140" value="90" step="1">
+        <span class="param-val" id="mBpmVal">90 BPM</span>
+      </div>
+      <div class="setting-row">
+        <label for="mDensity">Density</label>
+        <input type="range" id="mDensity" min="0" max="100" value="50" step="1">
+        <span class="param-val" id="mDensityVal">50%</span>
+      </div>
+      <div class="setting-row sel">
+        <label for="seedInput">Seed</label>
+        <input type="text" id="seedInput" maxlength="6" autocomplete="off" spellcheck="false" title="The same seed and settings always compose the same piece">
+      </div>
+      <div class="setting-row check">
+        <label for="binPads">Binaural pads: the chords carry the beat (beats up to 12 Hz)</label>
+        <input type="checkbox" id="binPads" checked>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <h3>Mix</h3>
+      <div class="setting-row">
+        <label for="mField">Field (drone)</label>
+        <input type="range" id="mField" min="0" max="100" value="55" step="1">
+        <span class="param-val" id="mFieldVal">55%</span>
+      </div>
+      <div class="setting-row">
+        <label for="mPad">Pads</label>
+        <input type="range" id="mPad" min="0" max="100" value="70" step="1">
+        <span class="param-val" id="mPadVal">70%</span>
+      </div>
+      <div class="setting-row">
+        <label for="mBass">Bass</label>
+        <input type="range" id="mBass" min="0" max="100" value="65" step="1">
+        <span class="param-val" id="mBassVal">65%</span>
+      </div>
+      <div class="setting-row">
+        <label for="mLead">Melody</label>
+        <input type="range" id="mLead" min="0" max="100" value="60" step="1">
+        <span class="param-val" id="mLeadVal">60%</span>
+      </div>
+      <div class="setting-row">
+        <label for="mBells">Bells</label>
+        <input type="range" id="mBells" min="0" max="100" value="60" step="1">
+        <span class="param-val" id="mBellsVal">60%</span>
+      </div>
+      <div class="setting-row">
+        <label for="mDrums">Drums</label>
+        <input type="range" id="mDrums" min="0" max="100" value="60" step="1">
+        <span class="param-val" id="mDrumsVal">60%</span>
+      </div>
+      <div class="setting-row">
+        <label for="mVerb">Composer reverb</label>
+        <input type="range" id="mVerb" min="0" max="100" value="40" step="1">
+        <span class="param-val" id="mVerbVal">40%</span>
+      </div>
+      <div class="row-note">Tip: for the most consonant blend, set the field's Layer Spacing to Octave, or choose the <strong style="color:var(--amber-hi);">φ-chain</strong> scale: with six φ-spaced layers, every layer of the field is one of its notes, so the composer plays the field's own pitches.</div>
+    </div>
+
+    <div class="settings-section">
+      <h3>Download audio (.wav)</h3>
+      <div class="export-row">
+        <select id="exportLen" aria-label="Length">
+          <option value="cycle">One full piece</option>
+          <option value="120">2 minutes</option>
+          <option value="180">3 minutes</option>
+        </select>
+        <button class="btn amber" id="exportAudioBtn" type="button">⬇ Download</button>
+      </div>
+      <div class="export-status" id="exportStatus"></div>
+      <div class="row-note">Renders the current sound (the field, plus the composer when it is on) to a WAV file, faster than real time. Use it in a video or podcast, or layer it under a track from an AI music generator so the real binaural beat is in the mix.</div>
+    </div>
+
+    <details class="settings-section fold" id="aiDetails">
+      <summary>AI music prompt</summary>
+      <div class="row-note" style="padding-top:0;">For Suno, Udio and the like.</div>
+      <textarea class="prompt-box" id="aiPrompt" readonly aria-label="AI music prompt"></textarea>
+      <div class="io-row three">
+        <button id="copyStyleBtn" type="button">Copy style</button>
+        <button id="copyStructBtn" type="button">Copy structure</button>
+        <button id="copyDescBtn" type="button">Copy description</button>
+      </div>
+      <div class="io-row" style="grid-template-columns:1fr;">
+        <button id="aiRefreshBtn" type="button">↻ Rewrite from current settings</button>
+      </div>
+      <div class="row-note">Written from your current settings. AI music generators imitate the character of the sound, but they cannot reproduce exact frequencies or a true binaural beat (that needs each ear tuned separately). For the real thing, download the audio above and layer it under the AI track.</div>
+    </details>
+  </div>
+
