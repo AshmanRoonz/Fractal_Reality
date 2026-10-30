@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Circumpunct Theory of Mind</title>
+<meta name="description" content="Soul, mind and body as point, field and circle: how the relationship between wholes and parts repeats from God and souls down to the organization of a person.">
+<meta name="created" content="2026-10-29">
+<meta name="last-updated" content="2026-10-29">
+<meta name="version" content="1.1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Cinzel:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+    --bg-deep: #0a0a0f;
+    --bg-surface: #12121a;
+    --gold-primary: #d4a853;
+    --gold-light: #f0d78c;
+    --gold-dim: #8a6d3a;
+    --text-primary: #f2efe8;
+    --text-secondary: #c9c4b8;
+    --text-dim: #8f897b;
+    --border-subtle: rgba(212, 168, 83, 0.18);
+    --glow-gold: rgba(212, 168, 83, 0.35);
+    --blue-cool: #6a93b8;
+    --green-soft: #8ab07a;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { height: 100%; overflow: hidden; }
+
+body {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    background: var(--bg-deep);
+    color: var(--text-primary);
+    font-size: 20px;
+    line-height: 1.55;
+}
+
+.deck { position: relative; width: 100vw; height: 100vh; height: 100svh; overflow: hidden; }
+
+.slide {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    padding: 5vh 6vw 88px;
+    overflow-y: auto;
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+    pointer-events: none;
+    text-align: center;
+}
+.slide.active { opacity: 1; transform: translateY(0); pointer-events: auto; }
+.slide-inner { margin: auto; max-width: 960px; width: 100%; }
+
+h1.title {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(2.1rem, 6vw, 4.2rem);
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    color: var(--gold-light);
+    text-shadow: 0 0 30px var(--glow-gold);
+    line-height: 1.2;
+    margin-bottom: 1rem;
+}
+.subtitle { font-size: clamp(1.15rem, 2.2vw, 1.5rem); color: var(--text-secondary); font-style: italic; }
+.byline {
+    margin-top: 2rem;
+    font-family: 'Cinzel', serif;
+    font-size: 0.85rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+}
+.meta-line { margin-top: 0.6rem; font-family: Consolas, Menlo, monospace; font-size: 0.72rem; color: var(--text-dim); letter-spacing: 0.04em; }
+
+h2 {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(1.45rem, 3.2vw, 2.4rem);
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    color: var(--gold-light);
+    margin-bottom: 1.4rem;
+    line-height: 1.3;
+}
+.kicker {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(0.8rem, 1.4vw, 1rem);
+    color: var(--gold-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    margin-bottom: 0.9rem;
+}
+.kicker.premise { color: var(--blue-cool); }
+
+.body-text { font-size: clamp(1.1rem, 1.8vw, 1.38rem); line-height: 1.65; margin: 0 auto 1rem; max-width: 760px; }
+.body-text.dim { color: var(--text-secondary); }
+.body-text em { color: var(--gold-light); font-style: italic; }
+.small { font-size: clamp(0.92rem, 1.3vw, 1.05rem); color: var(--text-dim); max-width: 760px; margin: 0.8rem auto 0; line-height: 1.55; }
+.small a { color: var(--gold-primary); }
+.big-line {
+    font-size: clamp(1.7rem, 4.4vw, 3.1rem);
+    line-height: 1.3;
+    color: var(--gold-light);
+    font-style: italic;
+    margin: 1.2rem 0;
+}
+.formula {
+    font-size: clamp(1.25rem, 3vw, 2.1rem);
+    color: var(--gold-light);
+    letter-spacing: 0.03em;
+    margin: 1.2rem 0 1.6rem;
+}
+.formula .sep { color: var(--gold-dim); padding: 0 0.4em; }
+.divider { width: 64px; height: 1px; background: var(--gold-dim); margin: 1.6rem auto; }
+
+.callout {
+    border-left: 2px solid var(--gold-dim);
+    background: rgba(212, 168, 83, 0.05);
+    padding: 0.8rem 1.1rem;
+    margin: 1.4rem auto 0;
+    max-width: 760px;
+    text-align: left;
+    font-size: clamp(1.02rem, 1.6vw, 1.22rem);
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+.callout.premise { border-left-color: var(--blue-cool); background: rgba(106, 147, 184, 0.06); }
+.callout b { color: var(--text-primary); font-weight: 600; }
+
+/* figures */
+.hero-svg { width: min(40vh, 62vw); aspect-ratio: 1; display: block; margin: 0 auto 1.4rem; }
+.fig { width: 100%; max-width: 340px; aspect-ratio: 1; display: block; margin: 0 auto; }
+.field-canvas { width: min(34vh, 80vw); aspect-ratio: 1; display: block; margin: 0 auto 1.2rem; }
+
+.two-col { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: 2.2rem; align-items: center; text-align: left; }
+.two-col .body-text { margin-left: 0; }
+
+.stations { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.8rem; margin: 1.6rem auto; max-width: 820px; }
+.chip {
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
+    padding: 0.9rem 0.4rem 0.7rem;
+    background: var(--bg-surface);
+}
+.chip .g { font-size: clamp(1.6rem, 3.4vw, 2.3rem); color: var(--gold-light); line-height: 1.1; }
+.chip .n { font-family: 'Cinzel', serif; font-size: 0.82rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold-primary); margin-top: 0.4rem; }
+.chip .d { font-size: 1rem; color: var(--text-secondary); margin-top: 0.25rem; line-height: 1.35; }
+
+.cols { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.2rem; text-align: left; margin-top: 1.2rem; }
+.col { border: 1px solid var(--border-subtle); border-radius: 8px; padding: 1rem 1.1rem; background: var(--bg-surface); }
+.col h3 { font-family: 'Cinzel', serif; font-weight: 500; font-size: 0.86rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold-primary); margin-bottom: 0.6rem; }
+.col p { font-size: clamp(1rem, 1.45vw, 1.12rem); color: var(--text-secondary); line-height: 1.5; }
+.col svg { width: 120px; height: 120px; display: block; margin: 0 auto 0.8rem; }
+
+.links { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.6rem; margin-top: 1.8rem; }
+.links a {
+    font-family: 'Cinzel', serif; font-size: 0.8rem; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--gold-primary); text-decoration: none;
+    border: 1px solid var(--border-subtle); border-radius: 999px; padding: 0.45rem 1rem;
+}
+.links a:hover { border-color: var(--gold-dim); color: var(--gold-light); }
+
+/* nav */
+.home { position: fixed; top: 14px; left: 18px; font-family: 'Cinzel', serif; font-size: 0.8rem; letter-spacing: 0.12em; color: var(--gold-dim); text-decoration: none; z-index: 10; }
+.home:hover { color: var(--gold-light); }
+.hint { position: fixed; top: 14px; right: 18px; font-size: 0.8rem; color: var(--text-dim); letter-spacing: 0.1em; z-index: 10; }
+.nav-controls {
+    position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%);
+    display: flex; align-items: center; gap: 0.8rem; z-index: 10;
+    background: rgba(10, 10, 15, 0.82); padding: 0.4rem 0.9rem; border-radius: 999px; border: 1px solid var(--border-subtle);
+}
+.nav-btn { background: none; border: 0; color: var(--gold-primary); font-size: 1.6rem; line-height: 1; cursor: pointer; padding: 0 0.3rem; }
+.nav-btn:disabled { color: var(--text-dim); opacity: 0.4; cursor: default; }
+.dots { display: flex; gap: 6px; }
+.dot { width: 7px; height: 7px; border-radius: 50%; background: var(--gold-dim); opacity: 0.45; cursor: pointer; }
+.dot.active { background: var(--gold-light); opacity: 1; }
+.slide-counter { font-family: Consolas, Menlo, monospace; font-size: 0.78rem; color: var(--text-dim); min-width: 3.4rem; text-align: center; }
+.listen {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    background: none; border: 1px solid var(--border-subtle); border-radius: 999px;
+    color: var(--gold-primary); font-family: 'Cinzel', serif; font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase;
+    padding: 0.3rem 0.8rem; cursor: pointer;
+}
+.listen:hover, .listen.on { border-color: var(--gold-primary); color: var(--gold-light); }
+.listen .ico { font-size: 0.8rem; line-height: 1; }
+
+@media (max-width: 760px) {
+    body { font-size: 18px; }
+    .slide { padding: 56px 16px 84px; }
+    .stations { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.5rem; }
+    .chip .n { font-size: 0.68rem; letter-spacing: 0.04em; }
+    .two-col, .cols { grid-template-columns: 1fr; gap: 1.2rem; }
+    .fig { max-width: 220px; }
+    .dots { display: none; }
+    .hint { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .slide { transition: none; }
+}
+</style>
+</head>
+<body>
+
+<a class="home" href="index.html">⊙ fractalreality.ca</a>
+<div class="hint">← → or Space</div>
+
+<div class="deck" id="deck">
+
+<!-- 1. Title -->
+<section class="slide active">
+    <div class="slide-inner">
+        <svg class="hero-svg" viewBox="0 0 200 200" role="img" aria-label="A circumpunct: a point within a circle, with a glowing field between them">
+            <defs>
+                <radialGradient id="heroField">
+                    <stop offset="0" stop-color="#d4a853" stop-opacity="0.32"/>
+                    <stop offset="0.7" stop-color="#d4a853" stop-opacity="0.08"/>
+                    <stop offset="1" stop-color="#d4a853" stop-opacity="0"/>
+                </radialGradient>
+            </defs>
+            <circle cx="100" cy="100" r="80" fill="url(#heroField)"/>
+            <circle cx="100" cy="100" r="80" fill="none" stroke="#d4a853" stroke-width="2.2"/>
+            <circle cx="100" cy="100" r="7" fill="#f0d78c"/>
+        </svg>
+        <h1 class="title">The Circumpunct Theory of Mind</h1>
+        <p class="subtitle">I am whole. I am part.</p>
+        <div class="byline">Ashman Roonz · Circumpunct Framework</div>
+        <div class="meta-line">Created 2026-10-29 · Last updated 2026-10-29 · Version 1.1</div>
+    </div>
+</section>
+
+<!-- 2. Wholes and parts -->
+<section class="slide">
+    <div class="slide-inner">
+        <div class="kicker">The question</div>
+        <h2>One, and many</h2>
+        <p class="body-text">I understand mind through the relationship between wholes and parts. We experience ourselves as one, yet our lives involve many thoughts, feelings, sensations and bodily processes. Each of us is also part of relationships and realities larger than ourselves.</p>
+        <p class="body-text dim">The circumpunct gives me a way to think about these relationships together. Its central proposal is that the organization of a person repeats a relationship that extends throughout reality.</p>
+    </div>
+</section>
+
+<!-- 3. The circumpunct -->
+<section class="slide">
+    <div class="slide-inner">
+        <div class="kicker">The circumpunct</div>
+        <h2>A point within a circle</h2>
+        <div class="two-col">
+            <svg class="fig" viewBox="0 0 240 240" role="img" aria-label="The circumpunct labelled: the point is soul, the field is mind, the circle is body">
+                <defs>
+                    <radialGradient id="mindField">
+                        <stop offset="0" stop-color="#d4a853" stop-opacity="0.26"/>
+                        <stop offset="1" stop-color="#d4a853" stop-opacity="0.04"/>
+                    </radialGradient>
+                </defs>
+                <circle cx="120" cy="120" r="96" fill="url(#mindField)" stroke="#d4a853" stroke-width="2"/>
+                <circle cx="120" cy="120" r="6" fill="#f0d78c"/>
+                <text x="120" y="146" text-anchor="middle" fill="#f0d78c" font-family="Cinzel, serif" font-size="13" letter-spacing="2">SOUL</text>
+                <text x="120" y="84" text-anchor="middle" fill="#c9c4b8" font-family="Cinzel, serif" font-size="13" letter-spacing="2">MIND</text>
+                <text x="120" y="236" text-anchor="middle" fill="#d4a853" font-family="Cinzel, serif" font-size="13" letter-spacing="2">BODY</text>
+            </svg>
+            <div>
+                <p class="body-text">I call the point <em>soul</em>, the circle <em>body</em>, and the field within it <em>mind</em>.</p>
+                <p class="body-text dim">The soul is the indivisible point of view. The body is our boundary and interface with the world. The mind is the field through which our perceptions, feelings, thoughts and intentions relate.</p>
+                <p class="body-text dim">Their integration is what I call consciousness, or centered wholeness.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 4. Center and field -->
+<section class="slide">
+    <div class="slide-inner">
+        <div class="kicker">These distinctions matter</div>
+        <h2>The center and the field</h2>
+        <div class="stations">
+            <div class="chip"><div class="g">•</div><div class="n">Soul</div><div class="d">the center from which experience is lived</div></div>
+            <div class="chip"><div class="g">Φ</div><div class="n">Mind</div><div class="d">the field surrounding and relating to the center</div></div>
+            <div class="chip"><div class="g">○</div><div class="n">Body</div><div class="d">boundary and interface with the world</div></div>
+            <div class="chip"><div class="g">⊙</div><div class="n">Consciousness</div><div class="d">their integration: centered wholeness</div></div>
+        </div>
+        <p class="body-text">A mind can contain conflicting thoughts and changing feelings while those experiences remain present to a point of view.</p>
+        <p class="body-text dim">In this framework, the indivisibility of that point of view is a foundational claim. It does not mean that everything experienced is simple or that mental life has no parts.</p>
+    </div>
+</section>
+
+<!-- 5. God -->
+<section class="slide">
+    <div class="slide-inner">
+        <div class="kicker">The ultimate whole</div>
+        <h2>God as the infinite field</h2>
+        <canvas class="field-canvas" id="infinite" aria-label="An unbounded field of many points, each with its own small circle, fading out with no outer edge"></canvas>
+        <p class="body-text">I understand God as the infinite field or mind, the ultimate whole. When I call this field mind, I mean the field of all relating, not a human mind made larger.</p>
+        <p class="body-text dim">Everything belongs within this all-inclusion. God cannot be adequately represented as a dot somewhere inside a larger space, because that would make God one object among others. The infinite field includes the points and the relationships between them. It has no outside.</p>
+    </div>
+</section>
+
+<!-- 6. Two kinds of wholeness -->
+<section class="slide">
+    <div class="slide-inner">
+        <div class="kicker">Two kinds of wholeness</div>
+        <h2>Integration and all-inclusion</h2>
+        <div class="cols">
+            <div class="col">
+                <svg viewBox="0 0 120 120" aria-hidden="true">
+                    <circle cx="60" cy="60" r="46" fill="rgba(212,168,83,0.08)" stroke="#d4a853" stroke-width="2"/>
+                    <circle cx="60" cy="60" r="4" fill="#f0d78c"/>
+                    <circle cx="40" cy="48" r="2.2" fill="#c9c4b8"/><circle cx="78" cy="44" r="2.2" fill="#c9c4b8"/>
+                    <circle cx="74" cy="80" r="2.2" fill="#c9c4b8"/><circle cx="44" cy="78" r="2.2" fill="#c9c4b8"/>
+                </svg>
+                <h3>A formed whole</h3>
+                <p>Brings parts together within a boundary. Wholeness through integration.</p>
+            </div>
+            <div class="col">
+                <svg viewBox="0 0 120 120" aria-hidden="true">
+                    <defs>
+                        <radialGradient id="noEdge">
+                            <stop offset="0" stop-color="#d4a853" stop-opacity="0.22"/>
+                            <stop offset="1" stop-color="#d4a853" stop-opacity="0"/>
+                        </radialGradient>
+                    </defs>
+                    <rect width="120" height="120" fill="url(#noEdge)"/>
+                    <g fill="none" stroke="#d4a853" stroke-width="1.2" opacity="0.8">
+                        <circle cx="34" cy="38" r="12"/><circle cx="82" cy="32" r="9"/><circle cx="60" cy="66" r="14"/>
+                        <circle cx="28" cy="88" r="8"/><circle cx="92" cy="84" r="11"/>
+                    </g>
+                    <g fill="#f0d78c">
+                        <circle cx="34" cy="38" r="2"/><circle cx="82" cy="32" r="2"/><circle cx="60" cy="66" r="2.4"/>
+                        <circle cx="28" cy="88" r="2"/><circle cx="92" cy="84" r="2"/>
+                    </g>
+                </svg>
+                <h3>Infinite wholeness</h3>
+                <p>Includes everything without an outer boundary. Wholeness through all-inclusion.</p>
+            </div>
+        </div>
+        <p class="body-text" style="margin-top:1.4rem">A person is a centered whole within the greater reality that includes us.</p>
+    </div>
+</section>
+
+<!-- 7. Souls -->
+<section class="slide">
+    <div class="slide-inner">
+        <div class="kicker">The ultimate parts</div>
+        <h2>Souls</h2>
+        <p class="big-line">If God is the ultimate whole, souls are the ultimate parts.</p>
+        <div class="callout premise"><b>Axiom.</b> I hold, as an axiom of this framework, that an infinite whole that stayed undivided would have no one to whom anything appears. If the infinite is to be experienced, it must become particular somewhere, and a point of view is where that happens. This is why I take souls, and not particles, to be the ultimate parts.</div>
+        <p class="body-text dim" style="margin-top:1.4rem">By soul, I mean a singular, indivisible point of view. Ultimate here concerns the subject of experience, not the size of a physical object. A soul is not the smallest particle at the bottom of a sequence of smaller particles. It is the center to which an experience belongs.</p>
+    </div>
+</section>
+
+<!-- 8. Four terms -->
+<section class="slide">
+    <div class="slide-inner">
+        <div class="kicker">Four foundational terms</div>
+        <h2>God, souls, wholes and parts</h2>
+        <div class="stations">
+            <div class="chip"><div class="g">∞</div><div class="n">God</div><div class="d">the all-inclusive whole</div></div>
+            <div class="chip"><div class="g">•</div><div class="n">Souls</div><div class="d">indivisible centers</div></div>
+            <div class="chip"><div class="g">⊙</div><div class="n">Wholes</div><div class="d">how beings are gathered</div></div>
+            <div class="chip"><div class="g">◦◦</div><div class="n">Parts</div><div class="d">how beings participate</div></div>
+        </div>
+        <p class="body-text">A whole can participate as a part of something greater, while each of its parts can itself be a whole.</p>
+        <p class="body-text dim">Wholeness and parthood therefore depend on the relationship and scale we are considering.</p>
+    </div>
+</section>
+
+<!-- 9. No empty space -->
+<section class="slide">
+    <div class="slide-inner">
+        <div class="kicker premise">A hypothesis</div>
+        <h2>No empty space, no final particle</h2>
+        <p class="body-text">I also propose that there is no absolutely empty space and no final smallest particle. What appears empty at one scale may contain structure too small for us to perceive.</p>
+        <p class="body-text dim">On this account, physical reality continues through nested organization without reaching a final material bottom.</p>
+        <div class="callout premise"><b>Status.</b> Infinite nesting is a hypothesis in this philosophy. Establishing it as a physical account would require evidence beyond the existence of fields or the limits of what we can presently observe.</div>
+    </div>
+</section>
+
+<!-- 10. The mind has structure -->
+<section class="slide">
+    <div class="slide-inner">
+        <div class="kicker">The field has structure</div>
+        <h2>The mind has wholes and parts too</h2>
+        <p class="body-text">The body has wholes and parts, and so does the mind. A memory can be a whole composed of details, yet also be one part of a larger understanding. A feeling can influence a thought, which can reshape the meaning of an experience.</p>
+        <p class="body-text dim">These relationships give mental life an organization of its own. Explaining how that organization corresponds to physical structure remains part of the work of the theory.</p>
+    </div>
+</section>
+
+<!-- 11. Mind as a whole -->
+<section class="slide">
+    <div class="slide-inner">
+        <div class="kicker">The mind as a whole</div>
+        <h2>Attention gathers, intention organizes</h2>
+        <p class="body-text">The mind can also act as a whole in relation to bodily parts. Attention can gather aspects of an experience together, and an intention can organize what we do.</p>
+        <p class="body-text dim">This does not make the mind the entirety of the person. The mind remains part of our complete being, just as the body remains a whole composed of parts. The relationship changes with what we are considering.</p>
+    </div>
+</section>
+
+<!-- 12. The correspondence -->
+<section class="slide">
+    <div class="slide-inner">
+        <div class="kicker">The correspondence</div>
+        <h2>The relationship repeats within us</h2>
+        <p class="formula">God : souls <span class="sep">::</span> mind : bodily parts</p>
+        <p class="body-text">God relates to souls as an ultimate whole to ultimate parts, while mind relates to bodily parts as an integrating field to its participating constituents.</p>
+        <p class="big-line">Our minds are fractals of God.<br>Our bodies are fractals of souls.</p>
+    </div>
+</section>
+
+<!-- 13. The soul's two relationships -->
+<section class="slide">
+    <div class="slide-inner">
+        <div class="kicker">Where the scales meet</div>
+        <h2>The soul in two relationships</h2>
+        <div class="cols">
+            <div class="col">
+                <h3>In relation to God</h3>
+                <p>A soul is an ultimate part.</p>
+            </div>
+            <div class="col">
+                <h3>In relation to a person</h3>
+                <p>The soul is the center around which mind and body are gathered.</p>
+            </div>
+        </div>
+        <p class="body-text" style="margin-top:1.6rem">I do not take this as a contradiction.</p>
+        <p class="big-line">The soul is where the two scales meet: the place where the infinite whole is present to one point of view.</p>
+    </div>
+</section>
+
+<!-- 14. Fractal -->
+<section class="slide">
+    <div class="slide-inner">
+        <div class="kicker">What “fractal” means here</div>
+        <h2>A recurring organization of roles</h2>
+        <p class="body-text">Our minds express wholeness at a local scale. Our bodily parts express participation in something greater. An indivisible soul has no internal pieces for a composite body to copy, so the resemblance concerns their roles in the relationship.</p>
+        <p class="body-text dim">The body itself carries the pattern further because its parts also have their own organization. Each can be understood in relation to what composes it and what it helps compose.</p>
+        <div class="callout"><b>An open question.</b> Whether the smaller wholes that compose a body have points of view of their own is a question I leave open. The framework allows that every whole has a center, but the claim that a cell experiences anything would need an argument of its own.</div>
+    </div>
+</section>
+
+<!-- 15. Convergence and emergence -->
+<section class="slide">
+    <div class="slide-inner">
+        <div class="kicker">Movement</div>
+        <h2>Convergence and emergence</h2>
+        <p class="formula">○ → Φ → • <span class="sep">then</span> • → Φ → ○</p>
+        <p class="body-text">Convergence moves inward toward the point. Emergence moves outward through the field to the boundary. In convergence, experience comes into focus for a center. In emergence, what takes shape at that center is expressed through the field and body.</p>
+        <p class="body-text dim">What I attend to, and how I attend to it, affects how I meet an experience. My response then becomes part of the world that I and others encounter. The whole influences its parts while the parts influence the whole.</p>
+    </div>
+</section>
+
+<!-- 16. Protect and connect -->
+<section class="slide">
+    <div class="slide-inner">
+        <div class="kicker">An ethical direction</div>
+        <h2>Protect and connect</h2>
+        <p class="body-text">Each person has a point of view that matters, a wholeness of their own, and relationships with others. I take these as reasons to protect and connect.</p>
+        <div class="callout premise"><b>The commitment.</b> The circumpunct does not prove these values. It shows their shape once one commitment is made: that every center of experience matters.</div>
+        <div class="stations" style="grid-template-columns: repeat(3, minmax(0, 1fr));">
+            <div class="chip"><div class="g">○</div><div class="n">Protection</div><div class="d">honors the boundary</div></div>
+            <div class="chip"><div class="g">Φ</div><div class="n">Connection</div><div class="d">lives in the field</div></div>
+            <div class="chip"><div class="g">•</div><div class="n">Truthfulness</div><div class="d">the center can only respond to what reaches it</div></div>
+        </div>
+        <p class="body-text dim">Neither care for the whole nor care for its parts is sufficient when it requires abandoning the other.</p>
+    </div>
+</section>
+
+<!-- 17. Truth and evil -->
+<section class="slide">
+    <div class="slide-inner">
+        <div class="kicker">Truthfulness</div>
+        <h2>What reaches us</h2>
+        <p class="body-text">We depend on what reaches us to understand our situation and choose how to respond. Deception used to control another person interferes with that relationship. It makes their choices serve an arrangement they cannot adequately see. Coercion similarly treats another person&rsquo;s participation as something to seize.</p>
+        <p class="big-line">Evil involves patterns that sustain harm by distorting truth, violating agency or breaking trust.</p>
+    </div>
+</section>
+
+<!-- 18. Goodness and correction -->
+<section class="slide">
+    <div class="slide-inner">
+        <div class="kicker">Goodness</div>
+        <h2>Distinct, and together</h2>
+        <p class="body-text">Goodness supports truthful relationships in which people can remain distinct while participating together. Agreement matters when it is freely given and grounded in what is actually happening.</p>
+        <p class="body-text dim">Correction matters because our understanding is incomplete. Being mistaken is part of being human; the willingness to revise a belief or repair harm allows a relationship to change.</p>
+        <p class="body-text">The same openness belongs within the theory itself. Its claims must remain available for examination.</p>
+    </div>
+</section>
+
+<!-- 19. Close -->
+<section class="slide">
+    <div class="slide-inner">
+        <div class="kicker">One account of being</div>
+        <p class="body-text">We have a center, a body and a mind, and we belong to realities greater than ourselves. Our wholeness carries responsibilities toward our parts, while our participation carries responsibilities toward other wholes. I want a way of living that honors both relationships.</p>
+        <div class="divider"></div>
+        <p class="big-line">I am whole.<br>I am part.</p>
+        <div class="links">
+            <a href="index.html">fractalreality.ca</a>
+            <a href="ethics.html">The ethical guide</a>
+            <a href="existence/">Existence</a>
+        </div>
+        <p class="small" style="margin-top:2rem">Narrated in the ElevenLabs voice Ashley Gordon. Press Listen to hear each slide read aloud.</p>
+        <p class="small"><b>Revision history</b><br>2026-10-29 v1.1: narration added, one clip per slide<br>2026-10-29 v1.0: initial; essay revised with the axiom, the soul&rsquo;s two relationships, the open question on cells, and the ethical commitment</p>
+    </div>
+</section>
+
+</div>
+
+<div class="nav-controls">
+    <button class="nav-btn" id="prev" aria-label="Previous slide">‹</button>
+    <span class="slide-counter" id="counter">1 / 19</span>
+    <button class="nav-btn" id="next" aria-label="Next slide">›</button>
+    <button class="listen" id="listen" aria-label="Listen to the narration"><span class="ico">▶</span><span class="lbl">Listen</span></button>
+</div>
+
+<script>
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ---------- the infinite field: points, each with its own circle, no outer edge ---------- */
+const field = document.getElementById('infinite');
+const seeds = [];
+(function makeSeeds() {
+    let s = 7;
+    const rand = () => (s = (s * 16807) % 2147483647) / 2147483647;
+    for (let i = 0; i < 90; i++) seeds.push({ x: rand(), y: rand(), r: 0.012 + rand() * 0.05, p: rand() * Math.PI * 2 });
+})();
+function drawField(t) {
+    const dpr = window.devicePixelRatio || 1;
+    const w = field.clientWidth, h = field.clientHeight;
+    if (!w) return;
+    if (field.width !== Math.round(w * dpr)) { field.width = Math.round(w * dpr); field.height = Math.round(h * dpr); }
+    const g = field.getContext('2d');
+    g.setTransform(dpr, 0, 0, dpr, 0, 0);
+    g.clearRect(0, 0, w, h);
+    const glow = g.createRadialGradient(w / 2, h / 2, 0, w / 2, h / 2, w / 2);
+    glow.addColorStop(0, 'rgba(212,168,83,0.16)');
+    glow.addColorStop(1, 'rgba(212,168,83,0)');
+    g.fillStyle = glow;
+    g.fillRect(0, 0, w, h);
+    for (const d of seeds) {
+        const x = d.x * w, y = d.y * h;
+        const fade = Math.max(0, 1 - Math.hypot(x - w / 2, y - h / 2) / (w * 0.52));
+        if (fade <= 0) continue;
+        const breathe = 1 + 0.08 * Math.sin(t / 1400 + d.p);
+        g.strokeStyle = 'rgba(212,168,83,' + (0.55 * fade) + ')';
+        g.lineWidth = 1;
+        g.beginPath(); g.arc(x, y, d.r * w * breathe, 0, Math.PI * 2); g.stroke();
+        g.fillStyle = 'rgba(240,215,140,' + fade + ')';
+        g.beginPath(); g.arc(x, y, 1.8, 0, Math.PI * 2); g.fill();
+    }
+}
+function fieldLoop(t) {
+    if (slides[current] && slides[current].contains(field)) drawField(t);
+    if (!reduceMotion) requestAnimationFrame(fieldLoop);
+}
+
+/* ---------- deck navigation ---------- */
+const slides = document.querySelectorAll('.slide');
+const total = slides.length;
+let current = 0;
+const counter = document.getElementById('counter');
+const prevBtn = document.getElementById('prev');
+const nextBtn = document.getElementById('next');
+const dotsWrap = document.createElement('div');
+dotsWrap.className = 'dots';
+for (let i = 0; i < total; i++) {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === 0 ? ' active' : '');
+    d.addEventListener('click', () => goTo(i));
+    dotsWrap.appendChild(d);
+}
+document.querySelector('.nav-controls').insertBefore(dotsWrap, nextBtn);
+const dots = dotsWrap.querySelectorAll('.dot');
+
+function goTo(i) {
+    if (i < 0 || i >= total) return;
+    slides[current].classList.remove('active');
+    dots[current].classList.remove('active');
+    current = i;
+    slides[current].classList.add('active');
+    dots[current].classList.add('active');
+    slides[current].scrollTop = 0;
+    counter.textContent = (current + 1) + ' / ' + total;
+    prevBtn.disabled = current === 0;
+    nextBtn.disabled = current === total - 1;
+    history.replaceState(null, '', '#' + (current + 1));
+    if (reduceMotion) drawField(0);
+    if (listening) playSlide();
+}
+
+/* ---------- narration: one clip per slide, read in the ElevenLabs voice Ashley Gordon ---------- */
+const voice = new Audio();
+voice.preload = 'auto';
+const listenBtn = document.getElementById('listen');
+let listening = false, advanceTimer = 0;
+const clip = (i) => 'audio/theory_of_mind/' + String(i + 1).padStart(2, '0') + '.mp3';
+function playSlide() {
+    clearTimeout(advanceTimer);
+    voice.src = clip(current);
+    voice.play().catch(() => setListening(false));
+}
+function setListening(on) {
+    listening = on;
+    listenBtn.classList.toggle('on', on);
+    listenBtn.querySelector('.ico').textContent = on ? '❚❚' : '▶';
+    listenBtn.querySelector('.lbl').textContent = on ? 'Pause' : 'Listen';
+    if (on) playSlide(); else { clearTimeout(advanceTimer); voice.pause(); }
+}
+voice.addEventListener('ended', () => {
+    if (!listening) return;
+    if (current === total - 1) { setListening(false); return; }
+    advanceTimer = setTimeout(() => goTo(current + 1), 900);
+});
+listenBtn.addEventListener('click', () => setListening(!listening));
+prevBtn.addEventListener('click', () => goTo(current - 1));
+nextBtn.addEventListener('click', () => goTo(current + 1));
+
+document.addEventListener('keydown', (e) => {
+    if (e.target.closest('button') && (e.key === ' ' || e.key === 'Enter')) return;
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); goTo(current + 1); }
+    else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); goTo(current - 1); }
+    else if (e.key === 'Home') goTo(0);
+    else if (e.key === 'End') goTo(total - 1);
+});
+
+let touchX = 0, touchY = 0, touchOk = true;
+document.addEventListener('touchstart', (e) => {
+    touchOk = !e.target.closest('a, button');
+    touchX = e.changedTouches[0].screenX;
+    touchY = e.changedTouches[0].screenY;
+}, { passive: true });
+document.addEventListener('touchend', (e) => {
+    if (!touchOk) return;
+    const dx = e.changedTouches[0].screenX - touchX;
+    const dy = e.changedTouches[0].screenY - touchY;
+    if (Math.abs(dx) < 50 || Math.abs(dx) < Math.abs(dy)) return;
+    goTo(current + (dx < 0 ? 1 : -1));
+});
+
+/* ---------- start ---------- */
+const start = parseInt((location.hash || '').slice(1), 10);
+prevBtn.disabled = true;
+if (start >= 1 && start <= total) goTo(start - 1);
+window.addEventListener('resize', () => drawField(0));
+requestAnimationFrame(fieldLoop);
+</script>
+
+</body>
+</html>
