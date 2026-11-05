@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Self Science: Configuring the Way I Exist Within</title>
+<meta name="description" content="Self Science: attention, imagination, mind-body feedback, and the corrigible whole. An essay by Ashman Roonz.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink-900: #0a0d14;
+    --ink-800: #11141d;
+    --ink-700: #141823;
+    --rule: rgba(255,255,255,0.08);
+    --fog-100: #e6e8ee;
+    --fog-300: #a4abb8;
+    --fog-500: #6b7180;
+    --gold: #b8a060;
+    --gold-bright: #d4b870;
+    --violet: #8c7ad0;
+    --glow-gold: rgba(184,160,96,0.22);
+  }
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme="dark"]) {
+      --ink-900: #f6f3ea;
+      --ink-800: #ffffff;
+      --ink-700: #fbf9f3;
+      --rule: rgba(60,50,20,0.14);
+      --fog-100: #1d1f26;
+      --fog-300: #4a4f5c;
+      --fog-500: #7a7f8c;
+      --gold: #8a7430;
+      --gold-bright: #6e5b20;
+      --violet: #5a4aa0;
+      --glow-gold: rgba(138,116,48,0.18);
+    }
+  }
+  :root[data-theme="dark"] {
+    --ink-900: #0a0d14;
+    --ink-800: #11141d;
+    --ink-700: #141823;
+    --rule: rgba(255,255,255,0.08);
+    --fog-100: #e6e8ee;
+    --fog-300: #a4abb8;
+    --fog-500: #6b7180;
+    --gold: #b8a060;
+    --gold-bright: #d4b870;
+    --violet: #8c7ad0;
+    --glow-gold: rgba(184,160,96,0.22);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--ink-900);
+    color: var(--fog-100);
+    font-family: "EB Garamond", Georgia, serif;
+    font-size: 19px;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .sans { font-family: "Space Grotesk", system-ui, sans-serif; }
+
+  header.hero {
+    position: relative;
+    text-align: center;
+    padding: 72px 20px 56px;
+    background:
+      radial-gradient(ellipse at 50% 0%, rgba(140,122,208,0.18), transparent 60%),
+      radial-gradient(ellipse at 50% 100%, rgba(184,160,96,0.10), transparent 55%);
+    border-bottom: 1px solid var(--rule);
+  }
+  .kicker {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+  h1 {
+    font-weight: 500;
+    font-size: clamp(34px, 5.4vw, 60px);
+    line-height: 1.1;
+    margin: 18px 0 14px;
+    color: var(--gold-bright);
+    text-shadow: 0 0 40px var(--glow-gold);
+  }
+  .subtitle {
+    font-style: italic;
+    font-size: clamp(18px, 2.4vw, 23px);
+    color: var(--fog-300);
+  }
+  .byline {
+    margin-top: 22px;
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--fog-500);
+  }
+  .meta {
+    margin-top: 10px;
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    color: var(--fog-500);
+  }
+
+  main {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0 22px 80px;
+  }
+
+  .pull {
+    margin: 48px auto;
+    padding: 26px 28px;
+    max-width: 620px;
+    text-align: center;
+    font-style: italic;
+    font-size: clamp(22px, 3vw, 28px);
+    line-height: 1.4;
+    color: var(--gold-bright);
+    background: var(--ink-700);
+    border: 1px solid var(--rule);
+    border-radius: 14px;
+    box-shadow: 0 0 40px var(--glow-gold);
+  }
+
+  section { margin-top: 56px; }
+
+  h2 {
+    font-family: "EB Garamond", Georgia, serif;
+    font-weight: 500;
+    font-size: clamp(26px, 3.4vw, 34px);
+    color: var(--gold-bright);
+    margin-bottom: 18px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  p { margin-bottom: 1.1em; }
+
+  .structure {
+    margin: 26px 0 8px;
+    background: var(--ink-800);
+    border: 1px solid var(--rule);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .structure div {
+    display: grid;
+    grid-template-columns: 56px 1fr;
+    gap: 12px;
+    padding: 13px 18px;
+    border-top: 1px solid var(--rule);
+    align-items: baseline;
+  }
+  .structure div:first-child { border-top: 0; }
+  .structure .sym {
+    font-size: 22px;
+    color: var(--gold);
+    text-align: center;
+  }
+  .structure .name {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 15px;
+    color: var(--fog-100);
+  }
+  .structure .name span {
+    display: block;
+    font-family: "EB Garamond", Georgia, serif;
+    font-size: 17px;
+    color: var(--fog-300);
+  }
+  .note {
+    font-size: 16px;
+    font-style: italic;
+    color: var(--fog-300);
+    margin-top: 12px;
+  }
+
+  .lines {
+    margin: 26px 0;
+    padding: 24px 26px;
+    text-align: center;
+    background: var(--ink-700);
+    border: 1px solid var(--rule);
+    border-radius: 12px;
+    font-size: 22px;
+    line-height: 1.7;
+    color: var(--gold-bright);
+  }
+  .lines span { display: block; }
+
+  .scope {
+    margin-top: 60px;
+    padding: 22px 24px;
+    background: var(--ink-800);
+    border-left: 3px solid var(--gold);
+    border-radius: 8px;
+    font-size: 17px;
+    color: var(--fog-300);
+  }
+  .scope strong {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold);
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  .back {
+    display: inline-block;
+    margin-top: 40px;
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--fog-300);
+    text-decoration: none;
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 4px;
+  }
+  .back:hover { color: var(--gold-bright); }
+
+  .revision {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0 22px 60px;
+    font-size: 15px;
+    color: var(--fog-500);
+  }
+  .revision h2 { font-size: 20px; border: 0; }
+  .revision ul { list-style: none; }
+  .revision li { margin-bottom: 6px; }
+
+  footer {
+    text-align: center;
+    padding: 30px 20px 50px;
+    border-top: 1px solid var(--rule);
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    color: var(--fog-500);
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">Essay</div>
+  <h1>Self Science</h1>
+  <div class="subtitle">Configuring the Way I Exist Within</div>
+  <div class="subtitle" style="font-size:17px; margin-top:8px;">Attention, imagination, mind-body feedback, and the corrigible whole</div>
+  <div class="byline">Ashman Roonz</div>
+  <div class="meta">Created: 2026-11-05 &middot; Last updated: 2026-11-05 &middot; Version: 1.0</div>
+</header>
+
+<main>
+
+  <div class="pull">&ldquo;I am how I exist within.&rdquo;</div>
+
+  <section>
+    <h2>The Starting Point: I Am One and Many</h2>
+    <p>Self Science begins with direct experience.</p>
+    <p>I exist. I experience. I am one being, yet I am composed of many parts. I have a body, a mind, sensations, thoughts, memories, feelings, and capacities for attention, imagination, and will. I am a whole with parts. I am also a part of greater wholes. To understand myself, I must understand both my unity and my multiplicity, both my inwardness and my relationships.</p>
+    <p>My being is not only a matter of what I am, but of how I participate in my own wholeness. I do not merely have a body. I exist within my body. I do not merely have a mind. I exist through imagination, feeling, perception, and organization. And I do not simply undergo my own states passively. I can participate in how those states are configured.</p>
+    <p>The circumpunct framework identifies structural roles within this whole:</p>
+
+    <div class="structure">
+      <div><div class="sym">&bull;</div><div class="name">Center<span>the indivisible point of view, the locus of experience</span></div></div>
+      <div><div class="sym">&mdash;</div><div class="name">Path<span>continuity, direction, movement, and development</span></div></div>
+      <div><div class="sym">&#9675;</div><div class="name">Boundary<span>the body as interface, distinction, and embodiment</span></div></div>
+      <div><div class="sym">&Phi;</div><div class="name">Field<span>the mind as the dynamic field of imagination, perception, and organization</span></div></div>
+      <div><div class="sym">&#8857;</div><div class="name">Whole<span>the integrated self coordinating its parts</span></div></div>
+    </div>
+    <p class="note">These are roles in an ontological model, not claims that each symbol denotes a distinct measurable physical structure.</p>
+  </section>
+
+  <section>
+    <h2>Attention: The Meeting Place of Will and Need</h2>
+    <div class="pull" style="margin-top:20px;">Attention is where the will of the whole meets the demands of its parts.</div>
+    <p>The body makes demands through pain, hunger, pleasure, tension, posture, fatigue, and sensation. The mind presents memories, imagery, thoughts, expectations, and emotions. Different needs and possibilities compete for expression. Attention is where the whole participates in determining what becomes foreground, what is explored, and what is acted upon.</p>
+    <p>Attention is not always chosen. A sound, a pain, a fear, or a sudden memory may capture it. But deliberate attention gives me an opportunity to respond to the state I am in and participate in the state that follows.</p>
+  </section>
+
+  <section>
+    <h2>Imagination: The Field of Possibility</h2>
+    <p>Imagination is not merely fantasy. It is a way of representing possible movements, situations, feelings, and forms of being. Sometimes it operates spontaneously, producing images, memories, fears, and scenarios without invitation. At other times I can guide it deliberately, choosing a possibility to explore and sustaining my attention upon it.</p>
+    <p>This makes imagination especially important in Self Science. An imagined situation does not have to occur externally to influence my actual state. If I vividly imagine danger, my body may respond with heightened arousal, faster breathing, increased muscle tension, or a racing heart. The danger may be imagined, but the bodily reaction is real.</p>
+    <p>Imagination does not provide unlimited or absolute control over physiology. Its influence varies with experience, bodily conditions, context, and the state of the nervous system. Yet the influence itself is meaningful: what I represent internally can change how I am physically organized.</p>
+  </section>
+
+  <section>
+    <h2>Walking: The Practice of Being Within</h2>
+    <p>As I walk, I can attend not only to where I am going, but to how I am being within my body. I can imagine a more coherent way of moving and notice changes in posture, breathing, balance, muscle tension, and gait. I do not need to command each muscle individually. I orient toward a whole-body configuration, and my movement may begin to reorganize around it.</p>
+    <p>The optimal configuration is not necessarily perfect posture or maximum conscious control. It is a flexible coordination suited to the body, the task, and the environment. Too much interference can disrupt a movement that the nervous system already knows how to perform. Deliberate attention works best when it also listens to bodily feedback.</p>
+    <div class="pull" style="margin-top:20px;">Imagination explores a possible configuration. The body responds. Sensation provides feedback. Attention refines the whole.</div>
+  </section>
+
+  <section>
+    <h2>Mind, Body, and Chi: Influence Goes Both Ways</h2>
+    <p>My imagination and mind are not merely detached instructions sent to a passive machine. Mind and body are continuously interacting. Sensation, movement, hormones, posture, and physiological condition influence how I think and feel. Attention, intention, imagery, expectation, and memory influence the way I move and respond.</p>
+    <p>Within the circumpunct, I propose understanding &Phi;, the mind, as a dynamic organizing field of embodied experience. When I speak of this field &ldquo;running through my body,&rdquo; I am describing an experienced pattern of whole-body influence and coordination, not claiming that science has measured a separate substance or energy called mind.</p>
+    <p>This also offers an interpretation of chi. Chi may name the felt coordination of mind and body: the sense of vitality, direction, coherence, and movement that arises when an organism functions as an integrated whole. Traditional uses of qi are broader than this interpretation, but the comparison helps describe the experience.</p>
+    <p>The relationship is reciprocal: the mind influences the body, and the body influences the mind. The whole is continuously changing through their exchange.</p>
+  </section>
+
+  <section>
+    <h2>Recalibration: Changing States, Not Reversing Them</h2>
+    <p>Through movement and imagination, I sometimes find that I can ease pain or improve how my body functions. I may discover a less tense way of moving, reduce unnecessary guarding, or shift attention in a way that changes the experience of discomfort. These changes are worth observing carefully, while remembering that pain relief is not the same thing as proof of faster tissue healing.</p>
+    <p>The deeper insight is not that I reverse an unwanted state. I configure another one. Fear and calm, heaviness and fluidity, tension and ease are not simply positions on one switch. They are different patterns of an embodied system.</p>
+    <div class="pull" style="margin-top:20px;">Self-mastery is not the suppression of an unwanted state. It is the ability to participate intentionally in the configuration of the next state.</div>
+    <p>This distinction changes the practice. Instead of fighting the present state, I can observe it, learn from the parts involved, imagine another viable organization, and test what changes. The body&rsquo;s response tells me whether to continue, adjust, or stop.</p>
+  </section>
+
+  <section>
+    <h2>Cohesion Is Not Corrigibility</h2>
+    <p>Self-mastery is not the suppression of parts. It is the increasing capacity of the whole to coordinate them without becoming captive to any one of them. But this requires a more careful distinction than saying that a whole which ignores its parts necessarily loses integrity.</p>
+    <p>A whole can preserve its structure even while ignoring feedback from its parts. In simulation runs, a leader that ignored its parts could hold the system together across every seed. What it lost was not necessarily cohesion. It lost the capacity to respond when its parts changed.</p>
+    <p><strong>Cohesion</strong> is the ability of a system to remain together.</p>
+    <p><strong>Corrigibility</strong> is its ability to receive information, recognize error or change, and reorganize accordingly.</p>
+    <p>A stable system is not automatically a healthy or adaptive one. Preserving its current arrangement can become a liability when its parts or its environment change. The same distinction applies to a person who suppresses bodily feedback, a relationship that preserves appearances rather than listening, or an institution that protects its existing procedures from correction.</p>
+    <div class="pull" style="margin-top:20px;">Wholeness is not merely the preservation of unity. It is the capacity to maintain unity through change.</div>
+    <p>A healthy whole remains responsive to its parts, capable of correcting itself, and able to reorganize as circumstances change. Its mechanisms of self-preservation must not overwhelm its mechanisms of self-correction.</p>
+  </section>
+
+  <section>
+    <h2>Time, Attention, and Becoming</h2>
+    <p>The past gives me structure. My experiences, habits, memories, and learned responses influence what I expect, imagine, and notice. The future represents possibilities not yet realized. The present is where the whole participates in what emerges next.</p>
+    <p>I use the finite structures of my past to direct attention and action toward possible futures. Through those actions, new experiences emerge. They then become part of the finite structure that shapes the next moment.</p>
+    <div class="pull" style="margin-top:20px;">The finite directs how the infinite converges and emerges.</div>
+    <p>In this philosophical statement, &ldquo;infinite&rdquo; refers to open potential, not a demonstrated infinity of physically available outcomes. The practical insight is that I use what I have become to participate in what I am becoming.</p>
+    <p>Will directs attention. Imagination configures possibilities. The body responds and provides feedback. The whole changes state. Experience becomes memory, and memory helps organize the next act of imagination.</p>
+  </section>
+
+  <section>
+    <h2>The Goal of Self Science</h2>
+    <p>The goal is not the absence of constraint, the domination of one part, or a fixed ideal of perfection. The goal is wholeness: a growing capacity to coordinate body, mind, attention, imagination, values, and action while remaining sensitive to the changing needs of the parts.</p>
+    <p>To become whole is to practice a more coherent way of existing within myself. It is to become capable of deliberate change without losing responsiveness, and to hold together without becoming rigid.</p>
+    <p>Self Science is the practice of studying and shaping the way I exist within. It begins with direct experience and continues through attention, experimentation, feedback, and correction.</p>
+
+    <div class="lines">
+      <span>I am.</span>
+      <span>I am one and many.</span>
+      <span>I am whole and part.</span>
+      <span>I am how I exist within.</span>
+      <span>My imagination configures possibilities.</span>
+      <span>My body responds and informs me.</span>
+      <span>My whole remains capable of correction.</span>
+      <span>I participate in my own becoming.</span>
+    </div>
+
+    <div class="pull" style="margin-top:20px;">Learn how to exist within yourself as a whole: coherent enough to act, sensitive enough to listen, and corrigible enough to change.</div>
+  </section>
+
+  <div class="scope">
+    <strong>A note on scope</strong>
+    This essay develops a first-person philosophical framework. Its descriptions of subjective experience and mind-body regulation are not a demonstration that souls, chi, or a distinct physical mind-field have been scientifically established.
+  </div>
+
+  <a class="back" href="index.html">&larr; Back to fractalreality.ca</a>
+
+</main>
+
+<div class="revision">
+  <h2>Revision history</h2>
+  <ul>
+    <li>2026-11-05 v1.0: initial HTML version, built from the Self Science Word document (Philosophy folder). Text carried over without edits; the title's run-together &ldquo;WayI&rdquo; corrected to &ldquo;Way I&rdquo;.</li>
+  </ul>
+</div>
+
+<footer>
+  The Circumpunct Framework &middot; Parts are fractals of their wholes
+</footer>
+
+</body>
+</html>
