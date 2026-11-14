@@ -6,6 +6,12 @@
       "runtimeExecutable": "python",
       "runtimeArgs": ["-m", "http.server", "8420", "--directory", "docs"],
       "port": 8420
+    },
+    {
+      "name": "forum",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["--prefix", "forum", "run", "dev"],
+      "port": 8787
     }
   ]
 }

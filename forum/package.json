@@ -1,0 +1,15 @@
+{
+  "name": "fractal-forum",
+  "version": "1.0.0",
+  "private": true,
+  "description": "The Fractal Reality forum: share ideas, steelman each other, practice corrigibility and curiosity.",
+  "scripts": {
+    "dev": "wrangler dev --port 8787 --ip 127.0.0.1",
+    "migrate:local": "wrangler d1 migrations apply fractal-forum-db --local",
+    "migrate:remote": "wrangler d1 migrations apply fractal-forum-db --remote",
+    "deploy": "wrangler deploy"
+  },
+  "devDependencies": {
+    "wrangler": "^4.0.0"
+  }
+}

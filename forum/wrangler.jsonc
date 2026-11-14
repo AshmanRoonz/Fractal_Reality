@@ -1,0 +1,21 @@
+{
+	"$schema": "./node_modules/wrangler/config-schema.json",
+	"name": "fractal-forum",
+	"main": "src/index.js",
+	"compatibility_date": "2026-11-01",
+	"observability": {
+		"enabled": true
+	},
+	// D1 database. No database_id: wrangler auto-provisions it on first deploy.
+	// If you prefer to create it yourself: `wrangler d1 create fractal-forum-db`
+	// and paste the returned id here as "database_id".
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "fractal-forum-db",
+			"database_id": "c5e8008b-78ef-4fbf-8bde-9905604efe6c"
+		}
+	],
+	// Custom domain: attached automatically on deploy, since the zone is on Cloudflare.
+	"routes": [{ "pattern": "forum.fractalreality.ca", "custom_domain": true }]
+}

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Privacy</title>
+<meta name="description" content="Privacy policy for fractalreality.ca and the Fractal Reality forum: what is stored, what is never done with it, and how to delete your data.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink-900: #0a0d14;
+    --ink-800: #11141d;
+    --ink-700: #141823;
+    --rule: rgba(255,255,255,0.08);
+    --fog-100: #e6e8ee;
+    --fog-300: #a4abb8;
+    --fog-500: #6b7180;
+    --gold: #b8a060;
+    --gold-bright: #d4b870;
+    --glow-gold: rgba(184,160,96,0.22);
+  }
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme="dark"]) {
+      --ink-900: #f6f3ea;
+      --ink-800: #ffffff;
+      --ink-700: #fbf9f3;
+      --rule: rgba(60,50,20,0.14);
+      --fog-100: #1d1f26;
+      --fog-300: #4a4f5c;
+      --fog-500: #7a7f8c;
+      --gold: #8a7430;
+      --gold-bright: #6e5b20;
+      --glow-gold: rgba(138,116,48,0.18);
+    }
+  }
+  :root[data-theme="dark"] {
+    --ink-900: #0a0d14;
+    --ink-800: #11141d;
+    --ink-700: #141823;
+    --rule: rgba(255,255,255,0.08);
+    --fog-100: #e6e8ee;
+    --fog-300: #a4abb8;
+    --fog-500: #6b7180;
+    --gold: #b8a060;
+    --gold-bright: #d4b870;
+    --glow-gold: rgba(184,160,96,0.22);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--ink-900);
+    color: var(--fog-100);
+    font-family: "EB Garamond", Georgia, serif;
+    font-size: 19px;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+  header.hero {
+    text-align: center;
+    padding: 64px 20px 44px;
+    background: radial-gradient(ellipse at 50% 0%, rgba(140,122,208,0.14), transparent 60%);
+    border-bottom: 1px solid var(--rule);
+  }
+  .kicker {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+  h1 {
+    font-weight: 500;
+    font-size: clamp(32px, 5vw, 52px);
+    margin: 16px 0 10px;
+    color: var(--gold-bright);
+    text-shadow: 0 0 40px var(--glow-gold);
+  }
+  .meta {
+    margin-top: 10px;
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    color: var(--fog-500);
+  }
+  main { max-width: 720px; margin: 0 auto; padding: 0 22px 80px; }
+  section { margin-top: 48px; }
+  h2 {
+    font-weight: 500;
+    font-size: clamp(24px, 3.2vw, 30px);
+    color: var(--gold-bright);
+    margin-bottom: 14px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--rule);
+  }
+  p, li { margin-bottom: 1em; color: var(--fog-100); }
+  ul { padding-left: 22px; }
+  .quiet { color: var(--fog-300); font-style: italic; }
+  .back {
+    display: inline-block;
+    margin-top: 40px;
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--fog-300);
+    text-decoration: none;
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 4px;
+  }
+  .back:hover { color: var(--gold-bright); }
+  a { color: var(--gold-bright); }
+  .revision {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0 22px 60px;
+    font-size: 15px;
+    color: var(--fog-500);
+  }
+  .revision h2 { font-size: 20px; border: 0; }
+  .revision ul { list-style: none; padding: 0; }
+  footer {
+    text-align: center;
+    padding: 30px 20px 50px;
+    border-top: 1px solid var(--rule);
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    color: var(--fog-500);
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">Policy</div>
+  <h1>Privacy</h1>
+  <div class="meta">Applies to fractalreality.ca and forum.fractalreality.ca<br>Created: 2026-11-14 &middot; Last updated: 2026-11-14 &middot; Version: 1.0</div>
+</header>
+
+<main>
+
+  <section>
+    <h2>The short version</h2>
+    <p>This site collects as little as possible. The main site stores nothing about you. The forum stores only what it needs to know you when you return: your display name, email, and avatar from the sign-in provider you chose, plus what you post. Nothing is sold, nothing is used for advertising, and nothing about your activity here is sent back to the sign-in providers. You can delete your data yourself at any time.</p>
+  </section>
+
+  <section>
+    <h2>The main site (fractalreality.ca)</h2>
+    <p>The main site is static pages. It has no accounts, no analytics, and sets no tracking cookies. Like most websites, its pages load fonts and small script libraries from public content delivery networks (Google Fonts and similar); your browser requests those files directly, and those services see the ordinary technical details of any web request, such as your IP address. The site's host also keeps standard server logs.</p>
+  </section>
+
+  <section>
+    <h2>The forum (forum.fractalreality.ca)</h2>
+    <p>When you sign in to the forum with Google, Discord, Facebook, or Apple, the provider confirms who you are and we store:</p>
+    <ul>
+      <li><strong>Your display name, email address, and avatar image URL</strong>, as the provider reports them. You can change the display name on your profile page.</li>
+      <li><strong>What you write</strong>: your threads and replies, with timestamps.</li>
+      <li><strong>A session cookie</strong>: a signed token that keeps you signed in for up to 30 days. It identifies your account and does nothing else. No tracking or advertising cookies are set.</li>
+    </ul>
+    <p>Your email is used for exactly two things: recognizing your account, and (for site administrators) granting moderation roles. It is never displayed publicly, never sold, and never used for mailing lists.</p>
+    <p>Sign-in is one-directional: the provider tells the forum who you are, and the forum tells the provider nothing about what you do here. Your posts and profile are not shared with Google, Discord, Facebook, or Apple.</p>
+    <p>Forum data is stored with Cloudflare (the forum runs on Cloudflare Workers and a Cloudflare D1 database). Moderators can remove content that breaks the <a href="https://forum.fractalreality.ca/guidelines">guidelines</a>.</p>
+  </section>
+
+  <section id="delete">
+    <h2>Delete your data</h2>
+    <p>You can delete your forum account and data yourself, at any time, with no questions asked:</p>
+    <ul>
+      <li>Sign in at <a href="https://forum.fractalreality.ca">forum.fractalreality.ca</a>.</li>
+      <li>Open <strong>your profile</strong> (your name, top right).</li>
+      <li>Choose <strong>Delete my account and data</strong> and confirm.</li>
+    </ul>
+    <p>This immediately and permanently removes your display name, email address, avatar, and the link between your account and your sign-in provider (including anything received from Facebook or any other provider). Threads and replies you wrote remain in the conversations they are part of, attributed to &ldquo;Deleted member&rdquo;; if you want specific posts removed as well, ask a moderator in the thread or before deleting your account.</p>
+    <p class="quiet">If you can no longer sign in (for example, you removed the app's access at the provider), request deletion through the contact options on <a href="https://fractalreality.ca">fractalreality.ca</a> and state the provider and account email you signed in with.</p>
+  </section>
+
+  <section>
+    <h2>Changes</h2>
+    <p>If this policy changes, the change is recorded in the revision history below, with its date. There is no silent revision.</p>
+  </section>
+
+  <a class="back" href="index.html">&larr; Back to fractalreality.ca</a>
+
+</main>
+
+<div class="revision">
+  <h2>Revision history</h2>
+  <ul>
+    <li>2026-11-14 v1.0: initial policy, covering the static site and the forum (accounts, posts, session cookie, self-serve deletion).</li>
+  </ul>
+</div>
+
+<footer>
+  The Circumpunct Framework &middot; Parts are fractals of their wholes
+</footer>
+
+</body>
+</html>
