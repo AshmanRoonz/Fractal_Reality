@@ -16,9 +16,6 @@
 			"database_id": "c5e8008b-78ef-4fbf-8bde-9905604efe6c"
 		}
 	],
-	"workers_dev": true
-	// Custom domain, once fractalreality.ca's DNS is moved to Cloudflare
-	// (its nameservers currently point at WordPress.com, so Cloudflare cannot
-	// attach the subdomain yet). When the zone is on this account, restore:
-	// "routes": [{ "pattern": "forum.fractalreality.ca", "custom_domain": true }]
+	"workers_dev": true,
+	"routes": [{ "pattern": "forum.fractalreality.ca", "custom_domain": true }]
 }
