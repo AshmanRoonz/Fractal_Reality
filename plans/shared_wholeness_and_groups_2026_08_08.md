@@ -2,9 +2,11 @@
 
 ```
 Created: 2026-08-08
-Last updated: 2026-08-08
-Version: 1.2
+Last updated: 2026-11-05
+Version: 1.3
 ```
+
+**Notice, 2026-11-05 (Ashman).** Parts of this record are superseded. "There is not always another whole" is wrong. Groups are wholes, and there are many types of centre, so Finding 1's "a group is not a whole" no longer stands as written, and the migration queue's social rows are void. See `plans/wholes_groups_and_centres_2026_11_05.md`. The text below is left as it was recorded.
 
 **Status: adjudicated by Ashman in conversation, not yet written into `CLAUDE.md` or the framework file.** The thread runs from the 2026-08-01 session into its continuation on 2026-08-08, where every finding below was recorded; read `plans/wholeness_plane_and_nesting_2026_08_01.md` first, since Finding 3 there (the Shared-Tonic Principle) is the computed result these corrections generalize. The corrections supersede positions committed in `CLAUDE.md` and in the book, including material written on 2026-08-01. This document is the full record; nothing has been applied to the corpus yet.
 
@@ -199,6 +201,7 @@ The ethics needs no repair. κ = (c, a) never required the container to be a who
 
 ## Revision history
 
+- 2026-11-05 v1.3: notice added at the top: Ashman has superseded parts of this record; the findings are left as recorded.
 - 2026-08-08 v1.2: Finding 7 added (Ashman). The World as relationally generated rather than containing, with the vesica as the meeting-figure; carries the all-scales condition that keeps it from being idealism, the peer extension of §27.7o, and the convergence with Finding 6 (the filter is the overlap). Confidence is stated in prose here rather than in the grades table, which stops at Finding 6.
 - 2026-08-08 v1.1: Finding 6 added (Ashman). The world is Reality filtered in three distinct kinds (resolution, phase, time), and the step to ∞ is categorical rather than a fourth kind; carries the gnostic guard as a publication requirement rather than a caveat.
 - 2026-08-08 v1.0: initial. Five findings recorded, two of them adjudicated in conversation and neither yet applied to the corpus. Migration queue and grades included. The thread continues the 2026-08-01 session; dates in the body refer to when each position was taken, not to when this file was written.

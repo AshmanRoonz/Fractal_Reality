@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="The circumpunct framework walked from direct experience: one and many, the 0 and the 1, what cannot be divided, time, nesting, attention and ethics, with live models and a ledger of what is firm and what is not.">
+<title>The Circumpunct</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one live instrument held in view beside a walk that starts at "I am". Dark and gold follow the fractalreality.ca pages. */
+:root {
+  color-scheme: dark;
+  --bg: #0a0a10;
+  --panel: #14141d;
+  --ink: #ebe6da;
+  --dim: #a9a598;
+  --gold: #d4a84b;
+  --gold-soft: #f0dca8;
+  --line: #2c2c39;
+  --serif: 'EB Garamond', Georgia, 'Times New Roman', serif;
+  --display: 'Cormorant Garamond', 'EB Garamond', Georgia, serif;
+  --mono: 'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace;
+}
+* { box-sizing: border-box; }
+html { background: var(--bg); }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 1.22rem;
+  line-height: 1.58;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+.page { display: grid; grid-template-columns: minmax(0, 1fr); max-width: 1320px; margin-inline: auto; }
+.instrument {
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  z-index: 5;
+  background: var(--bg);
+  padding-block: 8px 8px;
+  border-bottom: 1px solid var(--line);
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+}
+#cv { display: block; width: min(100%, 34vh); max-width: 100%; aspect-ratio: 1; touch-action: manipulation; -webkit-touch-callout: none; user-select: none; -webkit-user-select: none; }
+#cv.tappable { cursor: crosshair; touch-action: none; }
+.cap { margin: 0; color: var(--dim); font-size: .92rem; line-height: 1.3; text-align: center; max-width: 46ch; min-height: 2.6em; }
+.read { margin: 0; font-family: var(--mono); font-size: .7rem; color: var(--gold-soft); text-align: center; min-height: 1.5em; font-variant-numeric: tabular-nums; }
+main { min-width: 0; }
+.wrap { max-width: 62ch; margin-inline: auto; }
+header.hero { padding-block: 2.2rem 1.6rem; }
+h1 { font-family: var(--display); font-weight: 400; font-size: clamp(2.6rem, 7.5vw, 4.5rem); line-height: 1.02; letter-spacing: .01em; margin: 0; text-wrap: balance; }
+.sub { font-family: var(--display); font-style: italic; font-size: clamp(1.3rem, 3vw, 1.65rem); line-height: 1.25; color: var(--gold-soft); margin: .5rem 0 1.4rem; text-wrap: balance; }
+.epi { margin: 0 0 1.4rem; }
+.how { color: var(--dim); font-size: 1.08rem; }
+.meta, .standing, .ctl label, .ctl output, .eyebrow { font-family: var(--mono); }
+.meta { font-size: .7rem; color: var(--dim); margin: 0; line-height: 1.7; }
+section { padding-block: 2.6rem; border-top: 1px solid var(--line); }
+.eyebrow { font-size: .68rem; letter-spacing: .12em; text-transform: uppercase; color: var(--gold); margin: 0 0 .45rem; }
+h2 { font-family: var(--display); font-weight: 500; font-size: clamp(1.9rem, 4.6vw, 2.6rem); line-height: 1.08; margin: 0 0 .9rem; text-wrap: balance; }
+p { margin: 0 0 1rem; }
+.law { font-family: var(--mono); font-size: .92rem; color: var(--gold-soft); margin: 0 0 1rem; overflow-x: auto; white-space: nowrap; }
+.big { font-family: var(--display); font-size: 1.62rem; line-height: 1.22; color: var(--gold-soft); margin: 0 0 1.1rem; text-wrap: balance; }
+.run { font-size: 1.08rem; }
+.run b { font-family: var(--mono); font-weight: 500; font-size: .66rem; letter-spacing: .1em; text-transform: uppercase; color: var(--gold); margin-right: .6em; }
+.standing { font-size: .7rem; line-height: 1.65; color: var(--dim); margin: 1.2rem 0 0; }
+.standing b { font-weight: 500; color: var(--gold); letter-spacing: .1em; text-transform: uppercase; margin-right: .6em; }
+.ctl { display: grid; gap: .85rem; margin: 0 0 1.2rem; }
+.ctl .row { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 12px; align-items: baseline; }
+.ctl label { font-size: .74rem; }
+.ctl output { font-size: .74rem; color: var(--gold-soft); font-variant-numeric: tabular-nums; }
+.ctl input[type=range] { grid-column: 1 / -1; width: 100%; accent-color: var(--gold); margin: .35rem 0 0; height: 26px; }
+.check { display: flex; gap: .55rem; align-items: center; }
+.check input { accent-color: var(--gold); width: 18px; height: 18px; margin: 0; }
+.btns { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 1.2rem; }
+button {
+  font-family: var(--mono); font-size: .74rem; color: var(--ink); background: var(--panel);
+  border: 1px solid var(--line); border-radius: 0; padding: .55rem .85rem; cursor: pointer; min-height: 40px;
+}
+button:hover { border-color: var(--gold); }
+button[aria-pressed=true] { border-color: var(--gold); color: var(--gold-soft); }
+:focus-visible { outline: 2px solid var(--gold-soft); outline-offset: 2px; }
+dl.roles { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: .55rem .9rem; margin: 0 0 1.1rem; }
+dl.roles dt { font-size: 1.5rem; line-height: 1.15; color: var(--gold); text-align: center; min-width: 1.4em; }
+dl.roles dd { margin: 0; }
+dl.roles dd b { font-weight: 500; }
+.tbl { overflow-x: auto; margin: 0 0 1.1rem; }
+table { border-collapse: collapse; width: 100%; font-size: 1rem; line-height: 1.3; }
+table.wide { min-width: 33rem; }
+th { font-family: var(--mono); font-weight: 500; font-size: .66rem; letter-spacing: .06em; color: var(--gold); text-align: left; vertical-align: bottom; }
+th, td { padding: .5rem .8rem .5rem 0; border-bottom: 1px solid var(--line); }
+td { vertical-align: top; }
+td.s { font-family: var(--mono); font-size: .7rem; line-height: 1.5; color: var(--gold-soft); }
+a { color: var(--gold-soft); text-underline-offset: 3px; }
+.closing { font-family: var(--display); font-size: 1.62rem; line-height: 1.32; margin: 0 0 1.2rem; }
+.closing span { display: block; }
+.last { font-style: italic; color: var(--gold-soft); }
+footer { padding-block: 1.6rem 3rem; border-top: 1px solid var(--line); }
+footer p { font-family: var(--mono); font-size: .7rem; line-height: 1.7; color: var(--dim); margin: 0 0 .8rem; }
+@media (min-width: 980px) {
+  .page { grid-template-columns: minmax(0, 62ch) minmax(380px, 1fr); column-gap: clamp(32px, 5vw, 80px); align-items: start; }
+  main { grid-column: 1; grid-row: 1; }
+  .wrap { margin-inline: 0; }
+  .instrument { grid-column: 2; grid-row: 1; top: 0; height: 100vh; padding-block: 3vh; border-bottom: 0; align-content: center; gap: 12px; background: transparent; }
+  #cv { width: min(100%, 76vh); }
+  .cap { font-size: 1.02rem; }
+  .read { font-size: .74rem; }
+  section { padding-block: 4rem; }
+  header.hero { padding-block: 7vh 2.4rem; }
+}
+@media (max-width: 979px) {
+  body { font-size: 1.14rem; }
+  .cap { font-size: .86rem; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+  <aside class="instrument" aria-label="Live model">
+    <canvas id="cv" role="img" aria-label="A live field turning once around a single zero."></canvas>
+    <p class="cap" id="cap">A live model of one whole. The marked point at its center is a zero that nobody placed.</p>
+    <p class="read" id="read" aria-live="off"></p>
+  </aside>
+
+  <main>
+    <div class="wrap">
+      <header class="hero" data-scene="hero">
+        <h1>The Circumpunct</h1>
+        <p class="sub">A theory of wholeness, built up from direct experience.</p>
+        <p class="epi">The 0 is the inward unity of the 1.<br>The 1 is the integrated unity of the many.<br>And every 1 is part of a greater whole.</p>
+        <p class="how">The circle that stays in view is a live model. It changes as you read, and some sections let you work it. Each section is marked with the kind of claim it makes, from direct experience to proposal.</p>
+        <p class="meta">Framework by Ashman Roonz. Models and tests by Claude, working with Ashman.<br>Created: 2026-11-05 · Last updated: 2026-11-05 · Version: 1.0</p>
+      </header>
+
+      <section data-scene="iam">
+        <p class="eyebrow">1 · Direct experience</p>
+        <h2>I am.</h2>
+        <p>I exist. I experience. This is already so before any theory. I can doubt what I am seeing, and the doubting is still an experience.</p>
+        <p>So the walk starts here, with no equipment. Everything later has to be reachable from this spot, or has to say plainly where it stops being reachable.</p>
+        <p class="standing"><b>Standing</b>Direct experience. Nothing below can add to it or check it.</p>
+      </section>
+
+      <section data-scene="many">
+        <p class="eyebrow">2 · Direct experience</p>
+        <h2>I am one and many.</h2>
+        <p>Attend for a moment and the one experience turns out to be full. There is a body, with organs and cells. There is sensation, thought, memory and feeling. Hunger and a plan for tomorrow can be present at once. They are distinct, and they belong to one life.</p>
+        <p>So the first structure is already here. I am a whole with parts. I also live among others and within a world, so I am a part as well. Wholes have parts, and wholes are parts of greater wholes.</p>
+        <p class="standing"><b>Standing</b>Direct experience, then a first generalization.</p>
+      </section>
+
+      <section data-scene="list">
+        <p class="eyebrow">3 · A simple law</p>
+        <h2>Many is not yet one.</h2>
+        <p>A heap of sand can be counted as one heap. I differ from a heap because my parts bear on each other. Each one takes in what the others are doing and answers.</p>
+        <p>Here is about the simplest law that does this. Each part fades if left alone, reads the others, and has a limit to how strong it can get.</p>
+        <p class="law">x′ = −x + tanh(G · what x reads)</p>
+        <div class="ctl">
+          <div class="row"><label for="ctl-gain">Gain G</label><output id="out-gain" for="ctl-gain">3.0</output>
+          <input type="range" id="ctl-gain" min="0.5" max="4" step="0.1" value="3"></div>
+        </div>
+        <p>Below a gain of 1 the parts fade. Above it they pull each other into a shared state that nothing outside supplied, and it holds. That is a first kind of whole. Its middle is an average, the way any list has one. Cut it in half and each half has an average of its own and carries on.</p>
+        <p class="standing"><b>Standing</b>A law chosen for its simplicity. The threshold at a gain of 1 is arithmetic, and the cut was tested in a model.</p>
+      </section>
+
+      <section data-scene="zeroone">
+        <p class="eyebrow">4 · Arithmetic</p>
+        <h2>The 0 and the 1.</h2>
+        <p>Now go round the parts in order, and let each differ a little from the one before, so that the circle of them turns once. Two things are then true of the same parts. Add up their states and they cancel to 0. Add up their steps and they make exactly 1 turn.</p>
+        <p class="big">The 0 is the center of a 1, but not just any 1. It is the center of a 1 that is itself a whole with parts.</p>
+        <div class="ctl">
+          <div class="row"><label for="ctl-parts">Parts</label><output id="out-parts" for="ctl-parts">4</output>
+          <input type="range" id="ctl-parts" min="2" max="16" step="1" value="4"></div>
+          <label class="check" for="ctl-alike"><input type="checkbox" id="ctl-alike">Make every part alike</label>
+        </div>
+        <p>The inner figure lays the states end to end, and it closes. Two parts can balance on a 0 and cannot turn, since two leave no way round. If every part is alike, nothing turns and nothing cancels. That is a 1 with no center. Four parts a quarter turn apart are 1, i, −1 and −i, the framework's four strokes, and they add to 0.</p>
+        <p class="standing"><b>Standing</b>Arithmetic.</p>
+      </section>
+
+      <section data-scene="divide">
+        <p class="eyebrow">5 · Theorem and model</p>
+        <h2>What cannot be divided.</h2>
+        <p>Only 0 is unchanged by dividing. Half of 0 is 0, and each half is all of it.</p>
+        <p>Give each part a phase as well as a strength, and close the loop. Mathematics then supplies something nobody put in. If a loop turns once and stays alive all the way round, a continuous field inside it must have a zero. Nobody places it. It is none of the parts, and there is no half of it. The whole and its center also arrive together, because the loop's turn and the zero's charge are one fact read two ways.</p>
+        <p>Try it. Press on the field, and that part is held opposite for as long as you press. Then cut the whole.</p>
+        <div class="btns">
+          <button type="button" id="btn-cut-side">Cut off one side</button>
+          <button type="button" id="btn-cut-core">Cut through the center</button>
+          <button type="button" id="btn-mend">Mend</button>
+        </div>
+        <p class="run"><b>In the model</b>Holding any one part opposite turned at most .5% of the others, and removing the parts nearest the center changed nothing, in every run. So no part is the center, and no part can take it over. At a gain of 4, a cut left the turn with the piece that kept the zero: 1 and 0. A cut through the zero left 0 and 0. A turn is counted in whole numbers, so there is no fraction to be had. A plain list and a star with a hub, each started with a turn, lost it in every run.</p>
+        <p>For a conscious being the framework goes further. There is an indivisible center of experience, a point of view from which the many are experienced as one. This is what it calls the soul. An observer is ultimate to itself, at least.</p>
+        <p>The model does not reach that. A spiral in a chemical dish has a zero like this one. So the model shows a shape a center can have, and it leaves open whether anything experiences from such a center.</p>
+        <p class="standing"><b>Standing</b>Arithmetic, then a theorem, then a model. The soul is a proposal about the first person, and no test here touches it.</p>
+      </section>
+
+      <section data-scene="anatomy">
+        <p class="eyebrow">6 · Definitions</p>
+        <h2>Reading the symbol.</h2>
+        <p>The sign ⊙ can now be read as a working description of a whole.</p>
+        <dl class="roles">
+          <dt>•</dt><dd><b>Center.</b> The indivisible point of view, where experience converges.</dd>
+          <dt>—</dt><dd><b>Path.</b> Continuity and direction: what stays, moves and develops.</dd>
+          <dt>○</dt><dd><b>Boundary.</b> The body as interface, where I am distinct and where the world touches me.</dd>
+          <dt>Φ</dt><dd><b>Field.</b> The mind, a living field of imagination, perception and relation, running through the whole.</dd>
+          <dt>⊙</dt><dd><b>Whole.</b> All of these integrated: ⊙ = Φ(•, —, ○).</dd>
+        </dl>
+        <p>These are roles, and they need not be places in space. They can describe a cell, a person or a community. The boundary distinguishes without severing. At the center we are absolutely distinct. At the boundary we are distinguishable but permeable. In the field we overlap. In Reality we were never separate.</p>
+        <p class="standing"><b>Standing</b>The framework's own definitions. They organize what follows and are not results.</p>
+      </section>
+
+      <section data-scene="flow">
+        <p class="eyebrow">7 · Model and reading</p>
+        <h2>The present.</h2>
+        <p>The past is what has emerged: structure, memory, consequence. The future is what has not yet emerged: possibility. The present is where they meet, at the center.</p>
+        <p class="big">The future converges. The past emerges.</p>
+        <p>In the model, let each part turn at a rate equal to its own energy, since the framework treats energy and frequency as one thing. At the zero there is no energy, so nothing turns there. With nothing else tuned, lines of equal phase run in toward the 0 and end there, and signal runs outward from it. Nothing crosses the 0.</p>
+        <div class="ctl">
+          <div class="row"><label for="ctl-core">Gain at the center</label><output id="out-core" for="ctl-core">2, as in the field</output>
+          <input type="range" id="ctl-core" min="0" max="8" step="1" value="5"></div>
+          <div class="row"><label for="ctl-turn">Strength of the turn</label><output id="out-turn" for="ctl-turn">1</output>
+          <input type="range" id="ctl-turn" min="0" max="6" step="1" value="3"></div>
+        </div>
+        <p class="run"><b>In the model</b>Wherever a single 0 held, in all 16 cases mapped, phase lines ran inward in every run. Signal ran outward in all 6 cases run. Give the center 25% more gain than its field and the flow stops. Give it more and the flow runs faintly the other way. Give it less and it carries about three times the slope and five times the signal. The prediction had been the reverse. Too strong a turn breaks one 0 into many, from 16 up to 178 of them.</p>
+        <p class="run"><b>Against</b>A whole fed only through its center stayed about the size of that center, reaching 6 to 10 sites out. When its input stopped it went out, and when the input came back it returned with no 0. The wholes that reached far were powered by their own parts. That sits against a plain reading of energy converging through the aperture, and it is unresolved.</p>
+        <p>The framework says the aperture has one variable, how open it is, and that the practice is to clear the aperture and tune the field. In this model, feeding the center obstructs the flow. An input with no phase of its own also cannot land on a 0, since gain times 0 is 0, so it can act only through the parts around it. Beside those two results stands the principle: the finite directs how the infinite converges and emerges. I use what I have become to participate in what I am becoming.</p>
+        <p class="standing"><b>Standing</b>Tested in one law, chosen for the reason given. Reading the results as time is an interpretation.</p>
+      </section>
+
+      <section data-scene="nest">
+        <p class="eyebrow">8 · Model and adjudication</p>
+        <h2>Whole and part, without end.</h2>
+        <p>Parts have their own centers. It is circumpuncts all the way down. There is always another whole, and in the mereology of wholes and parts there is no top whole.</p>
+        <div class="btns" role="group" aria-label="Direction of travel">
+          <button type="button" id="zoom-in" aria-pressed="true">Go in</button>
+          <button type="button" id="zoom-hold" aria-pressed="false">Hold</button>
+          <button type="button" id="zoom-out" aria-pressed="false">Go out</button>
+        </div>
+        <p>How can a whole of wholes hold together? A part's states add to 0, so nothing can read a part by averaging it. What a part gives its whole is its rotation, and the whole can reach that only at a contact.</p>
+        <p class="run"><b>In the model</b>Placed in one shared field, centers turning alike pushed each other out: 13 fell to 5 or 3. Joined at one contact each, every level kept its own 1 in every run, through 64 parts and three levels. A whole made of such parts held with 5 of them, where a plain ring at the same gain needed 9. Cutting the whole's ties left every part its turn. A part with no turn could sit in a whole with one, so the runs show this nesting can be so. They do not show it must be.</p>
+        <p>Groups are wholes too, and there are many types of center. These are the ones the tests have told apart.</p>
+        <div class="tbl"><table class="wide">
+          <thead><tr><th scope="col">Type</th><th scope="col">What it is</th><th scope="col">Parts that follow it and can move it</th><th scope="col">Its center cut away</th></tr></thead>
+          <tbody>
+            <tr><td>Barycenter</td><td>The average of a list</td><td class="s">0, or all if few</td><td>Nothing to cut</td></tr>
+            <tr><td>Several occupants</td><td>A few nodes that all read</td><td class="s">As many as occupy</td><td>The others carry on</td></tr>
+            <tr><td>Point</td><td>A node with no interior</td><td class="s">1</td><td>It and its parts fade</td></tr>
+            <tr><td>Chair</td><td>The same, with an interior</td><td class="s">1</td><td>Parts fade, it holds</td></tr>
+            <tr><td>Leader</td><td>A stronger interior that stops following</td><td class="s">0</td><td>Parts fade, it holds</td></tr>
+            <tr><td>0</td><td>What a closed turn forces</td><td class="s">0</td><td>Nothing to remove</td></tr>
+            <tr><td>Experience</td><td>A point of view</td><td class="s">Out of reach</td><td>Out of reach</td></tr>
+          </tbody>
+        </table></div>
+        <p class="standing"><b>Standing</b>The levels and the types of center are tested in models. That there is always another whole, and that groups are wholes, are the author's adjudications. A finite run always has a top ring, so no run can show the first.</p>
+      </section>
+
+      <section data-scene="god">
+        <p class="eyebrow">9 · Proposal</p>
+        <h2>The whole without a boundary.</h2>
+        <p>Follow the question to its limits. God is an unbounded whole, ∞, the inclusion of existence itself. We can call God the greatest whole, and God is still not the top rung of the chain. Going from one whole to the next is a step along the chain. Going to ∞ is a step out of it.</p>
+        <p>Souls are the indivisible centers of experience within it. In this theology neither arose from an original division. The proposal goes as far as this: God needs us just as much as we need God, since a whole and its parts are mutually necessary to what that whole is.</p>
+        <p class="run"><b>In the model</b>The runs bear on one side of that. A whole on a ring lost its turn when it lost a part, while parts kept their own turns when the whole's ties were cut. There the parts need the whole in order to be its parts, and the dependence for going on existing runs one way.</p>
+        <p class="standing"><b>Standing</b>A metaphysical proposal. It is offered as one, and nothing here derives it.</p>
+      </section>
+
+      <section data-scene="spokes">
+        <p class="eyebrow">10 · Practice</p>
+        <h2>Attention.</h2>
+        <p>Back to myself. Everything asks for me at once: pain, hunger, a memory, tomorrow. I do not experience all of it equally.</p>
+        <p class="big">Attention is where the will of the whole meets the demands of its parts.</p>
+        <p>Will directs attention. Imagination configures the mind. The body responds. The whole changes state. As I walk I can imagine a more coherent way of moving, and my posture, breathing and balance can change, with no command to any one muscle. If I imagine danger my heart may race. My mind is a field that runs through my body, and influence goes both ways.</p>
+        <div class="ctl">
+          <div class="row"><label for="ctl-hold">Things held at once</label><output id="out-hold" for="ctl-hold">1</output>
+          <input type="range" id="ctl-hold" min="0" max="5" step="1" value="0"></div>
+        </div>
+        <p class="run"><b>In the model</b>Suppose everything that passes through one point shares one limit, as one energy suggests. Then the more the point carries, the dimmer each thing and the less it takes to change any one. That limit is an assumption, and these numbers rest on it. The likeness to attention is a reading. Separately, a change that has taken hold in this law stays when the push is removed. Changing state is not the same as reversal, and going back would be a second change.</p>
+        <p class="run"><b>Elsewhere</b>Imagined exercise raised heart rate and breathing in step with the amount imagined (Decety and colleagues, 1991), and later work limits how far that reaches. Alexander technique lessons helped chronic back pain out to a year in <a href="https://bmj.com/cgi/content/abstract/337/aug19_2/a884">a trial of 579 patients</a>. Neither establishes the mechanism proposed here. If pain does not lessen, nobody has failed, and new or unexplained pain still needs examining.</p>
+        <p>Self-mastery is the growing ability of the whole to coordinate its parts without becoming captive to any one of them.</p>
+        <p class="standing"><b>Standing</b>First-person practice, with some outside support. None of it has been measured against this framework.</p>
+      </section>
+
+      <section data-scene="band">
+        <p class="eyebrow">11 · Model and reading</p>
+        <h2>Without domination.</h2>
+        <p>If every person is a whole with their own interior, then no person is only a tool, a role or a diagnosis. Every person is both whole and part, and a healthy relationship has to respect both. The framework holds that health is a corner and not a middle: full participation and full integrity together.</p>
+        <p class="big">A healthy whole protects the integrity of its parts while remaining capable of correcting itself.</p>
+        <div class="ctl">
+          <div class="row"><label for="ctl-ties">Ties between neighbors</label><output id="out-ties" for="ctl-ties">1.00</output>
+          <input type="range" id="ctl-ties" min="0.1" max="1" step="0.05" value="1"></div>
+          <div class="row"><label for="ctl-node">One node that every part reads</label><output id="out-node" for="ctl-node">0</output>
+          <input type="range" id="ctl-node" min="0" max="0.2" step="0.01" value="0"></div>
+          <div class="row"><label for="ctl-pull">One pull felt by every part</label><output id="out-pull" for="ctl-pull">0</output>
+          <input type="range" id="ctl-pull" min="0" max="0.6" step="0.02" value="0"></div>
+        </div>
+        <div class="btns"><button type="button" id="btn-restore">Restore the turn</button></div>
+        <p class="run"><b>In the model</b>Neighbor ties never ended the 0, even with no hold of their own left to the parts. So here strong connection and distinct parts live together. One node that all read took the balance at a share of .06 and the turn at about .10. One pull felt by all ended it at .316, about 15% of what it takes to flip a plain block. Absorption ends it where connection does not.</p>
+        <p class="run"><b>Elsewhere</b>In existing survey data the two coordinates do come apart in people. Fusion and cutoff, read here as the two ways of leaving that corner, correlated only .29 in 351 adults, and well-being was highest where both were low. That tests the shape and none of the laws.</p>
+        <p>When a greater whole demands that its parts surrender their integrity, it undermines its own wholeness. When a part refuses every responsibility to the whole, it undermines what sustains it. A center that ignored its parts still held together in every run, so holding together is no sign of health. What that center loses is the ability to change when its parts do.</p>
+        <p class="standing"><b>Standing</b>The thresholds are tested in one law, on a ring like this one. Reading them as ethics is an interpretation, and nothing here measures a person.</p>
+      </section>
+
+      <section data-scene="calm">
+        <p class="eyebrow">12 · The ledger</p>
+        <h2>What is firm and what is not.</h2>
+        <p>Each prediction was frozen before the run that tested it. Of 145, 88 passed, 55 missed, one passed for a trivial reason and one was inconclusive. Six more, on existing survey data, passed, and a seventh could not be run.</p>
+        <div class="tbl"><table>
+          <thead><tr><th scope="col">Claim</th><th scope="col">Standing</th></tr></thead>
+          <tbody>
+            <tr><td>I exist, and I am one and many</td><td class="s">Direct experience</td></tr>
+            <tr><td>The same parts add to 0 and step through 1 turn</td><td class="s">Arithmetic</td></tr>
+            <tr><td>A loop that turns forces a zero, in whole numbers</td><td class="s">Theorem</td></tr>
+            <tr><td>The zero and the turn arrive together</td><td class="s">Theorem, for wholes that turn. A plain consensus holds with no 0</td></tr>
+            <tr><td>No part is the 0, and cuts give no fractions</td><td class="s">Model, every run</td></tr>
+            <tr><td>Phase lines in, signal out, a poorer center carries more</td><td class="s">Model, one law, a narrow band</td></tr>
+            <tr><td>Levels keep their own 1 when joined at a contact</td><td class="s">Model, three levels</td></tr>
+            <tr><td>Absorption ends a 0 where connection does not</td><td class="s">Model, then a reading</td></tr>
+            <tr><td>Connection and distinctness are two coordinates in people</td><td class="s">First survey data fit the shape. No laws tested</td></tr>
+            <tr><td>Groups are wholes, and there is always another whole</td><td class="s">Author's adjudication</td></tr>
+            <tr><td>God is an unbounded whole, needing us as we need God</td><td class="s">Metaphysical proposal</td></tr>
+            <tr><td>The soul is an indivisible center of experience</td><td class="s">Proposal. Out of reach of these tests</td></tr>
+            <tr><td>Any of this in a living person or group</td><td class="s">Not measured</td></tr>
+          </tbody>
+        </table></div>
+        <p>Much of the mathematics is known under other names: bistability, vortices, spiral waves, social power. What is new here is the use of it, as an account of what a whole is. The framework also reads physics through the same structure, and that work carries its own grades elsewhere.</p>
+      </section>
+
+      <section data-scene="end">
+        <p class="closing"><span>I am.</span><span>I am one and many.</span><span>I am whole and part.</span><span>I am how I exist within.</span></p>
+        <p class="closing last">Learn how to exist within yourself as a whole.</p>
+      </section>
+
+      <footer>
+        <p>The circle is a live model running in your browser. The field, the marks in section 3 and the ring in section 11 follow the same laws as the tests, with the same noise. The rings in sections 8 and 9 are drawn, and the spokes in section 10 show numbers from the tests. Every number quoted in the text comes from the tests, which are in experiments/wholeness_*.py of the Fractal Reality repository.</p>
+        <p>More of the framework: <a href="https://fractalreality.ca">fractalreality.ca</a></p>
+        <p>Revision history<br>2026-11-05 v1.0: initial.</p>
+      </footer>
+    </div>
+  </main>
+</div>
+
+<script>
+(() => {
+  'use strict';
+  const TAU = Math.PI * 2, DT = 0.05, ROOT12 = 3.4641016;
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const $ = (id) => document.getElementById(id);
+  const cv = $('cv'), ctx = cv.getContext('2d');
+  const capEl = $('cap'), readEl = $('read');
+  const BG = '#0a0a10', INK = '#ebe6da', GOLD = '#d4a84b', SOFT = '#f0dca8', LINE = '#2c2c39', COOL = '#8fa7d6';
+  let S = 600;
+  const wrap = (a) => { a = (a + Math.PI) % TAU; if (a < 0) a += TAU; return a - Math.PI; };
+  const rest = (G) => { if (G <= 1) return 0; let m = 1; for (let i = 0; i < 4000; i++) m = Math.tanh(G * m); return m; };
+  const short = (v, d) => v.toFixed(d).replace(/^(-?)0\./, '$1.');
+
+  // Phase colors for the field: pale gold, slate, near black, amber, and round again.
+  const LUTN = 1024, LUT = new Uint8ClampedArray(LUTN * 3);
+  (() => {
+    const stops = [[246, 228, 180], [92, 96, 150], [14, 14, 30], [174, 106, 48]];
+    for (let i = 0; i < LUTN; i++) {
+      const u = i / LUTN * 4, k = Math.floor(u), f = u - k, s = f * f * (3 - 2 * f), a = stops[k % 4], b = stops[(k + 1) % 4];
+      for (let c = 0; c < 3; c++) LUT[i * 3 + c] = a[c] + (b[c] - a[c]) * s;
+    }
+  })();
+  // Two-tone phase colors for rings, so that no phase disappears into the ground.
+  const RC = [];
+  for (let i = 0; i < 64; i++) { const t = 0.5 + 0.5 * Math.cos(i / 64 * TAU); RC.push('rgb(' + Math.round(120 + 110 * t) + ',' + Math.round(140 + 52 * t) + ',' + Math.round(200 - 96 * t) + ')'); }
+  const ringColor = (ph) => RC[Math.floor((((ph % TAU) + TAU) % TAU) / TAU * 64) % 64];
+
+  // ---------- The field: z' = -z + lim(G W z), then a turn of c |z|^2 ----------
+  const F = (() => {
+    const N = 97, R = 46, CX = 48.5, CY = 48.5, D = N * N;
+    const idx = new Int32Array(D).fill(-1), list = [];
+    for (let y = 0; y < N; y++) for (let x = 0; x < N; x++) { const dx = x - CX, dy = y - CY; if (dx * dx + dy * dy < R * R) { idx[y * N + x] = list.length; list.push(y * N + x); } }
+    const act = Int32Array.from(list), M = act.length;
+    const re = new Float32Array(D + 1), im = new Float32Array(D + 1), nr = new Float32Array(D + 1), ni = new Float32Array(D + 1);
+    const rad = new Float32Array(D), cs = new Float32Array(D), sn = new Float32Array(D), gain = new Float32Array(D), ang = new Float32Array(D), side = new Int8Array(D);
+    const nb = new Int32Array(M * 4), inv = new Float32Array(M), rings = [];
+    for (let r = 0; r <= R; r++) rings.push([]);
+    for (let k = 0; k < M; k++) {
+      const i = act[k], x = i % N, y = (i / N) | 0, d = Math.hypot(x - CX, y - CY), p = Math.atan2(y - CY, x - CX);
+      rad[i] = d; cs[i] = Math.cos(p); sn[i] = Math.sin(p); rings[Math.min(R, Math.round(d))].push(i);
+    }
+    const links = () => {
+      for (let k = 0; k < M; k++) {
+        const i = act[k], x = i % N, y = (i / N) | 0; let c = 0;
+        const put = (j, q) => { const ok = j >= 0 && idx[j] >= 0 && side[j] === side[i]; nb[k * 4 + q] = ok ? j : D; if (ok) c++; };
+        put(x > 0 ? i - 1 : -1, 0); put(x < N - 1 ? i + 1 : -1, 1); put(y > 0 ? i - N : -1, 2); put(y < N - 1 ? i + N : -1, 3);
+        inv[k] = c ? 1 / c : 0;
+      }
+    };
+    links();
+    const st = { c: 0, sigma: 0.02, clamps: [], zeros: [], net: 0, netA: 0, netB: 0, offset: 0 };
+    const setGain = (G, Gc) => { for (let k = 0; k < M; k++) { const i = act[k]; gain[i] = rad[i] < 4 ? Gc : G; } };
+    const step = () => {
+      const c = st.c, ns = Math.sqrt(DT) * st.sigma * ROOT12;
+      for (let k = 0; k < M; k++) {
+        const i = act[k], q = k * 4, a = nb[q], b = nb[q + 1], d = nb[q + 2], e = nb[q + 3], g = gain[i] * inv[k];
+        const wr = (re[a] + re[b] + re[d] + re[e]) * g, wi = (im[a] + im[b] + im[d] + im[e]) * g;
+        const m = Math.sqrt(wr * wr + wi * wi), t = m > 1e-7 ? Math.tanh(m) / m : 1;
+        let xr = re[i] + DT * (-re[i] + t * wr), xi = im[i] + DT * (-im[i] + t * wi);
+        if (c !== 0) { const an = DT * c * (xr * xr + xi * xi), co = Math.cos(an), si = Math.sin(an), yr = xr * co - xi * si; xi = xr * si + xi * co; xr = yr; }
+        nr[i] = xr + ns * (Math.random() - 0.5); ni[i] = xi + ns * (Math.random() - 0.5);
+      }
+      for (let k = 0; k < M; k++) { const i = act[k]; re[i] = nr[i]; im[i] = ni[i]; }
+      for (let h = 0; h < st.clamps.length; h++) { const q = st.clamps[h]; re[q.i] = q.re; im[q.i] = q.im; }
+    };
+    // The same law reduced to one radius, used only to start the field near its steady state.
+    const radial = (G, Gc, c, T) => {
+      const n = R + 2, fr = new Float64Array(n), fi = new Float64Array(n), gr = new Float64Array(n), gi = new Float64Array(n);
+      for (let r = 1; r < n; r++) fr[r] = 0.9 * Math.tanh(r / 2);
+      for (let s = Math.round(T / DT); s > 0; s--) {
+        for (let r = 1; r < n; r++) {
+          const ur = r + 1 < n ? fr[r + 1] : fr[r], ui = r + 1 < n ? fi[r + 1] : fi[r], g = r < 4 ? Gc : G;
+          const lr = ur - 2 * fr[r] + fr[r - 1] + (ur - fr[r - 1]) / (2 * r) - fr[r] / (r * r);
+          const li = ui - 2 * fi[r] + fi[r - 1] + (ui - fi[r - 1]) / (2 * r) - fi[r] / (r * r);
+          const wr = g * (fr[r] + 0.25 * lr), wi = g * (fi[r] + 0.25 * li), m = Math.sqrt(wr * wr + wi * wi), t = m > 1e-9 ? Math.tanh(m) / m : 1;
+          const xr = fr[r] + DT * (-fr[r] + t * wr), xi = fi[r] + DT * (-fi[r] + t * wi);
+          const an = DT * c * (xr * xr + xi * xi), co = Math.cos(an), si = Math.sin(an);
+          gr[r] = xr * co - xi * si; gi[r] = xr * si + xi * co;
+        }
+        fr.set(gr); fi.set(gi); fr[0] = 0; fi[0] = 0;
+      }
+      return [fr, fi];
+    };
+    const seed = (G, Gc, c) => {
+      const f = radial(G, Gc, c, c ? 1200 : 60), fr = f[0], fi = f[1];
+      for (let k = 0; k < M; k++) {
+        const i = act[k], lo = Math.min(Math.floor(rad[i]), R), w = Math.min(1, rad[i] - lo), a = fr[lo] * (1 - w) + fr[lo + 1] * w, b = fi[lo] * (1 - w) + fi[lo + 1] * w;
+        re[i] = a * cs[i] - b * sn[i]; im[i] = a * sn[i] + b * cs[i];
+      }
+    };
+    const scan = () => {
+      for (let k = 0; k < M; k++) { const i = act[k]; ang[i] = Math.atan2(im[i], re[i]); }
+      const zeros = []; let net = 0, netA = 0, netB = 0, lw = 0, lx = 0, ly = 0, ln = 0;
+      for (let y = 0; y < N - 1; y++) for (let x = 0; x < N - 1; x++) {
+        const a = y * N + x, b = a + 1, c = a + N + 1, d = a + N;
+        if (idx[a] < 0 || idx[b] < 0 || idx[c] < 0 || idx[d] < 0) continue;
+        if (side[a] !== side[b] || side[a] !== side[c] || side[a] !== side[d]) continue;
+        const w = Math.round((wrap(ang[b] - ang[a]) + wrap(ang[c] - ang[b]) + wrap(ang[d] - ang[c]) + wrap(ang[a] - ang[d])) / TAU);
+        if (!w) continue;
+        net += w; if (side[a]) netB += w; else netA += w;
+        // Where the field is all but dark, as inside an emptied center, single squares only read noise. Count that region once.
+        const low = Math.min(re[a] * re[a] + im[a] * im[a], re[b] * re[b] + im[b] * im[b], re[c] * re[c] + im[c] * im[c], re[d] * re[d] + im[d] * im[d]);
+        if (low >= 0.0064) zeros.push([x + 0.5, y + 0.5, w]); else { lw += w; lx += x + 0.5; ly += y + 0.5; ln++; }
+      }
+      if (lw !== 0) zeros.push([lx / ln, ly / ln, lw]);
+      st.zeros = zeros; st.net = net; st.netA = netA; st.netB = netB;
+    };
+    const annulus = (q) => { let sr = 0, si = 0; const L = rings[q]; for (let k = 0; k < L.length; k++) { const i = L[k]; sr += re[i] * cs[i] + im[i] * sn[i]; si += im[i] * cs[i] - re[i] * sn[i]; } return Math.atan2(si, sr); };
+    const slope = () => {
+      let prev = annulus(14), acc = prev, sx = 0, sy = 0, sxx = 0, sxy = 0, n = 0;
+      for (let r = 14; r <= 36; r++) { const p = annulus(r); acc += wrap(p - prev); prev = p; sx += r; sy += acc; sxx += r * r; sxy += r * acc; n++; }
+      return (n * sxy - sx * sy) / (n * sxx - sx * sx);
+    };
+    const off = document.createElement('canvas'); off.width = off.height = N;
+    const octx = off.getContext('2d'), img = octx.createImageData(N, N), px = img.data;
+    const draw = (g) => {
+      const o = st.offset;
+      for (let k = 0; k < M; k++) {
+        const i = act[k], r = re[i], m = im[i], amp = Math.min(1, Math.sqrt(r * r + m * m) * 1.05), v = amp * amp * (3 - 2 * amp);
+        let th = (Math.atan2(m, r) + o) % TAU; if (th < 0) th += TAU;
+        const q = Math.min(LUTN - 1, (th / TAU * LUTN) | 0) * 3, p = i * 4;
+        px[p] = LUT[q] * v; px[p + 1] = LUT[q + 1] * v; px[p + 2] = LUT[q + 2] * v + 16 * (1 - v); px[p + 3] = 255;
+      }
+      octx.putImageData(img, 0, 0);
+      ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high';
+      ctx.save(); ctx.beginPath(); ctx.arc(g.cx, g.cy, g.rr, 0, TAU); ctx.clip();
+      ctx.drawImage(off, g.p - g.sc / 2, g.p - g.sc / 2, g.sc * N, g.sc * N); ctx.restore();
+    };
+    return { N, R, CX, CY, M, act, idx, re, im, ang, side, st, links, setGain, step, seed, scan, annulus, slope, draw };
+  })();
+  const geo = () => { const p = S * 0.03, sc = (S - 2 * p) / (F.N - 1); return { p, sc, cx: p + F.CX * sc, cy: p + F.CY * sc, rr: (F.R - 1) * sc }; };
+  const boundary = (g) => { ctx.strokeStyle = GOLD; ctx.lineWidth = Math.max(1.5, S / 300); ctx.beginPath(); ctx.arc(g.cx, g.cy, g.rr, 0, TAU); ctx.stroke(); };
+  const openDot = (x, y, r, color) => { ctx.beginPath(); ctx.arc(x, y, r, 0, TAU); ctx.fillStyle = BG; ctx.fill(); ctx.strokeStyle = color; ctx.lineWidth = Math.max(1.2, S / 420); ctx.stroke(); };
+  const markZeros = (g) => { const z = F.st.zeros, r = S / (z.length > 12 ? 230 : 130); for (let k = 0; k < z.length; k++) openDot(g.p + z[k][0] * g.sc, g.p + z[k][1] * g.sc, r, z[k][2] > 0 ? SOFT : COOL); };
+
+  const REF = 30, SHOWN = reduce ? 0.2 : 1.1;
+  const field = { sig: '', G: 2, Gc: 2, c: 1, rate: 18, acc: 0, tick: 0, omega: 0, psi: 0, rateEst: 0, slope: 0, cut: null, base: null, turned: 0 };
+  const useField = (G, Gc, c, rate) => {
+    field.rate = reduce ? Math.min(rate, 9) : rate;
+    const sig = G + '/' + Gc + '/' + c;
+    if (sig === field.sig) return;
+    field.sig = sig; field.G = G; field.Gc = Gc; field.c = c; field.cut = null; field.base = null; field.turned = 0;
+    F.side.fill(0); F.links(); F.st.clamps = []; F.st.c = c; F.setGain(G, Gc); F.seed(G, Gc, c);
+    const m = rest(G); field.omega = c * m * m; field.acc = 0; field.rateEst = 0; F.st.offset = 0; field.psi = F.annulus(REF);
+    F.scan(); field.slope = c ? F.slope() : 0;
+  };
+  const turnedShare = () => { if (!field.base) return 0; let n = 0; for (let k = 0; k < F.M; k++) { const i = F.act[k]; if (Math.abs(wrap(F.ang[i] - field.base[i])) > Math.PI / 2) n++; } return n / F.M; };
+  const runField = (dtReal) => {
+    field.acc += field.rate * dtReal / DT;
+    let n = Math.floor(field.acc); field.acc -= n; if (n > 12) n = 12;
+    for (let i = 0; i < n; i++) F.step();
+    if (field.c !== 0 && n > 0) {
+      const psi = F.annulus(REF), d = wrap(psi - field.psi); field.psi = psi;
+      if (F.st.zeros.length <= 2) { field.rateEst += (d / n - field.rateEst) * 0.1; F.st.offset += -d + Math.sign(field.rateEst) * SHOWN * dtReal; }
+      else F.st.offset += -field.omega * n * DT + Math.sign(field.c) * SHOWN * dtReal;
+      F.st.offset = wrap(F.st.offset);
+    }
+    field.tick++;
+    if (field.tick % 8 === 0) { F.scan(); field.turned = turnedShare(); }
+    if (field.tick % 24 === 0 && field.c !== 0) field.slope = F.slope();
+  };
+
+  // Press to hold one part opposite. Cut and mend.
+  const holdAt = (ev) => {
+    const b = cv.getBoundingClientRect(), fx = (ev.clientX - b.left) / b.width, fy = (ev.clientY - b.top) / b.height;
+    const x = Math.round((fx - 0.03) / 0.94 * (F.N - 1)), y = Math.round((fy - 0.03) / 0.94 * (F.N - 1));
+    if (x < 0 || y < 0 || x >= F.N || y >= F.N) return;
+    const i = y * F.N + x; if (F.idx[i] < 0) return;
+    F.scan(); field.base = Float32Array.from(F.ang); field.turned = 0;
+    F.st.clamps = [{ i, x, y, re: -F.re[i], im: -F.im[i] }];
+  };
+  cv.addEventListener('pointerdown', (e) => { if (scene !== 'divide') return; e.preventDefault(); try { cv.setPointerCapture(e.pointerId); } catch (err) { /* no capture, still works */ } holdAt(e); });
+  const letGo = () => { F.st.clamps = []; };
+  cv.addEventListener('pointerup', letGo); cv.addEventListener('pointercancel', letGo); cv.addEventListener('pointerleave', letGo);
+  const cutAt = (x0) => {
+    field.sig = ''; useField(4, 4, 0, 30);
+    for (let k = 0; k < F.M; k++) { const i = F.act[k]; F.side[i] = (i % F.N) >= x0 ? 1 : 0; }
+    F.links(); field.cut = x0; field.sig = 'cut'; F.scan();
+  };
+  $('btn-cut-side').addEventListener('click', () => cutAt(72));
+  $('btn-cut-core').addEventListener('click', () => cutAt(49));
+  $('btn-mend').addEventListener('click', () => { field.sig = ''; useField(4, 4, 0, 30); });
+
+  // ---------- Parts as marks: unrelated, then reading each other ----------
+  const P = (() => {
+    const n = 72, x = [], y = [], zr = new Float64Array(n), zi = new Float64Array(n), w = new Float64Array(n);
+    for (let i = 0; i < n; i++) { const r = Math.sqrt((i + 6) / (n + 6)) * 0.88, a = i * 2.39996323; x.push(r * Math.cos(a)); y.push(r * Math.sin(a)); w[i] = (Math.random() - 0.5) * 0.7; }
+    const scatter = () => { for (let i = 0; i < n; i++) { const t = Math.random() * TAU; zr[i] = 0.9 * Math.cos(t); zi[i] = 0.9 * Math.sin(t); } };
+    scatter();
+    return { n, x, y, zr, zi, w, G: 3, scatter };
+  })();
+  const runParts = (ties, dtReal) => {
+    const n = P.n;
+    if (ties) {
+      const ns = Math.sqrt(DT) * 0.02 * ROOT12;
+      for (let s = 0; s < 4; s++) {
+        let mr = 0, mi = 0; for (let i = 0; i < n; i++) { mr += P.zr[i]; mi += P.zi[i]; } mr /= n; mi /= n;
+        const wr = P.G * mr, wi = P.G * mi, m = Math.hypot(wr, wi), t = m > 1e-7 ? Math.tanh(m) / m : 1;
+        for (let i = 0; i < n; i++) { P.zr[i] += DT * (-P.zr[i] + t * wr) + ns * (Math.random() - 0.5); P.zi[i] += DT * (-P.zi[i] + t * wi) + ns * (Math.random() - 0.5); }
+      }
+    } else {
+      for (let i = 0; i < n; i++) {
+        const a = P.w[i] * dtReal * (reduce ? 0.15 : 1), c = Math.cos(a), s = Math.sin(a), xr = P.zr[i] * c - P.zi[i] * s; P.zi[i] = P.zr[i] * s + P.zi[i] * c; P.zr[i] = xr;
+        const m = Math.hypot(P.zr[i], P.zi[i]) || 1e-6, f = 1 + (0.9 / m - 1) * Math.min(1, dtReal * 3); P.zr[i] *= f; P.zi[i] *= f;
+      }
+    }
+    const R = S * 0.47, L = S * 0.05, c0 = S / 2; let mr = 0, mi = 0;
+    ctx.lineCap = 'round'; ctx.lineWidth = Math.max(1.5, S / 250);
+    for (let i = 0; i < n; i++) {
+      const x = c0 + P.x[i] * R, y = c0 + P.y[i] * R, m = Math.min(1, Math.hypot(P.zr[i], P.zi[i]));
+      mr += P.zr[i]; mi += P.zi[i];
+      ctx.globalAlpha = 0.3 + 0.7 * m; ctx.strokeStyle = SOFT; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + L * P.zr[i], y + L * P.zi[i]); ctx.stroke();
+      ctx.globalAlpha = 1; ctx.fillStyle = GOLD; ctx.beginPath(); ctx.arc(x, y, Math.max(1.5, S / 240), 0, TAU); ctx.fill();
+    }
+    mr /= n; mi /= n;
+    if (ties) {
+      ctx.strokeStyle = GOLD; ctx.lineWidth = Math.max(2, S / 170); ctx.beginPath(); ctx.moveTo(c0, c0); ctx.lineTo(c0 + S * 0.13 * mr, c0 + S * 0.13 * mi); ctx.stroke();
+      openDot(c0, c0, S / 95, GOLD);
+    }
+    return Math.hypot(mr, mi);
+  };
+
+  // ---------- The 0 and the 1 ----------
+  const Z = { n: 4, alike: false, spin: 0 };
+  const runZero = (dtReal) => {
+    Z.spin += dtReal * (reduce ? 0 : 0.1);
+    const n = Z.n, R = S * 0.4, L = S * 0.075, c0 = S / 2;
+    const at = (j) => (Z.alike ? 0 : j / n * TAU) + Z.spin - Math.PI / 2;
+    ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    ctx.strokeStyle = LINE; ctx.lineWidth = Math.max(1, S / 500); ctx.beginPath(); ctx.arc(c0, c0, R, 0, TAU); ctx.stroke();
+    let sx = 0, sy = 0;
+    for (let j = 0; j < n; j++) {
+      const pos = j / n * TAU - Math.PI / 2, a = at(j), x = c0 + R * Math.cos(pos), y = c0 + R * Math.sin(pos);
+      ctx.strokeStyle = SOFT; ctx.lineWidth = Math.max(2, S / 190); ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + L * Math.cos(a), y + L * Math.sin(a)); ctx.stroke();
+      ctx.fillStyle = GOLD; ctx.beginPath(); ctx.arc(x, y, S / 105, 0, TAU); ctx.fill();
+      sx += Math.cos(a); sy += Math.sin(a);
+    }
+    const u = Z.alike ? Math.min(S * 0.17, S * 0.5 / n) : Math.min(S * 0.42 * Math.sin(Math.PI / n), S * 0.17), pts = [[0, 0]];
+    for (let j = 0; j < n; j++) { const a = at(j), q = pts[j]; pts.push([q[0] + u * Math.cos(a), q[1] + u * Math.sin(a)]); }
+    let mx = 0, my = 0;
+    if (Z.alike) { mx = pts[n][0] / 2; my = pts[n][1] / 2; } else { for (let j = 0; j < n; j++) { mx += pts[j][0]; my += pts[j][1]; } mx /= n; my /= n; }
+    ctx.strokeStyle = GOLD; ctx.lineWidth = Math.max(1.5, S / 300); ctx.beginPath();
+    for (let j = 0; j <= n; j++) { const x = c0 + pts[j][0] - mx, y = c0 + pts[j][1] - my; if (j) ctx.lineTo(x, y); else ctx.moveTo(x, y); }
+    ctx.stroke();
+    ctx.fillStyle = GOLD; for (let j = 0; j <= n; j++) { ctx.beginPath(); ctx.arc(c0 + pts[j][0] - mx, c0 + pts[j][1] - my, Math.max(1.5, S / 330), 0, TAU); ctx.fill(); }
+    const sum = Math.hypot(sx, sy);
+    if (sum < 1e-6) openDot(c0, c0, S / 95, SOFT);
+    return 'states add to ' + (sum < 1e-6 ? '0.00' : sum.toFixed(2)) + '  ·  steps add to ' + (Z.alike ? '0 turns' : (n === 2 ? 'no way round' : '1 turn'));
+  };
+
+  // ---------- Rings of rings: each part touches its whole at one contact, and is turned a little ----------
+  const RHO = 0.25, NP = 8, TWIST = Math.PI / 8;
+  const ZS = (() => { const dr = 1 - RHO * Math.cos(TWIST), di = RHO * Math.sin(TWIST), d = dr * dr + di * di; return [(1 - RHO) * dr / d, (1 - RHO) * di / d]; })();
+  const Rg = { t: 0, dir: 1, pick: 1 };
+  const runRings = (dtReal) => {
+    Rg.t += Rg.dir * dtReal * (reduce ? 0.012 : 0.09); Rg.t -= Math.floor(Rg.t);
+    const tau = Rg.t + 3, unit = S * 0.34, k = unit * Math.pow(1 / RHO, tau), ca = Math.cos(-TWIST * tau), sa = Math.sin(-TWIST * tau);
+    const ox = S / 2 + unit * ZS[0], oy = S / 2 + unit * ZS[1], wMax = Math.max(1.2, S / 260);
+    const ring = (x, y, r, rot, ph) => {
+      const dx = x - ZS[0], dy = y - ZS[1], X = ox + k * (ca * dx - sa * dy), Y = oy + k * (sa * dx + ca * dy), pr = r * k;
+      const gx = Math.max(0, -X, X - S), gy = Math.max(0, -Y, Y - S);
+      if (gx * gx + gy * gy > pr * pr) return;
+      if (pr < 1.6) { if (pr >= 0.7) { ctx.globalAlpha = 0.45; ctx.fillStyle = ringColor(ph); ctx.fillRect(X - 0.6, Y - 0.6, 1.2, 1.2); } return; }
+      const fx = Math.max(X, S - X), fy = Math.max(Y, S - Y);
+      if (fx * fx + fy * fy > pr * pr) {
+        ctx.globalAlpha = Math.min(1, 0.3 + pr / 14); ctx.strokeStyle = ringColor(ph); ctx.lineWidth = Math.min(wMax, Math.max(0.7, pr / 22));
+        ctx.beginPath(); ctx.arc(X, Y, pr, 0, TAU); ctx.stroke();
+        if (pr > 7) { ctx.fillStyle = SOFT; ctx.beginPath(); ctx.arc(X, Y, Math.max(0.9, Math.min(pr * 0.04, S / 110)), 0, TAU); ctx.fill(); }
+      }
+      for (let j = 0; j < NP; j++) { const an = rot + j * TAU / NP; ring(x + (1 - RHO) * r * Math.cos(an), y + (1 - RHO) * r * Math.sin(an), r * RHO, an + TWIST, ph + j * TAU / NP); }
+    };
+    ring(0, 0, 1, 0, 0);
+    ctx.globalAlpha = 1;
+  };
+
+  // ---------- Things held at once: amplitude and push from the budget test at a gain of 4 ----------
+  const HOLD = [[1, 0.997, 2.14], [2, 0.995, 1.43], [4, 0.964, 0.671], [8, 0.888, 0.284], [16, 0.762, 0.114], [32, 0.609, 0.044]];
+  const H = { i: 0, shown: 0.997 };
+  const runSpokes = (dtReal) => {
+    const row = HOLD[H.i], d = row[0], R0 = S * 0.06, Rm = S * 0.38, c0 = S / 2;
+    H.shown += (row[1] - H.shown) * Math.min(1, dtReal * 4);
+    ctx.strokeStyle = LINE; ctx.lineWidth = Math.max(1, S / 500); ctx.beginPath(); ctx.arc(c0, c0, R0 + Rm, 0, TAU); ctx.stroke();
+    ctx.lineCap = 'round'; ctx.strokeStyle = GOLD; ctx.lineWidth = Math.max(2, S / (70 + d * 6)); ctx.globalAlpha = 0.25 + 0.75 * H.shown * H.shown;
+    for (let j = 0; j < d; j++) { const a = j / d * TAU - Math.PI / 2, l = R0 + Rm * H.shown; ctx.beginPath(); ctx.moveTo(c0 + R0 * Math.cos(a), c0 + R0 * Math.sin(a)); ctx.lineTo(c0 + l * Math.cos(a), c0 + l * Math.sin(a)); ctx.stroke(); }
+    ctx.globalAlpha = 1; ctx.fillStyle = SOFT; ctx.beginPath(); ctx.arc(c0, c0, S / 85, 0, TAU); ctx.fill();
+    return 'each ' + short(row[1], 3) + ' strong  ·  ' + short(row[2], row[2] < 1 ? 3 : 2) + ' to change one';
+  };
+
+  // ---------- A ring of 128 parts under three kinds of pressure ----------
+  const B = (() => {
+    const n = 128, r = 8, re = new Float64Array(n), im = new Float64Array(n), nr = new Float64Array(n), ni = new Float64Array(n);
+    const st = { n, re, im, s: 1, c: 0, u: 0, G: 4, q: 1, mean: 0 };
+    st.reset = () => { for (let j = 0; j < n; j++) { const a = j / n * TAU; re[j] = 0.99 * Math.cos(a); im[j] = 0.99 * Math.sin(a); } st.q = 1; st.mean = 0; };
+    st.step = () => {
+      let mr = 0, mi = 0; for (let j = 0; j < n; j++) { mr += re[j]; mi += im[j]; } mr /= n; mi /= n; st.mean = Math.hypot(mr, mi);
+      let sr = 0, si = 0; for (let k = -r; k <= r; k++) { const q = (k + n) % n; sr += re[q]; si += im[q]; }
+      const ns = Math.sqrt(DT) * 0.02 * ROOT12;
+      for (let j = 0; j < n; j++) {
+        const lr = (sr - re[j]) / (2 * r), li = (si - im[j]) / (2 * r);
+        const ar = (1 - st.c) * ((1 - st.s) * re[j] + st.s * lr) + st.c * mr, ai = (1 - st.c) * ((1 - st.s) * im[j] + st.s * li) + st.c * mi;
+        const wr = st.G * ar + st.u, wi = st.G * ai, m = Math.hypot(wr, wi), t = m > 1e-9 ? Math.tanh(m) / m : 1;
+        nr[j] = re[j] + DT * (-re[j] + t * wr) + ns * (Math.random() - 0.5); ni[j] = im[j] + DT * (-im[j] + t * wi) + ns * (Math.random() - 0.5);
+        const out = (j - r + n) % n, inn = (j + r + 1) % n; sr += re[inn] - re[out]; si += im[inn] - im[out];
+      }
+      re.set(nr); im.set(ni);
+    };
+    st.count = () => { let tot = 0; for (let j = 0; j < n; j++) { const k = (j + 1) % n; tot += wrap(Math.atan2(im[k], re[k]) - Math.atan2(im[j], re[j])); } st.q = Math.round(tot / TAU); };
+    st.reset();
+    return st;
+  })();
+  const runBand = () => {
+    const steps = reduce ? 3 : 10; for (let i = 0; i < steps; i++) B.step();
+    B.count();
+    const R = S * 0.41, c0 = S / 2, n = B.n;
+    ctx.lineCap = 'butt'; ctx.lineWidth = S * 0.075;
+    for (let j = 0; j < n; j++) {
+      const a0 = (j - 0.56) / n * TAU - Math.PI / 2, a1 = (j + 0.56) / n * TAU - Math.PI / 2, m = Math.min(1, Math.hypot(B.re[j], B.im[j]));
+      ctx.globalAlpha = 0.15 + 0.85 * m; ctx.strokeStyle = ringColor(Math.atan2(B.im[j], B.re[j])); ctx.beginPath(); ctx.arc(c0, c0, R, a0, a1); ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+    ctx.strokeStyle = LINE; ctx.lineWidth = Math.max(1, S / 500); ctx.beginPath(); ctx.arc(c0, c0, S * 0.2, 0, TAU); ctx.stroke();
+    const rm = S * 0.2 * Math.min(1, B.mean);
+    if (rm > S / 95) { ctx.fillStyle = GOLD; ctx.globalAlpha = 0.55; ctx.beginPath(); ctx.arc(c0, c0, rm, 0, TAU); ctx.fill(); ctx.globalAlpha = 1; }
+    else openDot(c0, c0, S / 95, SOFT);
+    return 'turn ' + B.q + '  ·  the parts add to ' + short(B.mean, 2);
+  };
+
+  // ---------- Two still marks ----------
+  let breath = 0;
+  const runPoint = (dtReal) => {
+    breath += dtReal * (reduce ? 0 : 0.9);
+    const c0 = S / 2, g = ctx.createRadialGradient(c0, c0, 0, c0, c0, S * 0.16);
+    g.addColorStop(0, 'rgba(212,168,75,.26)'); g.addColorStop(1, 'rgba(212,168,75,0)');
+    ctx.fillStyle = g; ctx.fillRect(0, 0, S, S);
+    ctx.fillStyle = SOFT; ctx.beginPath(); ctx.arc(c0, c0, S / 62 * (1 + 0.14 * Math.sin(breath)), 0, TAU); ctx.fill();
+  };
+  const runSymbol = () => {
+    const c0 = S / 2; ctx.strokeStyle = GOLD; ctx.lineWidth = Math.max(2, S / 160); ctx.beginPath(); ctx.arc(c0, c0, S * 0.4, 0, TAU); ctx.stroke();
+    ctx.fillStyle = SOFT; ctx.beginPath(); ctx.arc(c0, c0, S / 40, 0, TAU); ctx.fill();
+  };
+  const labelAnatomy = (g) => {
+    const fs = Math.max(13, S / 27);
+    const tag = (x, y, text) => {
+      ctx.font = '500 ' + fs + 'px "EB Garamond", Georgia, serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      const w = ctx.measureText(text).width + fs * 0.8; ctx.fillStyle = 'rgba(10,10,16,.82)'; ctx.fillRect(x - w / 2, y - fs * 0.8, w, fs * 1.6);
+      ctx.fillStyle = INK; ctx.fillText(text, x, y);
+    };
+    // The path is drawn through the dark side of the field so that it shows.
+    ctx.strokeStyle = SOFT; ctx.lineWidth = Math.max(1.5, S / 300); ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(g.cx, g.cy); ctx.lineTo(g.cx - g.rr, g.cy); ctx.stroke();
+    boundary(g);
+    openDot(g.cx, g.cy, S / 130, SOFT);
+    tag(g.cx - g.rr * 0.55, g.cy - fs * 1.15, '— path');
+    tag(g.cx + g.rr * 0.42, g.cy + g.rr * 0.5, 'Φ field');
+    tag(g.cx, g.cy - g.rr + fs * 1.5, '○ boundary');
+    tag(g.cx + fs * 2.3, g.cy + fs * 1.3, '• center');
+  };
+
+  // ---------- Which model goes with which part of the walk ----------
+  const SCENES = {
+    hero: ['A live model of one whole. The marked point at its center is a zero that nobody placed.', 'A live field turning once around a single zero.'],
+    iam: ['A point of view.', 'A single point of light.'],
+    many: ['Each mark is a part, and its line is its state. Here the parts have no relation.', 'Scattered marks, each pointing its own way.'],
+    list: ['The same parts, now reading each other. The line in the middle is their average.', 'Marks lining up as they read each other.'],
+    zeroone: ['Parts round a loop. The inner figure lays their states end to end.', 'Parts on a circle, with their states forming a closed figure inside.'],
+    divide: ['Color shows phase. Press on a part to hold it opposite, or cut the whole.', 'A field with one zero that can be pressed and cut.'],
+    anatomy: ['The same model, labeled with the framework’s roles.', 'The field labeled with center, path, boundary and field.'],
+    flow: ['Lines of equal phase run in to the 0. The turning is slowed so it can be followed.', 'A spiral whose arms move inward to a central zero.'],
+    nest: ['Every ring is a whole whose parts are rings. This one is drawn, where the others are simulated.', 'Rings made of rings, zooming without end.'],
+    god: ['There is always a larger ring. Drawn, as before.', 'Rings made of rings, zooming outward without end.'],
+    spokes: ['Everything that passes through one point, sharing one limit. The faint circle is full strength.', 'Spokes around a point that shorten as more are added.'],
+    band: ['A ring of 128 parts. The middle shows what they add to.', 'A colored ring of parts that can lose its turn under pressure.'],
+    calm: ['The model at rest, with its one 0.', 'The field at rest around a single zero.'],
+    end: ['', 'The circumpunct: a point within a circle.'],
+  };
+  let scene = 'hero', fade = 1, lastLine = '';
+  const flowCore = [0, 0.5, 1, 1.25, 1.5, 2, 2.5, 4, 8], flowTurn = [0, 0.25, 0.5, 1, 1.5, 2, 4];
+  const flowSet = () => { const c = flowTurn[+$('ctl-turn').value]; useField(2, flowCore[+$('ctl-core').value], c, c >= 1.5 ? 36 : 18); };
+  const enter = (name) => {
+    scene = name; fade = 0;
+    capEl.textContent = SCENES[name][0]; cv.setAttribute('aria-label', SCENES[name][1]);
+    cv.classList.toggle('tappable', name === 'divide');
+    F.st.clamps = [];
+    switch (name) {
+      case 'hero': useField(2, 2, 1, 18); break;
+      case 'flow': flowSet(); break;
+      case 'divide': if (field.cut === null) useField(4, 4, 0, 30); break;
+      case 'anatomy': case 'calm': useField(4, 4, 0, 12); break;
+      case 'many': P.scatter(); break;
+      case 'nest': Rg.dir = Rg.pick; break;
+      case 'god': Rg.dir = -1; break;
+      default: break;
+    }
+  };
+
+  // Controls
+  const on = (id, fn) => { const el = $(id); el.addEventListener('input', () => fn(el)); };
+  let flowTimer = 0;
+  const flowLater = () => { clearTimeout(flowTimer); flowTimer = setTimeout(() => { if (scene === 'flow') flowSet(); }, 140); };
+  on('ctl-gain', (el) => { P.G = +el.value; $('out-gain').textContent = (+el.value).toFixed(1); });
+  on('ctl-parts', (el) => { Z.n = +el.value; $('out-parts').textContent = el.value; });
+  on('ctl-alike', (el) => { Z.alike = el.checked; });
+  on('ctl-core', (el) => { const g = flowCore[+el.value]; $('out-core').textContent = g === 2 ? '2, as in the field' : String(g).replace(/^0\./, '.'); flowLater(); });
+  on('ctl-turn', (el) => { $('out-turn').textContent = String(flowTurn[+el.value]).replace(/^0\./, '.'); flowLater(); });
+  on('ctl-hold', (el) => { H.i = +el.value; $('out-hold').textContent = HOLD[H.i][0]; });
+  on('ctl-ties', (el) => { B.s = +el.value; $('out-ties').textContent = (+el.value).toFixed(2).replace(/^0\./, '.'); });
+  on('ctl-node', (el) => { B.c = +el.value; $('out-node').textContent = +el.value === 0 ? '0' : short(+el.value, 2); });
+  on('ctl-pull', (el) => { B.u = +el.value; $('out-pull').textContent = +el.value === 0 ? '0' : short(+el.value, 2); });
+  $('btn-restore').addEventListener('click', () => B.reset());
+  const zooms = { 'zoom-in': 1, 'zoom-hold': 0, 'zoom-out': -1 };
+  Object.keys(zooms).forEach((id) => $(id).addEventListener('click', () => { Rg.dir = Rg.pick = zooms[id]; Object.keys(zooms).forEach((o) => $(o).setAttribute('aria-pressed', String(o === id))); }));
+
+  // The part of the walk being read decides the model
+  const nodes = Array.from(document.querySelectorAll('[data-scene]')), inst = document.querySelector('.instrument');
+  const pickScene = () => {
+    const wide = innerWidth >= 980, bottom = inst.getBoundingClientRect().bottom;
+    const line = wide ? innerHeight * 0.45 : bottom + (innerHeight - bottom) * 0.35;
+    let best = nodes[0];
+    for (let k = 0; k < nodes.length; k++) if (nodes[k].getBoundingClientRect().top <= line) best = nodes[k];
+    if (innerHeight + scrollY >= document.documentElement.scrollHeight - 4) best = nodes[nodes.length - 1];
+    const name = best.getAttribute('data-scene');
+    if (name !== scene) enter(name);
+  };
+  addEventListener('scroll', pickScene, { passive: true });
+  const resize = () => { const b = cv.getBoundingClientRect(), d = Math.min(devicePixelRatio || 1, 2), s = Math.max(240, Math.round(b.width * d)); if (cv.width !== s) { cv.width = s; cv.height = s; S = s; } };
+  addEventListener('resize', () => { resize(); pickScene(); });
+  if (window.ResizeObserver) new ResizeObserver(resize).observe(cv);
+
+  // Frames
+  let last = performance.now(), visible = true;
+  if (window.IntersectionObserver) new IntersectionObserver((e) => { visible = e[0].isIntersecting; }).observe(cv);
+  const render = (now) => {
+    const dtReal = Math.min(0.05, Math.max(0, (now - last) / 1000)); last = now;
+    resize();
+    ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = 1; ctx.fillStyle = BG; ctx.fillRect(0, 0, S, S);
+    fade = Math.min(1, fade + dtReal * 2.5);
+    let line = '';
+    switch (scene) {
+      case 'iam': runPoint(dtReal); break;
+      case 'many': runParts(false, dtReal); break;
+      case 'list': line = 'their average  ' + short(runParts(true, dtReal), 2); break;
+      case 'zeroone': line = runZero(dtReal); break;
+      case 'nest': case 'god': runRings(dtReal); break;
+      case 'spokes': line = runSpokes(dtReal); break;
+      case 'band': line = runBand(); break;
+      case 'end': runSymbol(); break;
+      default: {
+        const g = geo(), z = F.st;
+        runField(dtReal); F.draw(g);
+        if (scene === 'anatomy') { labelAnatomy(g); break; }
+        boundary(g);
+        if (field.cut !== null) { const x = g.p + (field.cut - 0.5) * g.sc; ctx.strokeStyle = BG; ctx.lineWidth = Math.max(3, S / 110); ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, S); ctx.stroke(); }
+        markZeros(g);
+        if (z.clamps.length) { const q = z.clamps[0]; ctx.strokeStyle = INK; ctx.lineWidth = Math.max(1.2, S / 420); ctx.beginPath(); ctx.arc(g.p + q.x * g.sc, g.p + q.y * g.sc, S / 55, 0, TAU); ctx.stroke(); }
+        if (scene === 'divide') line = field.cut !== null ? 'left piece carries ' + z.netA + '  ·  right piece carries ' + z.netB : 'zeros ' + z.zeros.length + '  ·  turn ' + z.net + '  ·  parts turned ' + (field.turned * 100).toFixed(1) + '%';
+        else if (scene === 'flow') {
+          const k = field.slope * Math.sign(field.c || 1);
+          line = z.zeros.length > 3 ? 'the one 0 has broken into ' + z.zeros.length : (field.c === 0 ? 'no turn  ·  zeros ' + z.zeros.length : 'phase lines ' + (Math.abs(k) < 0.03 ? 'nearly still' : (k > 0 ? 'in' : 'out')) + '  ·  slope ' + short(Math.abs(field.slope), 2) + '  ·  zeros ' + z.zeros.length);
+        } else line = 'zeros ' + z.zeros.length + '  ·  turn ' + z.net;
+      }
+    }
+    if (fade < 1) { ctx.globalAlpha = 1 - fade; ctx.fillStyle = BG; ctx.fillRect(0, 0, S, S); ctx.globalAlpha = 1; }
+    if (line !== lastLine) { readEl.textContent = line; lastLine = line; }
+  };
+  const loop = (now) => { requestAnimationFrame(loop); if (document.hidden || !visible) { last = now; return; } render(now); };
+
+  resize();
+  useField(2, 2, 1, 18);
+  pickScene();
+  render(performance.now());
+  requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>

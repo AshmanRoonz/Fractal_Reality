@@ -4,6 +4,8 @@
 
 **Continued in `plans/shared_wholeness_and_groups_2026_08_08.md`** (2026-08-08). Finding 3 below, the Shared-Tonic Principle, is the computed result that the continuation generalizes: sharing rather than containment may be how wholes relate in general, which removes the requirement that there be a whole above us, and separates groups (a fuzzy centre) from wholes (one indivisible centre).
 
+**Notice, 2026-11-05 (Ashman).** Finding 4 is qualified: in the mereology of wholes and parts there is no top whole, while God is an unbounded whole and may be called the greatest whole. The continuation's removal of a whole above us is withdrawn. See `plans/wholes_groups_and_centres_2026_11_05.md`.
+
 ## Finding 1: κ is two quantities, not one. Health is a corner, not a middle.
 
 **Current position.** `CLAUDE.md` parameterizes the nesting bond as a single number with the two Lies at its limits: κ → 0 is Severance, κ → ∞ is Inflation, and health is the interval 0 < κ < κ*.

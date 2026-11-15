@@ -1,0 +1,39 @@
+== Test 1a: the clock ==
+P1.1   PASS            rings R G2 0.0:-0.000 R G2 0.05:0.050 R G2 0.1:0.100 R G2 0.2:0.200 R G4 0.0:-0.000 R G4 0.05:0.050 R G4 0.1:0.100 R G4 0.2:0.200 R G8 0.0:-0.000 R G8 0.05:0.050 R G8 0.1:0.100 R G8 0.2:0.200; chair at set .05/.10/.20: 0.038/0.077/0.156 (ratio 0.77); leader max |rate| 0.0000
+K7    not fired      ring rates within 5%
+K8    not fired      chair rate 0.077 inside [.075, .125]
+
+== Test 1b: the tongue ==
+P1.2   MISS            R G2: locked at [-0.05, 0.0, 0.05, 0.1, 0.15, 0.2] (predicted [-0.05, 0.0, 0.05, 0.1, 0.15, 0.2], max outside 0.86; R G4: locked at [0.05, 0.1, 0.15] (predicted [0.05, 0.1, 0.15], max outside 0.74; R G8: locked at [0.1] (predicted [0.1], max outside 0.93; chair: locked at [0.05, 0.1] (predicted [0.05, 0.1, 0.15], max outside 0.74; list locked everywhere True; leader locked at [0.0]
+P1.3   MISS (partial)  hits at .10: G2 1.00 G4 1.00 G8 1.00 chair 0.00; G2 at .05/.15/0/-.05: 1.00/0.00/0.00/0.00; list min 1.00; checks [np.True_, np.True_, np.True_, np.False_, np.True_, np.True_, np.True_, np.True_, True, True, True]
+K9    FIRED      correspondence: R G2 0.1: F 1.000 vs 1.000, LOCK 1.000 vs 1.000; R G2 0.3: F 0.056 vs 0.136, LOCK 0.862 vs 0.620; R G4 0.1: F 1.000 vs 1.000, LOCK 1.000 vs 1.000; R G4 0.3: F 0.225 vs 0.228, LOCK 0.240 vs 0.239
+
+== Test 2: two cues ==
+P2.1   MISS (partial)  R G2: follows 1.00, F 0.83 (pred 0.75), hit 0.53 (pred 0.48); R G4: follows 1.00, F 1.00 (pred 1.0), hit 0.60 (pred 0.57); R G8: follows 1.00, F 0.99 (pred 1.0), hit 0.84 (pred 0.82); chair: follows 1.00, F 0.52 (pred 1.0), hit 0.00 (pred 0.7)
+P2.2   PASS            list F 0.50/0.50 LOCK 0.65 hit 0.22 follows 0.00/0.00; leader F 0.24 hit 0.12
+P2.3   MISS (partial)  R G2: follows 0.00/0.00 F 0.28/0.28; R G4: follows 0.00/0.00 F 0.16/0.16; R G8: follows 0.00/0.00 F 0.21/0.22; chair: follows 0.00/0.00 F 0.19/0.19
+P2.4   MISS (partial)  R G2: follows 0.00/1.00 F1 0.83 hit1 0.53; R G4: follows 0.00/1.00 F1 1.00 hit1 0.58; R G8: follows 0.00/1.00 F1 1.00 hit1 0.85; chair: follows 0.00/1.00 F1 0.52 hit1 0.00
+P2.5   PASS            L: F 1.00 hit 1.00; R G2: F 0.99 hit 0.00; R G4: F 0.17 hit 0.07; R G8: F 0.24 hit 0.10; chair: F 0.21 hit 0.04; leader: F 0.24 hit 0.06
+K1    not fired      list follows exactly one cue in 0.00 of seeds
+K2    not fired      tuned rings follow the target in at least 1.00 of seeds
+K3    not fired      G2 at clock 0 follows one cue in 0.00 of seeds
+K6    n/a (chair clock 0.077 not within .02 of .10)      chair follows target in 1.00 of seeds
+
+== Test 3a: retune ==
+P3.1   MISS (partial)  R G2: t21 0.70 (pred 0.81), t22 0.82 (pred 0.99), t23 0.82; R G4: t21 0.65 (pred 0.69), t22 0.97 (pred 0.99), t23 0.99; R G8: t21 0.48 (pred 0.5), t22 0.84 (pred 0.87), t23 0.96; chair: t21 0.48 (pred 0.56), t22 0.52 (pred 0.92), t23 0.52
+
+== Test 3b: self-tuning ==
+P3.2   MISS (partial)  R G2: tuned by 20 1.00, by 30 1.00, to distractor 0.00, clock@30 0.108, rate 28-30 0.100, F 21-30 0.88; R G4: tuned by 20 1.00, by 30 1.00, to distractor 0.00, clock@30 0.106, rate 28-30 0.100, F 21-30 1.00; R G8: tuned by 20 0.01, by 30 0.56, to distractor 0.00, clock@30 0.054, rate 28-30 0.064, F 21-30 0.19; chair: tuned by 20 0.00, by 30 1.00, to distractor 0.00, clock@30 0.096, rate 28-30 0.104, F 21-30 0.10
+K4    not fired      max fraction tuned to the distractor 0.00
+
+== Test 3c: hold ==
+P3.3   MISS            33/40 cells within .10 (29/30 ring cells); R G8 on: 1.00(1.00) 1.00(1.00) 0.96(0.98) 0.35(0.45) 0.25(0.25); chair on: 0.99(1.00) 0.71(0.99) 0.15(0.75) 0.00(0.06) 0.25(0.25); R G4 on: 0.83(0.88) 0.36(0.46) 0.01(0.02) 0.24(0.25) 0.24(0.24); R G2 on: 0.33(0.28) 0.25(0.24) 0.25(0.25) 0.25(0.25) 0.55(0.60); R G8 off: 1.00(1.00) 0.97(0.96) 0.57(0.53) 0.05(0.03) 0.25(0.25); chair off: 0.12(0.99) 0.00(0.74) 0.39(0.16) 0.24(0.00) 0.25(0.25); R G4 off: 0.62(0.61) 0.11(0.10) 0.00(0.00) 0.40(0.42) 0.24(0.25); R G2 off: 0.31(0.29) 0.52(0.54) 0.33(0.37) 0.30(0.32) 0.15(0.17); list F_target 0.25 F_distractor 1.00
+K5    not fired      G8 on 0.96 vs G4 on 0.01 on trials 33-35
+P3.4   PASS            R G8 on: 1.00 (pred 0.95); R G4 on: 0.91 (pred 0.9); chair on: 0.99 (pred 0.95); R G2 on: 0.33 (pred 0.3); R G2 off: 0.82 (pred 0.75); G2 on clock@40 -0.063
+
+== windings ==
+P3.5   PASS            fraction of seed-trials at winding 1, all tests: G2 0.9801 G4 1.0000 G8 1.0000; Test 2 G2 0.9768
+
+== tally ==
+predictions: 5 PASS, 8 MISS (6 partial) of 13
+kill conditions: K7 not fired, K8 not fired, K9 FIRED, K1 not fired, K2 not fired, K3 not fired, K6 n/a, K4 not fired, K5 not fired
