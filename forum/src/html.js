@@ -122,6 +122,15 @@ const CSS = `
 
   .providers { display:flex; flex-direction:column; gap:12px; padding:22px; max-width:380px; margin:0 auto; }
   .providers .btn { text-align:center; padding:12px 16px; }
+  .providers .btn.off {
+    border-color:var(--rule); color:var(--fog-500); opacity:0.65;
+    cursor:not-allowed; display:inline-flex; align-items:center; justify-content:center; gap:10px;
+  }
+  .providers .btn.off:hover { background:transparent; text-decoration:none; }
+  .providers .btn.off .tag {
+    font-size:9px; letter-spacing:0.12em; padding:3px 7px;
+    border:1px solid var(--rule); border-radius:5px; color:var(--fog-500);
+  }
   .invite { text-align:center; max-width:560px; margin:0 auto 26px; color:var(--fog-300); font-style:italic; font-size:19px; }
   .invite strong { color:var(--gold-bright); font-style:normal; font-weight:500; }
 
@@ -306,7 +315,9 @@ export function loginPage({ providerList, devLogin, error }) {
   <div class="panel" style="max-width:440px; margin:0 auto;">
     <h2>Sign in</h2>
     <div class="providers">
-      ${providerList.map((p) => `<a class="btn" href="/auth/${p.id}">Continue with ${esc(p.label)}</a>`).join('')}
+      ${providerList.map((p) => p.unavailable
+        ? `<span class="btn off" aria-disabled="true" title="${esc(p.label)} sign-in is temporarily unavailable">Continue with ${esc(p.label)} <span class="tag">unavailable</span></span>`
+        : `<a class="btn" href="/auth/${p.id}">Continue with ${esc(p.label)}</a>`).join('')}
       ${providerList.length === 0 ? '<p style="color:var(--fog-300); font-style:italic; text-align:center;">No sign-in providers are configured yet.</p>' : ''}
       ${devLogin ? `<a class="btn quiet" href="/auth/dev">Continue as test user (dev only)</a>` : ''}
     </div>

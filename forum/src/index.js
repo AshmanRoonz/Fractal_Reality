@@ -13,6 +13,11 @@ import { providers, configuredProviders } from './oauth.js';
 
 const POST_COOLDOWN_S = 20;
 
+// Providers configured but temporarily not offered to the public (shown
+// greyed out on the sign-in page). Facebook waits on Meta's business
+// verification; remove it from this list once the app is published.
+const UNAVAILABLE_PROVIDERS = ['facebook'];
+
 const html = (body, status = 200, headers = {}) =>
   new Response(body, { status, headers: { 'Content-Type': 'text/html; charset=utf-8', ...headers } });
 
@@ -51,7 +56,9 @@ async function route(request, env, url) {
     const user = await currentUser(request, env);
     if (user) return redirect('/');
     return html(views.loginPage({
-      providerList: configuredProviders(env),
+      providerList: configuredProviders(env).map((p) => ({
+        id: p.id, label: p.label, unavailable: UNAVAILABLE_PROVIDERS.includes(p.id),
+      })),
       devLogin: env.DEV_LOGIN === '1',
       error: url.searchParams.get('error') ? 'Sign-in did not complete. Please try again.' : null,
     }));
