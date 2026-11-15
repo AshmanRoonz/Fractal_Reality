@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Forum</title>
+<meta name="description" content="The doorway to the Fractal Reality forum: share ideas, steelman each other, practice corrigibility and curiosity to become more conscious and explore new perspectives. Sign in with Google, Discord, Facebook, or Apple.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink-900: #0a0d14;
+    --ink-800: #11141d;
+    --ink-700: #141823;
+    --rule: rgba(255,255,255,0.08);
+    --fog-100: #e6e8ee;
+    --fog-300: #a4abb8;
+    --fog-500: #6b7180;
+    --gold: #b8a060;
+    --gold-bright: #d4b870;
+    --violet: #8c7ad0;
+    --glow-gold: rgba(184,160,96,0.22);
+  }
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme="dark"]) {
+      --ink-900: #f6f3ea;
+      --ink-800: #ffffff;
+      --ink-700: #fbf9f3;
+      --rule: rgba(60,50,20,0.14);
+      --fog-100: #1d1f26;
+      --fog-300: #4a4f5c;
+      --fog-500: #7a7f8c;
+      --gold: #8a7430;
+      --gold-bright: #6e5b20;
+      --violet: #5a4aa0;
+      --glow-gold: rgba(138,116,48,0.18);
+    }
+  }
+  :root[data-theme="dark"] {
+    --ink-900: #0a0d14;
+    --ink-800: #11141d;
+    --ink-700: #141823;
+    --rule: rgba(255,255,255,0.08);
+    --fog-100: #e6e8ee;
+    --fog-300: #a4abb8;
+    --fog-500: #6b7180;
+    --gold: #b8a060;
+    --gold-bright: #d4b870;
+    --violet: #8c7ad0;
+    --glow-gold: rgba(184,160,96,0.22);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--ink-900);
+    color: var(--fog-100);
+    font-family: "EB Garamond", Georgia, serif;
+    font-size: 19px;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  header.hero {
+    text-align: center;
+    padding: 72px 20px 48px;
+    background:
+      radial-gradient(ellipse at 50% 0%, rgba(140,122,208,0.18), transparent 60%),
+      radial-gradient(ellipse at 50% 100%, rgba(184,160,96,0.10), transparent 55%);
+    border-bottom: 1px solid var(--rule);
+  }
+  .kicker {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+  h1 {
+    font-weight: 500;
+    font-size: clamp(34px, 5.4vw, 60px);
+    line-height: 1.1;
+    margin: 18px 0 14px;
+    color: var(--gold-bright);
+    text-shadow: 0 0 40px var(--glow-gold);
+  }
+  .subtitle {
+    font-style: italic;
+    font-size: clamp(18px, 2.4vw, 23px);
+    color: var(--fog-300);
+  }
+  .meta {
+    margin-top: 14px;
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    color: var(--fog-500);
+  }
+
+  main { max-width: 720px; margin: 0 auto; padding: 0 22px 80px; }
+
+  .invite {
+    margin: 44px auto 10px;
+    text-align: center;
+    font-size: 21px;
+    color: var(--fog-300);
+    font-style: italic;
+  }
+  .invite strong { color: var(--gold-bright); font-style: normal; font-weight: 500; }
+
+  .door {
+    display: block;
+    max-width: 560px;
+    margin: 36px auto 0;
+    border: 1px solid var(--rule);
+    border-radius: 16px;
+    overflow: hidden;
+    background: var(--ink-800);
+    box-shadow: 0 0 50px var(--glow-gold);
+    transition: box-shadow 0.25s ease, border-color 0.25s ease;
+  }
+  .door:hover { border-color: var(--gold); box-shadow: 0 0 80px var(--glow-gold); }
+  .door img { display: block; width: 100%; height: auto; }
+  .door-cap {
+    text-align: center;
+    margin-top: 12px;
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--fog-500);
+  }
+  .door-cap a { color: var(--fog-500); }
+  .door-cap a:hover { color: var(--gold-bright); }
+
+  .enter {
+    text-align: center;
+    margin: 36px 0 8px;
+  }
+  .enter a.btn {
+    display: inline-block;
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 15px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gold-bright);
+    border: 1px solid var(--gold);
+    border-radius: 10px;
+    padding: 14px 30px;
+    text-decoration: none;
+  }
+  .enter a.btn:hover { background: var(--glow-gold); }
+  .signin {
+    text-align: center;
+    margin-top: 14px;
+    font-size: 16px;
+    color: var(--fog-500);
+    font-style: italic;
+  }
+
+  section { margin-top: 56px; }
+  h2 {
+    font-weight: 500;
+    font-size: clamp(24px, 3.2vw, 30px);
+    color: var(--gold-bright);
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .places { background: var(--ink-800); border: 1px solid var(--rule); border-radius: 12px; overflow: hidden; }
+  .places div { padding: 14px 18px; border-top: 1px solid var(--rule); }
+  .places div:first-child { border-top: 0; }
+  .places .n { color: var(--gold-bright); }
+  .places .d { color: var(--fog-300); font-style: italic; font-size: 17px; }
+
+  p { margin-bottom: 1.1em; }
+
+  .back {
+    display: inline-block;
+    margin-top: 40px;
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--fog-300);
+    text-decoration: none;
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 4px;
+  }
+  .back:hover { color: var(--gold-bright); }
+
+  .revision {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0 22px 60px;
+    font-size: 15px;
+    color: var(--fog-500);
+  }
+  .revision h2 { font-size: 20px; border: 0; }
+  .revision ul { list-style: none; }
+  .revision li { margin-bottom: 6px; }
+
+  footer {
+    text-align: center;
+    padding: 30px 20px 50px;
+    border-top: 1px solid var(--rule);
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    color: var(--fog-500);
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">Doorway</div>
+  <h1>The Forum</h1>
+  <div class="subtitle">Share ideas. Steelman each other. Practice corrigibility and curiosity.</div>
+  <div class="meta">Created: 2026-11-14 &middot; Last updated: 2026-11-14 &middot; Version: 1.0</div>
+</header>
+
+<main>
+
+  <p class="invite">Are you curious about philosophy, life, reality, consciousness, truth, and what it means to be human?<br>
+  <strong>Curiosity opens the door. Corrigibility keeps it open.</strong></p>
+
+  <a class="door" href="https://forum.fractalreality.ca" rel="noopener">
+    <img src="infographics/thumbs/what_exists.jpg" width="6144" height="7680" alt="What Exists? What is reality made of? Everything is one and many. Curiosity and corrigibility required. The doorway poster to the forum." loading="eager">
+  </a>
+  <div class="door-cap">The poster is the door. Step through it. (<a href="infographics.html">See it full size in the gallery</a>)</div>
+
+  <div class="enter">
+    <a class="btn" href="https://forum.fractalreality.ca" rel="noopener">Enter the Forum</a>
+    <div class="signin">Sign in with Google, Discord, Facebook, or Apple.</div>
+  </div>
+
+  <section>
+    <h2>What happens inside</h2>
+    <p>The forum is a practice space for becoming more conscious together: exploring new perspectives, building the strongest version of each other&rsquo;s positions before answering them, and treating a changed mind as a win rather than a loss.</p>
+    <div class="places">
+      <div><span class="n">Ideas</span> <span class="d">: share what you are seeing; a thought, a connection, a draft of something true.</span></div>
+      <div><span class="n">The Steelman Arena</span> <span class="d">: bring a disagreement and build the strongest version of the other side first.</span></div>
+      <div><span class="n">Corrigibility Practice</span> <span class="d">: say what changed your mind, and what corrected you.</span></div>
+      <div><span class="n">New Perspectives</span> <span class="d">: try on a view you do not hold and report what the world looks like from inside it.</span></div>
+      <div><span class="n">Open Questions</span> <span class="d">: what exists? What matters? Ask what you actually want to know.</span></div>
+    </div>
+  </section>
+
+  <a class="back" href="index.html">&larr; Back to fractalreality.ca</a>
+
+</main>
+
+<div class="revision">
+  <h2>Revision history</h2>
+  <ul>
+    <li>2026-11-14 v1.0: initial doorway page. The What Exists? poster set as the door; the forum itself runs at forum.fractalreality.ca on Cloudflare Workers and D1.</li>
+  </ul>
+</div>
+
+<footer>
+  The Circumpunct Framework &middot; Parts are fractals of their wholes
+</footer>
+
+</body>
+</html>

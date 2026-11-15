@@ -304,20 +304,37 @@
       <span class="font-serif text-lg tracking-wide">Fractal<span class="text-gold"> Reality</span></span>
     </a>
     <div class="flex items-center gap-1 sm:gap-2 text-sm">
-      <a href="#studio" class="hidden md:inline-block px-3 py-2 text-[12px] uppercase tracking-[0.18em] text-fog-300 hover:text-fog-100 transition-colors">Studio</a>
-      <a href="fractalgaming.html" class="hidden md:inline-block px-3 py-2 text-[12px] uppercase tracking-[0.18em] text-fog-300 hover:text-fog-100 transition-colors">Gaming</a>
-      <a href="#consulting" class="hidden md:inline-block px-3 py-2 text-[12px] uppercase tracking-[0.18em] text-fog-300 hover:text-fog-100 transition-colors">Consulting</a>
-      <a href="learn/" class="hidden md:inline-block px-3 py-2 text-[12px] uppercase tracking-[0.18em] text-fog-300 hover:text-fog-100 transition-colors">Learn</a>
-      <a href="#framework" class="hidden md:inline-block px-3 py-2 text-[12px] uppercase tracking-[0.18em] text-fog-300 hover:text-fog-100 transition-colors">Framework</a>
-      <a href="ethics.html" class="hidden md:inline-block px-3 py-2 text-[12px] uppercase tracking-[0.18em] text-fog-300 hover:text-fog-100 transition-colors">Ethics</a>
+      <a href="#studio" class="hidden lg:inline-block px-3 py-2 text-[12px] uppercase tracking-[0.18em] text-fog-300 hover:text-fog-100 transition-colors">Studio</a>
+      <a href="fractalgaming.html" class="hidden lg:inline-block px-3 py-2 text-[12px] uppercase tracking-[0.18em] text-fog-300 hover:text-fog-100 transition-colors">Gaming</a>
+      <a href="#consulting" class="hidden lg:inline-block px-3 py-2 text-[12px] uppercase tracking-[0.18em] text-fog-300 hover:text-fog-100 transition-colors">Consulting</a>
+      <a href="learn/" class="hidden lg:inline-block px-3 py-2 text-[12px] uppercase tracking-[0.18em] text-fog-300 hover:text-fog-100 transition-colors">Learn</a>
+      <a href="#framework" class="hidden lg:inline-block px-3 py-2 text-[12px] uppercase tracking-[0.18em] text-fog-300 hover:text-fog-100 transition-colors">Framework</a>
+      <a href="ethics.html" class="hidden lg:inline-block px-3 py-2 text-[12px] uppercase tracking-[0.18em] text-fog-300 hover:text-fog-100 transition-colors">Ethics</a>
+      <a href="https://forum.fractalreality.ca" class="hidden lg:inline-block px-3 py-2 text-[12px] uppercase tracking-[0.18em] text-gold hover:text-gold-bright transition-colors">Forum</a>
       <button onclick="openPagesOverlay()" class="inline-flex items-center gap-2 px-3 py-2 text-[12px] uppercase tracking-[0.18em] text-fog-300 hover:text-fog-100 transition-colors" title="Search all pages (press /)" aria-label="Search all pages">
         <i data-lucide="search" class="w-3.5 h-3.5"></i>
         <span class="hidden sm:inline">Library/Search</span>
       </button>
       <a href="mailto:ashroney@gmail.com?subject=Fractal%20Reality%20Inquiry"
-         class="ml-2 px-4 py-2 text-[12px] uppercase tracking-[0.18em] text-gold-bright bg-gold/10 border border-gold/40 rounded-md hover:bg-gold/20 hover:border-gold transition-all">
+         class="ml-2 px-4 py-2 text-[12px] uppercase tracking-[0.18em] text-gold-bright bg-gold/10 border border-gold/40 rounded-md hover:bg-gold/20 hover:border-gold transition-all hidden sm:inline-block">
         Get in touch
       </a>
+      <button id="mobileMenuBtn" onclick="toggleMobileMenu()" class="lg:hidden ml-1 inline-flex items-center justify-center w-9 h-9 rounded-md text-fog-300 hover:text-fog-100 border border-rule hover:border-gold/40 transition-colors" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
+        <i data-lucide="menu" class="w-4 h-4" id="mobileMenuIconOpen"></i>
+        <i data-lucide="x" class="w-4 h-4" id="mobileMenuIconClose" style="display:none"></i>
+      </button>
+    </div>
+  </div>
+  <div id="mobileMenu" class="hidden lg:hidden border-t border-rule bg-ink-900/95 backdrop-blur-xl">
+    <div class="max-w-6xl mx-auto px-6 py-3 flex flex-col">
+      <a href="#studio" onclick="toggleMobileMenu()" class="px-2 py-2.5 text-[13px] uppercase tracking-[0.18em] text-fog-300 hover:text-fog-100 transition-colors">Studio</a>
+      <a href="fractalgaming.html" class="px-2 py-2.5 text-[13px] uppercase tracking-[0.18em] text-fog-300 hover:text-fog-100 transition-colors">Gaming</a>
+      <a href="#consulting" onclick="toggleMobileMenu()" class="px-2 py-2.5 text-[13px] uppercase tracking-[0.18em] text-fog-300 hover:text-fog-100 transition-colors">Consulting</a>
+      <a href="learn/" class="px-2 py-2.5 text-[13px] uppercase tracking-[0.18em] text-fog-300 hover:text-fog-100 transition-colors">Learn</a>
+      <a href="#framework" onclick="toggleMobileMenu()" class="px-2 py-2.5 text-[13px] uppercase tracking-[0.18em] text-fog-300 hover:text-fog-100 transition-colors">Framework</a>
+      <a href="ethics.html" class="px-2 py-2.5 text-[13px] uppercase tracking-[0.18em] text-fog-300 hover:text-fog-100 transition-colors">Ethics</a>
+      <a href="https://forum.fractalreality.ca" class="px-2 py-2.5 text-[13px] uppercase tracking-[0.18em] text-gold hover:text-gold-bright transition-colors">Forum</a>
+      <a href="mailto:ashroney@gmail.com?subject=Fractal%20Reality%20Inquiry" class="mt-2 mb-1 px-4 py-2.5 text-center text-[12px] uppercase tracking-[0.18em] text-gold-bright bg-gold/10 border border-gold/40 rounded-md hover:bg-gold/20 hover:border-gold transition-all">Get in touch</a>
     </div>
   </div>
 </nav>
@@ -469,7 +486,7 @@
       Building wholeness<br>from <span class="italic text-gold-bright">first principles</span>.
     </h1>
     <p class="mt-6 max-w-xl text-fog-300 text-lg leading-relaxed reveal" data-reveal-delay="160">
-      Fractal Reality is the studio of Ashman Roonz: independent game development, philosophy and ethics consulting, hands-on AI courses, and ongoing research into the Circumpunct Framework; one structure and one flow for parts, wholes, and the center which connects them.
+      <strong class="text-fog-100 font-medium">What is reality made of?</strong> Everything is one and many: there are wholes, there are parts, and through their relationships new wholes emerge. Fractal Reality is the studio of Ashman Roonz, exploring that one idea everywhere it leads: independent games, philosophy and ethics consulting, hands-on AI courses, and ongoing research into the Circumpunct Framework.
     </p>
     <div class="mt-8 flex flex-wrap gap-3 reveal" data-reveal-delay="240">
       <a class="btn btn-primary" href="https://lss.fractalreality.ca">
@@ -838,7 +855,7 @@
              radial-gradient(circle at 25% 70%, rgba(102,204,136,0.13), transparent 55%),
              #06070d;">
         <!-- inline goo art: the game's own metaball trick (blur + alpha contrast), no asset needed -->
-        <svg viewBox="0 0 400 300" class="w-full h-full animate-float" role="img" aria-label="Goopling — a little cell with cilia adrift in yellow goop">
+        <svg viewBox="0 0 400 300" class="w-full h-full animate-float" role="img" aria-label="Goopling â€” a little cell with cilia adrift in yellow goop">
           <defs>
             <filter id="goo-fg" x="-30%" y="-30%" width="160%" height="160%">
               <feGaussianBlur in="SourceGraphic" stdDeviation="9"/>
@@ -1080,6 +1097,45 @@
       <p class="font-serif italic text-sm text-fog-100 mb-2">The 0 is the inward unity of the 1.</p>
       <p class="text-sm text-fog-300 leading-relaxed">The framework walked in twelve steps from &ldquo;I am&rdquo;, with a live model that stays in view and changes as you read. Raise a gain past 1 and parts that fade when left alone pull each other into one shared state, watch the same parts add to 0 while their steps make exactly 1 turn, press on a field or cut it, and put a ring of 128 parts under one pull felt by all until it loses its turn. Every section is marked with the kind of claim it makes, from direct experience through arithmetic and tested model to proposal, and the last is a ledger of what is firm and what is not.</p>
       <span class="inline-flex items-center gap-1.5 mt-3 text-sm text-gold">Start the walk <i data-lucide="arrow-right" class="w-4 h-4"></i></span>
+    </a>
+    <!-- Forum doorway (added 2026-11-14) -->
+    <a href="forum.html" class="reveal block sm:col-span-2 bg-ink-700 border border-rule rounded-xl p-6 hover:border-gold/40 transition-colors" data-reveal-delay="0">
+      <div class="flex items-center justify-between mb-3">
+        <div class="w-9 h-9 rounded-lg bg-gold/10 border border-gold/30 inline-flex items-center justify-center text-gold">
+          <i data-lucide="messages-square" class="w-5 h-5"></i>
+        </div>
+        <span class="font-sans text-[11px] tracking-[0.22em] uppercase text-gold/80">New &middot; Community</span>
+      </div>
+      <h4 class="font-serif font-semibold text-lg text-gold-bright mb-1.5">The Forum</h4>
+      <p class="font-serif italic text-sm text-fog-100 mb-2">Curiosity opens the door. Corrigibility keeps it open.</p>
+      <p class="text-sm text-fog-300 leading-relaxed">A place to share ideas, steelman each other, and practice corrigibility and curiosity: becoming more conscious together and exploring new perspectives. Five places inside, from the Steelman Arena to Corrigibility Practice. Sign in with Google, Discord, Facebook, or Apple.</p>
+      <span class="inline-flex items-center gap-1.5 mt-3 text-sm text-gold">Step through the doorway <i data-lucide="arrow-right" class="w-4 h-4"></i></span>
+    </a>
+    <!-- Infographics gallery (added 2026-11-14) -->
+    <a href="infographics.html" class="reveal block sm:col-span-2 bg-ink-700 border border-rule rounded-xl p-6 hover:border-gold/40 transition-colors" data-reveal-delay="0">
+      <div class="flex items-center justify-between mb-3">
+        <div class="w-9 h-9 rounded-lg bg-gold/10 border border-gold/30 inline-flex items-center justify-center text-gold">
+          <i data-lucide="image" class="w-5 h-5"></i>
+        </div>
+        <span class="font-sans text-[11px] tracking-[0.22em] uppercase text-gold/80">New &middot; Gallery</span>
+      </div>
+      <h4 class="font-serif font-semibold text-lg text-gold-bright mb-1.5">Infographics &amp; Typographics</h4>
+      <p class="font-serif italic text-sm text-fog-100 mb-2">The framework at a glance.</p>
+      <p class="text-sm text-fog-300 leading-relaxed">Twenty-one visual summaries in one gallery: the Circumpunct and its theory of mind, God and the Soul Matrix, One Thing with Infinite Centers, time, attention, love, the Self Science posters, and the ethics set from True. Faithful. Good. Right. to the Truth Resolution Protocol. Click any piece to view it full size.</p>
+      <span class="inline-flex items-center gap-1.5 mt-3 text-sm text-gold">Open the gallery <i data-lucide="arrow-right" class="w-4 h-4"></i></span>
+    </a>
+    <!-- Corrigibility essay (added 2026-11-14) -->
+    <a href="corrigibility.html" class="reveal block sm:col-span-2 bg-ink-700 border border-rule rounded-xl p-6 hover:border-gold/40 transition-colors" data-reveal-delay="0">
+      <div class="flex items-center justify-between mb-3">
+        <div class="w-9 h-9 rounded-lg bg-gold/10 border border-gold/30 inline-flex items-center justify-center text-gold">
+          <i data-lucide="refresh-ccw" class="w-5 h-5"></i>
+        </div>
+        <span class="font-sans text-[11px] tracking-[0.22em] uppercase text-gold/80">New &middot; Essay</span>
+      </div>
+      <h4 class="font-serif font-semibold text-lg text-gold-bright mb-1.5">Why Corrigibility Might Be the Highest Human Virtue</h4>
+      <p class="font-serif italic text-sm text-fog-100 mb-2">Corrigibility is how we remain faithful when we discover we were wrong.</p>
+      <p class="text-sm text-fog-300 leading-relaxed">Fallibility is built into finite beings, so the highest human virtue cannot be the possession of correct beliefs; it may be the capacity to recognize and correct our errors. On corrigibility as the meta-virtue that keeps every other virtue from turning dangerous, how ordinary error hardens into wrongdoing when mistakes are made untouchable, why the noble lie destroys the very correction it depends on, and the difference between obedience and remaining answerable to reality. A virtue of relational wholeness: the courage to become right.</p>
+      <span class="inline-flex items-center gap-1.5 mt-3 text-sm text-gold">Read the essay <i data-lucide="arrow-right" class="w-4 h-4"></i></span>
     </a>
     <!-- Self Science essay (added 2026-11-05) -->
     <a href="self_science.html" class="reveal block sm:col-span-2 bg-ink-700 border border-rule rounded-xl p-6 hover:border-gold/40 transition-colors" data-reveal-delay="0">
@@ -1324,6 +1380,21 @@ document.addEventListener('keydown', function(e) {
     e.preventDefault(); openPagesOverlay();
   }
 });
+</script>
+<script>
+function toggleMobileMenu() {
+  var menu = document.getElementById('mobileMenu');
+  var btn = document.getElementById('mobileMenuBtn');
+  var iconOpen = document.getElementById('mobileMenuIconOpen');
+  var iconClose = document.getElementById('mobileMenuIconClose');
+  var nowOpen = menu.classList.toggle('hidden') === false;
+  btn.setAttribute('aria-expanded', nowOpen ? 'true' : 'false');
+  btn.setAttribute('aria-label', nowOpen ? 'Close menu' : 'Open menu');
+  if (iconOpen && iconClose) {
+    iconOpen.style.display = nowOpen ? 'none' : '';
+    iconClose.style.display = nowOpen ? '' : 'none';
+  }
+}
 </script>
 </body>
 </html>

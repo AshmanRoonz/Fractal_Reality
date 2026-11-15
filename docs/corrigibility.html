@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Why Corrigibility Might Be the Highest Human Virtue</title>
+<meta name="description" content="Fallibility is built into finite beings, so the highest human virtue may be the capacity to recognize and correct our errors: corrigibility as the meta-virtue that keeps every other virtue answerable to reality. An essay by Ashman Roonz.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink-900: #0a0d14;
+    --ink-800: #11141d;
+    --ink-700: #141823;
+    --rule: rgba(255,255,255,0.08);
+    --fog-100: #e6e8ee;
+    --fog-300: #a4abb8;
+    --fog-500: #6b7180;
+    --gold: #b8a060;
+    --gold-bright: #d4b870;
+    --violet: #8c7ad0;
+    --glow-gold: rgba(184,160,96,0.22);
+  }
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme="dark"]) {
+      --ink-900: #f6f3ea;
+      --ink-800: #ffffff;
+      --ink-700: #fbf9f3;
+      --rule: rgba(60,50,20,0.14);
+      --fog-100: #1d1f26;
+      --fog-300: #4a4f5c;
+      --fog-500: #7a7f8c;
+      --gold: #8a7430;
+      --gold-bright: #6e5b20;
+      --violet: #5a4aa0;
+      --glow-gold: rgba(138,116,48,0.18);
+    }
+  }
+  :root[data-theme="dark"] {
+    --ink-900: #0a0d14;
+    --ink-800: #11141d;
+    --ink-700: #141823;
+    --rule: rgba(255,255,255,0.08);
+    --fog-100: #e6e8ee;
+    --fog-300: #a4abb8;
+    --fog-500: #6b7180;
+    --gold: #b8a060;
+    --gold-bright: #d4b870;
+    --violet: #8c7ad0;
+    --glow-gold: rgba(184,160,96,0.22);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--ink-900);
+    color: var(--fog-100);
+    font-family: "EB Garamond", Georgia, serif;
+    font-size: 19px;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  header.hero {
+    position: relative;
+    text-align: center;
+    padding: 72px 20px 56px;
+    background:
+      radial-gradient(ellipse at 50% 0%, rgba(140,122,208,0.18), transparent 60%),
+      radial-gradient(ellipse at 50% 100%, rgba(184,160,96,0.10), transparent 55%);
+    border-bottom: 1px solid var(--rule);
+  }
+  .kicker {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+  h1 {
+    font-weight: 500;
+    font-size: clamp(32px, 4.8vw, 54px);
+    line-height: 1.15;
+    max-width: 880px;
+    margin: 18px auto 14px;
+    color: var(--gold-bright);
+    text-shadow: 0 0 40px var(--glow-gold);
+  }
+  .byline {
+    margin-top: 22px;
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--fog-500);
+  }
+  .meta {
+    margin-top: 10px;
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    color: var(--fog-500);
+  }
+
+  main {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0 22px 80px;
+  }
+
+  .pull {
+    margin: 48px auto;
+    padding: 26px 28px;
+    max-width: 620px;
+    text-align: center;
+    font-style: italic;
+    font-size: clamp(21px, 2.8vw, 26px);
+    line-height: 1.45;
+    color: var(--gold-bright);
+    background: var(--ink-700);
+    border: 1px solid var(--rule);
+    border-radius: 14px;
+    box-shadow: 0 0 40px var(--glow-gold);
+  }
+
+  section { margin-top: 56px; }
+
+  h2 {
+    font-family: "EB Garamond", Georgia, serif;
+    font-weight: 500;
+    font-size: clamp(26px, 3.4vw, 34px);
+    color: var(--gold-bright);
+    margin-bottom: 18px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  p { margin-bottom: 1.1em; }
+
+  .lines {
+    margin: 26px 0;
+    padding: 24px 26px;
+    text-align: center;
+    background: var(--ink-700);
+    border: 1px solid var(--rule);
+    border-radius: 12px;
+    font-size: 21px;
+    line-height: 1.7;
+    color: var(--gold-bright);
+  }
+  .lines span { display: block; margin-bottom: 0.6em; }
+  .lines span:last-child { margin-bottom: 0; }
+
+  .back {
+    display: inline-block;
+    margin-top: 40px;
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--fog-300);
+    text-decoration: none;
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 4px;
+  }
+  .back:hover { color: var(--gold-bright); }
+
+  .revision {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0 22px 60px;
+    font-size: 15px;
+    color: var(--fog-500);
+  }
+  .revision h2 { font-size: 20px; border: 0; }
+  .revision ul { list-style: none; }
+  .revision li { margin-bottom: 6px; }
+
+  footer {
+    text-align: center;
+    padding: 30px 20px 50px;
+    border-top: 1px solid var(--rule);
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    color: var(--fog-500);
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">Essay</div>
+  <h1>Why Corrigibility Might Be the Highest Human Virtue</h1>
+  <div class="byline">Ashman Roonz</div>
+  <div class="meta">Created: 2026-11-14 &middot; Last updated: 2026-11-14 &middot; Version: 1.0</div>
+</header>
+
+<main>
+
+  <div class="pull">&ldquo;Corrigibility is how we remain faithful when we discover we were wrong.&rdquo;</div>
+
+  <section>
+    <h2>The Ontological Foundation: We Are Finite Beings in an Infinite Reality</h2>
+    <p>Before we can determine what makes a human being virtuous, we must first consider what a human being is.</p>
+    <p>Every human being is a finite whole within a greater reality. We experience existence from a particular point of view, with limited perception, incomplete knowledge, and imperfect understanding. No individual can perceive everything, know everything, or anticipate every consequence of their actions.</p>
+    <p>We are each a whole, but we are also a part of something greater than ourselves.</p>
+    <p>This is not merely a limitation of human intelligence. It is a fundamental condition of our existence. To occupy a particular perspective is necessarily to lack other perspectives. To understand something is not necessarily to understand it completely.</p>
+    <p>Therefore, the possibility of being wrong is inseparable from being human.</p>
+    <p>If fallibility is built into our existence, then the highest human virtue cannot simply be the possession of correct beliefs. No human being can guarantee that all their beliefs are correct.</p>
+    <p>Instead, perhaps the highest virtue must be the capacity to recognize and correct our errors.</p>
+    <p>That capacity is <strong>corrigibility</strong>.</p>
+  </section>
+
+  <section>
+    <h2>The Virtue That Protects Every Other Virtue</h2>
+    <p>We traditionally recognize virtues such as honesty, courage, compassion, justice, humility, wisdom, and integrity. Each describes something valuable about human character.</p>
+    <p>But what happens when these virtues operate without the possibility of correction?</p>
+    <p>Courage without corrigibility can become recklessness. Faithfulness without corrigibility can become blind loyalty. Justice without corrigibility can become rigid punishment. Compassion without corrigibility can perpetuate the very suffering it intends to alleviate. Wisdom without corrigibility becomes dogmatism, and integrity without corrigibility risks becoming little more than stubborn consistency.</p>
+    <p>Even honesty can become compromised when someone sincerely believes something false and refuses to examine the evidence against it.</p>
+    <p>In every case, a virtue becomes dangerous when its possessor believes they are beyond correction.</p>
+    <p>This reveals something important: possessing a virtue is not sufficient to guarantee virtuous behaviour. A person must also remain capable of recognizing when their application of that virtue is mistaken.</p>
+    <p>Corrigibility provides this capacity.</p>
+    <p>It is not simply another virtue alongside the others. It may be understood as a <em>meta-virtue</em>: a virtue that governs the development, maintenance, and correction of other virtues.</p>
+    <p>Corrigibility keeps goodness responsive to reality.</p>
+  </section>
+
+  <section>
+    <h2>Corrigibility Requires the Cooperation of Virtues</h2>
+    <p>Corrigibility is not weakness, submission, or uncertainty for its own sake. Genuine corrigibility requires the cooperation of several virtues.</p>
+    <p>It requires <strong>honesty</strong>, because we must be willing to acknowledge evidence that contradicts our beliefs.</p>
+    <p>It requires <strong>humility</strong>, because we must recognize that our understanding is incomplete.</p>
+    <p>It requires <strong>courage</strong>, because admitting a mistake can threaten our pride, identity, reputation, relationships, or sense of security.</p>
+    <p>It requires <strong>compassion</strong>, because we must care enough about the consequences of our mistakes to want to correct them.</p>
+    <p>And it requires <strong>integrity</strong>, because recognizing an error means little if we refuse to change our behaviour accordingly.</p>
+    <p>Corrigibility brings these virtues together into an active process of moral improvement.</p>
+    <p>It transforms virtue from something we claim to possess into something we continually practice.</p>
+    <p>A person may sincerely desire to be good, but without corrigibility, that desire can become disconnected from the actual effects of their behaviour.</p>
+    <p>The willingness to become better matters more than the insistence that one is already good.</p>
+  </section>
+
+  <section>
+    <h2>How Error Becomes Wrongdoing</h2>
+    <p>Making mistakes is inevitable. It is not inherently a moral failure to misunderstand something, act on incomplete information, or reach an incorrect conclusion.</p>
+    <p>What matters is how we respond when our errors become apparent.</p>
+    <p>Consider two people who make the same mistake.</p>
+    <p>The first acknowledges the evidence, accepts responsibility, and attempts to repair the harm.</p>
+    <p>The second denies the evidence, attacks the person who identified the mistake, invents justifications, and insists that no correction is necessary.</p>
+    <p>The original error may have been identical, but the moral trajectories are profoundly different.</p>
+    <p>The first person remains corrigible. The second begins constructing a defensive system around the error.</p>
+    <p>This is where ordinary mistakes can develop into sustained wrongdoing.</p>
+    <p>A person who becomes more committed to protecting their self-image than discovering the truth may begin to treat honesty as a threat. Criticism becomes an attack. Evidence becomes an inconvenience. Accountability becomes persecution.</p>
+    <p>Deception can then become a strategy of self-preservation.</p>
+    <p>And once deception becomes necessary to defend earlier deception, the system can become increasingly resistant to correction.</p>
+    <p>This suggests that some persistent forms of wrongdoing are not merely failures of knowledge or empathy. They involve the active protection of falsehood against correction.</p>
+    <div class="pull" style="margin-top:20px;">The gravest danger is not that human beings make mistakes. It is that we learn to make our mistakes untouchable.</div>
+  </section>
+
+  <section>
+    <h2>The Noble Lie and the Destruction of Corrigibility</h2>
+    <p>This problem becomes especially significant when deception is morally justified.</p>
+    <p>Throughout history, people have defended dishonesty by claiming that certain lies serve a greater good. The so-called <em>noble lie</em> is perhaps the clearest expression of this idea.</p>
+    <p>Someone decides that the truth is too dangerous, too disruptive, or too difficult for others to accept. They therefore substitute a falsehood, believing the deception will produce a desirable outcome.</p>
+    <p>But there is a fundamental problem with this reasoning.</p>
+    <p>The person who tells the noble lie assumes that their own understanding of the greater good is sufficiently reliable to justify deceiving others.</p>
+    <p>Yet this person is just as finite and fallible as everyone else.</p>
+    <p>By deliberately concealing the truth, they also restrict the ability of others to challenge their assumptions, identify unintended consequences, and correct their judgment.</p>
+    <p>The lie does more than introduce false information. It damages the process through which false information might otherwise be discovered and corrected.</p>
+    <p>This creates a contradiction within the justification itself.</p>
+    <p>If the supposed greater good depends on sound judgment, and sound judgment depends on the possibility of correction, then a deception that disables correction may undermine the very good it claims to protect.</p>
+    <p>The noble liar places their own judgment above the corrective participation of others.</p>
+    <p>They treat their perspective as sufficiently complete to override the perspectives of those affected by their decisions.</p>
+    <p>In a world of fallible beings, this is a dangerous moral privilege to claim.</p>
+    <div class="pull" style="margin-top:20px;">Lying was never noble merely because the liar believed their intentions were good.</div>
+    <p>Good intentions cannot eliminate the need for correction.</p>
+  </section>
+
+  <section>
+    <h2>Corrigibility Is Not Obedience</h2>
+    <p>An important distinction must be made.</p>
+    <p>Corrigibility does not mean accepting every criticism, surrendering to every authority, or allowing other people to dictate what we must believe.</p>
+    <p>Such behaviour would amount to compliance rather than genuine corrigibility.</p>
+    <p>A person can be open to correction while firmly rejecting accusations unsupported by evidence.</p>
+    <p>Indeed, sometimes corrigibility requires resisting social pressure.</p>
+    <p>If a group demands that an individual accept a falsehood, the genuinely corrigible response is not to submit. It is to examine the claim according to the best available evidence and reasoning.</p>
+    <p>Likewise, when a bully uses ridicule, gaslighting, intimidation, or manipulation to force agreement, resistance may be an expression of integrity rather than stubbornness.</p>
+    <p>The distinction lies in what governs our willingness to change.</p>
+    <p>An obedient person changes because someone else demands it.</p>
+    <p>A corrigible person changes because they have encountered sufficient reason to believe correction is warranted.</p>
+    <div class="pull" style="margin-top:20px;">Corrigibility is not submission to another person&rsquo;s will. It is a commitment to remain answerable to reality.</div>
+    <p>This also means that genuine corrigibility must be paired with discernment. Not every criticism is valid. Not every authority is trustworthy. Not every apparent consensus is correct.</p>
+    <p>The goal is neither permanent doubt nor blind agreement.</p>
+    <p>The goal is to remain capable of learning.</p>
+  </section>
+
+  <section>
+    <h2>Why Corrigibility Might Be the Highest Virtue</h2>
+    <p>There is a distinction between the highest moral value and the highest human virtue.</p>
+    <p>Truth may be the value toward which our understanding is directed. Goodness may be the aim of our moral conduct. Justice may guide our relationships with others.</p>
+    <p>But corrigibility may be the highest practical human virtue because it allows us to continue approaching these values despite our inevitable mistakes.</p>
+    <p>A person may possess extraordinary courage, intelligence, and conviction, yet cause tremendous harm if they cannot acknowledge being wrong.</p>
+    <p>Another person may begin with serious misunderstandings and character flaws, yet gradually develop wisdom, compassion, and integrity because they remain willing to learn.</p>
+    <p>The difference is not perfection.</p>
+    <p>It is the capacity for improvement.</p>
+    <p>Corrigibility makes moral growth possible across an entire lifetime. It allows us to revisit our beliefs, repair relationships, revise institutions, confront injustice, and learn from the consequences of our actions.</p>
+    <p>A society that values corrigibility would not demand that its members pretend to be infallible.</p>
+    <p>It would make acknowledging mistakes safer than concealing them.</p>
+    <p>It would reward honest correction rather than image management. It would distinguish accountability from humiliation and encourage leaders to revise their positions when evidence warrants it.</p>
+    <p>Such a society would recognize that truthfulness and correction are not threats to stability. They are among the conditions of trustworthy, sustainable cooperation.</p>
+    <p>This is particularly important in politics, education, science, leadership, and personal relationships, where the consequences of uncorrected errors can extend far beyond the individual who makes them.</p>
+    <p>The more power a person possesses, the more consequential their incorrigibility becomes.</p>
+    <p>No amount of authority can eliminate human fallibility.</p>
+    <p>If anything, authority increases the moral responsibility to remain corrigible.</p>
+  </section>
+
+  <section>
+    <h2>A Virtue Rooted in Wholeness</h2>
+    <p>Returning to ontology, we can understand corrigibility as a natural response to the relationship between wholes and parts.</p>
+    <p>Every individual is a whole with a unique perspective, yet each individual is also a part of a greater reality.</p>
+    <p>No part contains the complete perspective of the whole.</p>
+    <p>For individuals to participate constructively in that greater whole, they must remain capable of receiving information beyond their existing understanding.</p>
+    <p>They must be able to recognize where their beliefs fail to correspond with reality, where their actions harm other parts, and where their attempts at goodness produce unintended consequences.</p>
+    <p>Corrigibility allows the individual to remain both distinct and connected.</p>
+    <p>It preserves personal integrity without requiring isolation from criticism. It allows conviction without dogmatism, confidence without arrogance, and individuality without denying our interdependence.</p>
+    <p>In this sense, corrigibility can be understood as a virtue of relational wholeness.</p>
+    <p>The individual does not become less whole by acknowledging an error.</p>
+    <p>They become better integrated with the reality of which they are a part.</p>
+    <p>To be corrected is not necessarily to be diminished. Sometimes it is precisely how we become more complete in our understanding.</p>
+  </section>
+
+  <section>
+    <h2>Conclusion: The Courage to Become Right</h2>
+    <p>Perhaps we have spent too much of human history treating the appearance of being right as more important than the process of becoming right.</p>
+    <p>We reward certainty, defend reputation, and admire unwavering conviction. Yet certainty can be mistaken, reputations can be built on falsehood, and conviction can become destructive when it refuses correction.</p>
+    <p>A genuinely virtuous person is not someone who never makes mistakes.</p>
+    <p>It is someone whose commitment to truth is stronger than their commitment to defending those mistakes.</p>
+    <p>This does not establish corrigibility as the only virtue, nor does it mean that every other virtue is subordinate in every circumstance. But it offers a compelling reason to recognize corrigibility as a foundational virtue upon which sustained moral development depends.</p>
+    <p>Without it, honesty can become self-righteousness, courage can become recklessness, and integrity can become stubbornness.</p>
+    <p>With it, even our failures can become opportunities for growth.</p>
+    <p>If we want better individuals, healthier relationships, more trustworthy institutions, and a society in which truth is safer than deception, then perhaps we should stop measuring virtue primarily by how convincingly people defend their goodness.</p>
+    <p>We should also measure it by how willingly they correct themselves when they discover they were wrong.</p>
+
+    <div class="lines">
+      <span>Truth is what we must remain faithful to.</span>
+      <span>Corrigibility is how we remain faithful when we discover we were wrong.</span>
+      <span>The highest human virtue may not be the ability to be right, but the courage to become right when we are wrong.</span>
+    </div>
+  </section>
+
+  <a class="back" href="index.html">&larr; Back to fractalreality.ca</a>
+
+</main>
+
+<div class="revision">
+  <h2>Revision history</h2>
+  <ul>
+    <li>2026-11-14 v1.0: initial HTML version, built from Ashman&rsquo;s essay text. Text carried over without edits; the three closing lines set as the closing block, and three of the essay&rsquo;s own emphasized lines set as pull quotes.</li>
+  </ul>
+</div>
+
+<footer>
+  The Circumpunct Framework &middot; Parts are fractals of their wholes
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Infographics &amp; Typographics</title>
+<meta name="description" content="A gallery of 21 infographics and typographic pieces from the Circumpunct Framework by Ashman Roonz: ontology, mind, time, attention, love, Self Science, and ethics.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink-900: #0a0d14;
+    --ink-800: #11141d;
+    --ink-700: #141823;
+    --rule: rgba(255,255,255,0.08);
+    --fog-100: #e6e8ee;
+    --fog-300: #a4abb8;
+    --fog-500: #6b7180;
+    --gold: #b8a060;
+    --gold-bright: #d4b870;
+    --violet: #8c7ad0;
+    --glow-gold: rgba(184,160,96,0.22);
+  }
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme="dark"]) {
+      --ink-900: #f6f3ea;
+      --ink-800: #ffffff;
+      --ink-700: #fbf9f3;
+      --rule: rgba(60,50,20,0.14);
+      --fog-100: #1d1f26;
+      --fog-300: #4a4f5c;
+      --fog-500: #7a7f8c;
+      --gold: #8a7430;
+      --gold-bright: #6e5b20;
+      --violet: #5a4aa0;
+      --glow-gold: rgba(138,116,48,0.18);
+    }
+  }
+  :root[data-theme="dark"] {
+    --ink-900: #0a0d14;
+    --ink-800: #11141d;
+    --ink-700: #141823;
+    --rule: rgba(255,255,255,0.08);
+    --fog-100: #e6e8ee;
+    --fog-300: #a4abb8;
+    --fog-500: #6b7180;
+    --gold: #b8a060;
+    --gold-bright: #d4b870;
+    --violet: #8c7ad0;
+    --glow-gold: rgba(184,160,96,0.22);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--ink-900);
+    color: var(--fog-100);
+    font-family: "EB Garamond", Georgia, serif;
+    font-size: 19px;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  header.hero {
+    position: relative;
+    text-align: center;
+    padding: 72px 20px 56px;
+    background:
+      radial-gradient(ellipse at 50% 0%, rgba(140,122,208,0.18), transparent 60%),
+      radial-gradient(ellipse at 50% 100%, rgba(184,160,96,0.10), transparent 55%);
+    border-bottom: 1px solid var(--rule);
+  }
+  .kicker {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+  h1 {
+    font-weight: 500;
+    font-size: clamp(32px, 5vw, 56px);
+    line-height: 1.12;
+    margin: 18px auto 14px;
+    max-width: 880px;
+    color: var(--gold-bright);
+    text-shadow: 0 0 40px var(--glow-gold);
+  }
+  .subtitle {
+    font-style: italic;
+    font-size: clamp(18px, 2.4vw, 22px);
+    color: var(--fog-300);
+  }
+  .byline {
+    margin-top: 22px;
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--fog-500);
+  }
+  .meta {
+    margin-top: 10px;
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    color: var(--fog-500);
+  }
+
+  main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 22px 80px;
+  }
+
+  .lede {
+    max-width: 720px;
+    margin: 40px auto 8px;
+    text-align: center;
+    color: var(--fog-300);
+    font-size: 18px;
+  }
+  .lede .hint {
+    display: block;
+    margin-top: 8px;
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--fog-500);
+  }
+
+  .wide {
+    display: block;
+    margin: 36px 0 0;
+    border: 1px solid var(--rule);
+    border-radius: 14px;
+    overflow: hidden;
+    background: var(--ink-800);
+    cursor: zoom-in;
+  }
+  .wide img { display: block; width: 100%; height: auto; }
+
+  .grid {
+    margin-top: 28px;
+    columns: 3 300px;
+    column-gap: 18px;
+  }
+  figure.card {
+    break-inside: avoid;
+    margin: 0 0 18px;
+    background: var(--ink-800);
+    border: 1px solid var(--rule);
+    border-radius: 14px;
+    overflow: hidden;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+  figure.card:hover {
+    border-color: var(--gold);
+    box-shadow: 0 0 30px var(--glow-gold);
+  }
+  figure.card a.shot {
+    display: block;
+    cursor: zoom-in;
+  }
+  figure.card img {
+    display: block;
+    width: 100%;
+    height: auto;
+    background: #06080d;
+  }
+  figure.card figcaption {
+    padding: 14px 16px 16px;
+    border-top: 1px solid var(--rule);
+  }
+  figure.card figcaption .t {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 14.5px;
+    color: var(--gold-bright);
+    letter-spacing: 0.02em;
+  }
+  figure.card figcaption .d {
+    margin-top: 4px;
+    font-size: 15.5px;
+    font-style: italic;
+    color: var(--fog-300);
+    line-height: 1.45;
+  }
+
+  .divider {
+    margin: 48px 0 8px;
+    text-align: center;
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+
+  /* Lightbox */
+  #lb {
+    position: fixed;
+    inset: 0;
+    display: none;
+    z-index: 200;
+    background: rgba(4,6,10,0.92);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+  }
+  #lb.open { display: flex; flex-direction: column; }
+  #lb .stage {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 20px 0;
+  }
+  #lb .stage img {
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 8px;
+    box-shadow: 0 0 60px rgba(0,0,0,0.6);
+  }
+  #lb .bar {
+    flex: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    flex-wrap: wrap;
+    padding: 14px 20px 18px;
+    color: #e6e8ee;
+  }
+  #lb .bar .cap {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    color: #a4abb8;
+  }
+  #lb .bar a {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #d4b870;
+    text-decoration: none;
+    border: 1px solid rgba(212,184,112,0.4);
+    border-radius: 6px;
+    padding: 6px 12px;
+  }
+  #lb .close {
+    position: absolute;
+    top: 14px;
+    right: 18px;
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 26px;
+    line-height: 1;
+    color: #e6e8ee;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+  }
+
+  .back {
+    display: inline-block;
+    margin-top: 44px;
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--fog-300);
+    text-decoration: none;
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 4px;
+  }
+  .back:hover { color: var(--gold-bright); }
+
+  .revision {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 22px 60px;
+    font-size: 15px;
+    color: var(--fog-500);
+  }
+  .revision h2 {
+    font-weight: 500;
+    font-size: 20px;
+    color: var(--gold-bright);
+    margin-bottom: 10px;
+  }
+  .revision ul { list-style: none; }
+  .revision li { margin-bottom: 6px; }
+
+  footer {
+    text-align: center;
+    padding: 30px 20px 50px;
+    border-top: 1px solid var(--rule);
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    color: var(--fog-500);
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">Gallery</div>
+  <h1>Infographics &amp; Typographics</h1>
+  <div class="subtitle">The framework at a glance: posters, visual maps, and typographic pieces</div>
+  <div class="byline">Ashman Roonz</div>
+  <div class="meta">Created: 2026-11-14 &middot; Last updated: 2026-11-14 &middot; Version: 1.0</div>
+</header>
+
+<main>
+
+  <p class="lede">Twenty-one visual summaries of the Circumpunct Framework: what exists, what a self is, how time and attention work, what love and ethics ask of us, and how to experiment on the way you exist within.
+    <span class="hint">Click any piece to view it full size</span>
+  </p>
+
+  <a class="wide shot" href="infographics/the_circumpunct_banner.png" data-full="infographics/the_circumpunct_banner.png" data-cap="The Circumpunct: Centered Wholeness">
+    <img src="infographics/thumbs/the_circumpunct_banner.jpg" width="2062" height="763" alt="The Circumpunct: Centered Wholeness. A gold circle with a central point amid blue and violet field lines." loading="eager">
+  </a>
+
+  <div class="grid">
+
+    <figure class="card">
+      <a class="shot" href="infographics/what_exists.jpg" data-full="infographics/what_exists.jpg" data-cap="What Exists?">
+        <img src="infographics/thumbs/what_exists.jpg" width="6144" height="7680" alt="What Exists? What is reality made of? Everything is one and many: wholes, parts, and relationships, and the deepest questions they open. Curiosity and corrigibility required." loading="lazy">
+      </a>
+      <figcaption>
+        <div class="t">What Exists?</div>
+        <div class="d">What is reality made of? Everything is one and many. Curiosity opens the door; corrigibility keeps it open.</div>
+      </figcaption>
+    </figure>
+
+    <figure class="card">
+      <a class="shot" href="infographics/circumpunct_theory_of_mind.png" data-full="infographics/circumpunct_theory_of_mind.png" data-cap="The Circumpunct Theory of Mind">
+        <img src="infographics/thumbs/circumpunct_theory_of_mind.jpg" width="1024" height="1536" alt="The Circumpunct Theory of Mind: soul, mind, body, and consciousness as centered wholeness; I am whole, I am part." loading="lazy">
+      </a>
+      <figcaption>
+        <div class="t">The Circumpunct Theory of Mind</div>
+        <div class="d">An indivisible soul at the center of a mind within a body. I am whole. I am part.</div>
+      </figcaption>
+    </figure>
+
+    <figure class="card">
+      <a class="shot" href="infographics/god_and_the_soul_matrix.png" data-full="infographics/god_and_the_soul_matrix.png" data-cap="God and the Soul Matrix">
+        <img src="infographics/thumbs/god_and_the_soul_matrix.jpg" width="1226" height="1283" alt="God and the Soul Matrix: two foundational primitives, the unbounded infinity and the indivisible centers, mutually necessary." loading="lazy">
+      </a>
+      <figcaption>
+        <div class="t">God and the Soul Matrix</div>
+        <div class="d">Two foundational primitives, mutually necessary: the unbounded and the indivisible.</div>
+      </figcaption>
+    </figure>
+
+    <figure class="card">
+      <a class="shot" href="infographics/god_is_the_whole.png" data-full="infographics/god_is_the_whole.png" data-cap="God Is the Whole. We Are Fractal Wholes.">
+        <img src="infographics/thumbs/god_is_the_whole.jpg" width="1536" height="1024" alt="God is the Whole, we are fractal wholes: nested wholes within one ultimate Whole, the same pattern repeating across scales." loading="lazy">
+      </a>
+      <figcaption>
+        <div class="t">God Is the Whole. We Are Fractal Wholes.</div>
+        <div class="d">One ultimate Whole, containing wholes whose parts are also wholes, without end.</div>
+      </figcaption>
+    </figure>
+
+    <figure class="card">
+      <a class="shot" href="infographics/one_thing_infinite_centers.png" data-full="infographics/one_thing_infinite_centers.png" data-cap="One Thing, Infinite Centers">
+        <img src="infographics/thumbs/one_thing_infinite_centers.jpg" width="1055" height="1491" alt="One Thing, Infinite Centers: a condensed map of recursive wholeness, from core ontology through the four beats to ethics and prediction." loading="lazy">
+      </a>
+      <figcaption>
+        <div class="t">One Thing, Infinite Centers</div>
+        <div class="d">A condensed map of recursive wholeness, from ontology to ethics on one card.</div>
+      </figcaption>
+    </figure>
+
+    <figure class="card">
+      <a class="shot" href="infographics/circumpunct_view_of_time.png" data-full="infographics/circumpunct_view_of_time.png" data-cap="The Circumpunct View of Time">
+        <img src="infographics/thumbs/circumpunct_view_of_time.jpg" width="1055" height="1491" alt="The Circumpunct View of Time: how a center localizes Reality into lived duration, with clock time and lived time compared." loading="lazy">
+      </a>
+      <figcaption>
+        <div class="t">The Circumpunct View of Time</div>
+        <div class="d">How a center localizes Reality into lived duration. The clock measures sequence; the center lives duration.</div>
+      </figcaption>
+    </figure>
+
+    <figure class="card">
+      <a class="shot" href="infographics/dynamics_of_attention.png" data-full="infographics/dynamics_of_attention.png" data-cap="The Dynamics of Attention">
+        <img src="infographics/thumbs/dynamics_of_attention.jpg" width="941" height="1672" alt="The Dynamics of Attention: attention as where the will of the whole meets the demands of its parts, with the temporal process." loading="lazy">
+      </a>
+      <figcaption>
+        <div class="t">The Dynamics of Attention</div>
+        <div class="d">Attention is where the will of the whole meets the demands of its parts.</div>
+      </figcaption>
+    </figure>
+
+    <figure class="card">
+      <a class="shot" href="infographics/what_i_am_first_principles.png" data-full="infographics/what_i_am_first_principles.png" data-cap="What I Am: From First Principles">
+        <img src="infographics/thumbs/what_i_am_first_principles.jpg" width="1199" height="1312" alt="What I Am, from first principles: a map of being drawn from direct experience, from existence and unity through correction and meaning." loading="lazy">
+      </a>
+      <figcaption>
+        <div class="t">What I Am: From First Principles</div>
+        <div class="d">A map of my being, drawn from direct experience: twenty-five things I can say from inside.</div>
+      </figcaption>
+    </figure>
+
+    <figure class="card">
+      <a class="shot" href="infographics/i_am_centered_and_whole.png" data-full="infographics/i_am_centered_and_whole.png" data-cap="I Am Centered, and I Am Whole">
+        <img src="infographics/thumbs/i_am_centered_and_whole.jpg" width="1024" height="1536" alt="I am centered, and I am whole: a cosmic image of a meditating figure whose center is a black hole, within a field of relationships." loading="lazy">
+      </a>
+      <figcaption>
+        <div class="t">I Am Centered, and I Am Whole</div>
+        <div class="d">A cosmic image: attention gathers at one point while awareness opens to the whole system.</div>
+      </figcaption>
+    </figure>
+
+    <figure class="card">
+      <a class="shot" href="infographics/private_perspectives_shared_reality.png" data-full="infographics/private_perspectives_shared_reality.png" data-cap="Private Perspectives, Shared Reality">
+        <img src="infographics/thumbs/private_perspectives_shared_reality.jpg" width="1024" height="1536" alt="Private perspectives, shared reality: three centered circles over one landscape; one world seen from every such place." loading="lazy">
+      </a>
+      <figcaption>
+        <div class="t">Private Perspectives, Shared Reality</div>
+        <div class="d">Nobody can cross into your point of view; shared reality is the one world seen from every such place.</div>
+      </figcaption>
+    </figure>
+
+    <figure class="card">
+      <a class="shot" href="infographics/when_reality_seems_to_spin.png" data-full="infographics/when_reality_seems_to_spin.png" data-cap="When Reality Seems to Spin">
+        <img src="infographics/thumbs/when_reality_seems_to_spin.jpg" width="1024" height="1536" alt="When reality seems to spin: a blurred spinning room around a marked point of view, revealing a felt center; I call that your soul." loading="lazy">
+      </a>
+      <figcaption>
+        <div class="t">When Reality Seems to Spin</div>
+        <div class="d">The spin reveals one thing: a felt center to your perception of reality.</div>
+      </figcaption>
+    </figure>
+
+    <figure class="card">
+      <a class="shot" href="infographics/consciousness_is_your_gate.png" data-full="infographics/consciousness_is_your_gate.png" data-cap="Consciousness Is Your Gate">
+        <img src="infographics/thumbs/consciousness_is_your_gate.jpg" width="1024" height="1536" alt="Typographic piece with two glowing doorways under a starry sky: consciousness is your gate, open; curiosity is your gate, open toward something; love is two gates, open toward each other." loading="lazy">
+      </a>
+      <figcaption>
+        <div class="t">Consciousness Is Your Gate</div>
+        <div class="d">Consciousness, curiosity, and love: the same thing at different scales.</div>
+      </figcaption>
+    </figure>
+
+    <figure class="card">
+      <a class="shot" href="infographics/the_principle_of_love.png" data-full="infographics/the_principle_of_love.png" data-cap="The Principle of Love">
+        <img src="infographics/thumbs/the_principle_of_love.jpg" width="1024" height="1536" alt="The Principle of Love: love through the dimensions, from recognition to shared understanding, with key truths about love." loading="lazy">
+      </a>
+      <figcaption>
+        <div class="t">The Principle of Love</div>
+        <div class="d">The desire and action to connect, understand, and support another being, walked through the dimensions.</div>
+      </figcaption>
+    </figure>
+
+  </div>
+
+  <div class="divider">Self Science</div>
+
+  <a class="wide shot" href="infographics/self_science_banner.png" data-full="infographics/self_science_banner.png" data-cap="Self Science: Mind, Body, Soul">
+    <img src="infographics/thumbs/self_science_banner.jpg" width="2033" height="774" alt="Self Science banner: mind, body, soul. Don't just believe it. Experiment." loading="lazy">
+  </a>
+
+  <div class="grid">
+
+    <figure class="card">
+      <a class="shot" href="infographics/self_science_poster.png" data-full="infographics/self_science_poster.png" data-cap="Self Science: Configuring the Way I Exist Within">
+        <img src="infographics/thumbs/self_science_poster.jpg" width="941" height="1672" alt="Self Science poster: the structure of the self, attention, imagination and the body, changing states, self-mastery, cohesion and corrigibility, and the goal of wholeness." loading="lazy">
+      </a>
+      <figcaption>
+        <div class="t">Self Science</div>
+        <div class="d">Configuring the way I exist within: attention, imagination, feedback, and the corrigible whole.</div>
+      </figcaption>
+    </figure>
+
+    <figure class="card">
+      <a class="shot" href="infographics/qi_is_mind.png" data-full="infographics/qi_is_mind.png" data-cap="Qi Is Mind">
+        <img src="infographics/thumbs/qi_is_mind.jpg" width="1122" height="1402" alt="Qi Is Mind: mind as the inner field of the body; imagination affects the body, the body affects imagination, practice refines the relationship." loading="lazy">
+      </a>
+      <figcaption>
+        <div class="t">Qi Is Mind</div>
+        <div class="d">Mind as the inner field of the body. Change the imagination, and the body changes state.</div>
+      </figcaption>
+    </figure>
+
+    <figure class="card">
+      <a class="shot" href="infographics/self_knowledge_boundaries_resilience.png" data-full="infographics/self_knowledge_boundaries_resilience.png" data-cap="Self-Knowledge, Boundaries, and Resilience">
+        <img src="infographics/thumbs/self_knowledge_boundaries_resilience.jpg" width="1230" height="1278" alt="Self-Knowledge, Boundaries, and Resilience: a lifelong cycle of discovering values, establishing boundaries, encountering, and refining; boundaries as interfaces, not walls." loading="lazy">
+      </a>
+      <figcaption>
+        <div class="t">Self-Knowledge, Boundaries, and Resilience</div>
+        <div class="d">Boundaries are not walls against the world; they are the interface through which I engage with it.</div>
+      </figcaption>
+    </figure>
+
+  </div>
+
+  <div class="divider">Ethics</div>
+
+  <div class="grid">
+
+    <figure class="card">
+      <a class="shot" href="infographics/true_faithful_good_right.png" data-full="infographics/true_faithful_good_right.png" data-cap="True. Faithful. Good. Right.">
+        <img src="infographics/thumbs/true_faithful_good_right.jpg" width="1024" height="1536" alt="True, Faithful, Good, Right: four dimensions of ethical judgment from point to field, with bad, evil, and integrity defined." loading="lazy">
+      </a>
+      <figcaption>
+        <div class="t">True. Faithful. Good. Right.</div>
+        <div class="d">Four dimensions of ethical judgment, and integrity as all four holding together.</div>
+      </figcaption>
+    </figure>
+
+    <figure class="card">
+      <a class="shot" href="infographics/circumpunct_ethics_truthfulness.png" data-full="infographics/circumpunct_ethics_truthfulness.png" data-cap="Circumpunct Ethics">
+        <img src="infographics/thumbs/circumpunct_ethics_truthfulness.jpg" width="1024" height="1536" alt="Circumpunct Ethics: truthfulness across the whole of life, from center to whole to recursion, with where lies fit." loading="lazy">
+      </a>
+      <figcaption>
+        <div class="t">Circumpunct Ethics</div>
+        <div class="d">Truthfulness across the whole of life. Truthfulness keeps correction possible.</div>
+      </figcaption>
+    </figure>
+
+    <figure class="card">
+      <a class="shot" href="infographics/truth_resolution_protocol.png" data-full="infographics/truth_resolution_protocol.png" data-cap="Truth Resolution Protocol">
+        <img src="infographics/thumbs/truth_resolution_protocol.jpg" width="1024" height="1536" alt="Truth Resolution Protocol: corrigibility, speak truthfully, choose the resolution, keep honest boundaries, with the lie-or-die emergency exception." loading="lazy">
+      </a>
+      <figcaption>
+        <div class="t">Truth Resolution Protocol</div>
+        <div class="d">Speak the appropriate resolution of truth, and stay open to correction.</div>
+      </figcaption>
+    </figure>
+
+  </div>
+
+  <a class="back" href="index.html">&larr; Back to fractalreality.ca</a>
+
+</main>
+
+<div id="lb" role="dialog" aria-modal="true" aria-label="Image viewer">
+  <button class="close" aria-label="Close">&times;</button>
+  <div class="stage"><img src="" alt=""></div>
+  <div class="bar">
+    <span class="cap"></span>
+    <a href="" target="_blank" rel="noopener">Open full size</a>
+  </div>
+</div>
+
+<div class="revision">
+  <h2>Revision history</h2>
+  <ul>
+    <li>2026-11-14 v1.0: initial gallery, 21 pieces. Grid thumbnails generated for fast loading; full images open on click. The What Exists? poster re-encoded from an oversized PNG to high-quality JPEG for the web.</li>
+  </ul>
+</div>
+
+<footer>
+  The Circumpunct Framework &middot; Parts are fractals of their wholes
+</footer>
+
+<script>
+(function () {
+  var lb = document.getElementById('lb');
+  var img = lb.querySelector('.stage img');
+  var cap = lb.querySelector('.cap');
+  var link = lb.querySelector('.bar a');
+  var close = lb.querySelector('.close');
+
+  function open(full, caption) {
+    img.src = full;
+    img.alt = caption;
+    cap.textContent = caption;
+    link.href = full;
+    lb.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function shut() {
+    lb.classList.remove('open');
+    img.src = '';
+    document.body.style.overflow = '';
+  }
+
+  Array.prototype.forEach.call(document.querySelectorAll('a.shot'), function (a) {
+    a.addEventListener('click', function (e) {
+      e.preventDefault();
+      open(a.getAttribute('data-full'), a.getAttribute('data-cap') || '');
+    });
+  });
+
+  close.addEventListener('click', shut);
+  lb.addEventListener('click', function (e) {
+    if (e.target === lb || e.target.classList.contains('stage')) shut();
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && lb.classList.contains('open')) shut();
+  });
+})();
+</script>
+
+</body>
+</html>

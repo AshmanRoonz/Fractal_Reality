@@ -1,0 +1,20 @@
+# Copy to .dev.vars for local development (never commit .dev.vars).
+# With DEV_LOGIN=1 a "Continue as test user" button appears on /login,
+# so you can try the forum locally without any OAuth app.
+
+SESSION_SECRET=dev-only-secret-change-me
+DEV_LOGIN=1
+
+# Real providers work locally too once you register http://127.0.0.1:8787
+# callback URLs with them; see README.md.
+# GOOGLE_CLIENT_ID=
+# GOOGLE_CLIENT_SECRET=
+# DISCORD_CLIENT_ID=
+# DISCORD_CLIENT_SECRET=
+# FACEBOOK_CLIENT_ID=
+# FACEBOOK_CLIENT_SECRET=
+# APPLE_CLIENT_ID=
+# APPLE_TEAM_ID=
+# APPLE_KEY_ID=
+# APPLE_PRIVATE_KEY=
+# ADMIN_EMAILS=
