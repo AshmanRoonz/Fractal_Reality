@@ -1,0 +1,913 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html>
+<!--
+  ashmanroonz.ca Blogger theme
+  Created: 2026-11-15
+  Last updated: 2026-11-15
+  Version: 2.0
+  Revision history:
+  - 2026-11-15 v2.0: new theme. Removed the circumpunct hero, zone panels, particle canvas and
+    slide-out archive. Added links to fractalreality.ca and a searchable library of every post and page.
+-->
+<html b:css='false' b:defaultwidgetversion='2' b:layoutsVersion='3' b:responsive='true' b:templateUrl='classic.xml' b:templateVersion='1.0.0' expr:dir='data:blog.languageDirection' expr:lang='data:blog.locale' xmlns='http://www.w3.org/1999/xhtml' xmlns:b='http://www.google.com/2005/gml/b' xmlns:data='http://www.google.com/2005/gml/data' xmlns:expr='http://www.google.com/2005/gml/expr'>
+<head>
+    <meta content='width=device-width, initial-scale=1.0' name='viewport'/>
+    <meta content='#0a0d14' name='theme-color'/>
+    <title><data:view.title.escaped/></title>
+    <b:include data='blog' name='all-head-content'/>
+
+    <link href='https://fonts.googleapis.com' rel='preconnect'/>
+    <link href='https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600&amp;family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&amp;display=swap' rel='stylesheet'/>
+
+    <b:skin version='1.3.3'><![CDATA[
+/* ===================================
+   ashmanroonz.ca theme v2.0
+   =================================== */
+
+:root {
+    --ink: #0a0d14;
+    --panel: #11141d;
+    --panel-2: #141823;
+    --rule: rgba(255, 255, 255, 0.07);
+    --rule-strong: rgba(255, 255, 255, 0.14);
+    --text: #e6e8ee;
+    --dim: #a4abb8;
+    --faint: #6b7180;
+    --gold: #b8a060;
+    --gold-bright: #d4b870;
+    --gold-soft: rgba(184, 160, 96, 0.14);
+    --link: #79c0ff;
+    --serif: 'EB Garamond', Georgia, serif;
+    --sans: 'Space Grotesk', system-ui, -apple-system, sans-serif;
+    --wrap: 1120px;
+    --read: 720px;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+body {
+    margin: 0;
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--text);
+    background-color: var(--ink);
+    background-image:
+        radial-gradient(circle at 18% 12%, rgba(88, 166, 255, 0.05), transparent 45%),
+        radial-gradient(circle at 82% 78%, rgba(184, 160, 96, 0.05), transparent 50%);
+    background-attachment: fixed;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+}
+
+::selection { background: rgba(184, 160, 96, 0.35); color: #fff; }
+
+a { color: var(--link); text-decoration: none; transition: color 0.2s ease; }
+a:hover { color: var(--gold-bright); }
+img { max-width: 100%; height: auto; }
+h1, h2, h3, h4 { font-family: var(--serif); font-weight: 500; line-height: 1.2; margin: 0; }
+p { margin: 0 0 1em; }
+ul { margin: 0; padding: 0; list-style: none; }
+
+.wrap { max-width: var(--wrap); margin: 0 auto; padding: 0 1.25rem; }
+
+.kicker {
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--faint);
+}
+
+.skip-navigation {
+    position: absolute;
+    left: -9999px;
+    top: 0;
+    padding: 0.75rem 1rem;
+    background: var(--gold);
+    color: var(--ink);
+    z-index: 200;
+}
+.skip-navigation:focus { left: 0; }
+
+/* ---------- Top bar ---------- */
+.site-nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(10, 13, 20, 0.82);
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--rule);
+}
+.site-nav .wrap {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    min-height: 60px;
+}
+.brand {
+    font-family: var(--serif);
+    font-size: 1.3rem;
+    letter-spacing: 0.01em;
+    color: var(--text);
+    white-space: nowrap;
+}
+.brand:hover { color: var(--text); }
+.brand span { color: var(--gold); }
+
+.nav-links { display: flex; align-items: center; gap: 0.25rem; }
+.nav-links a {
+    padding: 0.5rem 0.7rem;
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--dim);
+}
+.nav-links a:hover { color: var(--text); }
+.nav-links a.nav-cta {
+    margin-left: 0.5rem;
+    padding: 0.5rem 0.9rem;
+    color: var(--gold-bright);
+    background: var(--gold-soft);
+    border: 1px solid rgba(184, 160, 96, 0.4);
+    border-radius: 6px;
+}
+.nav-links a.nav-cta:hover { border-color: var(--gold); background: rgba(184, 160, 96, 0.22); }
+
+.menu-toggle {
+    display: none;
+    width: 40px;
+    height: 40px;
+    background: none;
+    border: 1px solid var(--rule-strong);
+    border-radius: 6px;
+    color: var(--text);
+    font-size: 1.1rem;
+    cursor: pointer;
+}
+
+/* ---------- Intro (homepage) ---------- */
+.intro { padding: 4.5rem 0 2.5rem; }
+.intro h1 {
+    font-size: clamp(2.4rem, 6vw, 3.8rem);
+    margin: 0.75rem 0 1rem;
+    letter-spacing: -0.01em;
+}
+.intro h1 em { font-style: italic; color: var(--gold-bright); }
+.intro p.lede {
+    max-width: 620px;
+    font-size: 1.05rem;
+    color: var(--dim);
+    margin-bottom: 1.75rem;
+}
+.intro-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.7rem 1.25rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    border-radius: 6px;
+    border: 1px solid var(--rule-strong);
+    color: var(--text);
+    transition: all 0.2s ease;
+}
+.btn:hover { color: var(--text); border-color: rgba(255, 255, 255, 0.4); background: rgba(255, 255, 255, 0.05); }
+.btn-primary { background: var(--gold); border-color: var(--gold); color: var(--ink); }
+.btn-primary:hover { background: var(--gold-bright); border-color: var(--gold-bright); color: var(--ink); }
+
+/* ---------- Section headings ---------- */
+.section { padding: 2.5rem 0; }
+.section-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-bottom: 0.9rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--rule);
+}
+.section-head h2 { font-size: 1.9rem; }
+.section-head .kicker a { color: var(--gold); }
+
+/* ---------- Fractal Reality link band ---------- */
+.fr-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    overflow: hidden;
+}
+.fr-grid a {
+    display: block;
+    padding: 1.25rem 1.25rem 1.35rem;
+    background: var(--panel);
+    color: var(--text);
+    transition: background 0.2s ease;
+}
+.fr-grid a:hover { background: var(--panel-2); color: var(--text); }
+.fr-grid strong {
+    display: block;
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: 1.3rem;
+    margin-bottom: 0.2rem;
+}
+.fr-grid a:hover strong { color: var(--gold-bright); }
+.fr-grid span { font-size: 0.85rem; color: var(--dim); }
+
+/* ---------- Post tiles ---------- */
+.blog-posts {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+}
+.post-tile {
+    background: var(--panel);
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    overflow: hidden;
+    transition: border-color 0.2s ease, transform 0.2s ease;
+}
+.post-tile:hover { border-color: rgba(184, 160, 96, 0.5); transform: translateY(-2px); }
+.post-tile a { display: block; color: inherit; }
+.post-thumb {
+    position: relative;
+    aspect-ratio: 3 / 2;
+    background: var(--panel-2);
+    overflow: hidden;
+}
+.post-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.post-thumb-empty {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--serif);
+    font-size: 3rem;
+    color: rgba(184, 160, 96, 0.35);
+    background: linear-gradient(135deg, #141823 0%, #0f1219 100%);
+}
+.post-tile-info { padding: 1rem 1.1rem 1.2rem; }
+.post-tile-date { font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--faint); margin: 0 0 0.4rem; }
+.post-tile-title { font-size: 1.3rem; color: var(--text); }
+.post-tile:hover .post-tile-title { color: var(--gold-bright); }
+
+/* ---------- Single post / page ---------- */
+.article { max-width: var(--read); margin: 0 auto; padding: 3rem 0 1rem; }
+.article-head { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--rule); }
+.article-title { font-size: clamp(2rem, 5vw, 3rem); margin: 0.6rem 0 0; letter-spacing: -0.01em; }
+.article-cover { margin: 0 0 2rem; border-radius: 10px; overflow: hidden; border: 1px solid var(--rule); }
+.article-cover img { display: block; width: 100%; }
+
+.post-body {
+    font-family: var(--serif);
+    font-size: 1.25rem;
+    line-height: 1.7;
+    color: var(--text);
+    overflow-wrap: break-word;
+}
+.post-body p { margin: 0 0 1.1em; }
+.post-body h1, .post-body h2, .post-body h3, .post-body h4 { margin: 1.8em 0 0.6em; color: var(--text); }
+.post-body h2 { font-size: 1.8rem; }
+.post-body h3 { font-size: 1.45rem; }
+.post-body ul, .post-body ol { margin: 0 0 1.1em 1.4em; padding: 0; }
+.post-body ul { list-style: disc; }
+.post-body li { margin-bottom: 0.4em; }
+.post-body img { border-radius: 8px; margin: 1rem 0; }
+.post-body blockquote {
+    margin: 1.5em 0;
+    padding: 0.2em 0 0.2em 1.2em;
+    border-left: 2px solid var(--gold);
+    color: var(--dim);
+    font-style: italic;
+}
+.post-body pre, .post-body code { font-family: ui-monospace, Consolas, monospace; font-size: 0.8em; }
+.post-body pre { padding: 1rem; background: var(--panel); border: 1px solid var(--rule); border-radius: 8px; overflow-x: auto; }
+.post-body table { display: block; max-width: 100%; overflow-x: auto; border-collapse: collapse; }
+.post-body iframe { max-width: 100%; }
+.post-body hr { border: 0; border-top: 1px solid var(--rule); margin: 2em 0; }
+
+.article-foot { margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--rule); }
+.chips { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.chips a {
+    padding: 0.25rem 0.7rem;
+    font-size: 0.78rem;
+    color: var(--dim);
+    border: 1px solid var(--rule-strong);
+    border-radius: 999px;
+}
+.chips a:hover { color: var(--gold-bright); border-color: var(--gold); }
+
+/* ---------- Pager ---------- */
+.blog-pager {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+.blog-pager a { font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--dim); padding: 0.6rem 0; }
+.blog-pager a:hover { color: var(--gold-bright); }
+.blog-pager .blog-pager-older-link { margin-left: auto; }
+
+/* ---------- Comments ---------- */
+#comments { max-width: var(--read); margin: 2.5rem auto 0; padding-top: 1.5rem; border-top: 1px solid var(--rule); }
+#comments h3, #comments h4 { font-size: 1.4rem; margin-bottom: 1rem; }
+#comments ol, #comments ul { list-style: none; margin: 0; padding: 0; }
+#comments .comment { padding: 1rem 0; border-bottom: 1px solid var(--rule); }
+#comments .comment-replies { margin-left: 1.5rem; }
+#comments .avatar-image-container { display: none; }
+#comments .user, #comments .user a, #comments .comment-author { color: var(--gold-bright); font-weight: 500; font-style: normal; }
+#comments .datetime, #comments .datetime a, #comments .comment-timestamp a { font-size: 0.78rem; color: var(--faint); margin-left: 0.5rem; }
+#comments .comment-content, #comments .comment-body { color: var(--dim); margin: 0.4rem 0; }
+#comments .comment-actions a, #comments .continue a, #comments .thread-count a { font-size: 0.8rem; margin-right: 0.75rem; }
+#comments .thread-toggle { display: none; }
+#comments iframe { background: #fff; border-radius: 8px; margin-top: 1rem; }
+
+/* ---------- Library ---------- */
+.library { padding: 3rem 0 2rem; border-top: 1px solid var(--rule); margin-top: 3rem; }
+.lib-controls {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: 0.6rem;
+    margin-bottom: 0.75rem;
+}
+.lib-controls input, .lib-controls select {
+    width: 100%;
+    min-height: 44px;
+    padding: 0 0.9rem;
+    font: inherit;
+    font-size: 0.95rem;
+    color: var(--text);
+    background: var(--panel);
+    border: 1px solid var(--rule-strong);
+    border-radius: 6px;
+}
+.lib-controls input::placeholder { color: var(--faint); }
+.lib-controls input:focus, .lib-controls select:focus { outline: none; border-color: var(--gold); }
+.lib-controls select { max-width: 220px; }
+.lib-count { font-size: 0.8rem; color: var(--faint); margin: 0 0 1.25rem; }
+.lib-status { color: var(--dim); padding: 1rem 0; }
+.homepage .library { border-top: 0; margin-top: 0; padding-top: 1rem; }
+.homepage .blog-pager { display: none; }
+
+.topics { margin-top: 1rem; }
+.topics summary { cursor: pointer; color: var(--dim); font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; padding: 0.6rem 0; }
+.topics summary:hover { color: var(--text); }
+.topics .chips { padding: 0.75rem 0 0; }
+.topics .chips span { color: var(--faint); margin-left: 0.3rem; }
+
+/* ---------- Footer ---------- */
+.site-footer { margin-top: 3rem; padding: 2.5rem 0 3rem; border-top: 1px solid var(--rule); background: rgba(0, 0, 0, 0.25); }
+.footer-grid { display: grid; grid-template-columns: 1.2fr 2fr; gap: 2.5rem; }
+.site-footer p { color: var(--dim); font-size: 0.9rem; }
+.footer-links ul { columns: 2; column-gap: 2rem; }
+.footer-links li { break-inside: avoid; margin-bottom: 0.45rem; }
+.footer-links a { color: var(--dim); font-size: 0.88rem; }
+.footer-links a:hover { color: var(--gold-bright); }
+.footer-links h3 { font-family: var(--sans); font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--faint); margin-bottom: 0.9rem; }
+.colophon { margin-top: 2rem; font-size: 0.78rem; color: var(--faint); }
+
+/* ---------- Blogger bits ---------- */
+.widget { margin: 0; }
+.hidden { display: none !important; }
+.post-share-buttons, .blog-feeds, .post-feeds { display: none; }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 900px) {
+    .blog-posts { grid-template-columns: repeat(2, 1fr); }
+    .fr-grid { grid-template-columns: repeat(2, 1fr); }
+    .menu-toggle { display: inline-flex; align-items: center; justify-content: center; }
+    .nav-links {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+        padding: 0.5rem 1.25rem 1rem;
+        background: rgba(10, 13, 20, 0.97);
+        border-bottom: 1px solid var(--rule);
+    }
+    .nav-links.open { display: flex; }
+    .nav-links a { padding: 0.8rem 0; border-bottom: 1px solid var(--rule); }
+    .nav-links a.nav-cta { margin: 0.9rem 0 0; text-align: center; }
+    .footer-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+}
+
+@media (max-width: 600px) {
+    .wrap { padding: 0 1rem; }
+    .intro { padding: 3rem 0 1.5rem; }
+    .blog-posts { grid-template-columns: 1fr; }
+    .fr-grid { grid-template-columns: 1fr; }
+    .lib-controls { grid-template-columns: 1fr 1fr; }
+    .lib-controls input { grid-column: 1 / -1; }
+    .lib-controls select { max-width: none; }
+    .post-body { font-size: 1.15rem; }
+    .footer-links ul { columns: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after { transition-duration: 0.01ms !important; }
+}
+    ]]></b:skin>
+
+    <b:include data='blog' name='google-analytics'/>
+</head>
+<body>
+    <b:class cond='data:view.isHomepage' name='homepage'/>
+    <b:class cond='data:view.isPost' name='item-view'/>
+    <b:class cond='data:view.isPage' name='page-view'/>
+
+    <a class='skip-navigation' href='#main'>Skip to main content</a>
+
+    <!-- Top bar -->
+    <nav class='site-nav'>
+        <div class='wrap'>
+            <a class='brand' expr:href='data:blog.homepageUrl'>Ashman <span>Roonz</span></a>
+            <button aria-controls='nav-links' aria-expanded='false' aria-label='Menu' class='menu-toggle' id='menu-toggle'>&#9776;</button>
+            <div class='nav-links' id='nav-links'>
+                <a expr:href='data:blog.homepageUrl'>Articles</a>
+                <a href='#library'>Library</a>
+                <a href='https://fractalreality.ca/#framework'>Framework</a>
+                <a href='https://fractalreality.ca/learn/'>Learn</a>
+                <a href='https://fractalreality.ca/ethics.html'>Ethics</a>
+                <a href='https://forum.fractalreality.ca'>Forum</a>
+                <a class='nav-cta' href='https://fractalreality.ca'>Fractal Reality &#8599;</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Homepage intro -->
+    <b:if cond='data:view.isHomepage'>
+    <header class='intro'>
+        <div class='wrap'>
+            <span class='kicker'>The blog of Ashman Roonz</span>
+            <h1>Writing on <em>wholeness</em>,<br/>mind and reality.</h1>
+            <p class='lede'>Essays and notes from the years the Circumpunct Framework took shape. The current work, the games and the courses live at fractalreality.ca.</p>
+            <div class='intro-actions'>
+                <a class='btn btn-primary' href='https://fractalreality.ca'>Visit Fractal Reality &#8594;</a>
+                <a class='btn' href='#library'>Browse the articles</a>
+            </div>
+        </div>
+    </header>
+
+    <section class='section'>
+        <div class='wrap'>
+            <div class='section-head'>
+                <h2>At fractalreality.ca</h2>
+                <span class='kicker'><a href='https://fractalreality.ca'>Open the site &#8599;</a></span>
+            </div>
+            <div class='fr-grid'>
+                <a href='https://fractalreality.ca/#framework'><strong>The Circumpunct Framework</strong><span>The theory in its current form.</span></a>
+                <a href='https://fractalreality.ca/existence'><strong>Existence</strong><span>The narrated live-fractal ebook.</span></a>
+                <a href='https://fractalreality.ca/learn/'><strong>Learn</strong><span>Hands-on courses.</span></a>
+                <a href='https://fractalreality.ca/ethics.html'><strong>Ethics</strong><span>Good, Right, Faithful, True, Agreement.</span></a>
+                <a href='https://fractalreality.ca/fractalgaming.html'><strong>Fractal Gaming</strong><span>Last Ship Sailing and the labs.</span></a>
+                <a href='https://forum.fractalreality.ca'><strong>Forum</strong><span>Join the conversation.</span></a>
+            </div>
+        </div>
+    </section>
+    </b:if>
+
+    <!-- Main content -->
+    <main id='main' role='main'>
+        <div class='wrap'>
+            <b:if cond='data:view.isMultipleItems and not data:view.isHomepage'>
+            <div class='section-head' style='margin-top:2.5rem'>
+                <b:if cond='data:view.isLabelSearch'>
+                    <h2>Topic: <data:view.search.label/></h2>
+                <b:elseif cond='data:view.isSearch'/>
+                    <h2>Search: <data:view.search.query/></h2>
+                <b:elseif cond='data:view.isArchive'/>
+                    <h2>Archive</h2>
+                <b:else/>
+                    <h2>Articles</h2>
+                </b:if>
+                <span class='kicker'><a href='#library'>Full library &#8595;</a></span>
+            </div>
+            </b:if>
+
+            <b:section class='main' id='main-section' name='Main' showaddelement='false'>
+              <b:widget id='Blog1' locked='true' title='Blog Posts' type='Blog' version='2' visible='true'>
+                <b:widget-settings>
+                  <b:widget-setting name='showDateHeader'>false</b:widget-setting>
+                  <b:widget-setting name='showShareButtons'>false</b:widget-setting>
+                  <b:widget-setting name='showCommentLink'>false</b:widget-setting>
+                  <b:widget-setting name='showAuthor'>false</b:widget-setting>
+                  <b:widget-setting name='showAuthorProfile'>false</b:widget-setting>
+                  <b:widget-setting name='showLabels'>false</b:widget-setting>
+                  <b:widget-setting name='showLocation'>false</b:widget-setting>
+                  <b:widget-setting name='showTimestamp'>true</b:widget-setting>
+                  <b:widget-setting name='showBacklinks'>false</b:widget-setting>
+                  <b:widget-setting name='showInlineAds'>false</b:widget-setting>
+                  <b:widget-setting name='showReactions'>false</b:widget-setting>
+                </b:widget-settings>
+                <b:includable id='main'>
+                    <b:if cond='data:view.isSingleItem'>
+                        <b:loop values='data:posts' var='post'>
+                            <b:include data='post' name='postFull'/>
+                        </b:loop>
+                    <b:elseif cond='data:view.isHomepage'/>
+                        <!-- The homepage shows every article as cards in the library below; this is the no-JavaScript fallback. -->
+                        <noscript>
+                            <div class='blog-posts'>
+                                <b:loop values='data:posts' var='post'>
+                                    <b:include data='post' name='postTile'/>
+                                </b:loop>
+                            </div>
+                        </noscript>
+                    <b:else/>
+                        <div class='blog-posts'>
+                            <b:loop values='data:posts' var='post'>
+                                <b:include data='post' name='postTile'/>
+                            </b:loop>
+                        </div>
+                    </b:if>
+                    <b:include name='postPagination'/>
+                </b:includable>
+                <b:includable id='postTile' var='post'>
+                    <article class='post-tile'>
+                        <a expr:href='data:post.url'>
+                            <div class='post-thumb'>
+                                <b:if cond='data:post.featuredImage'>
+                                    <b:if cond='data:post.featuredImage.isResizable'>
+                                        <img expr:alt='data:post.title' expr:src='resizeImage(data:post.featuredImage, 720, "3:2")' loading='lazy'/>
+                                    <b:else/>
+                                        <img expr:alt='data:post.title' expr:src='data:post.featuredImage' loading='lazy'/>
+                                    </b:if>
+                                <b:else/>
+                                    <div class='post-thumb-empty'>&#8857;</div>
+                                </b:if>
+                            </div>
+                            <div class='post-tile-info'>
+                                <p class='post-tile-date'><data:post.date/></p>
+                                <h3 class='post-tile-title'><data:post.title/></h3>
+                            </div>
+                        </a>
+                    </article>
+                </b:includable>
+                <b:includable id='postFull' var='post'>
+                    <article class='article'>
+                        <header class='article-head'>
+                            <b:if cond='data:view.isPost'>
+                                <span class='kicker'><data:post.date/></span>
+                            </b:if>
+                            <h1 class='article-title'><data:post.title/></h1>
+                        </header>
+                        <div class='post-body' expr:id='&quot;post-body-&quot; + data:post.id'>
+                            <data:post.body/>
+                        </div>
+                        <b:if cond='data:post.labels'>
+                            <footer class='article-foot'>
+                                <div class='chips'>
+                                    <b:loop values='data:post.labels' var='label'>
+                                        <a expr:href='data:label.url' rel='tag'><data:label.name/></a>
+                                    </b:loop>
+                                </div>
+                            </footer>
+                        </b:if>
+                    </article>
+                    <b:include cond='data:post.allowComments' data='post' name='commentPicker'/>
+                </b:includable>
+                <b:includable id='postPagination'>
+                    <div class='blog-pager'>
+                        <b:if cond='data:newerPageUrl'>
+                            <a class='blog-pager-newer-link' expr:href='data:newerPageUrl'>&#8592; Newer</a>
+                        </b:if>
+                        <b:if cond='data:olderPageUrl'>
+                            <a class='blog-pager-older-link' expr:href='data:olderPageUrl'>Older &#8594;</a>
+                        </b:if>
+                    </div>
+                </b:includable>
+              </b:widget>
+            </b:section>
+        </div>
+    </main>
+
+    <!-- Library: every post and page, searchable -->
+    <section class='library' id='library'>
+        <div class='wrap'>
+            <b:section id='library-section' name='Library' showaddelement='false'>
+              <b:widget id='HTML1' locked='false' title='Library' type='HTML' version='2' visible='true'>
+                <b:widget-settings>
+                  <b:widget-setting name='content'/>
+                </b:widget-settings>
+                <b:includable id='main'>
+                    <div class='section-head'>
+                        <b:if cond='data:view.isHomepage'>
+                            <h2>All articles</h2>
+                        <b:else/>
+                            <h2>Library</h2>
+                        </b:if>
+                        <span class='kicker'>Every article and page</span>
+                    </div>
+                    <div class='lib-controls'>
+                        <input aria-label='Search the library' autocomplete='off' id='lib-search' placeholder='Search titles and topics (press /)' type='search'/>
+                        <select aria-label='Show' id='lib-kind'>
+                            <option value='all'>Everything</option>
+                            <option value='posts'>Articles</option>
+                            <option value='pages'>Pages</option>
+                        </select>
+                        <select aria-label='Topic' id='lib-label'>
+                            <option value=''>All topics</option>
+                        </select>
+                    </div>
+                    <p class='lib-count' id='lib-count'/>
+                    <div id='lib-results'>
+                        <p class='lib-status'>Loading the library...</p>
+                    </div>
+                    <noscript><p class='lib-status'>The library needs JavaScript. You can still <a href='/search?max-results=50'>page through the articles</a>.</p></noscript>
+                </b:includable>
+              </b:widget>
+              <b:widget id='Label1' locked='false' title='Topics' type='Label' version='2' visible='true'>
+                <b:widget-settings>
+                  <b:widget-setting name='sorting'>ALPHA</b:widget-setting>
+                  <b:widget-setting name='display'>LIST</b:widget-setting>
+                  <b:widget-setting name='selectedLabelsList'/>
+                  <b:widget-setting name='showType'>ALL</b:widget-setting>
+                  <b:widget-setting name='showFreqNumbers'>true</b:widget-setting>
+                </b:widget-settings>
+                <b:includable id='main'>
+                    <details class='topics'>
+                        <summary>Browse by topic</summary>
+                        <div class='chips'>
+                            <b:loop values='data:labels' var='label'>
+                                <a expr:href='data:label.url'><data:label.name/><span><data:label.count/></span></a>
+                            </b:loop>
+                        </div>
+                    </details>
+                </b:includable>
+              </b:widget>
+            </b:section>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class='site-footer'>
+        <div class='wrap'>
+            <div class='footer-grid'>
+                <div>
+                    <a class='brand' expr:href='data:blog.homepageUrl'>Ashman <span>Roonz</span></a>
+                    <p style='margin-top:0.75rem'>The current work lives at <a href='https://fractalreality.ca'>fractalreality.ca</a>.</p>
+                    <p><a href='mailto:email@ashmanroonz.ca'>Contact</a></p>
+                </div>
+                <div class='footer-links'>
+                    <b:section id='footer-section' name='Footer links' showaddelement='true'>
+                      <b:widget id='LinkList1' locked='false' title='Elsewhere' type='LinkList' version='2' visible='true'>
+                        <b:widget-settings>
+                          <b:widget-setting name='sorting'>NONE</b:widget-setting>
+                          <b:widget-setting name='text-0'>Fractal Reality</b:widget-setting>
+                          <b:widget-setting name='link-0'>https://fractalreality.ca</b:widget-setting>
+                          <b:widget-setting name='text-1'>Forum</b:widget-setting>
+                          <b:widget-setting name='link-1'>https://forum.fractalreality.ca</b:widget-setting>
+                          <b:widget-setting name='text-2'>About Me and this Website</b:widget-setting>
+                          <b:widget-setting name='link-2'>https://www.ashmanroonz.ca/p/about-me.html</b:widget-setting>
+                          <b:widget-setting name='text-3'>My Published Books</b:widget-setting>
+                          <b:widget-setting name='link-3'>https://www.ashmanroonz.ca/p/7-truths-book.html</b:widget-setting>
+                          <b:widget-setting name='text-4'>Free book! Self Science</b:widget-setting>
+                          <b:widget-setting name='link-4'>https://www.ashmanroonz.ca/2025/05/mind-consciousness-and-soul-visual.html</b:widget-setting>
+                          <b:widget-setting name='text-5'>Self Science Website</b:widget-setting>
+                          <b:widget-setting name='link-5'>https://www.selfscience.ca</b:widget-setting>
+                          <b:widget-setting name='text-6'>My YouTube Page</b:widget-setting>
+                          <b:widget-setting name='link-6'>https://www.youtube.com/@ashmanroonz</b:widget-setting>
+                          <b:widget-setting name='text-7'>Reddit: r/NonUnity</b:widget-setting>
+                          <b:widget-setting name='link-7'>https://www.reddit.com/r/NonUnity/</b:widget-setting>
+                          <b:widget-setting name='text-8'>Reddit: Source and Souls</b:widget-setting>
+                          <b:widget-setting name='link-8'>https://www.reddit.com/r/SourceAndSouls/</b:widget-setting>
+                          <b:widget-setting name='text-9'>Facebook: A Bridge Between Science and Spirituality</b:widget-setting>
+                          <b:widget-setting name='link-9'>https://www.facebook.com/groups/1569339780405159</b:widget-setting>
+                          <b:widget-setting name='text-10'>Facebook: Participatory Democracy</b:widget-setting>
+                          <b:widget-setting name='link-10'>https://www.facebook.com/groups/1013359073994803</b:widget-setting>
+                          <b:widget-setting name='text-11'>Old Blog</b:widget-setting>
+                          <b:widget-setting name='link-11'>https://ashmanroonzblog.wordpress.com/</b:widget-setting>
+                        </b:widget-settings>
+                        <b:includable id='main'>
+                            <h3><data:title/></h3>
+                            <ul>
+                                <b:loop values='data:links' var='link'>
+                                    <li><a expr:href='data:link.target'><data:link.name/></a></li>
+                                </b:loop>
+                            </ul>
+                        </b:includable>
+                      </b:widget>
+                    </b:section>
+                </div>
+            </div>
+            <p class='colophon'>&#169; <data:blog.title/></p>
+        </div>
+    </footer>
+
+    <script type='text/javascript'>
+    //<![CDATA[
+    (function () {
+        'use strict';
+
+        // ----- Mobile menu -----
+        var toggle = document.getElementById('menu-toggle');
+        var links = document.getElementById('nav-links');
+        if (toggle && links) {
+            toggle.addEventListener('click', function () {
+                var open = links.classList.toggle('open');
+                toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+            });
+            links.addEventListener('click', function (e) {
+                if (e.target.tagName === 'A') links.classList.remove('open');
+            });
+        }
+
+        // ----- Library -----
+        var results = document.getElementById('lib-results');
+        if (!results) return;
+
+        var searchBox = document.getElementById('lib-search');
+        var kindSel = document.getElementById('lib-kind');
+        var labelSel = document.getElementById('lib-label');
+        var countEl = document.getElementById('lib-count');
+
+        var PAGE = 150;            // Blogger returns at most 150 entries per request
+        var items = [];
+        var pending = 2;           // posts feed + pages feed
+        var failed = false;
+        var MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+        function jsonp(url, onData, onFail) {
+            var name = '__lib' + Math.random().toString(36).slice(2);
+            var s = document.createElement('script');
+            function cleanup() {
+                try { delete window[name]; } catch (e) { window[name] = undefined; }
+                if (s.parentNode) s.parentNode.removeChild(s);
+            }
+            window[name] = function (data) { cleanup(); onData(data); };
+            s.onerror = function () { cleanup(); onFail(); };
+            s.src = url + '&callback=' + name;
+            document.head.appendChild(s);
+        }
+
+        function load(kind, start) {
+            var url = '/feeds/' + kind + '/summary?alt=json-in-script&max-results=' + PAGE + '&start-index=' + start;
+            jsonp(url, function (data) {
+                var entries = (data && data.feed && data.feed.entry) || [];
+                entries.forEach(function (e) {
+                    var href = '';
+                    (e.link || []).forEach(function (l) { if (l.rel === 'alternate') href = l.href; });
+                    var title = (e.title && e.title.$t) || '';
+                    if (!href || !title) return;
+                    var labels = (e.category || []).map(function (c) { return c.term; });
+                    var when = e.published ? e.published.$t : '';
+                    items.push({
+                        kind: kind,
+                        thumb: bigThumb(e.media$thumbnail && e.media$thumbnail.url),
+                        title: title,
+                        href: href,
+                        year: when.slice(0, 4),
+                        date: when.slice(0, 10),
+                        labels: labels,
+                        hay: (title + ' ' + labels.join(' ')).toLowerCase()
+                    });
+                });
+                if (entries.length === PAGE) load(kind, start + PAGE);
+                else finish();
+            }, function () { failed = true; finish(); });
+        }
+
+        function finish() {
+            pending -= 1;
+            if (pending > 0) return;
+            var counts = {};
+            items.forEach(function (it) {
+                it.labels.forEach(function (l) { counts[l] = (counts[l] || 0) + 1; });
+            });
+            Object.keys(counts).sort(function (a, b) {
+                return a.toLowerCase() < b.toLowerCase() ? -1 : 1;
+            }).forEach(function (l) {
+                var o = document.createElement('option');
+                o.value = l;
+                o.textContent = l + ' (' + counts[l] + ')';
+                labelSel.appendChild(o);
+            });
+            render();
+        }
+
+        function el(tag, cls, text) {
+            var n = document.createElement(tag);
+            if (cls) n.className = cls;
+            if (text) n.textContent = text;
+            return n;
+        }
+
+        // The feed gives a 72px thumbnail; ask the image host for a card-sized 3:2 crop instead.
+        function bigThumb(url) {
+            if (!url) return '';
+            url = url.replace(/^http:/, 'https:');
+            if (url.indexOf('img.youtube.com') !== -1) return url.replace(/\/default\.jpg$/, '/hqdefault.jpg');
+            return url.replace(/\/s72(-[^\/]*)?\//, '/w720-h480-c/').replace(/=s72(-[^=]*)?$/, '=w720-h480-c');
+        }
+
+        function card(it) {
+            var art = el('article', 'post-tile');
+            var a = el('a');
+            a.href = it.href;
+            var thumb = el('div', 'post-thumb');
+            if (it.thumb) {
+                var img = document.createElement('img');
+                img.loading = 'lazy';
+                img.decoding = 'async';
+                img.alt = '';
+                img.onerror = function () {
+                    thumb.textContent = '';
+                    thumb.appendChild(el('div', 'post-thumb-empty', '⊙'));
+                };
+                img.src = it.thumb;
+                thumb.appendChild(img);
+            } else {
+                thumb.appendChild(el('div', 'post-thumb-empty', '⊙'));
+            }
+            var info = el('div', 'post-tile-info');
+            var d = 'Page';
+            if (it.kind === 'posts' && it.date) {
+                d = MONTHS[parseInt(it.date.slice(5, 7), 10) - 1] + ' ' + parseInt(it.date.slice(8, 10), 10) + ', ' + it.year;
+            }
+            info.appendChild(el('p', 'post-tile-date', d));
+            info.appendChild(el('h3', 'post-tile-title', it.title));
+            a.appendChild(thumb);
+            a.appendChild(info);
+            art.appendChild(a);
+            return art;
+        }
+
+        function render() {
+            var words = searchBox.value.toLowerCase().split(/\s+/).filter(Boolean);
+            var kind = kindSel.value;
+            var label = labelSel.value;
+
+            var shown = items.filter(function (it) {
+                if (kind !== 'all' && it.kind !== kind) return false;
+                if (label && it.labels.indexOf(label) === -1) return false;
+                for (var i = 0; i < words.length; i++) {
+                    if (it.hay.indexOf(words[i]) === -1) return false;
+                }
+                return true;
+            });
+
+            results.textContent = '';
+
+            if (!items.length) {
+                var p = el('p', 'lib-status', 'The library could not be loaded. ');
+                var a = el('a', '', 'Page through the articles instead.');
+                a.href = '/search?max-results=50';
+                p.appendChild(a);
+                results.appendChild(p);
+                countEl.textContent = '';
+                return;
+            }
+
+            countEl.textContent = shown.length + ' of ' + items.length + (failed ? ' (part of the library did not load)' : '');
+
+            if (!shown.length) {
+                results.appendChild(el('p', 'lib-status', 'Nothing matches that search.'));
+                return;
+            }
+
+            var posts = shown.filter(function (it) { return it.kind === 'posts'; })
+                .sort(function (a, b) { return a.date < b.date ? 1 : -1; });
+            var pages = shown.filter(function (it) { return it.kind === 'pages'; })
+                .sort(function (a, b) { return a.title.toLowerCase() < b.title.toLowerCase() ? -1 : 1; });
+
+            // One long grid, newest first, pages after the articles. Images load as they scroll into view.
+            var grid = el('div', 'blog-posts');
+            posts.concat(pages).forEach(function (it) { grid.appendChild(card(it)); });
+            results.appendChild(grid);
+        }
+
+        searchBox.addEventListener('input', render);
+        kindSel.addEventListener('change', render);
+        labelSel.addEventListener('change', render);
+
+        // Press / to jump to the library search
+        document.addEventListener('keydown', function (e) {
+            if (e.key !== '/' || e.ctrlKey || e.metaKey || e.altKey) return;
+            var t = e.target;
+            if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.tagName === 'SELECT' || t.isContentEditable)) return;
+            e.preventDefault();
+            searchBox.focus();
+            searchBox.scrollIntoView({ block: 'center' });
+        });
+
+        load('posts', 1);
+        load('pages', 1);
+    })();
+    //]]>
+    </script>
+</body>
+</html>
