@@ -304,20 +304,37 @@
       <span class="font-serif text-lg tracking-wide">Fractal<span class="text-gold"> Reality</span></span>
     </a>
     <div class="flex items-center gap-1 sm:gap-2 text-sm">
-      <a href="#studio" class="hidden md:inline-block px-3 py-2 text-[12px] uppercase tracking-[0.18em] text-fog-300 hover:text-fog-100 transition-colors">Studio</a>
-      <a href="fractalgaming.html" class="hidden md:inline-block px-3 py-2 text-[12px] uppercase tracking-[0.18em] text-fog-300 hover:text-fog-100 transition-colors">Gaming</a>
-      <a href="#consulting" class="hidden md:inline-block px-3 py-2 text-[12px] uppercase tracking-[0.18em] text-fog-300 hover:text-fog-100 transition-colors">Consulting</a>
-      <a href="learn/" class="hidden md:inline-block px-3 py-2 text-[12px] uppercase tracking-[0.18em] text-fog-300 hover:text-fog-100 transition-colors">Learn</a>
-      <a href="#framework" class="hidden md:inline-block px-3 py-2 text-[12px] uppercase tracking-[0.18em] text-fog-300 hover:text-fog-100 transition-colors">Framework</a>
-      <a href="ethics.html" class="hidden md:inline-block px-3 py-2 text-[12px] uppercase tracking-[0.18em] text-fog-300 hover:text-fog-100 transition-colors">Ethics</a>
+      <a href="#studio" class="hidden lg:inline-block px-3 py-2 text-[12px] uppercase tracking-[0.18em] text-fog-300 hover:text-fog-100 transition-colors">Studio</a>
+      <a href="fractalgaming.html" class="hidden lg:inline-block px-3 py-2 text-[12px] uppercase tracking-[0.18em] text-fog-300 hover:text-fog-100 transition-colors">Gaming</a>
+      <a href="#consulting" class="hidden lg:inline-block px-3 py-2 text-[12px] uppercase tracking-[0.18em] text-fog-300 hover:text-fog-100 transition-colors">Consulting</a>
+      <a href="learn/" class="hidden lg:inline-block px-3 py-2 text-[12px] uppercase tracking-[0.18em] text-fog-300 hover:text-fog-100 transition-colors">Learn</a>
+      <a href="#framework" class="hidden lg:inline-block px-3 py-2 text-[12px] uppercase tracking-[0.18em] text-fog-300 hover:text-fog-100 transition-colors">Framework</a>
+      <a href="ethics.html" class="hidden lg:inline-block px-3 py-2 text-[12px] uppercase tracking-[0.18em] text-fog-300 hover:text-fog-100 transition-colors">Ethics</a>
+      <a href="https://forum.fractalreality.ca" class="hidden lg:inline-block px-3 py-2 text-[12px] uppercase tracking-[0.18em] text-gold hover:text-gold-bright transition-colors">Forum</a>
       <button onclick="openPagesOverlay()" class="inline-flex items-center gap-2 px-3 py-2 text-[12px] uppercase tracking-[0.18em] text-fog-300 hover:text-fog-100 transition-colors" title="Search all pages (press /)" aria-label="Search all pages">
         <i data-lucide="search" class="w-3.5 h-3.5"></i>
         <span class="hidden sm:inline">Library/Search</span>
       </button>
       <a href="mailto:ashroney@gmail.com?subject=Fractal%20Reality%20Inquiry"
-         class="ml-2 px-4 py-2 text-[12px] uppercase tracking-[0.18em] text-gold-bright bg-gold/10 border border-gold/40 rounded-md hover:bg-gold/20 hover:border-gold transition-all">
+         class="ml-2 px-4 py-2 text-[12px] uppercase tracking-[0.18em] text-gold-bright bg-gold/10 border border-gold/40 rounded-md hover:bg-gold/20 hover:border-gold transition-all hidden sm:inline-block">
         Get in touch
       </a>
+      <button id="mobileMenuBtn" onclick="toggleMobileMenu()" class="lg:hidden ml-1 inline-flex items-center justify-center w-9 h-9 rounded-md text-fog-300 hover:text-fog-100 border border-rule hover:border-gold/40 transition-colors" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
+        <i data-lucide="menu" class="w-4 h-4" id="mobileMenuIconOpen"></i>
+        <i data-lucide="x" class="w-4 h-4" id="mobileMenuIconClose" style="display:none"></i>
+      </button>
+    </div>
+  </div>
+  <div id="mobileMenu" class="hidden lg:hidden border-t border-rule bg-ink-900/95 backdrop-blur-xl">
+    <div class="max-w-6xl mx-auto px-6 py-3 flex flex-col">
+      <a href="#studio" onclick="toggleMobileMenu()" class="px-2 py-2.5 text-[13px] uppercase tracking-[0.18em] text-fog-300 hover:text-fog-100 transition-colors">Studio</a>
+      <a href="fractalgaming.html" class="px-2 py-2.5 text-[13px] uppercase tracking-[0.18em] text-fog-300 hover:text-fog-100 transition-colors">Gaming</a>
+      <a href="#consulting" onclick="toggleMobileMenu()" class="px-2 py-2.5 text-[13px] uppercase tracking-[0.18em] text-fog-300 hover:text-fog-100 transition-colors">Consulting</a>
+      <a href="learn/" class="px-2 py-2.5 text-[13px] uppercase tracking-[0.18em] text-fog-300 hover:text-fog-100 transition-colors">Learn</a>
+      <a href="#framework" onclick="toggleMobileMenu()" class="px-2 py-2.5 text-[13px] uppercase tracking-[0.18em] text-fog-300 hover:text-fog-100 transition-colors">Framework</a>
+      <a href="ethics.html" class="px-2 py-2.5 text-[13px] uppercase tracking-[0.18em] text-fog-300 hover:text-fog-100 transition-colors">Ethics</a>
+      <a href="https://forum.fractalreality.ca" class="px-2 py-2.5 text-[13px] uppercase tracking-[0.18em] text-gold hover:text-gold-bright transition-colors">Forum</a>
+      <a href="mailto:ashroney@gmail.com?subject=Fractal%20Reality%20Inquiry" class="mt-2 mb-1 px-4 py-2.5 text-center text-[12px] uppercase tracking-[0.18em] text-gold-bright bg-gold/10 border border-gold/40 rounded-md hover:bg-gold/20 hover:border-gold transition-all">Get in touch</a>
     </div>
   </div>
 </nav>
@@ -838,7 +855,7 @@
              radial-gradient(circle at 25% 70%, rgba(102,204,136,0.13), transparent 55%),
              #06070d;">
         <!-- inline goo art: the game's own metaball trick (blur + alpha contrast), no asset needed -->
-        <svg viewBox="0 0 400 300" class="w-full h-full animate-float" role="img" aria-label="Goopling — a little cell with cilia adrift in yellow goop">
+        <svg viewBox="0 0 400 300" class="w-full h-full animate-float" role="img" aria-label="Goopling â€” a little cell with cilia adrift in yellow goop">
           <defs>
             <filter id="goo-fg" x="-30%" y="-30%" width="160%" height="160%">
               <feGaussianBlur in="SourceGraphic" stdDeviation="9"/>
@@ -1350,6 +1367,21 @@ document.addEventListener('keydown', function(e) {
     e.preventDefault(); openPagesOverlay();
   }
 });
+</script>
+<script>
+function toggleMobileMenu() {
+  var menu = document.getElementById('mobileMenu');
+  var btn = document.getElementById('mobileMenuBtn');
+  var iconOpen = document.getElementById('mobileMenuIconOpen');
+  var iconClose = document.getElementById('mobileMenuIconClose');
+  var nowOpen = menu.classList.toggle('hidden') === false;
+  btn.setAttribute('aria-expanded', nowOpen ? 'true' : 'false');
+  btn.setAttribute('aria-label', nowOpen ? 'Close menu' : 'Open menu');
+  if (iconOpen && iconClose) {
+    iconOpen.style.display = nowOpen ? 'none' : '';
+    iconClose.style.display = nowOpen ? '' : 'none';
+  }
+}
 </script>
 </body>
 </html>
