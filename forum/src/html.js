@@ -109,6 +109,25 @@ const CSS = `
   .btn.tiny { font-size:11px; padding:4px 9px; letter-spacing:0.08em; }
   .btn.danger { border-color:var(--danger); color:var(--danger); }
 
+  /* Moderation controls: present but never prominent. */
+  details.modrow { margin:10px 0 0; }
+  details.modrow summary {
+    cursor:pointer; display:inline-block; list-style:none; padding:3px 0;
+    font-family:"Space Grotesk",sans-serif; font-size:11px; letter-spacing:0.16em;
+    text-transform:uppercase; color:var(--fog-500);
+  }
+  details.modrow summary::-webkit-details-marker { display:none; }
+  details.modrow summary::after { content:" ▾"; }
+  details.modrow[open] summary::after { content:" ▴"; }
+  details.modrow summary:hover { color:var(--fog-300); }
+  details.modrow .actions { margin-top:8px; }
+  button.ghostdel {
+    border:none; background:none; cursor:pointer; padding:0 2px;
+    font-family:"Space Grotesk",sans-serif; font-size:11px; letter-spacing:0.06em;
+    color:var(--fog-500); opacity:0.8;
+  }
+  button.ghostdel:hover { color:var(--danger); opacity:1; }
+
   form.stack { padding:18px; display:flex; flex-direction:column; gap:12px; }
   input[type=text], textarea, select {
     width:100%; background:var(--ink-700); color:var(--fog-100); border:1px solid var(--rule);
@@ -253,10 +272,13 @@ export function threadPage({ thread, posts, user, error }) {
   <h1>${esc(thread.title)}</h1>
   <p class="sub">${thread.locked ? 'This thread is locked. ' : ''}Started ${timeAgo(thread.created_at)}</p>
   ${canModerate ? `
-  <div class="actions">
-    <form class="inline" method="post" action="/t/${thread.id}/${thread.locked ? 'unlock' : 'lock'}"><button class="btn quiet tiny" type="submit">${thread.locked ? 'Unlock' : 'Lock'}</button></form>
-    <form class="inline" method="post" action="/t/${thread.id}/delete" onsubmit="return confirm('Delete this whole thread?')"><button class="btn danger tiny" type="submit">Delete thread</button></form>
-  </div>` : ''}
+  <details class="modrow">
+    <summary>Moderation</summary>
+    <div class="actions">
+      <form class="inline" method="post" action="/t/${thread.id}/${thread.locked ? 'unlock' : 'lock'}"><button class="btn quiet tiny" type="submit">${thread.locked ? 'Unlock' : 'Lock'}</button></form>
+      <form class="inline" method="post" action="/t/${thread.id}/delete" onsubmit="return confirm('Delete this whole thread?')"><button class="btn danger tiny" type="submit">Delete thread</button></form>
+    </div>
+  </details>` : ''}
   <div class="panel">
     ${posts.map((p) => `
     <div class="post" id="p${p.id}">
@@ -266,7 +288,7 @@ export function threadPage({ thread, posts, user, error }) {
           <span class="nm">${esc(p.author_name)}</span>
           ${p.author_role !== 'member' ? `<span class="role">&middot; ${esc(p.author_role)}</span>` : ''}
           &middot; ${timeAgo(p.created_at)}
-          ${canModerate && !p.deleted ? `<form class="inline" method="post" action="/p/${p.id}/delete" onsubmit="return confirm('Delete this post?')"><button class="btn danger tiny" type="submit" style="margin-left:8px;">delete</button></form>` : ''}
+          ${canModerate && !p.deleted ? `<form class="inline" method="post" action="/p/${p.id}/delete" onsubmit="return confirm('Delete this post?')"><button class="ghostdel" type="submit" style="margin-left:6px;">delete</button></form>` : ''}
         </div>
         <div class="txt${p.deleted ? ' gone' : ''}">${p.deleted ? 'Removed by a moderator.' : esc(p.body)}</div>
       </div>
