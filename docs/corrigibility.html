@@ -186,6 +186,48 @@
     letter-spacing: 0.12em;
     color: var(--fog-500);
   }
+  /* Narration */
+  .listen {
+    display: inline-flex; align-items: center; gap: 10px;
+    margin-top: 26px; padding: 11px 22px;
+    font-family: "Space Grotesk", sans-serif; font-size: 13px;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--gold-bright); background: var(--ink-700);
+    border: 1px solid var(--gold); border-radius: 999px; cursor: pointer;
+  }
+  .listen:hover { box-shadow: 0 0 24px var(--glow-gold); }
+  .listen-note {
+    margin-top: 12px; font-family: "Space Grotesk", sans-serif;
+    font-size: 12px; letter-spacing: 0.06em; color: var(--fog-500);
+  }
+  main h2 { display: flex; align-items: center; gap: 12px; }
+  main h2 .from {
+    flex: none; margin-left: auto;
+    width: 32px; height: 32px; border-radius: 50%;
+    font-size: 11px; line-height: 1; color: var(--gold);
+    background: transparent; border: 1px solid var(--rule); cursor: pointer;
+  }
+  main h2 .from:hover { border-color: var(--gold); }
+  section.speaking h2 { border-bottom-color: var(--gold); }
+  section.speaking h2 .from { border-color: var(--gold); background: var(--glow-gold); }
+  section { scroll-margin-top: 16px; }
+  .player {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 20;
+    display: none; align-items: center; gap: 10px;
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
+    background: var(--ink-800); border-top: 1px solid var(--rule);
+    font-family: "Space Grotesk", sans-serif; font-size: 13px; color: var(--fog-300);
+  }
+  .player.on { display: flex; }
+  .player button {
+    flex: none; min-width: 40px; height: 40px; padding: 0 10px;
+    color: var(--gold-bright); background: var(--ink-700);
+    border: 1px solid var(--rule); border-radius: 10px; cursor: pointer; font-size: 12px;
+  }
+  .player button:hover { border-color: var(--gold); }
+  .player .now { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .player .bar { position: absolute; left: 0; top: -1px; height: 2px; width: 0; background: var(--gold); }
+  body.listening { padding-bottom: 70px; }
 </style>
 </head>
 <body>
@@ -194,7 +236,9 @@
   <div class="kicker">Essay</div>
   <h1>Why Corrigibility Might Be the Highest Human Virtue</h1>
   <div class="byline">Ashman Roonz</div>
-  <div class="meta">Created: 2026-11-14 &middot; Last updated: 2026-11-15 &middot; Version: 1.1</div>
+  <div class="meta">Created: 2026-11-14 &middot; Last updated: 2026-11-15 &middot; Version: 1.2</div>
+  <button class="listen" id="listen" type="button" aria-label="Listen to the essay"><span class="ico">&#9654;</span><span class="lbl">Listen</span></button>
+  <div class="listen-note">Read aloud in the ElevenLabs voice Ashley Gordon &middot; about 17 minutes</div>
 </header>
 
 <main>
@@ -372,9 +416,19 @@
 
 </main>
 
+<div class="player" id="player" role="region" aria-label="Narration">
+  <div class="bar" id="pbar"></div>
+  <button type="button" id="pprev" aria-label="Previous section">&#9664;&#9664;</button>
+  <button type="button" id="ptoggle" aria-label="Pause">&#10074;&#10074;</button>
+  <button type="button" id="pnext" aria-label="Next section">&#9654;&#9654;</button>
+  <div class="now" id="pnow"></div>
+  <button type="button" id="pclose" aria-label="Stop narration">&#10005;</button>
+</div>
+
 <div class="revision">
   <h2>Revision history</h2>
   <ul>
+    <li>2026-11-15 v1.2: narration added. The essay is read aloud in the ElevenLabs voice Ashley Gordon, one clip per section (audio/corrigibility/01.mp3 to 10.mp3; script in tools/corrigibility_narration/script.json). Listen plays from the top; the button beside each heading plays from that section.</li>
     <li>2026-11-15 v1.1: argument tightened. New section on the five pillars (corrigibility as necessary for each, with the reply to truth as a rival); the &ldquo;cooperation of virtues&rdquo; section reframed as what corrigibility costs; the obedience section extended (the test is the record, holding against weak or dishonest pressure, why corrigibility is not wisdom); the finitude condition stated in the opening; &ldquo;highest&rdquo; defined; faithfulness added to the list of virtues; the honesty example corrected.</li>
     <li>2026-11-14 v1.0: initial HTML version, built from Ashman&rsquo;s essay text. Text carried over without edits; the three closing lines set as the closing block, and three of the essay&rsquo;s own emphasized lines set as pull quotes.</li>
   </ul>
@@ -383,6 +437,84 @@
 <footer>
   The Circumpunct Framework &middot; Parts are fractals of their wholes
 </footer>
+
+<script>
+// Narration: one clip per section, played in order.
+(function () {
+  var sections = Array.prototype.slice.call(document.querySelectorAll('main section'));
+  var voice = new Audio();
+  voice.preload = 'none';
+  var listenBtn = document.getElementById('listen');
+  var player = document.getElementById('player');
+  var toggle = document.getElementById('ptoggle');
+  var now = document.getElementById('pnow');
+  var bar = document.getElementById('pbar');
+  var current = -1, timer = 0;
+  function clip(i) { return 'audio/corrigibility/' + String(i + 1).padStart(2, '0') + '.mp3'; }
+  function paint() {
+    var playing = current >= 0 && !voice.paused;
+    listenBtn.querySelector('.ico').innerHTML = playing ? '&#10074;&#10074;' : '&#9654;';
+    listenBtn.querySelector('.lbl').textContent = playing ? 'Pause' : (current >= 0 ? 'Resume' : 'Listen');
+    toggle.innerHTML = playing ? '&#10074;&#10074;' : '&#9654;';
+    toggle.setAttribute('aria-label', playing ? 'Pause' : 'Resume');
+    sections.forEach(function (s, i) { s.classList.toggle('speaking', i === current); });
+    player.classList.toggle('on', current >= 0);
+    document.body.classList.toggle('listening', current >= 0);
+    if (current >= 0) {
+      now.textContent = (current + 1) + ' of ' + sections.length + ' · ' + sections[current].querySelector('h2 .t').textContent;
+    }
+  }
+  function play(i, scroll) {
+    clearTimeout(timer);
+    if (i < 0 || i >= sections.length) { stop(); return; }
+    current = i;
+    voice.src = clip(i);
+    bar.style.width = '0';
+    voice.play().catch(function () {});
+    if (scroll) sections[i].scrollIntoView({ behavior: 'smooth', block: 'start' });
+    paint();
+  }
+  function stop() {
+    clearTimeout(timer);
+    voice.pause();
+    current = -1;
+    paint();
+  }
+  function flip() {
+    if (current < 0) { play(0, true); return; }
+    if (voice.paused) voice.play().catch(function () {}); else voice.pause();
+  }
+  sections.forEach(function (s, i) {
+    var h = s.querySelector('h2');
+    var t = document.createElement('span');
+    t.className = 't';
+    while (h.firstChild) t.appendChild(h.firstChild);
+    h.appendChild(t);
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'from';
+    b.innerHTML = '&#9654;';
+    b.setAttribute('aria-label', 'Listen from this section');
+    b.addEventListener('click', function () { play(i, false); });
+    h.appendChild(b);
+  });
+  listenBtn.addEventListener('click', flip);
+  toggle.addEventListener('click', flip);
+  document.getElementById('pprev').addEventListener('click', function () { play(Math.max(0, current - 1), true); });
+  document.getElementById('pnext').addEventListener('click', function () { play(current + 1, true); });
+  document.getElementById('pclose').addEventListener('click', stop);
+  voice.addEventListener('play', paint);
+  voice.addEventListener('pause', paint);
+  voice.addEventListener('timeupdate', function () {
+    if (voice.duration) bar.style.width = (100 * voice.currentTime / voice.duration) + '%';
+  });
+  voice.addEventListener('ended', function () {
+    var next = current + 1;
+    if (next >= sections.length) { stop(); return; }
+    timer = setTimeout(function () { play(next, true); }, 900);
+  });
+})();
+</script>
 
 </body>
 </html>
