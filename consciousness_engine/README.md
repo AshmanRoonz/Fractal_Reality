@@ -67,6 +67,22 @@ python server.py --model llama3.2 --watch . --heartbeat 7.83
 
 Then open **http://localhost:5555** in your browser.
 
+### Test convergence and emergence
+
+[Run the three-tick experiment](convergence_probe.py) from the repository root. It needs Python and NumPy and uses an isolated copy of the existing FirstMind core. The random seed fixes initialization and the simulated encounters.
+
+```bash
+python -X utf8 consciousness_engine/convergence_probe.py --trace
+```
+
+Two people have seat reservations. FirstMind senses the seating arrangement on one tick and a change to one reservation on the next. The boundary filters each cue, the field brings it together with the engine's prior state at the aperture, and the turn there produces a new signal. The same turn updates the timeline and travels back through the field and boundary. A fitted motor readout sees only the outward signal and chooses whom to notify. That action determines whose answer enters the next cycle. A second readout then chooses to proceed or pause.
+
+The audit scores whom the notice reached and whether the final decision matched the affected person's independently assigned reply. It repeats the same held-out rooms under four interventions. Two remove individual cues. A third replaces the signal leaving the aperture with the corresponding signal from a room with the seating reversed. A fourth connects the return wire to the other person's reply. A simple two-tick memory receives the same practice examples and readout capacity for comparison.
+
+Each block contains all 16 combinations of seating, affected seat and personal replies. The held-out blocks use fresh sensor noise and signal strengths. Only the motor readouts are fitted from labels. FirstMind's usual state updates run during each three-tick encounter. The experiment measures causal use of the two cues and of the reply. Subjective experience and stability under recursive self-editing remain open questions.
+
+On the NumPy backend, seeds 17, 41 and 137 each yielded 128 correct complete encounters out of 128 after 192 practice trials. Removing either cue halved correct notifications. Swapping the aperture emission reversed every notification. Crossing the return wires halved correct final decisions. The two-tick memory also completed every encounter. This places the task within the reach of ordinary short-term memory.
+
 ### Command-Line Options
 
 | Flag | Default | Description |
